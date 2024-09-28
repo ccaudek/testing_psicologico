@@ -1,0 +1,2947 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>21&nbsp; Analisti Fattoriale Confermativa – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/cfa/02_meanstructure.html" rel="next">
+<link href="../../chapters/fa/07_total_score.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cfa/01_cfa.html">Analisi fattoriale confermativa</a></li><li class="breadcrumb-item"><a href="../../chapters/cfa/01_cfa.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Teoria della generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Il modello del’analisi fattoriale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Analisi fattoriale confermativa</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a12_sum_notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Sommatorie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">21.1</span> Introduzione</a></li>
+  <li><a href="#limitazioni-dellapproccio-fattoriale" id="toc-limitazioni-dellapproccio-fattoriale" class="nav-link" data-scroll-target="#limitazioni-dellapproccio-fattoriale"><span class="header-section-number">21.2</span> Limitazioni dell’approccio fattoriale</a></li>
+  <li><a href="#efa-vs.-cfa-confronto-tra-analisi-fattoriale-esplorativa-e-confermativa" id="toc-efa-vs.-cfa-confronto-tra-analisi-fattoriale-esplorativa-e-confermativa" class="nav-link" data-scroll-target="#efa-vs.-cfa-confronto-tra-analisi-fattoriale-esplorativa-e-confermativa"><span class="header-section-number">21.3</span> EFA vs.&nbsp;CFA: Confronto tra Analisi Fattoriale Esplorativa e Confermativa</a>
+  <ul class="collapse">
+  <li><a href="#fondamenti-comuni-e-differenze" id="toc-fondamenti-comuni-e-differenze" class="nav-link" data-scroll-target="#fondamenti-comuni-e-differenze"><span class="header-section-number">21.3.1</span> Fondamenti Comuni e Differenze</a></li>
+  <li><a href="#indeterminatezza-fattoriale" id="toc-indeterminatezza-fattoriale" class="nav-link" data-scroll-target="#indeterminatezza-fattoriale"><span class="header-section-number">21.3.2</span> Indeterminatezza Fattoriale</a></li>
+  <li><a href="#indeterminatezza-dei-punteggi-fattoriali" id="toc-indeterminatezza-dei-punteggi-fattoriali" class="nav-link" data-scroll-target="#indeterminatezza-dei-punteggi-fattoriali"><span class="header-section-number">21.3.3</span> Indeterminatezza dei Punteggi Fattoriali</a></li>
+  <li><a href="#rotazione-e-specificazione-del-modello" id="toc-rotazione-e-specificazione-del-modello" class="nav-link" data-scroll-target="#rotazione-e-specificazione-del-modello"><span class="header-section-number">21.3.4</span> Rotazione e Specificazione del Modello</a></li>
+  <li><a href="#applicazioni-pratiche" id="toc-applicazioni-pratiche" class="nav-link" data-scroll-target="#applicazioni-pratiche"><span class="header-section-number">21.3.5</span> Applicazioni Pratiche</a></li>
+  <li><a href="#problemi-con-luso-combinato-di-efa-e-cfa" id="toc-problemi-con-luso-combinato-di-efa-e-cfa" class="nav-link" data-scroll-target="#problemi-con-luso-combinato-di-efa-e-cfa"><span class="header-section-number">21.3.6</span> Problemi con l’Uso Combinato di EFA e CFA</a></li>
+  <li><a href="#nuove-approcci-intermedi" id="toc-nuove-approcci-intermedi" class="nav-link" data-scroll-target="#nuove-approcci-intermedi"><span class="header-section-number">21.3.7</span> Nuove Approcci Intermedi</a></li>
+  </ul></li>
+  <li><a href="#raccomandazioni-per-la-selezione-degli-indicatori-nellanalisi-fattoriale" id="toc-raccomandazioni-per-la-selezione-degli-indicatori-nellanalisi-fattoriale" class="nav-link" data-scroll-target="#raccomandazioni-per-la-selezione-degli-indicatori-nellanalisi-fattoriale"><span class="header-section-number">21.4</span> Raccomandazioni per la Selezione degli Indicatori nell’Analisi Fattoriale</a></li>
+  <li><a href="#fondamenti-dei-modelli-di-base-nella-cfa" id="toc-fondamenti-dei-modelli-di-base-nella-cfa" class="nav-link" data-scroll-target="#fondamenti-dei-modelli-di-base-nella-cfa"><span class="header-section-number">21.5</span> Fondamenti dei Modelli di Base nella CFA</a></li>
+  <li><a href="#scalatura-dei-fattori-e-inclusione-delle-covariate-nei-modelli-cfa-di-base" id="toc-scalatura-dei-fattori-e-inclusione-delle-covariate-nei-modelli-cfa-di-base" class="nav-link" data-scroll-target="#scalatura-dei-fattori-e-inclusione-delle-covariate-nei-modelli-cfa-di-base"><span class="header-section-number">21.6</span> Scalatura dei Fattori e Inclusione delle Covariate nei Modelli CFA di Base</a>
+  <ul class="collapse">
+  <li><a href="#parametri-del-modello-nella-cfa" id="toc-parametri-del-modello-nella-cfa" class="nav-link" data-scroll-target="#parametri-del-modello-nella-cfa"><span class="header-section-number">21.6.1</span> Parametri del Modello nella CFA</a></li>
+  </ul></li>
+  <li><a href="#oltre-i-requisiti-minimi-di-identificazione" id="toc-oltre-i-requisiti-minimi-di-identificazione" class="nav-link" data-scroll-target="#oltre-i-requisiti-minimi-di-identificazione"><span class="header-section-number">21.7</span> Oltre i Requisiti Minimi di Identificazione</a>
+  <ul class="collapse">
+  <li><a href="#perché-sono-necessari" id="toc-perché-sono-necessari" class="nav-link" data-scroll-target="#perché-sono-necessari"><span class="header-section-number">21.7.1</span> Perché sono Necessari</a></li>
+  <li><a href="#perché-non-sono-sufficienti" id="toc-perché-non-sono-sufficienti" class="nav-link" data-scroll-target="#perché-non-sono-sufficienti"><span class="header-section-number">21.7.2</span> Perché Non Sono Sufficienti</a></li>
+  <li><a href="#esempio-pratico" id="toc-esempio-pratico" class="nav-link" data-scroll-target="#esempio-pratico"><span class="header-section-number">21.7.3</span> Esempio Pratico</a></li>
+  </ul></li>
+  <li><a href="#esempio-di-cfa-per-un-modello-di-abilità-cognitive-la-kaufman-assessment-battery-for-children" id="toc-esempio-di-cfa-per-un-modello-di-abilità-cognitive-la-kaufman-assessment-battery-for-children" class="nav-link" data-scroll-target="#esempio-di-cfa-per-un-modello-di-abilità-cognitive-la-kaufman-assessment-battery-for-children"><span class="header-section-number">21.8</span> Esempio di CFA per un Modello di Abilità Cognitive: La Kaufman Assessment Battery for Children</a></li>
+  <li><a href="#considerazioni-finali" id="toc-considerazioni-finali" class="nav-link" data-scroll-target="#considerazioni-finali"><span class="header-section-number">21.9</span> Considerazioni Finali</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">21.10</span> Session Info</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/cfa/01_cfa.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/cfa/01_cfa.html">Analisi fattoriale confermativa</a></li><li class="breadcrumb-item"><a href="../../chapters/cfa/01_cfa.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-cfa" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<section id="introduzione" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">21.1</span> Introduzione</h2>
+<p>In questo capitolo esamineremo la CFA per l’analisi dei modelli di misurazione con fattori comuni e indicatori continui. A differenza dell’analisi fattoriale esplorativa (EFA), nella CFA vengono analizzati modelli di misurazione vincolati. Ciò significa che il ricercatore specifica (1) il numero esatto di fattori; (2) il pattern dei carichi fattoriali, ossia la corrispondenza specifica tra i fattori e gli indicatori; e (3) la presenza di errori correlati, se presenti.</p>
+<p>La seconda caratteristica menzionata sopra implica che un indicatore satura solo sui fattori specificati dal ricercatore, e tutte le saturazioni incrociate di quell’indicatore su altri fattori sono fissate a zero. Sebbene sia possibile specificare un numero esatto di fattori nella EFA, la tecnica analizza modelli di misurazione non restrittivi, in cui ciascun indicatore satura su tutti i fattori (ossia tutte le saturazioni incrociate sono liberamente stimate).</p>
+<p>Un’altra differenza è che i modelli EFA con più fattori sono identificati solo dopo aver specificato un metodo di rotazione dei fattori, come obliqua (i fattori possono covariare) oppure ortogonale (i fattori sono non correlati). Poiché la CFA richiede un modello identificato, non c’è una fase di rotazione e di solito è permesso ai fattori di covariare.</p>
+<p>Nell’ambito dei requisiti per l’identificazione, è possibile stimare errori correlati nella CFA, ma è più difficile ottenere questo risultato nella EFA. Pertanto, la tecnica della CFA supporta meglio l’analisi delle strutture di covarianza degli errori rispetto alla EFA.</p>
+<div id="a8e1a699" class="cell" data-tags="[&quot;remove_cell&quot;]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"../../code/_common.R"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"lavaan"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"semTools"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="limitazioni-dellapproccio-fattoriale" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="limitazioni-dellapproccio-fattoriale"><span class="header-section-number">21.2</span> Limitazioni dell’approccio fattoriale</h2>
+<p>L’approccio classico dell’analisi fattoriale (EFA più rotazione fattoriale) ha rivelato avere diversi limiti. Nella ricerca iniziale, dibattiti teorici importanti, come il numero di fattori dell’intelligenza o della personalità, erano basati sui risultati di diverse rotazioni fattoriali. Questi dibattiti si sono rivelati essere semplici speculazioni, poiché conclusioni diverse potevano essere supportate a seconda dell’interpretazione dei dati. Per esempio, il dibattito tra Eysenck e Cattell sul numero di fattori della personalità (due o sedici) dipendeva dall’uso di rotazioni ortogonali o oblique sugli stessi dati.</p>
+<p>Nella seconda metà del XX secolo, c’era una generale insoddisfazione verso l’analisi fattoriale a causa della sua apparente capacità di adattarsi a quasi qualsiasi soluzione. Furono raccomandati criteri rigorosi per il suo uso, come la necessità di grandi campioni, che spesso rendevano l’analisi impraticabile a quei tempi. Inoltre, furono introdotti vincoli relativi alle ipotesi del modello e al requisito che le variabili nella matrice di correlazione avessero varianze equivalenti, creando problemi pratici significativi, specialmente con dati binari spesso usati nei test psicometrici.</p>
+<p>Solo con l’introduzione di metodi psicometrici moderni, come l’analisi fattoriale confermativa (CFA) discussa in questo capitolo e la Teoria di Risposta all’Item (discussa in una sezione successiva), questi problemi sono stati risolti.</p>
+</section>
+<section id="efa-vs.-cfa-confronto-tra-analisi-fattoriale-esplorativa-e-confermativa" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="efa-vs.-cfa-confronto-tra-analisi-fattoriale-esplorativa-e-confermativa"><span class="header-section-number">21.3</span> EFA vs.&nbsp;CFA: Confronto tra Analisi Fattoriale Esplorativa e Confermativa</h2>
+<section id="fondamenti-comuni-e-differenze" class="level3" data-number="21.3.1">
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="fondamenti-comuni-e-differenze"><span class="header-section-number">21.3.1</span> Fondamenti Comuni e Differenze</h3>
+<p>Sia l’Analisi Fattoriale Esplorativa (EFA) che quella Confermativa (CFA) si basano sul modello dei fattori comuni. Entrambe le tecniche presuppongono che la varianza degli indicatori osservati possa essere suddivisa in varianza comune e varianza unica. La varianza comune è quella condivisa tra gli indicatori e sottende le covarianze osservate, mentre la varianza unica comprende sia la varianza specifica delle variabili che l’errore di misurazione. I fattori estratti, detti fattori comuni, rappresentano le variabili latenti costruite da questa varianza comune.</p>
+<p>Nell’EFA, la struttura dei fattori è indeterminata e viene esplorata senza ipotesi a priori riguardo al numero o alla natura dei fattori. L’EFA è quindi particolarmente utile nelle fasi iniziali di ricerca, quando la teoria è poco sviluppata o si sospetta la presenza di fattori inaspettati.</p>
+<p>Al contrario, la CFA si basa su un modello di fattori predefinito, che specifica a priori quali indicatori sono associati a ciascun fattore, rendendola idonea per confermare teorie esistenti o per validare strutture fattoriali precedentemente esplorate. In CFA, i carichi incrociati (indicatori che caricano su più di un fattore) sono generalmente vincolati a zero, stabilendo una relazione diretta e specifica tra fattori e indicatori.</p>
+</section>
+<section id="indeterminatezza-fattoriale" class="level3" data-number="21.3.2">
+<h3 data-number="21.3.2" class="anchored" data-anchor-id="indeterminatezza-fattoriale"><span class="header-section-number">21.3.2</span> Indeterminatezza Fattoriale</h3>
+<p>Un problema ricorrente in entrambe le tecniche è l’indeterminatezza fattoriale, dove i fattori comuni non possono essere definiti in modo univoco dai loro indicatori a causa della natura approssimativa delle stime. Questo si manifesta sia in EFA, con l’indeterminatezza della rotazione, che in CFA, dove l’analisi potrebbe non replicarsi in nuovi campioni a causa dell’uso dei medesimi dati per verificare il modello.</p>
+</section>
+<section id="indeterminatezza-dei-punteggi-fattoriali" class="level3" data-number="21.3.3">
+<h3 data-number="21.3.3" class="anchored" data-anchor-id="indeterminatezza-dei-punteggi-fattoriali"><span class="header-section-number">21.3.3</span> Indeterminatezza dei Punteggi Fattoriali</h3>
+<p>Un’altra complicazione è l’indeterminatezza dei punteggi fattoriali, che si verifica quando esistono infinite soluzioni valide per i punteggi fattoriali a partire dagli indicatori. Questo comporta che diversi metodi possono produrre ordinamenti differenti dei casi, un problema noto come indeterminatezza dei punteggi fattoriali (Grice, 2001).</p>
+</section>
+<section id="rotazione-e-specificazione-del-modello" class="level3" data-number="21.3.4">
+<h3 data-number="21.3.4" class="anchored" data-anchor-id="rotazione-e-specificazione-del-modello"><span class="header-section-number">21.3.4</span> Rotazione e Specificazione del Modello</h3>
+<p>La EFA può presentare ambiguità a causa dell’infinita quantità di configurazioni dei carichi fattoriali che potrebbero adattarsi ai dati, un fenomeno meno pronunciato nella CFA dove la specifica del modello è più rigida.</p>
+</section>
+<section id="applicazioni-pratiche" class="level3" data-number="21.3.5">
+<h3 data-number="21.3.5" class="anchored" data-anchor-id="applicazioni-pratiche"><span class="header-section-number">21.3.5</span> Applicazioni Pratiche</h3>
+<p>L’EFA è spesso preferita in nuovi ambiti di ricerca, dove i fattori potrebbero non essere ben definiti, mentre la CFA è utilizzata per confermare le strutture fattoriali in studi di validazione o in seguito a revisioni di test esistenti.</p>
+</section>
+<section id="problemi-con-luso-combinato-di-efa-e-cfa" class="level3" data-number="21.3.6">
+<h3 data-number="21.3.6" class="anchored" data-anchor-id="problemi-con-luso-combinato-di-efa-e-cfa"><span class="header-section-number">21.3.6</span> Problemi con l’Uso Combinato di EFA e CFA</h3>
+<p>Si noti che l’applicazione della CFA immediatamente dopo la EFA nello stesso campione può essere problematica. Talvolta, l’uso congiunto non verifica né conferma i risultati dell’EFA. La restrittività dei modelli CFA, con i carichi incrociati impostati a zero, può portare a risultati che non sono coerenti con i dati analizzati nell’EFA.</p>
+</section>
+<section id="nuove-approcci-intermedi" class="level3" data-number="21.3.7">
+<h3 data-number="21.3.7" class="anchored" data-anchor-id="nuove-approcci-intermedi"><span class="header-section-number">21.3.7</span> Nuove Approcci Intermedi</h3>
+<p>Metodi come l’Analisi Strutturale Esplorativa (ESEM) offrono un approccio ibrido che combina la flessibilità dell’EFA con alcuni degli aspetti confirmatori della CFA. Questo permette una maggiore precisione nel testare l’adattamento del modello, pur mantenendo la capacità di esplorare nuove strutture fattoriali.</p>
+</section>
+</section>
+<section id="raccomandazioni-per-la-selezione-degli-indicatori-nellanalisi-fattoriale" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="raccomandazioni-per-la-selezione-degli-indicatori-nellanalisi-fattoriale"><span class="header-section-number">21.4</span> Raccomandazioni per la Selezione degli Indicatori nell’Analisi Fattoriale</h2>
+<p>La selezione accurata degli indicatori è cruciale per il successo dell’analisi fattoriale, sia essa Esplorativa (EFA) o Confermativa (CFA). Le linee guida suggerite da Fabrigar e Wegener (2012) e Little et al.&nbsp;(1999), come riassunto in <span class="citation" data-cites="kline2023principles">Kline (<a href="../../99-references.html#ref-kline2023principles" role="doc-biblioref">2023</a>)</span>, enfatizzano i seguenti punti chiave:</p>
+<ol type="1">
+<li><p><strong>Definizione dei Concetti Teorici</strong>: È essenziale articolare i concetti teorici in modo dettagliato per delineare chiaramente ogni dominio di interesse. Ad esempio, se lo studio riguarda le dimensioni dell’ansia, è importante riferirsi a letteratura teorica ed empirica che discute vari aspetti come ansia di stato, ansia di tratto e ansia sociale.</p></li>
+<li><p><strong>Scelta degli Indicatori</strong>: Gli indicatori selezionati dovrebbero coprire adeguatamente i domini d’interesse senza affidarsi esclusivamente allo stesso metodo di misurazione, come i questionari di autovalutazione, per ridurre la varianza dovuta a metodi comuni. L’impiego di modelli CFA specializzati può aiutare a stimare questi effetti del metodo.</p></li>
+<li><p><strong>Guida Teorica o Empirica Forte</strong>: Se esiste una solida base teorica o empirica, gli indicatori omogenei sono preferibili poiché forniscono stime più precise e meno distorte, specialmente in analisi di tipo più confermativo.</p></li>
+<li><p><strong>Analisi di Indicatori Meno Omogenei</strong>: Se la guida teorica è debole, può essere vantaggioso esaminare un insieme di indicatori meno omogenei che coprono un’ampia gamma del dominio d’interesse. Ciò evita di basarsi su approssimazioni che potrebbero non riflettere pienamente i concetti chiave.</p></li>
+<li><p><strong>Uso di Indicatori di Qualità Psicometrica Inferiore</strong>: Anche gli indicatori con minore qualità psicometrica possono essere utili se coprono ampiamente il costrutto, generano punteggi che riflettono ampie differenze individuali e sono analizzati attraverso metodi più confermativi.</p></li>
+<li><p><strong>Problemi Tecnici</strong>: L’analisi potrebbe incontrare problemi come i casi Heywood o la mancata convergenza se alcuni fattori hanno un numero insufficiente di indicatori, specialmente in campioni piccoli. Un numero sicuro minimo di indicatori per ogni fattore previsto è di circa 3-5. Tuttavia, in alcuni casi, potrebbe essere vantaggioso utilizzare meno indicatori per fattore se questi sono psicometricamente solidi.</p></li>
+</ol>
+<p>Hayduk e Littvay (2012) hanno sottolineato che non è sempre preferibile avere più indicatori per fattore; in certi contesti, un singolo indicatore ben scelto può essere sufficiente. Se gli indicatori sono altamente ridondanti, non aggiungono informazioni significative. L’idea di una “regola d’oro” di 3-5 indicatori per fattore è una guida generale, ma la scelta dovrebbe essere basata sulle ipotesi specifiche di ricerca piuttosto che su una regola arbitraria.</p>
+</section>
+<section id="fondamenti-dei-modelli-di-base-nella-cfa" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="fondamenti-dei-modelli-di-base-nella-cfa"><span class="header-section-number">21.5</span> Fondamenti dei Modelli di Base nella CFA</h2>
+<p>I modelli di base nella Confermative Factor Analysis (CFA) con più fattori sono caratterizzati da specifiche fondamentali che garantiscono una misurazione precisa delle variabili latenti. Ecco una sintesi delle caratteristiche principali di tali modelli:</p>
+<ol type="1">
+<li><p><strong>Relazione tra Indicatori e Fattori</strong>: Ogni indicatore è una variabile continua influenzata da due principali componenti: un fattore comune, che rappresenta la variabile latente che l’indicatore è inteso a misurare, e la varianza unica. Quest’ultima include sia l’errore di misurazione casuale sia la varianza specifica non spiegata dal fattore, entrambi rappresentati dal termine di errore.</p></li>
+<li><p><strong>Indipendenza dei Termini di Errore</strong>: I termini di errore sono assunti come indipendenti l’uno dall’altro e dai fattori. Ciò implica l’assenza di confondenti non misurati per qualsiasi coppia di indicatori e l’indipendenza delle cause omesse dai fattori.</p></li>
+<li><p><strong>Linearità e Covarianza</strong>: Le relazioni all’interno del modello sono lineari e i fattori possono covariare, il che significa che non esistono effetti causali diretti tra i fattori.</p></li>
+</ol>
+<p>Queste caratteristiche definiscono la misurazione unidimensionale, sottolineando che ciascun indicatore è pensato per misurare una sola dimensione e non condivide varianza con altri indicatori una volta controllati i fattori comuni. Tuttavia, è anche possibile specificare modelli CFA multidimensionali, dove alcuni indicatori possono caricare su più di un fattore o dove coppie di termini di errore possono essere correlati.</p>
+<p>Inoltre, esistono metodi specializzati per analizzare relazioni non lineari tra fattori e indicatori continui, o tra i fattori stessi, come descritto da Amemiya e Yalcin (2001). Le relazioni tra indicatori categorici e fattori sono intrinsecamente non lineari, e questi scenari sono trattati nel CFA categorico.</p>
+<p>Un esempio di modello CFA di base con due fattori e sei indicatori viene presentato di seguito, dove tutti i carichi incrociati sono fissati a zero <span class="citation" data-cites="kline-14-1-fig">(<a href="../../99-references.html#ref-kline-14-1-fig" role="doc-biblioref"><strong>kline-14-1-fig?</strong></a>)</span>. Per esempio, il fattore B non ha un effetto causale diretto sull’indicatore X1, il quale è misurato da un altro fattore (A). Tuttavia, ciò non significa che X1 e il fattore B siano completamente scorrelati. La struttura del modello permette a X1 di covariare con B poiché B è correlato con A, che è una causa di X1 (l’altra causa è E1, il termine di errore di X1). In modo simile, si prevede che gli indicatori X1 e X4 covarino poiché sono influenzati dai fattori A e B, rispettivamente, i quali sono correlati.</p>
+<p>Le costanti di scala, indicate come (1) nel modello, definiscono le metriche per le variabili non misurate, inclusi i fattori comuni e i termini di errore degli indicatori, stabilendo così una base uniforme per la misurazione nel modello CFA.</p>
+<div id="fig-kline_14_1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kline_14_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/kline_14_1.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kline_14_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;21.1: Modello di analisi fattoriali confermativa con due fattori comuni e sei indicatori. (Figura tratta da <span class="citation" data-cites="kline2023principles">Kline (<a href="../../99-references.html#ref-kline2023principles" role="doc-biblioref">2023</a>)</span>)
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="scalatura-dei-fattori-e-inclusione-delle-covariate-nei-modelli-cfa-di-base" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="scalatura-dei-fattori-e-inclusione-delle-covariate-nei-modelli-cfa-di-base"><span class="header-section-number">21.6</span> Scalatura dei Fattori e Inclusione delle Covariate nei Modelli CFA di Base</h2>
+<p>Nella rappresentazione di base dei modelli Confermative Factor Analysis (CFA), la scalatura dei fattori viene spesso eseguita utilizzando il metodo della variabile di riferimento, conosciuto anche come metodo della variabile marker o approccio di identificazione del carico di riferimento (Newsom, 2015). In questo approccio, un vincolo di <em>Unit Loading Identification</em> (ULI) è applicato al carico di un indicatore per ciascun fattore. Per esempio, nel modello illustrato, il carico di <span class="math inline">\(X1\)</span> sul fattore <span class="math inline">\(A\)</span> è fissato a 1.0, stabilendo così la varianza del fattore <span class="math inline">\(A\)</span> sulla base della varianza comune dell’indicatore <span class="math inline">\(X1\)</span>, che funge da variabile di riferimento per <span class="math inline">\(A\)</span>. Analogamente, la varianza del fattore <span class="math inline">\(B\)</span> è calibrata utilizzando <span class="math inline">\(X4\)</span> come variabile marker.</p>
+<p>Quando più indicatori per lo stesso fattore presentano precisione equivalente e nessuno di essi è considerato particolarmente rappresentativo del concetto sottostante, la scelta dell’indicatore come variabile di riferimento diventa generalmente arbitraria. Questa selezione non influisce solitamente sull’adattamento globale del modello, sulla soluzione standardizzata, o sulle stime delle varianze di errore dell’indicatore nelle soluzioni non standardizzate. Le saturazioni fisse a 1.0 per le variabili di riferimento rimangono invariate nelle soluzioni non standardizzate e non sono soggette a test di significatività, poiché sono considerate costanti.</p>
+<p>Un potenziale svantaggio di questo metodo è l’assenza di test di significatività per le saturazioni fisse, il che può essere limitante se si desidera valutare la significatività di tutte le saturazioni. Metodi alternativi per scalare i fattori, che non richiedono la selezione di variabili di riferimento, saranno discussi nelle sezioni successive.</p>
+<p>Nei modelli CFA di base, tutti i fattori sono considerati variabili esogene, il che significa che sono liberi di variare e covariare indipendentemente l’uno dall’altro. Tuttavia, è possibile includere variabili esterne, dette covariate, che si presume possano influenzare i fattori comuni. Ad esempio, l’età dei partecipanti potrebbe essere vista come una covariata che influisce sui fattori comuni in un modello CFA.</p>
+<p>L’inclusione di covariate trasforma i fattori comuni da variabili esogene a endogene, implicando che non sono più completamente liberi di variare in modo indipendente, ma possono essere direttamente influenzati dalle covariate. Questo richiede l’aggiunta di termini di disturbo nei fattori comuni per rappresentare l’effetto diretto delle covariate su di essi, integrando così l’effetto delle variabili esterne nel modello CFA.</p>
+<section id="parametri-del-modello-nella-cfa" class="level3" data-number="21.6.1">
+<h3 data-number="21.6.1" class="anchored" data-anchor-id="parametri-del-modello-nella-cfa"><span class="header-section-number">21.6.1</span> Parametri del Modello nella CFA</h3>
+<p>In un modello CFA con indicatori continui, quando le medie delle variabili non sono considerate, i parametri liberi includono varianze, covarianze di variabili esogene e gli effetti diretti (carichi) sulle variabili endogene. Ad esempio, analizzando il modello di base illustrato in figura, i parametri liberi possono essere suddivisi come segue:</p>
+<ol type="1">
+<li><strong>Varianze</strong>: Comprendono le varianze di due fattori e sei termini di errore associati agli indicatori, per un totale di otto varianze.</li>
+<li><strong>Covarianza</strong>: È presente una covarianza tra i due fattori.</li>
+<li><strong>Effetti Diretti (Carichi)</strong>: Quattro carichi fattoriali rappresentano gli effetti diretti dei fattori sugli indicatori, specificamente per gli indicatori X2, X3, X5 e X6. Questi carichi non sono fissati, a differenza di quelli usati per scalare i fattori.</li>
+</ol>
+<p>Sommando questi parametri, il totale dei parametri liberi nel modello è 13. Con <span class="math inline">\(v = 6\)</span> variabili osservate, il numero totale di osservazioni statisticamente indipendenti, calcolato come <span class="math inline">\(6(7)/2\)</span>, è 21. Di conseguenza, i gradi di libertà per il modello presentato sono calcolati sottraendo i parametri liberi dalle osservazioni indipendenti, risultando in <span class="math inline">\(21 - 13 = 8\)</span> gradi di libertà.</p>
+<section id="requisiti-di-identificazione-necessari-ma-non-sufficienti-per-i-modelli-di-cfa" class="level4" data-number="21.6.1.1">
+<h4 data-number="21.6.1.1" class="anchored" data-anchor-id="requisiti-di-identificazione-necessari-ma-non-sufficienti-per-i-modelli-di-cfa"><span class="header-section-number">21.6.1.1</span> Requisiti di Identificazione: Necessari ma Non Sufficienti per i Modelli di CFA</h4>
+<p>Per assicurare che un modello di Confermative Factor Analysis (CFA) sia correttamente specificato e possa essere utilizzato per trarre conclusioni valide, è fondamentale soddisfare alcuni requisiti di identificazione essenziali. Questi requisiti sono necessari ma non sempre sufficienti; cioè, la loro soddisfazione non garantisce automaticamente l’identificazione completa del modello.</p>
+<ol type="1">
+<li><strong>Gradi di Libertà (dfM) Maggiori o Uguali a Zero</strong>:
+<ul>
+<li><strong>Calcolo</strong>: I gradi di libertà di un modello CFA si determinano sottraendo il numero di parametri liberi (come varianze, covarianze, e carichi fattoriali) dal numero totale di osservazioni indipendenti disponibili, solitamente le varianze e covarianze degli indicatori.</li>
+<li><strong>Significato</strong>: Avere gradi di libertà positivi indica che ci sono sufficienti dati per stimare i parametri del modello e verificare il suo adattamento. Un modello con zero gradi di libertà è “saturato” e si adatterà perfettamente ai dati, ma non fornirà validazione ulteriore.</li>
+<li><strong>Importanza</strong>: Mantenere dfM ≥ 0 è cruciale per evitare la sottospecificazione del modello, che potrebbe condurre a stime inaccurate e conclusioni fuorvianti.</li>
+</ul></li>
+<li><strong>Scalatura Corretta di Ogni Variabile Non Misurata</strong>:
+<ul>
+<li><strong>Necessità</strong>: È essenziale scalare ogni variabile latente, come i fattori, per definirne l’unità di misura. Senza una scalatura adeguata, parametri come i carichi fattoriali rimarrebbero indeterminati.</li>
+<li><strong>Metodi</strong>: La scalatura può essere effettuata in vari modi, come fissando il carico di un indicatore per fattore a 1.0 (metodo della variabile di riferimento), fissando la varianza del fattore a un valore preciso, tipicamente 1.0 (metodo della standardizzazione della varianza), o applicando vincoli alle stime delle saturazioni fattoriali (metodo di codifica degli effetti).</li>
+</ul></li>
+</ol>
+<p>In sintesi, pur essendo fondamentale soddisfare questi requisiti per stabilire una base identificabile e interpretabile per un modello CFA, l’identificazione completa del modello può richiedere considerazioni aggiuntive legate alla struttura specifica e alle ipotesi teoriche che sottendono al modello.</p>
+<div id="fig-kline_14_2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kline_14_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/kline_14_2.png" class="img-fluid figure-img" style="width:80.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kline_14_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;21.2: Scalatura dei fattori nel metodo della variabile di riferimento con vincoli di identificazione del carico unitario (ULI) (a), metodo di standardizzazione della variabile con vincoli di identificazione della varianza unitaria (UVI) (b) e metodo di codifica degli effetti con vincoli di identificazione della codifica degli effetti (ECI) (a + b + c)/3 = (d + e + f)/3 = 1.0 (c). (Figura tratta da <span class="citation" data-cites="kline2023principles">Kline (<a href="../../99-references.html#ref-kline2023principles" role="doc-biblioref">2023</a>)</span>)
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="requisiti-sufficienti-aggiuntivi-per-lidentificazione-nei-modelli-cfa" class="level4" data-number="21.6.1.2">
+<h4 data-number="21.6.1.2" class="anchored" data-anchor-id="requisiti-sufficienti-aggiuntivi-per-lidentificazione-nei-modelli-cfa"><span class="header-section-number">21.6.1.2</span> Requisiti Sufficienti Aggiuntivi per l’Identificazione nei Modelli CFA</h4>
+<p>Oltre ai criteri base, esistono requisiti addizionali che favoriscono l’identificazione adeguata nei modelli di Confermative Factor Analysis (CFA):</p>
+<ol type="1">
+<li><p><strong>Regola dei Tre Indicatori per i Modelli a Singolo Fattore</strong>: Affinché un modello CFA con un solo fattore sia pienamente identificabile, è necessario che disponga di almeno tre indicatori. Questo è dovuto al fatto che con solamente due indicatori non si dispone di sufficiente informazione per separare accuratamente la varianza del fattore e i suoi carichi specifici dagli errori di misurazione. Un modello con esattamente tre indicatori ha zero gradi di libertà, il che significa che si adatterà perfettamente ai dati ma non permetterà ulteriori test o validazioni. Per garantire gradi di libertà positivi (dfM &gt; 0) e consentire un’efficace validazione del modello, è consigliabile utilizzare almeno quattro indicatori.</p></li>
+<li><p><strong>Regola dei Due Indicatori per i Modelli con Più Fattori</strong>: Nei modelli CFA che coinvolgono più di un fattore, è essenziale che ogni fattore sia rappresentato da almeno due indicatori. Questa disposizione aiuta a definire chiaramente ogni fattore e a distinguerlo dagli altri fattori presenti nel modello. Tuttavia, i modelli che si limitano a due indicatori per fattore possono presentare problematiche, specialmente in campioni di dimensioni ridotte, poiché possono emergere instabilità nelle stime e complessità nell’interpretazione dei risultati.</p></li>
+</ol>
+<p>Questi requisiti aggiuntivi sono fondamentali non solo per garantire che un modello CFA sia teoricamente valido (attraverso una corretta scalatura e definizione delle variabili latenti), ma anche per assicurare la sua utilità pratica, fornendo sufficienti gradi di libertà per consentire validazioni affidabili e interpretazioni significative del modello.</p>
+</section>
+</section>
+</section>
+<section id="oltre-i-requisiti-minimi-di-identificazione" class="level2" data-number="21.7">
+<h2 data-number="21.7" class="anchored" data-anchor-id="oltre-i-requisiti-minimi-di-identificazione"><span class="header-section-number">21.7</span> Oltre i Requisiti Minimi di Identificazione</h2>
+<p>Nel contesto della Confermative Factor Analysis (CFA), i requisiti di identificazione sono considerati necessari ma non sufficienti. Questo significa che, anche se il loro soddisfacimento è cruciale per una corretta stima dei parametri del modello, essi non garantiscono da soli che il modello sia il migliore possibile o pienamente identificato in termini di struttura e fondamenti teorici. Questa distinzione sottolinea l’importanza di andare oltre i criteri minimi per esplorare l’adeguatezza complessiva e la validità del modello all’interno del suo contesto teorico e applicativo.</p>
+<section id="perché-sono-necessari" class="level3" data-number="21.7.1">
+<h3 data-number="21.7.1" class="anchored" data-anchor-id="perché-sono-necessari"><span class="header-section-number">21.7.1</span> Perché sono Necessari</h3>
+<ol type="1">
+<li><p><strong>Gradi di Libertà (dfM) Maggiori o Uguali a Zero</strong>: Avere gradi di libertà non negativi è essenziale per assicurare che ci siano abbastanza dati per stimare i parametri del modello. Se i gradi di libertà sono negativi, indica che ci sono troppi parametri da stimare rispetto alle informazioni disponibili, il che rende il modello inidentificabile.</p></li>
+<li><p><strong>Scalatura Corretta di Ogni Variabile Non Misurata</strong>: La scalatura delle variabili latenti consente di stabilire un’unità di misura chiara, rendendo possibile l’interpretazione dei parametri come i carichi fattoriali. Senza una scalatura appropriata, i parametri del modello rimarrebbero indeterminati e potrebbero condurre a conclusioni ambigue.</p></li>
+</ol>
+</section>
+<section id="perché-non-sono-sufficienti" class="level3" data-number="21.7.2">
+<h3 data-number="21.7.2" class="anchored" data-anchor-id="perché-non-sono-sufficienti"><span class="header-section-number">21.7.2</span> Perché Non Sono Sufficienti</h3>
+<p>Nonostante la soddisfazione di questi requisiti renda il modello tecnicamente identificabile e stima i parametri, ci sono altre considerazioni che possono influenzare l’adeguatezza del modello:</p>
+<ul>
+<li><p><strong>Adeguamento del Modello</strong>: Anche se un modello ha gradi di libertà positivi e le variabili sono correttamente scalate, potrebbe non adattarsi bene ai dati. L’adeguatezza del modello è valutata attraverso statistiche di fit come il Chi-quadrato, RMSEA, CFI, e altri. Un modello può soddisfare i requisiti di identificazione ma avere un cattivo fit.</p></li>
+<li><p><strong>Validità Teorica</strong>: Un modello può essere tecnicamente corretto ma non catturare accuratamente le relazioni teoriche tra le variabili. La costruzione del modello deve essere guidata da una solida base teorica che giustifica le relazioni tra i fattori e gli indicatori.</p></li>
+</ul>
+</section>
+<section id="esempio-pratico" class="level3" data-number="21.7.3">
+<h3 data-number="21.7.3" class="anchored" data-anchor-id="esempio-pratico"><span class="header-section-number">21.7.3</span> Esempio Pratico</h3>
+<p>Immaginiamo un modello CFA per misurare due concetti psicologici, come l’ansia e la depressione, con tre indicatori per ciascun fattore. Anche se il modello potrebbe avere gradi di libertà sufficienti e ogni fattore è correttamente scalato con un indicatore con carico fissato a 1.0, potrebbero sorgere problemi:</p>
+<ul>
+<li><p><strong>Cross-loadings</strong>: Gli indicatori per l’ansia potrebbero anche avere carichi significativi sulla depressione, il che non è catturato nel modello perché ogni indicatore è supposto misurare un solo fattore. Questo problema di validità del modello non è rilevato dai semplici criteri di identificazione.</p></li>
+<li><p><strong>Adattamento del Modello</strong>: Il modello potrebbe mostrare un cattivo adattamento ai dati, suggerendo che la struttura ipotizzata dei fattori e degli indicatori non riflette accuratamente le relazioni tra le variabili osservate.</p></li>
+</ul>
+<p>In conclusione, mentre i requisiti di identificazione sono critici per la fattibilità tecnica di un modello CFA, non garantiscono di per sé che il modello sia il migliore possibile o che rifletta accuratamente le dinamiche sottostanti. Ulteriori analisi e valutazioni sono necessarie per assicurare che il modello sia sia identificabile che valido.</p>
+<section id="altri-metodi-per-la-scalatura-dei-fattori-nei-modelli-di-cfa" class="level4" data-number="21.7.3.1">
+<h4 data-number="21.7.3.1" class="anchored" data-anchor-id="altri-metodi-per-la-scalatura-dei-fattori-nei-modelli-di-cfa"><span class="header-section-number">21.7.3.1</span> Altri Metodi per la Scalatura dei Fattori nei Modelli di CFA</h4>
+<p>La scalatura dei fattori è fondamentale per garantire una corretta identificazione e interpretazione dei fattori in un modello di Confermative Factor Analysis (CFA). Oltre al comune metodo della variabile di riferimento, esistono altri due approcci principali:</p>
+<ol type="1">
+<li><p><strong>Metodo di Standardizzazione della Varianza (Variance Standardization Method)</strong>:</p>
+<ul>
+<li><strong>Descrizione</strong>: Questo metodo fissa la varianza di ciascun fattore a 1.0, un approccio noto come <em>unit variance identification</em> (UVI).</li>
+<li><strong>Implicazioni</strong>: La standardizzazione dei fattori implica che le loro varianze non sono stimate come parametri liberi. Invece, le covarianze tra i fattori sono liberamente stimate e interpretate come correlazioni di Pearson.</li>
+<li><strong>Carichi degli Indicatori</strong>: Tutti i carichi degli indicatori sono considerati parametri liberi, il che permette di testarne la significatività statistica attraverso i loro errori standard.</li>
+<li><strong>Vantaggi e Limitazioni</strong>: Il principale vantaggio di questo metodo è la sua semplicità e l’assenza di necessità di selezionare una variabile di riferimento. Tuttavia, è generalmente più adatto per modellare fattori esogeni.</li>
+</ul></li>
+<li><p><strong>Metodo di Codifica degli Effetti (Effects Coding Method)</strong>:</p>
+<ul>
+<li><strong>Funzionamento</strong>: A differenza dei metodi precedenti, questo non richiede la selezione di una variabile di riferimento e non implica la standardizzazione dei fattori.</li>
+<li><strong>Vincolo di Codifica degli Effetti (ECI)</strong>: Si impone che la media dei carichi fattoriali per gli indicatori di un dato fattore sia uguale a 1.0. Questo obbliga il software SEM a trovare una combinazione ottimale di carichi che, in media, risultino in 1.0.</li>
+<li><strong>Stima della Varianza del Fattore</strong>: La varianza del fattore viene stimata come la varianza comune media calcolata attraverso tutti gli indicatori, considerando il loro contributo individuale alla misurazione del fattore.</li>
+<li><strong>Vantaggi</strong>: Questo metodo consente che tutti gli indicatori contribuiscano equamente alla scalatura del loro fattore comune. È particolarmente utile in studi longitudinali o quando si confrontano gruppi diversi, dato che le varianze dei fattori possono fornire informazioni preziose.</li>
+</ul></li>
+</ol>
+<p>Ogni metodo di scalatura presenta vantaggi specifici e limitazioni, che devono essere considerati in base agli obiettivi della ricerca e alle caratteristiche del modello CFA:</p>
+<ul>
+<li>Il <strong>Metodo di Standardizzazione della Varianza</strong> offre una soluzione semplice e diretta, ma potrebbe non essere sempre il più appropriato, specialmente in contesti dove i fattori sono endogeni.</li>
+<li>Il <strong>Metodo di Codifica degli Effetti</strong> è vantaggioso per stabilire una scalatura equilibrata e stabile dei fattori, utile soprattutto in studi comparativi o longitudinali.</li>
+</ul>
+<p>La scelta del metodo di scalatura dovrebbe essere guidata dalle necessità specifiche della ricerca, dalla struttura dei dati e dalle ipotesi teoriche del modello di CFA utilizzato.</p>
+</section>
+</section>
+</section>
+<section id="esempio-di-cfa-per-un-modello-di-abilità-cognitive-la-kaufman-assessment-battery-for-children" class="level2" data-number="21.8">
+<h2 data-number="21.8" class="anchored" data-anchor-id="esempio-di-cfa-per-un-modello-di-abilità-cognitive-la-kaufman-assessment-battery-for-children"><span class="header-section-number">21.8</span> Esempio di CFA per un Modello di Abilità Cognitive: La Kaufman Assessment Battery for Children</h2>
+<p>La <em>Kaufman Assessment Battery for Children</em> (KABC-I) è un test di valutazione delle abilità cognitive, somministrato individualmente a bambini dagli 2 anni e mezzo ai 12 anni e mezzo (Kaufman &amp; Kaufman, 1983). Questo strumento è stato progettato per misurare due distinti fattori cognitivi attraverso otto indicatori.</p>
+<p>I primi tre compiti del test sono orientati all’elaborazione sequenziale e richiedono ai bambini di ricordare e ripetere stimoli uditivi (come nel Richiamo Numerico e nell’Ordine delle Parole) o visivi (come nei Movimenti della Mano) in un ordine specifico. Questi compiti sono pensati per riflettere la capacità di memoria a breve termine e di sequenziamento delle informazioni.</p>
+<p>Gli altri cinque compiti, che includono la Chiusura Gestaltica e la Serie Fotografica, sono ritenuti misurare un tipo di ragionamento più olistico e meno sequenziale, associato all’elaborazione simultanea. Questi compiti valutano la capacità di integrare e sintetizzare le informazioni visuo-spaziali in un contesto più ampio, spesso indipendentemente dall’ordine in cui le informazioni sono presentate.</p>
+<p>Keith (1985) ha proposto delle denominazioni alternative per i fattori misurati dalla KABC-I, suggerendo i termini “memoria a breve termine” per sostituire “elaborazione sequenziale” e “ragionamento visuo-spaziale” per “elaborazione simultanea”. Queste etichette alternative riflettono una prospettiva leggermente diversa sui tipi di competenze cognitive che i due fattori intendono misurare.</p>
+<p>Questo modello di CFA, utilizzando i compiti della KABC-I come indicatori, fornisce una struttura utile per comprendere come diversi tipi di elaborazione cognitiva possano essere categorizzati e valutati nei contesti educativi e diagnostici.</p>
+<div id="d5bb42c3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># input the correlations in lower diagnonal form</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>kabcLower.cor <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st"> 1.00</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st"> .39 1.00</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st"> .35  .67 1.00</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st"> .21  .11  .16 1.00</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st"> .32  .27  .29  .38 1.00</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st"> .40  .29  .28  .30  .47 1.00</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st"> .39  .32  .30  .31  .42  .41 1.00</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st"> .39  .29  .37  .42  .58  .51  .42 1.00 "</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># name the variables and convert to full correlation matrix</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># hm, hand movements; nr, number recall; wo, word order; gc, gestalt closure;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># tr, triangles; sm, spatial memory; ma, matrix analogies; ps, photo series</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>kabc.cor <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">getCov</span>(kabcLower.cor, <span class="at">names =</span> <span class="fu">c</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"hm"</span>, <span class="st">"nr"</span>, <span class="st">"wo"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"gc"</span>, <span class="st">"tr"</span>, <span class="st">"sm"</span>, <span class="st">"ma"</span>, <span class="st">"ps"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># display correlations</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>kabc.cor</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 8 x 8 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">hm</th>
+<th data-quarto-table-cell-role="th" scope="col">nr</th>
+<th data-quarto-table-cell-role="th" scope="col">wo</th>
+<th data-quarto-table-cell-role="th" scope="col">gc</th>
+<th data-quarto-table-cell-role="th" scope="col">tr</th>
+<th data-quarto-table-cell-role="th" scope="col">sm</th>
+<th data-quarto-table-cell-role="th" scope="col">ma</th>
+<th data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">hm</td>
+<td>1.00</td>
+<td>0.39</td>
+<td>0.35</td>
+<td>0.21</td>
+<td>0.32</td>
+<td>0.40</td>
+<td>0.39</td>
+<td>0.39</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">nr</td>
+<td>0.39</td>
+<td>1.00</td>
+<td>0.67</td>
+<td>0.11</td>
+<td>0.27</td>
+<td>0.29</td>
+<td>0.32</td>
+<td>0.29</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">wo</td>
+<td>0.35</td>
+<td>0.67</td>
+<td>1.00</td>
+<td>0.16</td>
+<td>0.29</td>
+<td>0.28</td>
+<td>0.30</td>
+<td>0.37</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">gc</td>
+<td>0.21</td>
+<td>0.11</td>
+<td>0.16</td>
+<td>1.00</td>
+<td>0.38</td>
+<td>0.30</td>
+<td>0.31</td>
+<td>0.42</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">tr</td>
+<td>0.32</td>
+<td>0.27</td>
+<td>0.29</td>
+<td>0.38</td>
+<td>1.00</td>
+<td>0.47</td>
+<td>0.42</td>
+<td>0.58</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">sm</td>
+<td>0.40</td>
+<td>0.29</td>
+<td>0.28</td>
+<td>0.30</td>
+<td>0.47</td>
+<td>1.00</td>
+<td>0.41</td>
+<td>0.51</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ma</td>
+<td>0.39</td>
+<td>0.32</td>
+<td>0.30</td>
+<td>0.31</td>
+<td>0.42</td>
+<td>0.41</td>
+<td>1.00</td>
+<td>0.42</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">ps</td>
+<td>0.39</td>
+<td>0.29</td>
+<td>0.37</td>
+<td>0.42</td>
+<td>0.58</td>
+<td>0.51</td>
+<td>0.42</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="1b26582c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add the standard deviations and convert to covariances</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>kabc.cov <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cor2cov</span>(kabc.cor, <span class="at">sds =</span> <span class="fu">c</span>(<span class="fl">3.40</span>, <span class="fl">2.40</span>, <span class="fl">2.90</span>, <span class="fl">2.70</span>, <span class="fl">2.70</span>, <span class="fl">4.20</span>, <span class="fl">2.80</span>, <span class="fl">3.00</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># display covariances</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>kabc.cov</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 8 x 8 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">hm</th>
+<th data-quarto-table-cell-role="th" scope="col">nr</th>
+<th data-quarto-table-cell-role="th" scope="col">wo</th>
+<th data-quarto-table-cell-role="th" scope="col">gc</th>
+<th data-quarto-table-cell-role="th" scope="col">tr</th>
+<th data-quarto-table-cell-role="th" scope="col">sm</th>
+<th data-quarto-table-cell-role="th" scope="col">ma</th>
+<th data-quarto-table-cell-role="th" scope="col">ps</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">hm</td>
+<td>11.5600</td>
+<td>3.1824</td>
+<td>3.4510</td>
+<td>1.9278</td>
+<td>2.9376</td>
+<td>5.7120</td>
+<td>3.7128</td>
+<td>3.978</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">nr</td>
+<td>3.1824</td>
+<td>5.7600</td>
+<td>4.6632</td>
+<td>0.7128</td>
+<td>1.7496</td>
+<td>2.9232</td>
+<td>2.1504</td>
+<td>2.088</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">wo</td>
+<td>3.4510</td>
+<td>4.6632</td>
+<td>8.4100</td>
+<td>1.2528</td>
+<td>2.2707</td>
+<td>3.4104</td>
+<td>2.4360</td>
+<td>3.219</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">gc</td>
+<td>1.9278</td>
+<td>0.7128</td>
+<td>1.2528</td>
+<td>7.2900</td>
+<td>2.7702</td>
+<td>3.4020</td>
+<td>2.3436</td>
+<td>3.402</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">tr</td>
+<td>2.9376</td>
+<td>1.7496</td>
+<td>2.2707</td>
+<td>2.7702</td>
+<td>7.2900</td>
+<td>5.3298</td>
+<td>3.1752</td>
+<td>4.698</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">sm</td>
+<td>5.7120</td>
+<td>2.9232</td>
+<td>3.4104</td>
+<td>3.4020</td>
+<td>5.3298</td>
+<td>17.6400</td>
+<td>4.8216</td>
+<td>6.426</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ma</td>
+<td>3.7128</td>
+<td>2.1504</td>
+<td>2.4360</td>
+<td>2.3436</td>
+<td>3.1752</td>
+<td>4.8216</td>
+<td>7.8400</td>
+<td>3.528</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">ps</td>
+<td>3.9780</td>
+<td>2.0880</td>
+<td>3.2190</td>
+<td>3.4020</td>
+<td>4.6980</td>
+<td>6.4260</td>
+<td>3.5280</td>
+<td>9.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="fig-kline_14_3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-kline_14_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/kline_14_3.png" class="img-fluid figure-img" style="width:99.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-kline_14_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;21.3: Modello CFA per la Kaufman Assessment Battery for Children. (Figura tratta da <span class="citation" data-cites="kline2023principles">Kline (<a href="../../99-references.html#ref-kline2023principles" role="doc-biblioref">2023</a>)</span>)
+</figcaption>
+</figure>
+</div>
+<section id="modello-a-fattore-singolo" class="level4" data-number="21.8.0.1">
+<h4 data-number="21.8.0.1" class="anchored" data-anchor-id="modello-a-fattore-singolo"><span class="header-section-number">21.8.0.1</span> Modello a Fattore Singolo</h4>
+<p>Nell’ambito della CFA, se il modello bersaglio ha due o più fattori, spesso il primo modello analizzato è un modello a fattore singolo. Se non si può rigettare un modello a fattore singolo, non ha molto senso valutare modelli con più fattori.</p>
+<p>Specifichiamo il modello ad un fattore comune nella sintassi di <code>lavaan</code>.</p>
+<div id="a4de644e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># single factor (general ability)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># indicator hm automatically specified as reference variable</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>kabc1.model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    General =~ hm + nr + wo + gc + tr + sm + ma + ps </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati.</p>
+<div id="8847c796" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># variances calculated with N in the denominator, not N - 1</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>kabc1 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(kabc1.model, <span class="at">sample.cov =</span> kabc.cov, <span class="at">sample.nobs =</span> <span class="dv">200</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Generiamo un modello di percorso.</p>
+<div id="6529405a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(kabc1,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_cfa_files/figure-html/cell-7-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esaminiamo la soluzione non standardizzata.</p>
+<div id="a4f4f04a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">parameterEstimates</span>(kabc1) <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op     rhs   est    se     z pvalue ci.lower ci.upper
+1  General =~      hm 1.000 0.000    NA     NA    1.000    1.000
+2  General =~      nr 0.636 0.111 5.708      0    0.418    0.854
+3  General =~      wo 0.805 0.136 5.910      0    0.538    1.072
+4  General =~      gc 0.659 0.123 5.361      0    0.418    0.900
+5  General =~      tr 0.963 0.138 6.984      0    0.693    1.233
+6  General =~      sm 1.433 0.211 6.796      0    1.019    1.846
+7  General =~      ma 0.883 0.137 6.459      0    0.615    1.151
+8  General =~      ps 1.166 0.159 7.324      0    0.854    1.478
+9       hm ~~      hm 7.812 0.863 9.049      0    6.120    9.504
+10      nr ~~      nr 4.240 0.456 9.294      0    3.345    5.134
+11      wo ~~      wo 5.975 0.650 9.195      0    4.702    7.249
+12      gc ~~      gc 5.652 0.599 9.432      0    4.478    6.827
+13      tr ~~      tr 3.831 0.468 8.186      0    2.914    4.748
+14      sm ~~      sm 9.979 1.179 8.463      0    7.668   12.290
+15      ma ~~      ma 4.925 0.558 8.822      0    3.831    6.020
+16      ps ~~      ps 3.936 0.531 7.410      0    2.895    4.977
+17 General ~~ General 3.690 0.921 4.008      0    1.885    5.494</code></pre>
+</div>
+</div>
+<p>La saturazione non standardizzata per il compito “Movimenti della Mano” è stato fissato automaticamente a 1.0 per scalare il singolo fattore comune. Le istruzioni seguenti consentono di estrarre dall’output di <code>sem()</code> solo le informazioni relative alle saturazioni fattoriali.</p>
+<div id="a698cab6" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(kabc1, <span class="at">standardized =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(op <span class="sc">==</span> <span class="st">"=~"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Latent Factor"</span> <span class="ot">=</span> lhs,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Indicator =</span> rhs,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">B =</span> est,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">SE =</span> se,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">Z =</span> z,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"p-value"</span> <span class="ot">=</span> pvalue,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">Beta =</span> std.all</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">format =</span> <span class="st">"markdown"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Factor Loadings"</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>
+
+Table: Factor Loadings
+
+|Latent Factor |Indicator |     B|    SE|     Z| p-value|  Beta|
+|:-------------|:---------|-----:|-----:|-----:|-------:|-----:|
+|General       |hm        | 1.000| 0.000|    NA|      NA| 0.566|
+|General       |nr        | 0.636| 0.111| 5.708|       0| 0.510|
+|General       |wo        | 0.805| 0.136| 5.910|       0| 0.535|
+|General       |gc        | 0.659| 0.123| 5.361|       0| 0.470|
+|General       |tr        | 0.963| 0.138| 6.984|       0| 0.687|
+|General       |sm        | 1.433| 0.211| 6.796|       0| 0.657|
+|General       |ma        | 0.883| 0.137| 6.459|       0| 0.607|
+|General       |ps        | 1.166| 0.159| 7.324|       0| 0.749|</code></pre>
+</div>
+</div>
+<p>Esaminiamo le misure di bontà di adattamento.</p>
+<div id="e0ed0373" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(kabc1, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  chisq      df     cfi     tli   rmsea    srmr 
+105.427  20.000   0.818   0.746   0.146   0.084 </code></pre>
+</div>
+</div>
+<p>Troviamo i residui grezzi, ovvero la differenza tra la matrice di <em>covarianza</em> osservata e quella predetta dal modello.</p>
+<div id="81723e84" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(kabc1, <span class="at">type =</span> <span class="st">"raw"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "raw"
+
+$cov
+       hm     nr     wo     gc     tr     sm     ma     ps
+hm  0.000                                                 
+nr  0.820  0.000                                          
+wo  0.462  2.751  0.000                                   
+gc -0.513 -0.836 -0.711  0.000                            
+tr -0.631 -0.519 -0.602  0.415  0.000                     
+sm  0.397 -0.452 -0.863 -0.097  0.212  0.000              
+ma  0.437  0.069 -0.199  0.186  0.022  0.131  0.000       
+ps -0.345 -0.659 -0.263  0.550  0.530  0.229 -0.289  0.000
+</code></pre>
+</div>
+</div>
+<p>Specificando <code>type = "cor.bollen"</code> o <code>type = "cor"</code> otteniamo la differenza tra la matrice di <em>correlazione</em> osservata e quella predetta dal modello.</p>
+<div id="c60d563d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(kabc1, <span class="at">type =</span> <span class="st">"cor.bollen"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "cor.bollen"
+
+$cov
+       hm     nr     wo     gc     tr     sm     ma     ps
+hm  0.000                                                 
+nr  0.101  0.000                                          
+wo  0.047  0.397  0.000                                   
+gc -0.056 -0.130 -0.091  0.000                            
+tr -0.069 -0.080 -0.077  0.057  0.000                     
+sm  0.028 -0.045 -0.071 -0.009  0.019  0.000              
+ma  0.046  0.010 -0.025  0.025  0.003  0.011  0.000       
+ps -0.034 -0.092 -0.030  0.068  0.066  0.018 -0.035  0.000
+</code></pre>
+</div>
+</div>
+<p>In alternativa, possiamo ottenere i residui standardizzati alla maniera di Mplus (<code>standardized.mplus</code>), che vengono calcolati utilizzando la seguente formula:</p>
+<p><span class="math display">\[
+    \text{Residuo Standardizzato} = \frac{\text{Cov. Osservata} - \text{Cov. Stimata}}{\sqrt{\text{Var. dell'Errore per X} \times \text{Var. dell'Errore per Y}}},
+\]</span></p>
+<p>dove: - La covarianza osservata è il valore della covarianza tra due variabili nel set di dati. - La covarianza stimata è la covarianza tra le stesse due variabili, come previsto dal modello SEM. - La varianza dell’errore per la variabile X e Y sono le varianze degli errori per le due variabili in questione.</p>
+<p>I residui standardizzati misurano quanto la relazione osservata tra due variabili si discosta da quella prevista dal modello, in unità standardizzate. Un valore vicino a zero indica che il modello si adatta bene ai dati per quella specifica relazione. Valori più grandi in valore assoluto suggeriscono un cattivo adattamento in quella specifica parte del modello.</p>
+<div id="90620220" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(kabc1, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+       hm     nr     wo     gc     tr     sm     ma     ps
+hm  0.000                                                 
+nr  2.062  0.000                                          
+wo  1.026  6.218  0.000                                   
+gc -1.231 -2.727 -1.952  0.000                            
+tr -2.200 -2.364 -2.355  1.379  0.000                     
+sm  0.723 -1.188 -1.995 -0.210  0.596  0.000              
+ma  1.086  0.237 -0.601  0.544  0.089  0.313  0.000       
+ps -1.241 -3.422 -1.037  1.833  2.178  0.675 -1.375  0.000
+</code></pre>
+</div>
+</div>
+<p>Il modello a fattore singolo mostra un rapporto elevato chi-quadro/df. Inoltre, i residui per questa analisi indicano che l’adattamento locale è scadente. Pertanto, il modello a fattore singolo per la KABC-I è rigettato.</p>
+</section>
+<section id="modello-a-due-fattori" class="level4" data-number="21.8.0.2">
+<h4 data-number="21.8.0.2" class="anchored" data-anchor-id="modello-a-due-fattori"><span class="header-section-number">21.8.0.2</span> Modello a Due Fattori</h4>
+<p>In una seconda analisi, adattiamo ai dati il modello a due fattori rappresentato nella {numref}<code>kline-14-3-fig</code>.</p>
+<div id="2a4f52a2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>kabc2_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="st">    Sequent =~ hm + nr + wo</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Simultan =~ gc + tr + sm + ma + ps </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f24c300a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>kabc2 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(kabc2_model, <span class="at">sample.cov =</span> kabc.cov, <span class="at">sample.nobs =</span> <span class="dv">200</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="19f7af1d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(kabc2,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_cfa_files/figure-html/cell-16-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="0e12a56d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">parameterEstimates</span>(kabc2) <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        lhs op      rhs   est    se     z pvalue ci.lower ci.upper
+1   Sequent =~       hm 1.000 0.000    NA     NA    1.000    1.000
+2   Sequent =~       nr 1.147 0.181 6.341  0.000    0.792    1.501
+3   Sequent =~       wo 1.388 0.219 6.340  0.000    0.959    1.817
+4  Simultan =~       gc 1.000 0.000    NA     NA    1.000    1.000
+5  Simultan =~       tr 1.445 0.227 6.352  0.000    0.999    1.890
+6  Simultan =~       sm 2.029 0.335 6.062  0.000    1.373    2.685
+7  Simultan =~       ma 1.212 0.212 5.717  0.000    0.797    1.628
+8  Simultan =~       ps 1.727 0.265 6.521  0.000    1.208    2.246
+9        hm ~~       hm 8.664 0.938 9.237  0.000    6.826   10.502
+10       nr ~~       nr 1.998 0.414 4.831  0.000    1.188    2.809
+11       wo ~~       wo 2.902 0.604 4.801  0.000    1.717    4.087
+12       gc ~~       gc 5.419 0.585 9.261  0.000    4.272    6.566
+13       tr ~~       tr 3.426 0.458 7.479  0.000    2.528    4.323
+14       sm ~~       sm 9.997 1.202 8.320  0.000    7.642   12.353
+15       ma ~~       ma 5.105 0.578 8.838  0.000    3.973    6.237
+16       ps ~~       ps 3.482 0.537 6.482  0.000    2.429    4.535
+17  Sequent ~~  Sequent 2.838 0.838 3.389  0.001    1.197    4.480
+18 Simultan ~~ Simultan 1.834 0.530 3.459  0.001    0.795    2.874
+19  Sequent ~~ Simultan 1.271 0.324 3.918  0.000    0.635    1.907</code></pre>
+</div>
+</div>
+<div id="72f71467" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardizedSolution</span>(kabc2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 19 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">op</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">est.std</th>
+<th data-quarto-table-cell-role="th" scope="col">se</th>
+<th data-quarto-table-cell-role="th" scope="col">z</th>
+<th data-quarto-table-cell-role="th" scope="col">pvalue</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.lower</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.upper</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>hm</td>
+<td>0.4967517</td>
+<td>0.06185190</td>
+<td>8.031309</td>
+<td>8.881784e-16</td>
+<td>0.3755242</td>
+<td>0.6179792</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>=~</td>
+<td>nr</td>
+<td>0.8070386</td>
+<td>0.04626958</td>
+<td>17.442098</td>
+<td>0.000000e+00</td>
+<td>0.7163519</td>
+<td>0.8977253</td>
+</tr>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>wo</td>
+<td>0.8082004</td>
+<td>0.04624070</td>
+<td>17.478118</td>
+<td>0.000000e+00</td>
+<td>0.7175703</td>
+<td>0.8988305</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>gc</td>
+<td>0.5029005</td>
+<td>0.06088027</td>
+<td>8.260485</td>
+<td>2.220446e-16</td>
+<td>0.3835774</td>
+<td>0.6222236</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>tr</td>
+<td>0.7264627</td>
+<td>0.04412957</td>
+<td>16.462040</td>
+<td>0.000000e+00</td>
+<td>0.6399703</td>
+<td>0.8129550</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>sm</td>
+<td>0.6560490</td>
+<td>0.04959951</td>
+<td>13.226925</td>
+<td>0.000000e+00</td>
+<td>0.5588358</td>
+<td>0.7532623</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>ma</td>
+<td>0.5878905</td>
+<td>0.05485948</td>
+<td>10.716298</td>
+<td>0.000000e+00</td>
+<td>0.4803679</td>
+<td>0.6954131</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>ps</td>
+<td>0.7817406</td>
+<td>0.04012341</td>
+<td>19.483401</td>
+<td>0.000000e+00</td>
+<td>0.7031001</td>
+<td>0.8603810</td>
+</tr>
+<tr class="odd">
+<td>hm</td>
+<td>~~</td>
+<td>hm</td>
+<td>0.7532377</td>
+<td>0.06145007</td>
+<td>12.257719</td>
+<td>0.000000e+00</td>
+<td>0.6327978</td>
+<td>0.8736777</td>
+</tr>
+<tr class="even">
+<td>nr</td>
+<td>~~</td>
+<td>nr</td>
+<td>0.3486887</td>
+<td>0.07468267</td>
+<td>4.668937</td>
+<td>3.027615e-06</td>
+<td>0.2023134</td>
+<td>0.4950641</td>
+</tr>
+<tr class="odd">
+<td>wo</td>
+<td>~~</td>
+<td>wo</td>
+<td>0.3468121</td>
+<td>0.07474351</td>
+<td>4.640030</td>
+<td>3.483594e-06</td>
+<td>0.2003175</td>
+<td>0.4933067</td>
+</tr>
+<tr class="even">
+<td>gc</td>
+<td>~~</td>
+<td>gc</td>
+<td>0.7470911</td>
+<td>0.06123343</td>
+<td>12.200705</td>
+<td>0.000000e+00</td>
+<td>0.6270758</td>
+<td>0.8671064</td>
+</tr>
+<tr class="odd">
+<td>tr</td>
+<td>~~</td>
+<td>tr</td>
+<td>0.4722520</td>
+<td>0.06411696</td>
+<td>7.365476</td>
+<td>1.765255e-13</td>
+<td>0.3465850</td>
+<td>0.5979189</td>
+</tr>
+<tr class="even">
+<td>sm</td>
+<td>~~</td>
+<td>sm</td>
+<td>0.5695997</td>
+<td>0.06507943</td>
+<td>8.752377</td>
+<td>0.000000e+00</td>
+<td>0.4420463</td>
+<td>0.6971530</td>
+</tr>
+<tr class="odd">
+<td>ma</td>
+<td>~~</td>
+<td>ma</td>
+<td>0.6543848</td>
+<td>0.06450273</td>
+<td>10.145071</td>
+<td>0.000000e+00</td>
+<td>0.5279617</td>
+<td>0.7808078</td>
+</tr>
+<tr class="even">
+<td>ps</td>
+<td>~~</td>
+<td>ps</td>
+<td>0.3888817</td>
+<td>0.06273220</td>
+<td>6.199076</td>
+<td>5.679559e-10</td>
+<td>0.2659288</td>
+<td>0.5118345</td>
+</tr>
+<tr class="odd">
+<td>Sequent</td>
+<td>~~</td>
+<td>Sequent</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.0000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.0000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="odd">
+<td>Sequent</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>0.5569247</td>
+<td>0.06673231</td>
+<td>8.345654</td>
+<td>0.000000e+00</td>
+<td>0.4261318</td>
+<td>0.6877176</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="5b25b10f" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(kabc2, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chisq     df    cfi    tli  rmsea   srmr 
+38.325 19.000  0.959  0.939  0.071  0.072 </code></pre>
+</div>
+</div>
+<p>Un modello di analisi fattoriale confermativa (CFA) che utilizza un singolo fattore può essere visto come un caso specifico o un “sottoinsieme” di modelli CFA più complessi con due o più fattori che impiegano gli stessi indicatori e lo stesso schema di covarianza degli errori, se presente. Questa struttura gerarchica tra i modelli a singolo fattore e quelli multifattoriali implica che i ricercatori possono applicare il test del chi-quadro per confrontare direttamente l’adattamento di un modello CFA a singolo fattore con quello di modelli CFA a più fattori. In pratica, ciò permette di valutare se l’introduzione di fattori aggiuntivi migliora significativamente l’adattamento del modello ai dati rispetto a un modello più semplice a singolo fattore. Questo tipo di analisi è fondamentale per determinare la complessità ottimale del modello in base alla struttura sottostante dei dati. Sebbene questo argomento verrà approfondito successivamente, è importante anticipare qui l’utilizzo del test del rapporto di verosimiglianza, che consente di confrontare i modelli in maniera quantitativa.</p>
+<div id="aba9936e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(kabc1, kabc2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">kabc2</td>
+<td>19</td>
+<td>7592.082</td>
+<td>7648.153</td>
+<td>38.32476</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">kabc1</td>
+<td>20</td>
+<td>7657.183</td>
+<td>7709.956</td>
+<td>105.42664</td>
+<td>67.10188</td>
+<td>0.5748995</td>
+<td>1</td>
+<td>2.578323e-16</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I risultati del test indicano che l’adattamento del modello con due fattori è statisticamente migliore rispetto a quello del modello a fattore singolo (il modello ad un fattore ha un valore <span class="math inline">\(\chi^2\)</span> superiore di 67.1 punti, con un grado di libertà).</p>
+<p>Anche se il test del rapporto tra verosimiglianze favorisce il modello a due fattori, possiamo notare che l’esame dei residui mostra un problema con l’indicatore <code>hm</code>.</p>
+<div id="2deefb19" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(kabc2, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+       hm     nr     wo     gc     tr     sm     ma     ps
+hm  0.000                                                 
+nr -0.591  0.000                                          
+wo -3.790  1.539  0.000                                   
+gc  1.126 -2.329 -1.315     NA                            
+tr  2.046 -1.558 -1.001  0.429  0.000                     
+sm  3.464 -0.112 -0.355 -0.784 -0.267  0.000              
+ma  3.505  1.129  0.727  0.323 -0.245  0.664  0.008       
+ps  2.991 -2.002  0.524  0.910  0.677 -0.144 -1.978  0.000
+</code></pre>
+</div>
+</div>
+<p>Per affrontare questo problema, calcoliamo i <em>modification indices</em> che ci dicono quale parametro del modello ha l’effetto maggiore sulla misura di fit complessivo.</p>
+<div id="390ab15a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modindices</span>(kabc2, <span class="at">sort =</span> <span class="cn">TRUE</span>, <span class="at">maximum.number =</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 5 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">op</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">mi</th>
+<th data-quarto-table-cell-role="th" scope="col">epc</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.lv</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.all</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.nox</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">25</td>
+<td>Simultan</td>
+<td>=~</td>
+<td>hm</td>
+<td>20.097078</td>
+<td>1.0539461</td>
+<td>1.4275011</td>
+<td>0.4209070</td>
+<td>0.4209070</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">35</td>
+<td>nr</td>
+<td>~~</td>
+<td>wo</td>
+<td>20.097058</td>
+<td>4.7406831</td>
+<td>4.7406831</td>
+<td>1.9685321</td>
+<td>1.9685321</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">26</td>
+<td>Simultan</td>
+<td>=~</td>
+<td>nr</td>
+<td>7.013048</td>
+<td>-0.5104555</td>
+<td>-0.6913786</td>
+<td>-0.2887972</td>
+<td>-0.2887972</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">29</td>
+<td>hm</td>
+<td>~~</td>
+<td>wo</td>
+<td>7.012988</td>
+<td>-1.7458372</td>
+<td>-1.7458372</td>
+<td>-0.3481696</td>
+<td>-0.3481696</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">32</td>
+<td>hm</td>
+<td>~~</td>
+<td>sm</td>
+<td>4.847027</td>
+<td>1.6094583</td>
+<td>1.6094583</td>
+<td>0.1729329</td>
+<td>0.1729329</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I risultati degli indici di modifica (MI) indicano che il misfit del modello è principalmente attribuibile alla fissazione a zero del carico tra l’indicatore <code>hm</code> e il fattore comune <code>Simulan</code>, nonché alla fissazione a zero della covarianza tra le componenti residue di <code>nr</code> e <code>wo</code>. Per migliorare l’adattamento del modello, si propone quindi di modificare questi aspetti, iniziando con il primo, ovvero riconsiderando il carico di <code>hm</code> sul fattore <code>Simulan</code>.</p>
+<div id="708f9894" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>kabc3_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="st">    Sequent =~ hm + nr + wo</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Simultan =~ hm + gc + tr + sm + ma + ps</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9476526a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>kabc3 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(kabc3_model, <span class="at">sample.cov =</span> kabc.cov, <span class="at">sample.nobs =</span> <span class="dv">200</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="69f2283c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">parameterEstimates</span>(kabc3) <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        lhs op      rhs   est    se     z pvalue ci.lower ci.upper
+1   Sequent =~       hm 1.000 0.000    NA     NA    1.000    1.000
+2   Sequent =~       nr 2.285 0.777 2.941  0.003    0.762    3.808
+3   Sequent =~       wo 2.767 0.941 2.939  0.003    0.922    4.612
+4  Simultan =~       hm 1.000 0.000    NA     NA    1.000    1.000
+5  Simultan =~       gc 1.014 0.255 3.979  0.000    0.515    1.514
+6  Simultan =~       tr 1.457 0.329 4.427  0.000    0.812    2.101
+7  Simultan =~       sm 2.103 0.483 4.354  0.000    1.157    3.050
+8  Simultan =~       ma 1.259 0.298 4.229  0.000    0.675    1.842
+9  Simultan =~       ps 1.752 0.391 4.486  0.000    0.987    2.518
+10       hm ~~       hm 7.851 0.845 9.291  0.000    6.195    9.507
+11       nr ~~       nr 1.899 0.487 3.896  0.000    0.944    2.854
+12       wo ~~       wo 2.750 0.713 3.856  0.000    1.352    4.148
+13       gc ~~       gc 5.444 0.585 9.297  0.000    4.296    6.591
+14       tr ~~       tr 3.521 0.457 7.702  0.000    2.625    4.417
+15       sm ~~       sm 9.767 1.179 8.287  0.000    7.457   12.077
+16       ma ~~       ma 5.013 0.569 8.815  0.000    3.898    6.127
+17       ps ~~       ps 3.554 0.529 6.718  0.000    2.517    4.591
+18  Sequent ~~  Sequent 0.734 0.490 1.499  0.134   -0.226    1.693
+19 Simultan ~~ Simultan 1.759 0.760 2.314  0.021    0.269    3.250
+20  Sequent ~~ Simultan 0.579 0.178 3.252  0.001    0.230    0.928</code></pre>
+</div>
+</div>
+<p>Il modello così modificato fornisce un buon adattamento ai dati.</p>
+<div id="cba5623a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(kabc3, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chisq     df    cfi    tli  rmsea   srmr 
+18.108 18.000  1.000  1.000  0.005  0.035 </code></pre>
+</div>
+</div>
+<div id="760b049d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(kabc3, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+       hm     nr     wo     gc     tr     sm     ma     ps
+hm  0.000                                                 
+nr  1.165  0.000                                          
+wo -1.637  0.000  0.000                                   
+gc -1.066 -1.919 -0.939  0.000                            
+tr -1.710 -0.763 -0.247  0.603  0.000                     
+sm  1.325  0.287  0.044 -0.867 -0.304  0.000              
+ma  1.730  1.428  1.029  0.258 -0.298  0.338  0.000       
+ps -0.512 -1.059  1.285  1.035  1.088 -0.361 -2.181  0.008
+</code></pre>
+</div>
+</div>
+<p>Eseguiamo il confronto tra questo terzo modello e il secondo.</p>
+<div id="badbb14b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(kabc2, kabc3)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">kabc3</td>
+<td>18</td>
+<td>7573.864</td>
+<td>7633.234</td>
+<td>18.10764</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">kabc2</td>
+<td>19</td>
+<td>7592.082</td>
+<td>7648.153</td>
+<td>38.32476</td>
+<td>20.21711</td>
+<td>0.3099767</td>
+<td>1</td>
+<td>6.913179e-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Il test del rapporto tra verosimiglianze favorisce il modello nel quale <code>hm</code> satura su entrambi i fattori comuni.</p>
+<div id="e51a1585" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardizedSolution</span>(kabc3)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 20 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">op</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">est.std</th>
+<th data-quarto-table-cell-role="th" scope="col">se</th>
+<th data-quarto-table-cell-role="th" scope="col">z</th>
+<th data-quarto-table-cell-role="th" scope="col">pvalue</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.lower</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.upper</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>hm</td>
+<td>0.2525852</td>
+<td>0.08220770</td>
+<td>3.072524</td>
+<td>2.122564e-03</td>
+<td>0.09146104</td>
+<td>0.4137093</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>=~</td>
+<td>nr</td>
+<td>0.8177224</td>
+<td>0.05332037</td>
+<td>15.336023</td>
+<td>0.000000e+00</td>
+<td>0.71321642</td>
+<td>0.9222284</td>
+</tr>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>wo</td>
+<td>0.8193490</td>
+<td>0.05332364</td>
+<td>15.365586</td>
+<td>0.000000e+00</td>
+<td>0.71483657</td>
+<td>0.9238614</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>hm</td>
+<td>0.3911086</td>
+<td>0.07920465</td>
+<td>4.937950</td>
+<td>7.894795e-07</td>
+<td>0.23587038</td>
+<td>0.5463469</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>gc</td>
+<td>0.4995366</td>
+<td>0.06083478</td>
+<td>8.211366</td>
+<td>2.220446e-16</td>
+<td>0.38030263</td>
+<td>0.6187706</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>tr</td>
+<td>0.7173667</td>
+<td>0.04430392</td>
+<td>16.191948</td>
+<td>0.000000e+00</td>
+<td>0.63053266</td>
+<td>0.8042008</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>sm</td>
+<td>0.6659828</td>
+<td>0.04841875</td>
+<td>13.754648</td>
+<td>0.000000e+00</td>
+<td>0.57108381</td>
+<td>0.7608818</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>ma</td>
+<td>0.5978172</td>
+<td>0.05378964</td>
+<td>11.113985</td>
+<td>0.000000e+00</td>
+<td>0.49239147</td>
+<td>0.7032430</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>ps</td>
+<td>0.7766255</td>
+<td>0.03976264</td>
+<td>19.531536</td>
+<td>0.000000e+00</td>
+<td>0.69869211</td>
+<td>0.8545588</td>
+</tr>
+<tr class="even">
+<td>hm</td>
+<td>~~</td>
+<td>hm</td>
+<td>0.6825459</td>
+<td>0.06079286</td>
+<td>11.227403</td>
+<td>0.000000e+00</td>
+<td>0.56339406</td>
+<td>0.8016977</td>
+</tr>
+<tr class="odd">
+<td>nr</td>
+<td>~~</td>
+<td>nr</td>
+<td>0.3313300</td>
+<td>0.08720253</td>
+<td>3.799546</td>
+<td>1.449613e-04</td>
+<td>0.16041622</td>
+<td>0.5022438</td>
+</tr>
+<tr class="even">
+<td>wo</td>
+<td>~~</td>
+<td>wo</td>
+<td>0.3286672</td>
+<td>0.08738134</td>
+<td>3.761298</td>
+<td>1.690341e-04</td>
+<td>0.15740296</td>
+<td>0.4999315</td>
+</tr>
+<tr class="odd">
+<td>gc</td>
+<td>~~</td>
+<td>gc</td>
+<td>0.7504632</td>
+<td>0.06077839</td>
+<td>12.347532</td>
+<td>0.000000e+00</td>
+<td>0.63133972</td>
+<td>0.8695867</td>
+</tr>
+<tr class="even">
+<td>tr</td>
+<td>~~</td>
+<td>tr</td>
+<td>0.4853850</td>
+<td>0.06356431</td>
+<td>7.636123</td>
+<td>2.242651e-14</td>
+<td>0.36080119</td>
+<td>0.6099687</td>
+</tr>
+<tr class="odd">
+<td>sm</td>
+<td>~~</td>
+<td>sm</td>
+<td>0.5564669</td>
+<td>0.06449211</td>
+<td>8.628450</td>
+<td>0.000000e+00</td>
+<td>0.43006469</td>
+<td>0.6828691</td>
+</tr>
+<tr class="even">
+<td>ma</td>
+<td>~~</td>
+<td>ma</td>
+<td>0.6426146</td>
+<td>0.06431274</td>
+<td>9.992026</td>
+<td>0.000000e+00</td>
+<td>0.51656392</td>
+<td>0.7686652</td>
+</tr>
+<tr class="odd">
+<td>ps</td>
+<td>~~</td>
+<td>ps</td>
+<td>0.3968529</td>
+<td>0.06176136</td>
+<td>6.425586</td>
+<td>1.313629e-10</td>
+<td>0.27580286</td>
+<td>0.5179029</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>~~</td>
+<td>Sequent</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.00000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.00000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>0.5096198</td>
+<td>0.07025684</td>
+<td>7.253668</td>
+<td>4.056755e-13</td>
+<td>0.37191892</td>
+<td>0.6473207</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="a1d4f252" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(kabc3,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">style =</span> <span class="st">"mx"</span>,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_cfa_files/figure-html/cell-30-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nei modelli precedenti, abbiamo adottato un metodo di scalatura dei fattori comuni che fissava la saturazione fattoriale di uno degli indicatori per ciascun fattore comune a 1.0 come riferimento. Ora, esploreremo un diverso approccio di scalatura che prevede la standardizzazione della varianza delle variabili latenti.</p>
+<p>Per attuare questa procedura nel software <code>lavaan</code>, è necessario modificare la configurazione predefinita in cui la saturazione fattoriale del primo indicatore di ogni fattore comune è fissata a 1.0. Per fare ciò, useremo la sintassi <code>NA*</code> per indicare che la saturazione fattoriale del primo indicatore deve essere stimata. Questo si realizza inserendo <code>NA*</code> nell’istruzione che definisce la relazione tra le variabili latenti e gli indicatori (espresso tramite <code>=~</code>). Inoltre, è fondamentale specificare che la varianza delle variabili latenti sia fissata a 1.0, il che si attua mediante la sintassi <code>1*</code> nell’istruzione che stabilisce la varianza di ciascun fattore comune (<code>~~</code>).</p>
+<div id="f6757a0e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>kabc3alt_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="st">    Sequent =~ NA*hm + nr + wo</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Simultan =~ NA*hm + gc + tr + sm + ma + ps</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="st">    Sequent ~~ 1*Sequent</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="st">    Simultan ~~ 1*Simultan</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello così parametrizzato ai dati.</p>
+<div id="385cb529" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>kabc3alt <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    kabc3alt_model, <span class="at">sample.cov =</span> kabc.cov, <span class="at">sample.nobs =</span> <span class="dv">200</span>, <span class="at">std.lv =</span> <span class="cn">TRUE</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo la soluzione non standardizzata.</p>
+<div id="7c36f78d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(kabc3alt,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_cfa_files/figure-html/cell-33-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Esaminiamo la soluzione stanardizzata.</p>
+<div id="27c6d3a2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>loadings <span class="ot">&lt;-</span> <span class="fu">standardizedSolution</span>(kabc3alt)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>loadings</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 20 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">op</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">est.std</th>
+<th data-quarto-table-cell-role="th" scope="col">se</th>
+<th data-quarto-table-cell-role="th" scope="col">z</th>
+<th data-quarto-table-cell-role="th" scope="col">pvalue</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.lower</th>
+<th data-quarto-table-cell-role="th" scope="col">ci.upper</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>hm</td>
+<td>0.2525843</td>
+<td>0.08220772</td>
+<td>3.072513</td>
+<td>2.122649e-03</td>
+<td>0.09146008</td>
+<td>0.4137084</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>=~</td>
+<td>nr</td>
+<td>0.8177223</td>
+<td>0.05332042</td>
+<td>15.336006</td>
+<td>0.000000e+00</td>
+<td>0.71321623</td>
+<td>0.9222284</td>
+</tr>
+<tr class="odd">
+<td>Sequent</td>
+<td>=~</td>
+<td>wo</td>
+<td>0.8193488</td>
+<td>0.05332369</td>
+<td>15.365569</td>
+<td>0.000000e+00</td>
+<td>0.71483633</td>
+<td>0.9238614</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>hm</td>
+<td>0.3911092</td>
+<td>0.07920463</td>
+<td>4.937959</td>
+<td>7.894445e-07</td>
+<td>0.23587098</td>
+<td>0.5463474</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>gc</td>
+<td>0.4995384</td>
+<td>0.06083464</td>
+<td>8.211414</td>
+<td>2.220446e-16</td>
+<td>0.38030467</td>
+<td>0.6187721</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>tr</td>
+<td>0.7173674</td>
+<td>0.04430383</td>
+<td>16.191995</td>
+<td>0.000000e+00</td>
+<td>0.63053351</td>
+<td>0.8042013</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>sm</td>
+<td>0.6659822</td>
+<td>0.04841876</td>
+<td>13.754631</td>
+<td>0.000000e+00</td>
+<td>0.57108320</td>
+<td>0.7608813</td>
+</tr>
+<tr class="even">
+<td>Simultan</td>
+<td>=~</td>
+<td>ma</td>
+<td>0.5978175</td>
+<td>0.05378959</td>
+<td>11.114002</td>
+<td>0.000000e+00</td>
+<td>0.49239189</td>
+<td>0.7032432</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>=~</td>
+<td>ps</td>
+<td>0.7766261</td>
+<td>0.03976255</td>
+<td>19.531596</td>
+<td>0.000000e+00</td>
+<td>0.69869292</td>
+<td>0.8545593</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>~~</td>
+<td>Sequent</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.00000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="odd">
+<td>Simultan</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>1.0000000</td>
+<td>0.00000000</td>
+<td>NA</td>
+<td>NA</td>
+<td>1.00000000</td>
+<td>1.0000000</td>
+</tr>
+<tr class="even">
+<td>hm</td>
+<td>~~</td>
+<td>hm</td>
+<td>0.6825461</td>
+<td>0.06079284</td>
+<td>11.227409</td>
+<td>0.000000e+00</td>
+<td>0.56339433</td>
+<td>0.8016979</td>
+</tr>
+<tr class="odd">
+<td>nr</td>
+<td>~~</td>
+<td>nr</td>
+<td>0.3313302</td>
+<td>0.08720260</td>
+<td>3.799545</td>
+<td>1.449621e-04</td>
+<td>0.16041623</td>
+<td>0.5022441</td>
+</tr>
+<tr class="even">
+<td>wo</td>
+<td>~~</td>
+<td>wo</td>
+<td>0.3286675</td>
+<td>0.08738141</td>
+<td>3.761297</td>
+<td>1.690344e-04</td>
+<td>0.15740304</td>
+<td>0.4999319</td>
+</tr>
+<tr class="odd">
+<td>gc</td>
+<td>~~</td>
+<td>gc</td>
+<td>0.7504614</td>
+<td>0.06077847</td>
+<td>12.347487</td>
+<td>0.000000e+00</td>
+<td>0.63133780</td>
+<td>0.8695850</td>
+</tr>
+<tr class="even">
+<td>tr</td>
+<td>~~</td>
+<td>tr</td>
+<td>0.4853840</td>
+<td>0.06356425</td>
+<td>7.636116</td>
+<td>2.242651e-14</td>
+<td>0.36080034</td>
+<td>0.6099676</td>
+</tr>
+<tr class="odd">
+<td>sm</td>
+<td>~~</td>
+<td>sm</td>
+<td>0.5564677</td>
+<td>0.06449207</td>
+<td>8.628466</td>
+<td>0.000000e+00</td>
+<td>0.43006551</td>
+<td>0.6828698</td>
+</tr>
+<tr class="even">
+<td>ma</td>
+<td>~~</td>
+<td>ma</td>
+<td>0.6426142</td>
+<td>0.06431272</td>
+<td>9.992024</td>
+<td>0.000000e+00</td>
+<td>0.51656358</td>
+<td>0.7686648</td>
+</tr>
+<tr class="odd">
+<td>ps</td>
+<td>~~</td>
+<td>ps</td>
+<td>0.3968519</td>
+<td>0.06176127</td>
+<td>6.425579</td>
+<td>1.313689e-10</td>
+<td>0.27580204</td>
+<td>0.5179018</td>
+</tr>
+<tr class="even">
+<td>Sequent</td>
+<td>~~</td>
+<td>Simultan</td>
+<td>0.5096198</td>
+<td>0.07025682</td>
+<td>7.253670</td>
+<td>4.056755e-13</td>
+<td>0.37191898</td>
+<td>0.6473207</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="6078df54" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>relevant_loadings <span class="ot">&lt;-</span> loadings[loadings<span class="sc">$</span>op <span class="sc">==</span> <span class="st">"=~"</span>, <span class="fu">c</span>(<span class="st">"lhs"</span>, <span class="st">"rhs"</span>, <span class="st">"est.std"</span>)]</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>relevant_loadings</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 9 x 3</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">est.std</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>Sequent</td>
+<td>hm</td>
+<td>0.2525843</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>Sequent</td>
+<td>nr</td>
+<td>0.8177223</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>Sequent</td>
+<td>wo</td>
+<td>0.8193488</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>Simultan</td>
+<td>hm</td>
+<td>0.3911092</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>Simultan</td>
+<td>gc</td>
+<td>0.4995384</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>Simultan</td>
+<td>tr</td>
+<td>0.7173674</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">7</td>
+<td>Simultan</td>
+<td>sm</td>
+<td>0.6659822</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">8</td>
+<td>Simultan</td>
+<td>ma</td>
+<td>0.5978175</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">9</td>
+<td>Simultan</td>
+<td>ps</td>
+<td>0.7766261</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Idealmente, per sostenere l’ipotesi di validità convergente, un fattore dovrebbe spiegare almeno il 50% della varianza in ciascuno dei suoi indicatori continui, come sostengono Bagozzi e Yi (2012). Ciò implica che, per essere considerato adeguatamente rappresentativo del costrutto che intende misurare, tutti gli indicatori di un fattore dovrebbero mostrare che la maggior parte della loro varianza è spiegata dal fattore stesso. Un modo meno rigoroso ma ancora informativo per valutare la validità convergente è attraverso l’uso della Varianza Media Estratta (AVE), calcolata come la media dei quadrati dei carichi fattoriali standardizzati di tutti gli indicatori associati a un particolare fattore. Un valore AVE superiore a 0.50 indica che, in media, il fattore spiega più della metà della varianza degli indicatori rispetto alla varianza residua attribuibile agli errori di misurazione, come indicato da Hair et al.&nbsp;(2022).</p>
+<p>Nell’ambito di un modello a due fattori, i risultati ottenuti dall’esempio in esame evidenziano alcune criticità in relazione al criterio più stringente: il modello non riesce a spiegare una variazione significativa (R^2 &gt; 0.50) per quattro dei otto indicatori, ossia la metà di essi. Tuttavia, se consideriamo l’AVE, i risultati migliorano leggermente per il fattore sequenziale, che spiega in media circa il 52% della varianza dei suoi tre indicatori (AVE = 0.517).</p>
+<p>Nella pratica analitica reale, valori di R^2 inferiori a 0.50 sono spesso considerati accettabili. Comrey e Lee (1992) hanno proposto una scala di valutazione gradiente in cui un R^2 superiore a 0.50 è classificato come eccellente, mentre valori approssimativamente pari a 0.40, 0.30, 0.20 e 0.10 sono considerati molto buoni, buoni, sufficienti e scarsi, rispettivamente. Secondo queste linee guida più flessibili, i risultati per gli indicatori del modello CFA a due fattori della KABC-I sono classificati come “eccellenti” (R^2 &gt; 0.50) per tre degli otto indicatori, nessuno è giudicato “scarso” (R^2 circa 0.10), e i rimanenti cinque indicatori presentano valori intermedi. È essenziale sottolineare che queste linee guida non dovrebbero essere applicate in modo indiscriminato in tutti i contesti di CFA o con tutti i tipi di indicatori. Gli indicatori continui, come i punteggi totali nell’esempio citato, tendono a mostrare carichi fattoriali più elevati rispetto agli indicatori ordinali, come quelli basati su scale di risposta tipo Likert.</p>
+</section>
+</section>
+<section id="considerazioni-finali" class="level2" data-number="21.9">
+<h2 data-number="21.9" class="anchored" data-anchor-id="considerazioni-finali"><span class="header-section-number">21.9</span> Considerazioni Finali</h2>
+<p>L’analisi fattoriale confermativa (CFA) rappresenta uno strumento cruciale nell’ambito delle ricerche psicologiche e sociali, in quanto consente di esaminare modelli di misurazione riflessiva. In questi modelli, i fattori comuni agiscono come proxy per le variabili teoriche. La CFA richiede che il ricercatore definisca preventivamente aspetti critici del modello, come il numero di fattori, l’assegnazione degli indicatori ai fattori e gli schemi di covarianza degli errori.</p>
+<p>Nei modelli CFA base, ciascun indicatore continuo è associato a un unico fattore e si presume che gli errori siano indipendenti, formando così una struttura unidimensionale. L’analisi di modelli con più fattori permette di verificare le ipotesi di validità convergente e discriminante.</p>
+<p>È anche possibile esplorare modelli CFA che includono covarianze di errore o indicatori correlati a più fattori. Tuttavia, gestire tali modelli è più complesso, specialmente in termini di identificazione del modello. Problemi tecnici come la non convergenza delle soluzioni o risultati inammissibili sono più comuni nei campioni di dimensioni ridotte o quando i fattori sono definiti da soli due indicatori. L’aggiustamento del modello può diventare una sfida, considerata l’ampia varietà di modifiche potenziali.</p>
+<p>Un’altra questione critica è rappresentata dai modelli CFA equivalenti, i quali possono produrre risultati simili nonostante le loro differenze strutturali. Per affrontare queste sfide efficacemente, è essenziale fondare l’analisi più su basi teoriche che su meri calcoli statistici. L’efficacia della CFA, quindi, dipende notevolmente dal contesto teorico e dalla competenza metodologica del ricercatore, essendo cruciale un’approfondita comprensione del dominio di studio per guidare l’analisi.</p>
+</section>
+<section id="session-info" class="level2" data-number="21.10">
+<h2 data-number="21.10" class="anchored" data-anchor-id="session-info"><span class="header-section-number">21.10</span> Session Info</h2>
+<div id="d646eba3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] C
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] ggokabeito_0.1.0  viridis_0.6.5     viridisLite_0.4.2 ggpubr_0.6.0     
+ [5] ggExtra_0.10.1    bayesplot_1.11.1  gridExtra_2.3     patchwork_1.2.0  
+ [9] semTools_0.5-6    semPlot_1.1.6     lavaan_0.6-17     psych_2.4.3      
+[13] scales_1.3.0      markdown_1.12     knitr_1.45        lubridate_1.9.3  
+[17] forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4       purrr_1.0.2      
+[21] readr_2.1.5       tidyr_1.3.1       tibble_3.2.1      ggplot2_3.5.0    
+[25] tidyverse_2.0.0   here_1.0.1       
+
+loaded via a namespace (and not attached):
+  [1] rstudioapi_0.15.0  jsonlite_1.8.8     magrittr_2.0.3    
+  [4] TH.data_1.1-2      estimability_1.5   nloptr_2.0.3      
+  [7] rmarkdown_2.26     vctrs_0.6.5        minqa_1.2.6       
+ [10] base64enc_0.1-3    rstatix_0.7.2      htmltools_0.5.7   
+ [13] broom_1.0.5        Formula_1.2-5      htmlwidgets_1.6.4 
+ [16] plyr_1.8.9         sandwich_3.1-0     emmeans_1.10.0    
+ [19] zoo_1.8-12         uuid_1.2-0         igraph_2.0.2      
+ [22] mime_0.12          lifecycle_1.0.4    pkgconfig_2.0.3   
+ [25] Matrix_1.6-5       R6_2.5.1           fastmap_1.1.1     
+ [28] shiny_1.8.0        digest_0.6.35      OpenMx_2.21.11    
+ [31] fdrtool_1.2.17     colorspace_2.1-0   rprojroot_2.0.4   
+ [34] Hmisc_5.1-1        fansi_1.0.6        timechange_0.3.0  
+ [37] abind_1.4-5        compiler_4.3.3     withr_3.0.0       
+ [40] glasso_1.11        htmlTable_2.4.2    backports_1.4.1   
+ [43] carData_3.0-5      ggsignif_0.6.4     MASS_7.3-60.0.1   
+ [46] corpcor_1.6.10     gtools_3.9.5       tools_4.3.3       
+ [49] pbivnorm_0.6.0     foreign_0.8-86     zip_2.3.1         
+ [52] httpuv_1.6.14      nnet_7.3-19        glue_1.7.0        
+ [55] quadprog_1.5-8     nlme_3.1-164       promises_1.2.1    
+ [58] lisrelToR_0.3      grid_4.3.3         pbdZMQ_0.3-11     
+ [61] checkmate_2.3.1    cluster_2.1.6      reshape2_1.4.4    
+ [64] generics_0.1.3     gtable_0.3.4       tzdb_0.4.0        
+ [67] data.table_1.15.2  hms_1.1.3          car_3.1-2         
+ [70] utf8_1.2.4         sem_3.1-15         pillar_1.9.0      
+ [73] IRdisplay_1.1      rockchalk_1.8.157  later_1.3.2       
+ [76] splines_4.3.3      lattice_0.22-5     survival_3.5-8    
+ [79] kutils_1.73        tidyselect_1.2.0   miniUI_0.1.1.1    
+ [82] pbapply_1.7-2      stats4_4.3.3       xfun_0.42         
+ [85] qgraph_1.9.8       arm_1.13-1         stringi_1.8.3     
+ [88] boot_1.3-29        evaluate_0.23      codetools_0.2-19  
+ [91] mi_1.1             cli_3.6.2          RcppParallel_5.1.7
+ [94] IRkernel_1.3.2     rpart_4.1.23       xtable_1.8-4      
+ [97] repr_1.1.6         munsell_0.5.0      Rcpp_1.0.12       
+[100] coda_0.19-4.1      png_0.1-8          XML_3.99-0.16.1   
+[103] parallel_4.3.3     ellipsis_0.3.2     jpeg_0.1-10       
+[106] lme4_1.1-35.1      mvtnorm_1.2-4      openxlsx_4.2.5.2  
+[109] crayon_1.5.2       rlang_1.1.3        multcomp_1.4-25   
+[112] mnormt_2.1.1      </code></pre>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-kline2023principles" class="csl-entry" role="listitem">
+Kline, Rex B. 2023. <em>Principles and practice of structural equation modeling</em>. Guilford publications.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/fa/07_total_score.html" class="pagination-link" aria-label="Punteggio totale e modello fattoriale">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/cfa/02_meanstructure.html" class="pagination-link" aria-label="La struttura delle medie">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/cfa/01_cfa.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
