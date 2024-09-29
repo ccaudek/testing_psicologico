@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>54&nbsp; Modello di Regressione Logistica – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/irt/E_01.html" rel="next">
+<link href="../../chapters/mokken/02_applications.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">54.1</span> Introduzione</a></li>
+  <li><a href="#modello-di-regressione-logistica-per-variabili-binarie" id="toc-modello-di-regressione-logistica-per-variabili-binarie" class="nav-link" data-scroll-target="#modello-di-regressione-logistica-per-variabili-binarie"><span class="header-section-number">54.2</span> Modello di Regressione Logistica per Variabili Binarie</a></li>
+  <li><a href="#modello-lineare-nelle-probabilità" id="toc-modello-lineare-nelle-probabilità" class="nav-link" data-scroll-target="#modello-lineare-nelle-probabilità"><span class="header-section-number">54.3</span> Modello Lineare nelle Probabilità</a>
+  <ul class="collapse">
+  <li><a href="#problemi-di-normalità" id="toc-problemi-di-normalità" class="nav-link" data-scroll-target="#problemi-di-normalità"><span class="header-section-number">54.3.1</span> Problemi di Normalità</a></li>
+  <li><a href="#problematiche-di-omoschedasticità" id="toc-problematiche-di-omoschedasticità" class="nav-link" data-scroll-target="#problematiche-di-omoschedasticità"><span class="header-section-number">54.3.2</span> Problematiche di Omoschedasticità</a></li>
+  <li><a href="#linearità" id="toc-linearità" class="nav-link" data-scroll-target="#linearità"><span class="header-section-number">54.3.3</span> Linearità</a></li>
+  </ul></li>
+  <li><a href="#modello-lineare-nelle-probabilità-vincolato" id="toc-modello-lineare-nelle-probabilità-vincolato" class="nav-link" data-scroll-target="#modello-lineare-nelle-probabilità-vincolato"><span class="header-section-number">54.4</span> Modello Lineare nelle Probabilità Vincolato</a></li>
+  <li><a href="#regressione-logistica" id="toc-regressione-logistica" class="nav-link" data-scroll-target="#regressione-logistica"><span class="header-section-number">54.5</span> Regressione Logistica</a></li>
+  <li><a href="#probabilità-odds-e-logit" id="toc-probabilità-odds-e-logit" class="nav-link" data-scroll-target="#probabilità-odds-e-logit"><span class="header-section-number">54.6</span> Probabilità, Odds e Logit</a>
+  <ul class="collapse">
+  <li><a href="#trasformazione-inversa-del-logit" id="toc-trasformazione-inversa-del-logit" class="nav-link" data-scroll-target="#trasformazione-inversa-del-logit"><span class="header-section-number">54.6.1</span> Trasformazione Inversa del Logit</a></li>
+  </ul></li>
+  <li><a href="#modelli-lineari-generalizzati" id="toc-modelli-lineari-generalizzati" class="nav-link" data-scroll-target="#modelli-lineari-generalizzati"><span class="header-section-number">54.7</span> Modelli Lineari Generalizzati</a></li>
+  <li><a href="#componente-sistematica" id="toc-componente-sistematica" class="nav-link" data-scroll-target="#componente-sistematica"><span class="header-section-number">54.8</span> Componente Sistematica</a></li>
+  <li><a href="#componente-aleatoria" id="toc-componente-aleatoria" class="nav-link" data-scroll-target="#componente-aleatoria"><span class="header-section-number">54.9</span> Componente Aleatoria</a></li>
+  <li><a href="#funzione-legame" id="toc-funzione-legame" class="nav-link" data-scroll-target="#funzione-legame"><span class="header-section-number">54.10</span> Funzione Legame</a></li>
+  <li><a href="#regressione-logistica-con-r" id="toc-regressione-logistica-con-r" class="nav-link" data-scroll-target="#regressione-logistica-con-r"><span class="header-section-number">54.11</span> Regressione Logistica con R</a></li>
+  <li><a href="#interpretazione-dei-coefficienti" id="toc-interpretazione-dei-coefficienti" class="nav-link" data-scroll-target="#interpretazione-dei-coefficienti"><span class="header-section-number">54.12</span> Interpretazione dei Coefficienti</a>
+  <ul class="collapse">
+  <li><a href="#interpretazione-basata-sui-log-odds" id="toc-interpretazione-basata-sui-log-odds" class="nav-link" data-scroll-target="#interpretazione-basata-sui-log-odds"><span class="header-section-number">54.12.1</span> Interpretazione Basata sui Log-Odds</a></li>
+  <li><a href="#interpretazione-attraverso-lodds-ratio" id="toc-interpretazione-attraverso-lodds-ratio" class="nav-link" data-scroll-target="#interpretazione-attraverso-lodds-ratio"><span class="header-section-number">54.12.2</span> Interpretazione Attraverso l’Odds Ratio</a></li>
+  <li><a href="#interpretazione-basata-sulle-probabilità-predette" id="toc-interpretazione-basata-sulle-probabilità-predette" class="nav-link" data-scroll-target="#interpretazione-basata-sulle-probabilità-predette"><span class="header-section-number">54.12.3</span> Interpretazione Basata sulle Probabilità Predette</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">54.13</span> Considerazioni Conclusive</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">54.14</span> Session Info</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/irt/01_logistic_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-logistit-regr" class="quarto-section-identifier"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    car, LaplacesDemon, gmodels, effects, psych, jtools</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Caricamento dei namespace richiesti: pacman
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+I pacchetti binari scaricati sono in
+    /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T//RtmpjyxgLC/downloaded_packages</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+gmodels installed
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+I pacchetti binari scaricati sono in
+    /var/folders/s7/z86r4t9j6yx376cm120nln6w0000gn/T//RtmpjyxgLC/downloaded_packages</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+jtools installed
+</code></pre>
+</div>
+</div>
+<section id="introduzione" class="level2" data-number="54.1">
+<h2 data-number="54.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">54.1</span> Introduzione</h2>
+<p>Prima di immergerci nell’esplorazione dei modelli di Teoria della Risposta all’Item (IRT), è fondamentale acquisire una solida comprensione del modello di regressione logistica. Questo modello, ampiamente utilizzato per analizzare dati categorici, ci serve come solido punto di partenza per comprendere i più complessi modelli IRT. La regressione logistica, infatti, si occupa di stimare la probabilità che un evento avvenga, date certe variabili predittive. Analogamente, i modelli IRT si focalizzano sulla probabilità che un esaminando risponda correttamente a un item, basandosi su parametri che descrivono sia l’abilità dell’esaminando sia le caratteristiche dell’item.</p>
+<p>Nonostante le somiglianze, i modelli IRT si distaccano in maniera sostanziale dalla regressione logistica per la loro capacità di modellare simultaneamente le proprietà degli item e le abilità degli individui. Mentre la regressione logistica assume che ogni osservazione sia indipendente, i modelli IRT considerano le interdipendenze tra le risposte agli item e tra gli item stessi. Nel presente capitolo, ci dedicheremo ad esplorare il modello di regressione logistica.</p>
+</section>
+<section id="modello-di-regressione-logistica-per-variabili-binarie" class="level2" data-number="54.2">
+<h2 data-number="54.2" class="anchored" data-anchor-id="modello-di-regressione-logistica-per-variabili-binarie"><span class="header-section-number">54.2</span> Modello di Regressione Logistica per Variabili Binarie</h2>
+<p>Il modello di regressione logistica si utilizza per analizzare la relazione tra una variabile dipendente dicotomica, che assume i valori di “successo” e “fallimento”, e una o più variabili indipendenti, che possono essere sia quantitative che qualitative. Consideriamo <span class="math inline">\(n\)</span> osservazioni indipendenti, dove <span class="math inline">\(Y_i\)</span> indica l’osservazione <span class="math inline">\(i\)</span>-esima della variabile risposta, per <span class="math inline">\(i=1, \dots, n\)</span>. Ogni osservazione è associata a un vettore di variabili esplicative <span class="math inline">\((x_1, \dots, x_p)\)</span>. La relazione che vogliamo esaminare è tra la probabilità di successo <span class="math inline">\(\pi_i\)</span> e le variabili esplicative, espressa dalla formula:</p>
+<p><span class="math display">\[
+P(Y=1 \mid X=x_i) = \pi_i.
+\]</span></p>
+<p>In questo contesto, la variabile dipendente <span class="math inline">\(Y\)</span> segue una distribuzione di Bernoulli, con i seguenti possibili valori:</p>
+<p><span class="math display">\[
+y_i =
+\begin{cases}
+    1 &amp; \text{per un successo (per l'osservazione $i$-esima)},\\
+    0 &amp; \text{per un fallimento}.
+\end{cases}
+\]</span></p>
+<p>Le probabilità associate a questi valori sono rispettivamente <span class="math inline">\(\pi\)</span> per il successo e <span class="math inline">\(1-\pi\)</span> per il fallimento:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    P(Y_i = 1) &amp;= \pi,\\
+    P(Y_i = 0) &amp;= 1-\pi.
+\end{aligned}
+\]</span></p>
+<p>Questo modello permette quindi di studiare come le variabili esplicative influenzino la probabilità di un evento binario, quali il successo o il fallimento.</p>
+<p>Per illustrare, consideriamo un dataset di 100 volontari, dove <code>age</code> è la variabile esplicativa e <code>chd</code> è la variabile risposta che indica la presenza (<code>chd</code> = 1) o assenza (<code>chd</code> = 0) di disturbi cardiaci. La media condizionata <span class="math inline">\(\mathbb{E}(Y \mid X=x)\)</span> in una popolazione può essere vista come la proporzione di valori 1 per un dato punteggio <span class="math inline">\(x\)</span> sulla variabile esplicativa (ad esempio, l’età), ovvero la probabilità condizionata <span class="math inline">\(\pi_i\)</span> di osservare la presenza di sintomi cardiaci in un certo gruppo d’età:</p>
+<p><span class="math display">\[
+\pi_i \equiv P(Y = 1 \mid X = x).
+\]</span></p>
+<p>Il valore atteso diventa:</p>
+<p><span class="math display">\[
+\mathbb{E}(Y \mid x) = \pi_i.
+\]</span></p>
+<p>Se <span class="math inline">\(X\)</span> è una variabile discreta, possiamo calcolare la proporzione di <span class="math inline">\(Y=1\)</span> per ogni valore di <span class="math inline">\(X=x\)</span> nel campione. Queste proporzioni rappresentano una stima non parametrica della funzione di regressione di <span class="math inline">\(Y\)</span> su <span class="math inline">\(X\)</span>, e possono essere stimate tramite tecniche di smoothing, come indicato nella figura seguente.</p>
+<div id="cell-5" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>chdage <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"../../data/logistic_reg/chdage_dat.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>chdage <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 6 x 3</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">id</th>
+<th data-quarto-table-cell-role="th" scope="col">age</th>
+<th data-quarto-table-cell-role="th" scope="col">chd</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>20</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>2</td>
+<td>23</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>3</td>
+<td>24</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>5</td>
+<td>25</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>4</td>
+<td>25</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>7</td>
+<td>26</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-6" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle proporzioni di Y = 1 per ogni valore di X</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>prop_data <span class="ot">&lt;-</span> chdage <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(age) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">prop_chd =</span> <span class="fu">mean</span>(chd))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico con smoothing</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prop_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> prop_chd)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="co"># Mostra i punti di proporzione</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">span =</span> <span class="fl">0.7</span>) <span class="sc">+</span> <span class="co"># Regressione LOESS</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Stima Non Parametrica della Regressione di CHD su Age"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Età"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Proporzione di CHD = 1"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_logistic_regr_files/figure-html/cell-4-output-2.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Per valori bassi della variabile <code>age</code> la proporzione condizionata di valori <span class="math inline">\(Y=1\)</span> è prossima allo 0. Per valori alti dell’età la proporzione di valori <span class="math inline">\(Y=1\)</span> è prossima a 1.0. A livelli di età intermedi, la curva di regressione non parametrica gradualmente approssima i valori 0 e 1 seguendo un andamento sigmoidale.</p>
+<p>Anche se nel caso presente la regressione non parametrica produce un risultato sensato, è utile rappresentare la dipendenza di <span class="math inline">\(Y\)</span> da <span class="math inline">\(X\)</span> con una semplice funzione, in particolare quando ci sono molteplici variabili esplicative.</p>
+</section>
+<section id="modello-lineare-nelle-probabilità" class="level2" data-number="54.3">
+<h2 data-number="54.3" class="anchored" data-anchor-id="modello-lineare-nelle-probabilità"><span class="header-section-number">54.3</span> Modello Lineare nelle Probabilità</h2>
+<p>Introduciamo un modello lineare con le seguenti assunzioni standard:</p>
+<p><span class="math display">\[
+Y_i = \alpha + \beta X_i + \varepsilon_i,
+\]</span></p>
+<p>dove <span class="math inline">\(\varepsilon_i\)</span> segue una distribuzione normale con media 0 e varianza 1 (<span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0, 1)\)</span>) e gli errori <span class="math inline">\(\varepsilon_i\)</span> e <span class="math inline">\(\varepsilon_j\)</span> sono indipendenti per ogni <span class="math inline">\(i \neq j\)</span>. Il valore atteso di <span class="math inline">\(Y_i\)</span> è quindi <span class="math inline">\(\mathbb{E}(Y_i) = \alpha + \beta X_i\)</span>, portando a:</p>
+<p><span class="math display">\[
+\pi_i = \alpha + \beta X_i.
+\]</span></p>
+<p>Questo è noto come <em>modello lineare nelle probabilità</em> (<em>linear probability model</em>). Tuttavia, questo approccio presenta una limitazione significativa: non garantisce che i valori predetti di <span class="math inline">\(\pi_i\)</span> siano confinati nell’intervallo [0,1], come richiesto per le probabilità.</p>
+<section id="problemi-di-normalità" class="level3" data-number="54.3.1">
+<h3 data-number="54.3.1" class="anchored" data-anchor-id="problemi-di-normalità"><span class="header-section-number">54.3.1</span> Problemi di Normalità</h3>
+<p>Considerando che <span class="math inline">\(Y_i\)</span> può assumere solo i valori 0 o 1, i residui <span class="math inline">\(\varepsilon_i\)</span> risultano anch’essi dicotomici e quindi non possono seguire una distribuzione normale. Ad esempio, se <span class="math inline">\(Y_i=1\)</span> con probabilità <span class="math inline">\(\pi_i\)</span>, il residuo sarà:</p>
+<p><span class="math display">\[
+\varepsilon_i = 1 - \mathbb{E}(Y_i) = 1 - (\alpha + \beta X_i) = 1 - \pi_i.
+\]</span></p>
+<p>Se, invece, <span class="math inline">\(Y_i=0\)</span> con probabilità <span class="math inline">\(1-\pi_i\)</span>, il residuo sarà:</p>
+<p><span class="math display">\[
+\varepsilon_i = 0 - \mathbb{E}(Y_i) = 0 - (\alpha + \beta X_i) = - \pi_i.
+\]</span></p>
+<p>Tuttavia, se la dimensione del campione è grande, il teorema del limite centrale può mitigare l’importanza dell’assunzione di normalità per le stime dei minimi quadrati.</p>
+</section>
+<section id="problematiche-di-omoschedasticità" class="level3" data-number="54.3.2">
+<h3 data-number="54.3.2" class="anchored" data-anchor-id="problematiche-di-omoschedasticità"><span class="header-section-number">54.3.2</span> Problematiche di Omoschedasticità</h3>
+<p>Utilizzare il metodo dei minimi quadrati può essere inappropriato in questo contesto poiché la varianza dei residui non è costante ma dipende dalla media, e quindi dalla variabile <span class="math inline">\(X\)</span>. Assumendo che il modello sia lineare, abbiamo che <span class="math inline">\(\mathbb{E}(\varepsilon_i)=0\)</span>. Sfruttando le relazioni discusse in precedenza, la varianza dei residui si calcola come:</p>
+<p><span class="math display">\[
+\mathbb{V}(\varepsilon_i) = (1-\pi_i)\pi_i.
+\]</span></p>
+<p>Consideriamo che la varianza dei residui <span class="math inline">\(\varepsilon_i\)</span> può essere espressa come:</p>
+<p><span class="math display">\[
+\text{Var}(\varepsilon_i) = \mathbb{E}(\varepsilon_i^2) - \mathbb{E}(\varepsilon_i)^2,
+\]</span></p>
+<p>dove <span class="math inline">\(\mathbb{E}(\varepsilon_i^2)\)</span> è il valore atteso del quadrato dei residui e <span class="math inline">\(\mathbb{E}(\varepsilon_i)^2\)</span> è il quadrato del valore atteso dei residui.</p>
+<p>Ora calcoliamo <span class="math inline">\(\mathbb{E}(\varepsilon_i^2)\)</span>:</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathbb{E}(\varepsilon_i^2) &amp;= \mathbb{E}[(Y_i - \mathbb{E}(Y_i))^2] \\
+&amp;= \mathbb{E}[(Y_i - \pi_i)^2] \\
+&amp;= \mathbb{E}[(Y_i^2 - 2Y_i\pi_i + \pi_i^2)] \\
+&amp;= \mathbb{E}(Y_i^2) - 2\mathbb{E}(Y_i\pi_i) + \mathbb{E}(\pi_i^2) \\
+&amp;= \mathbb{E}(Y_i) - 2\mathbb{E}(Y_i\pi_i) + \pi_i^2 \\
+&amp;= \pi_i - 2\pi_i^2 + \pi_i^2 \\
+&amp;= \pi_i - \pi_i^2 \\
+&amp;= \pi_i(1 - \pi_i)
+\end{align*}
+\]</span></p>
+<p>Ora calcoliamo <span class="math inline">\(\mathbb{E}(\varepsilon_i)^2\)</span>:</p>
+<p><span class="math display">\[
+\begin{align*}
+\mathbb{E}(\varepsilon_i)^2 &amp;= (\mathbb{E}(Y_i - \mathbb{E}(Y_i)))^2 \\
+&amp;= (\mathbb{E}(Y_i - \pi_i))^2 \\
+&amp;= (0)^2 \\
+&amp;= 0
+\end{align*}
+\]</span></p>
+<p>Quindi, sostituendo questi risultati nella formula della varianza dei residui, otteniamo:</p>
+<p><span class="math display">\[
+\text{Var}(\varepsilon_i) = \mathbb{E}(\varepsilon_i^2) - \mathbb{E}(\varepsilon_i)^2 = \pi_i(1 - \pi_i)
+\]</span></p>
+<p>Quindi, abbiamo dimostrato che la varianza dei residui nella regressione logistica può essere espressa come <span class="math inline">\((1-\pi_i)\pi_i\)</span>.</p>
+<p>Dato che <span class="math inline">\(\pi_i\)</span> dipende da <span class="math inline">\(x\)</span>, ciò significa che la varianza non è costante in funzione di <span class="math inline">\(x\)</span>. Questa eteroschedasticità dei residui rappresenta un problema per le stime dei minimi quadrati nel modello lineare, specialmente quando le probabilità <span class="math inline">\(\pi_i\)</span> sono vicine a 0 o 1.</p>
+</section>
+<section id="linearità" class="level3" data-number="54.3.3">
+<h3 data-number="54.3.3" class="anchored" data-anchor-id="linearità"><span class="header-section-number">54.3.3</span> Linearità</h3>
+<p>Il maggiore inconveniente connesso all’adozione del modello lineare nelle probabilità deriva dal fatto che la stima della probabilità di successo, <span class="math inline">\(P(\hat{Y}_i=1)=\hat{\pi}_i\)</span>, non è necessariamente compresa nell’intervallo (<span class="math inline">\(0,1\)</span>), ma può essere sia negativa sia maggiore di 1. Nel caso dell’esempio in discussione, ciò significa che la retta dei minimi quadrati produce valori attesi <span class="math inline">\(\hat{\pi}\)</span> inferiori a 0 per bassi valori della variabile età e valori <span class="math inline">\(\hat{\pi}\)</span> superiori a 1 per valori di età alti.</p>
+</section>
+</section>
+<section id="modello-lineare-nelle-probabilità-vincolato" class="level2" data-number="54.4">
+<h2 data-number="54.4" class="anchored" data-anchor-id="modello-lineare-nelle-probabilità-vincolato"><span class="header-section-number">54.4</span> Modello Lineare nelle Probabilità Vincolato</h2>
+<p>Una soluzione per mantenere <span class="math inline">\(\pi\)</span> all’interno dell’intervallo (0, 1) è la seguente specificazione del modello:</p>
+<p><span class="math display">\[
+\pi=
+\begin{cases}
+  0                           &amp;\text{se $\alpha + \beta X &lt; 0$},\\
+  \alpha + \beta X           &amp;\text{se $0 \leq \alpha + \beta X \leq 1$},\\
+  1 &amp;\text{se $\alpha + \beta X &gt; 1$}.
+\end{cases}
+\]</span></p>
+<p>Questo <em>modello lineare nelle probabilità vincolato</em> mostra alcune instabilità, soprattutto a causa della sua dipendenza critica dai valori estremi di <span class="math inline">\(\pi\)</span>, dove assume i valori 0 o 1. La linearità di <span class="math inline">\(\pi = \alpha + \beta X\)</span> si basa fortemente sui punti in cui si verificano questi estremi. In particolare, la stima di <span class="math inline">\(\pi = 0\)</span> può essere influenzata dal valore minimo di <span class="math inline">\(X\)</span> associato a <span class="math inline">\(Y=1\)</span>, mentre la stima di <span class="math inline">\(\pi = 1\)</span> può dipendere dal valore massimo di <span class="math inline">\(X\)</span> per cui <span class="math inline">\(Y=0\)</span>. Questi valori estremi tendono a variare significativamente tra diversi campioni e possono diventare più estremi all’aumentare della dimensione del campione.</p>
+<p>La presenza di più variabili esplicative (<span class="math inline">\(k \geq 2\)</span>) complica ulteriormente la stima dei parametri del modello. Inoltre, il modello mostra un cambiamento brusco nella pendenza della curva di regressione ai punti estremi (0 e 1 di <span class="math inline">\(\pi\)</span>), risultando poco realistico in molte situazioni pratiche. Questo rende il modello meno adatto a descrivere relazioni complesse e gradualmente variabili tra <span class="math inline">\(\pi\)</span> e <span class="math inline">\(X\)</span>.</p>
+<p>Una funzione che modella una relazione più fluida e continua tra <span class="math inline">\(\pi\)</span> e <span class="math inline">\(X\)</span> sarebbe più realistica e rappresentativa delle dinamiche osservate. Questo motiva la preferenza per modelli alternativi, come il modello di regressione logistica, che tende a fornire una rappresentazione più accurata e realistica delle interazioni tra variabili dicotomiche e esplicative.</p>
+</section>
+<section id="regressione-logistica" class="level2" data-number="54.5">
+<h2 data-number="54.5" class="anchored" data-anchor-id="regressione-logistica"><span class="header-section-number">54.5</span> Regressione Logistica</h2>
+<p>Un metodo efficace per gestire il problema del vincolo sulle probabilità è specificare modelli non direttamente per le probabilità stesse, ma per una loro trasformazione che elimina tale vincolo. Invece di definire un modello lineare per la probabilità condizionata <span class="math inline">\(\pi_i\)</span>, si può specificare un modello lineare per il logaritmo degli odds (logit):</p>
+<p><span class="math display">\[
+\eta_i = \log_e \frac{\pi_i}{1-\pi_i} = \alpha + \beta x_i,
+\]</span></p>
+<p>Questo approccio non presenta problemi poiché il logit <span class="math inline">\(\eta\)</span> è sempre un numero reale, permettendo di modellare una trasformazione lineare di <span class="math inline">\(\pi\)</span>. L’immagine che segue è stata generata calcolando i <em>logit empirici</em>, ovvero il logaritmo degli odds <span class="math inline">\(\log_e(\hat{\pi}_i/(1-\hat{\pi}_i))\)</span> per 8 intervalli in cui è stata suddivisa la variabile “età”. Questa analisi mostra chiaramente una relazione lineare tra i logit empirici e l’età, evidenziando come la regressione logistica possa efficacemente modellare e interpretare relazioni tra variabili trasformate e fattori esplicativi.</p>
+<div id="cell-11" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>xc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">24.5</span>, <span class="dv">32</span>, <span class="dv">37</span>, <span class="dv">42</span>, <span class="dv">47</span>, <span class="dv">52</span>, <span class="dv">57</span>, <span class="fl">64.5</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>yc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.13</span>, <span class="fl">0.25</span>, <span class="fl">0.33</span>, <span class="fl">0.46</span>, <span class="fl">0.63</span>, <span class="fl">0.76</span>, <span class="fl">0.8</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>logit_y <span class="ot">&lt;-</span> <span class="fu">log</span>(yc <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> yc))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(logit_y <span class="sc">~</span> xc)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    xc, logit_y,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Eta'"</span>, <span class="at">ylab =</span> <span class="st">"Logit(Y)"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">""</span>, <span class="at">type =</span> <span class="st">"n"</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(xc, logit_y, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_logistic_regr_files/figure-html/cell-5-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="probabilità-odds-e-logit" class="level2" data-number="54.6">
+<h2 data-number="54.6" class="anchored" data-anchor-id="probabilità-odds-e-logit"><span class="header-section-number">54.6</span> Probabilità, Odds e Logit</h2>
+<p>La relazione tra probabilità, odds e logit viene illustrata nella tabella qui sotto. È importante notare che gli odds e il logit trasformano l’intervallo di probabilità (0, 1) in uno spettro più ampio. Gli odds rappresentano il rapporto tra la probabilità di un evento e la probabilità del suo complemento. Il logit, invece, è il logaritmo naturale degli odds, trasformando così l’intervallo di probabilità in tutta la linea dei numeri reali. Quando la probabilità è 0.5, gli odds sono 1 e il logit è 0. Logit negativi indicano probabilità inferiori a 0.5, mentre logit positivi indicano probabilità superiori a 0.5.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Probabilità (P)</th>
+<th>Odds (O)</th>
+<th>logit (L)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.01</td>
+<td>0.01 / 0.99 = 0.0101</td>
+<td><span class="math inline">\(\ln(\frac{0.01}{0.99}) = -4.60\)</span></td>
+</tr>
+<tr class="even">
+<td>0.05</td>
+<td>0.05 / 0.95 = 0.0526</td>
+<td><span class="math inline">\(\ln(\frac{0.05}{0.95}) = -2.94\)</span></td>
+</tr>
+<tr class="odd">
+<td>0.10</td>
+<td>0.10 / 0.90 = 0.1111</td>
+<td><span class="math inline">\(\ln(\frac{0.10}{0.90}) = -2.20\)</span></td>
+</tr>
+<tr class="even">
+<td>0.30</td>
+<td>0.30 / 0.70 = 0.4286</td>
+<td><span class="math inline">\(\ln(\frac{0.30}{0.70}) = -0.85\)</span></td>
+</tr>
+<tr class="odd">
+<td>0.50</td>
+<td>0.50 / 0.50 = 1</td>
+<td><span class="math inline">\(\ln(\frac{0.50}{0.50}) = 0.00\)</span></td>
+</tr>
+<tr class="even">
+<td>0.70</td>
+<td>0.70 / 0.30 = 2.3333</td>
+<td><span class="math inline">\(\ln(\frac{0.70}{0.30}) = 0.85\)</span></td>
+</tr>
+<tr class="odd">
+<td>0.90</td>
+<td>0.90 / 0.10 = 9</td>
+<td><span class="math inline">\(\ln(\frac{0.90}{0.10}) = 2.20\)</span></td>
+</tr>
+<tr class="even">
+<td>0.95</td>
+<td>0.95 / 0.05 = 19</td>
+<td><span class="math inline">\(\ln(\frac{0.95}{0.05}) = 2.94\)</span></td>
+</tr>
+<tr class="odd">
+<td>0.99</td>
+<td>0.99 / 0.01 = 99</td>
+<td><span class="math inline">\(\ln(\frac{0.99}{0.01}) = 4.60\)</span></td>
+</tr>
+</tbody>
+</table>
+<section id="trasformazione-inversa-del-logit" class="level3" data-number="54.6.1">
+<h3 data-number="54.6.1" class="anchored" data-anchor-id="trasformazione-inversa-del-logit"><span class="header-section-number">54.6.1</span> Trasformazione Inversa del Logit</h3>
+<p>La trasformazione inversa del logit, detta <em>antilogit</em>, consente di trasformare i logit in probabilità:</p>
+<p><span class="math display">\[
+  \pi_i =\frac{e^{\eta_i}}{1+e^{\eta_i}}.
+\]</span></p>
+<p>Logit e probabilità possono dunque essere trasformati gli uni nelle altre. La trasformazione inversa del logit consente di specificare un modello non lineare per le probabilità <span class="math inline">\(\pi_i\)</span>. Tale modello non lineare è detto <em>logit</em>, o modello di regressione logistica:</p>
+<p><span class="math display">\[
+  \pi_i = \frac{e^{\eta_i}}{1+e^{\eta_i}} =  \frac{e^{\alpha + \beta x_i}}{1+e^{\alpha + \beta x_i}}.
+\]</span></p>
+<p>La funzione logistica ben rappresenta l’andamento sigmoidale delle proporzioni di casi <span class="math inline">\(Y=1\)</span>, ovvero <span class="math inline">\(\hat{\pi}_i = E(Y \mid x_i)\)</span> (le proporzioni di presenza di disturbi coronarici), in funzione di livelli crescenti della variabile <code>age</code>:</p>
+<div id="cell-14" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fm <span class="ot">&lt;-</span> <span class="fu">glm</span>(chd <span class="sc">~</span> age, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>), <span class="at">data =</span> chdage)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>logit_hat <span class="ot">&lt;-</span> fm<span class="sc">$</span>coef[<span class="dv">1</span>] <span class="sc">+</span> fm<span class="sc">$</span>coef[<span class="dv">2</span>] <span class="sc">*</span> chdage<span class="sc">$</span>age</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>pi_hat <span class="ot">&lt;-</span> <span class="fu">exp</span>(logit_hat) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(logit_hat))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(chdage<span class="sc">$</span>age, pi_hat,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Eta'"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">"P(CHD)"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">""</span>, <span class="at">type =</span> <span class="st">"n"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(chdage<span class="sc">$</span>age, pi_hat)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>xc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">24.5</span>, <span class="dv">32</span>, <span class="dv">37</span>, <span class="dv">42</span>, <span class="dv">47</span>, <span class="dv">52</span>, <span class="dv">57</span>, <span class="fl">64.5</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>yc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.13</span>, <span class="fl">0.25</span>, <span class="fl">0.33</span>, <span class="fl">0.46</span>, <span class="fl">0.63</span>, <span class="fl">0.76</span>, <span class="fl">0.8</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(xc, yc, <span class="at">cex =</span> <span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_logistic_regr_files/figure-html/cell-6-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="modelli-lineari-generalizzati" class="level2" data-number="54.7">
+<h2 data-number="54.7" class="anchored" data-anchor-id="modelli-lineari-generalizzati"><span class="header-section-number">54.7</span> Modelli Lineari Generalizzati</h2>
+<p>Nel caso di una variabile risposta binaria, il modello classico di regressione lineare si scontra con sfide specifiche:</p>
+<ol type="1">
+<li><strong>Distribuzione Binomiale</strong>: <span class="math inline">\(Y_i\)</span> segue una distribuzione binomiale (con indice <span class="math inline">\(n_i\)</span>, potenzialmente uguale a uno nel caso individuale), rendendo non applicabile l’ipotesi di normalità.</li>
+<li><strong>Limiti delle Probabilità</strong>: Utilizzando una specificazione lineare come <span class="math inline">\(\pi_i= \beta_0 + \beta_1 x_i\)</span>, si possono ottenere stime di probabilità esterne all’intervallo 0-1.</li>
+<li><strong>Varianze Non Costanti</strong>: La varianza di <span class="math inline">\(\varepsilon\)</span> varia in base alla specificazione del modello di probabilità, seguendo la formula <span class="math inline">\(V(\varepsilon_i)=\pi_i(1-\pi_i)\)</span>.</li>
+</ol>
+<p>Per superare queste sfide, si utilizzano i Modelli Lineari Generalizzati (GLM). Questi modelli consentono l’uso di variabili risposta di diversa natura e includono:</p>
+<ul>
+<li><strong>Regressione Lineare</strong>: Per variabili dipendenti continue e variabili esplicative continue o qualitative.</li>
+<li><strong>Regressione Logistica</strong>: Per variabili risposta binarie.</li>
+<li><strong>Modello Loglineare di Poisson</strong>: Per modellare frequenze in tabelle di contingenza.</li>
+</ul>
+<p>I GLM allentano alcune ipotesi fondamentali del modello lineare classico, come linearità, normalità della componente erratica, e omoschedasticità delle osservazioni. Sono strutturati in tre componenti principali:</p>
+<ol type="1">
+<li><strong>Componente Aleatoria</strong>: Definisce la distribuzione di probabilità della variabile risposta <span class="math inline">\(Y\)</span>.</li>
+<li><strong>Componente Sistematica</strong>: Specifica la relazione lineare tra le variabili esplicative e una trasformazione della variabile risposta.</li>
+<li><strong>Funzione Legame</strong>: Trasforma la media attesa <span class="math inline">\(\mathbb{E}(Y)\)</span> in un formato che possa essere modellato linearmente rispetto alle variabili esplicative. Non è la variabile risposta stessa ad essere modellizzata direttamente, ma una sua trasformazione, come il logit nel caso della regressione logistica.</li>
+</ol>
+<p>Esempi di combinazioni di componenti aleatorie, funzioni di legame e sistematiche nei GLM includono:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 19%">
+<col style="width: 27%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Componente Aleatoria</th>
+<th>Funzione Legame</th>
+<th>Componente Sistematica</th>
+<th>Modello</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gaussiana</td>
+<td>Identità</td>
+<td>Continua</td>
+<td>Regressione</td>
+</tr>
+<tr class="even">
+<td>Gaussiana</td>
+<td>Identità</td>
+<td>Categoriale</td>
+<td>Analisi della varianza</td>
+</tr>
+<tr class="odd">
+<td>Gaussiana</td>
+<td>Identità</td>
+<td>Mista</td>
+<td>Analisi della covarianza</td>
+</tr>
+<tr class="even">
+<td>Binomiale</td>
+<td>Logit</td>
+<td>Mista</td>
+<td>Regressione logistica</td>
+</tr>
+<tr class="odd">
+<td>Poisson</td>
+<td>Logaritmo</td>
+<td>Mista</td>
+<td>Modello Loglineare</td>
+</tr>
+</tbody>
+</table>
+<p>Questa struttura rende i GLM particolarmente flessibili e adatti a una vasta gamma di situazioni statistiche, superando i limiti del modello lineare classico.</p>
+</section>
+<section id="componente-sistematica" class="level2" data-number="54.8">
+<h2 data-number="54.8" class="anchored" data-anchor-id="componente-sistematica"><span class="header-section-number">54.8</span> Componente Sistematica</h2>
+<p>La componente sistematica mette in relazione un vettore (<span class="math inline">\(\eta_1, \eta_2, \dots, \eta_k\)</span>) con le variabili esplicative mediante un modello lineare. Sia <span class="math inline">\(X_{ij}\)</span> il valore della <span class="math inline">\(j\)</span>-esima variabile esplicativa (<span class="math inline">\(j=1, 2, \dots, p\)</span>) per l’<span class="math inline">\(i\)</span>-esima osservazione (<span class="math inline">\(i=1, \dots, k\)</span>). Allora</p>
+<p><span class="math display">\[
+\eta_i = \sum_j \beta_j X_{ij}.
+\]</span></p>
+<p>Questa combinazione lineare di variabili esplicative è chiamata il <em>predittore lineare</em>. Un <span class="math inline">\(X_{ij}=1, \forall i\)</span> viene utilizzato per il coefficiente dell’intercetta del modello (talvolta denotata da <span class="math inline">\(\alpha\)</span>).</p>
+</section>
+<section id="componente-aleatoria" class="level2" data-number="54.9">
+<h2 data-number="54.9" class="anchored" data-anchor-id="componente-aleatoria"><span class="header-section-number">54.9</span> Componente Aleatoria</h2>
+<p>La componente aleatoria del modello suppone l’esistenza di <span class="math inline">\(k\)</span> osservazioni indipendenti <span class="math inline">\(y_1, y_2, \dots, y_k\)</span>, ciascuna delle quali viene trattata come la realizzazione di una variabile casuale <span class="math inline">\(Y_i\)</span>. Si assume che <span class="math inline">\(Y_i\)</span> abbia una distribuzione binomiale:</p>
+<p><span class="math display">\[
+Y_i \sim Bin(n_i, \pi_i)
+\]</span></p>
+<p>con parametri <span class="math inline">\(n_i\)</span> e <span class="math inline">\(\pi_i\)</span>. Per dati individuali (uno per ciascun valore <span class="math inline">\(x_i\)</span>), <span class="math inline">\(n_i=1,
+    \forall i\)</span>.</p>
+</section>
+<section id="funzione-legame" class="level2" data-number="54.10">
+<h2 data-number="54.10" class="anchored" data-anchor-id="funzione-legame"><span class="header-section-number">54.10</span> Funzione Legame</h2>
+<p>La funzione legame <span class="math inline">\(g(\cdot)\)</span> mette in relazione il valore atteso della variabile risposta <span class="math inline">\(Y_i\)</span> con la componente sistematica <span class="math inline">\(\eta_i\)</span> del modello. Abbiamo visto che <span class="math inline">\(\mathbb{E}(Y_i)=\pi_i\)</span>. Che relazione c’è tra <span class="math inline">\(\pi_i\)</span> e il predittore lineare <span class="math inline">\(\eta_i= \alpha + \sum_j  \beta_j X_{ij}\)</span>? La risposta a questa domanda è data dalla funzione legame:</p>
+<p><span class="math display">\[
+\eta_i = g(\pi_i) = \ln{\frac{\pi_i}{1-\pi_i}}
+\]</span></p>
+<p>Si noti che la funzione legame non trasforma la variabile risposta <span class="math inline">\(Y_i\)</span> ma bensì il suo valore atteso <span class="math inline">\(\pi_i\)</span>.</p>
+<p>La funzione legame è invertibile: anziché trasformare il valore atteso nel predittore lineare si può trasformare il predittore lineare nel valore atteso <span class="math inline">\(\pi_i\)</span>:</p>
+<p><span class="math display">\[
+\pi_i = \frac{e^{\eta_i}}{1+e^{\eta_i}} =  \frac{e^{\alpha + \sum_j  \beta_j X_{ij}}}{1+e^{\alpha + \sum_j  \beta_j X_{ij}}}.
+\]</span></p>
+<p>Si ottiene così un modello non lineare per le probabilità <span class="math inline">\(\pi_i\)</span>.</p>
+<div id="cell-17" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">5</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">invlogit</span>(x)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, prob, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main =</span> <span class="st">"Funzione logistica"</span>, <span class="at">ylab =</span> <span class="st">"Probabilita'"</span>, <span class="at">xlab =</span> <span class="st">"Valori X"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_logistic_regr_files/figure-html/cell-7-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="regressione-logistica-con-r" class="level2" data-number="54.11">
+<h2 data-number="54.11" class="anchored" data-anchor-id="regressione-logistica-con-r"><span class="header-section-number">54.11</span> Regressione Logistica con R</h2>
+<p>La stima dei parametri del modello di regressione logistica per i dati in esame si ottiene in R utilizzando la funzione <code>glm()</code>:</p>
+<div id="cell-19" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fm <span class="ot">&lt;-</span> <span class="fu">glm</span>(chd <span class="sc">~</span> age,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> chdage</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si noti che è necessario specificare sia la funzione teorica (<code>family = binomial</code>) della componente erratica del modello, sia la funzione legame (<code>link = "logit"</code>). L’output della funzione <code>glm()</code> può essere visualizzato utilizzando <code>summary()</code>:</p>
+<div id="cell-21" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = chd ~ age, family = binomial(link = "logit"), data = chdage)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -5.30945    1.13365  -4.683 2.82e-06 ***
+age          0.11092    0.02406   4.610 4.02e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 136.66  on 99  degrees of freedom
+Residual deviance: 107.35  on 98  degrees of freedom
+AIC: 111.35
+
+Number of Fisher Scoring iterations: 4
+</code></pre>
+</div>
+</div>
+<p>Per i dati dell’esempio, le probabilità predette sono uguali a</p>
+<p><span class="math display">\[
+\hat{\pi}(x)=\frac{e^{-5.309 + 0.111 \times {\tt age}}}{1+e^{-5.309 + 0.111 \times {\tt age}}}.
+\]</span></p>
+<p>I logit stimati sono dati dall’equazione</p>
+<p><span class="math display">\[
+\hat{\eta}(x)=-5.309 + 0.111 \times {\tt age}.
+\]</span></p>
+</section>
+<section id="interpretazione-dei-coefficienti" class="level2" data-number="54.12">
+<h2 data-number="54.12" class="anchored" data-anchor-id="interpretazione-dei-coefficienti"><span class="header-section-number">54.12</span> Interpretazione dei Coefficienti</h2>
+<p>Il modello di regressione logistica può essere interpretato focalizzandosi sui coefficienti di regressione.</p>
+<section id="interpretazione-basata-sui-log-odds" class="level3" data-number="54.12.1">
+<h3 data-number="54.12.1" class="anchored" data-anchor-id="interpretazione-basata-sui-log-odds"><span class="header-section-number">54.12.1</span> Interpretazione Basata sui Log-Odds</h3>
+<ol type="1">
+<li><strong>Intercetta (-5.30945):</strong>
+<ul>
+<li>Rappresenta il log-odds di sviluppare CHD quando l’età è 0. Benché questo non sia praticamente realistico, offre un punto di riferimento teorico.</li>
+<li>Il valore negativo suggerisce una bassa probabilità di CHD a 0 anni.</li>
+</ul></li>
+<li><strong>Coefficiente di Età (0.11092):</strong>
+<ul>
+<li>Indica la variazione dei log-odds di CHD per ogni anno aggiuntivo di età.</li>
+<li>Un valore positivo implica che, all’aumentare dell’età, aumenta anche la probabilità di CHD.</li>
+</ul></li>
+</ol>
+</section>
+<section id="interpretazione-attraverso-lodds-ratio" class="level3" data-number="54.12.2">
+<h3 data-number="54.12.2" class="anchored" data-anchor-id="interpretazione-attraverso-lodds-ratio"><span class="header-section-number">54.12.2</span> Interpretazione Attraverso l’Odds Ratio</h3>
+<p>Per calcolare l’odds ratio associato all’età, si esponenzia il coefficiente:</p>
+<p><span class="math display">\[
+\text{Odds Ratio per Età} = e^{0.11092} \approx 1.12.
+\]</span></p>
+<p>Questo valore mostra la variazione degli odds di CHD per ogni incremento annuale di età. Un odds ratio maggiore di 1 indica un aumento della probabilità con l’età. Ad esempio, un odds ratio di 1.12 significa che per ogni anno in più, gli odds di avere CHD aumentano del 12%. L’odds ratio fornisce una visione relativa e intuitiva del cambiamento del rischio.</p>
+</section>
+<section id="interpretazione-basata-sulle-probabilità-predette" class="level3" data-number="54.12.3">
+<h3 data-number="54.12.3" class="anchored" data-anchor-id="interpretazione-basata-sulle-probabilità-predette"><span class="header-section-number">54.12.3</span> Interpretazione Basata sulle Probabilità Predette</h3>
+<p>L’interpretazione più diretta e intuitiva dei coefficienti nel modello di regressione logistica è tramite il calcolo delle probabilità predette. A differenza dei coefficienti grezzi o degli odds ratio, le probabilità predette offrono una comprensione immediata dell’impatto delle variabili.</p>
+<p>Nel caso dello studio della probabilità di CHD in base all’età, si possono calcolare le probabilità predette di CHD per individui di diverse età. Questo metodo fornisce una rappresentazione chiara di come il rischio di CHD vari in funzione dell’età, rendendo l’interpretazione accessibile anche a chi non è esperto in statistica.</p>
+<div id="cell-23" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">effect_plot</span>(fm,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred =</span> age, <span class="at">interval =</span> <span class="cn">TRUE</span>, <span class="at">plot.points =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">jitter =</span> <span class="fl">0.05</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_logistic_regr_files/figure-html/cell-10-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="54.13">
+<h2 data-number="54.13" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">54.13</span> Considerazioni Conclusive</h2>
+<p>Nel caso di una variabile dipendente binaria <span class="math inline">\(Y_i\)</span>, il tradizionale modello di regressione lineare non può essere applicato. Tale problema può essere risolto applicando il modello lineare non direttamente al valore atteso della variabile risposta, ma ad una sua trasformazione, il logit. La componente sistematica del modello di regressione lineare esprime il valore atteso della variabile dipendente come una funzione lineare dei predittori: <span class="math inline">\(\mu_i = \boldsymbol{\beta x}_i\)</span>.</p>
+<p>Per il modello di regressione lineare, il valore atteso di <span class="math inline">\(Y\)</span> è la media delle distribuzioni condizionate <span class="math inline">\(Y \mid x_i\)</span>.</p>
+<p>Per il modello di regressione logistica, il valore atteso della variabile risposta binaria, condizionato ad un determinato valore della variabile esplicativa (o ad un insieme di valori del vettore di variabili esplicative) è uguale alla probabilità che <span class="math inline">\(Y\)</span> assuma il valore 1:</p>
+<p><span class="math display">\[
+\mathbb{E}(Y \mid x_i) \equiv Pr(Y=1 \mid X=x_i) \equiv \pi_i.
+\]</span></p>
+<p>Tale valore atteso può essere interpretato come la proporzione di individui nella popolazione per i quali <span class="math inline">\(Y=1\)</span> in corrispondenza di <span class="math inline">\(X=x_i\)</span>.</p>
+<p>La componente sistematica del modello di regressione logistica rappresenta una trasformazione di <span class="math inline">\(\pi_i\)</span> come funzione lineare dei predittori:</p>
+<p><span class="math display">\[
+\ln \frac{\pi_i}{1-\pi_i} = \alpha + \beta X_i.
+\]</span></p>
+<p>Il modello è dunque lineare nei logit. Equivalentemente, esponenziando</p>
+<p><span class="math display">\[
+\frac{\pi_i}{1-\pi_i} = \exp(\alpha + \beta X_i)
+\]</span></p>
+<p>l’odds stimato di <span class="math inline">\(Y_i=1\)</span> è uguale a <span class="math inline">\(\exp(\alpha + \beta X_i)\)</span>.</p>
+<p>La funzione antilogit trasforma il predittore lineare <span class="math inline">\(\eta_i = \alpha + \beta X_i\)</span> nelle probabilità:</p>
+<p><span class="math display">\[
+\pi_i = \frac{\exp(\alpha+\beta X_i)}{1 + \exp(\alpha+\beta X_i)}.
+\]</span></p>
+<p>Il modello di regressione logistica è un modello non lineare nelle probabilità (ovvero, rispetto al valore atteso della variabile risposta).</p>
+<p>La funzione logistica</p>
+<p><span class="math display">\[
+\Lambda(\eta) = \frac{\exp(\eta)}{1 + \exp(\eta)}
+\]</span></p>
+<p>viene scelta quale funzione legame per trasformare la componente lineare del modello, <span class="math inline">\(\eta_i =\alpha+\beta X_i\)</span>, nel valore atteso della variabile dipendente, <span class="math inline">\(\pi_i\)</span>. Qualunque funzione cumulativa di probabilità potrebbe fungere da funzione legame, tuttavia, è conveniente scegliere la funzione logistica per facilità di interpretazione.</p>
+<p>La componente aleatoria del modello di regressione logistica, infine, ci porta a considerare la variabile dipendente come una variabile aleatoria binomiale, sia nel caso di dati raggruppati (con denomiatore binomiale uguale alla frequenza delle osservazioni in ciascun gruppo <span class="math inline">\(n_i\)</span> corrispondente a modalità omogenee della/e variabile/i esplicativa/e) che nel caso di dati individuali (dove <span class="math inline">\(n_i\)</span> = 1, <span class="math inline">\(\forall i\)</span>).</p>
+</section>
+<section id="session-info" class="level2" data-number="54.14">
+<h2 data-number="54.14" class="anchored" data-anchor-id="session-info"><span class="header-section-number">54.14</span> Session Info</h2>
+<div id="cell-26" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>R version 4.4.1 (2024-06-14)
+Platform: aarch64-apple-darwin20
+Running under: macOS 15.0
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] jtools_2.3.0         effects_4.2-2        gmodels_2.19.1      
+ [4] LaplacesDemon_16.1.6 car_3.1-2            carData_3.0-5       
+ [7] ggokabeito_0.1.0     viridis_0.6.5        viridisLite_0.4.2   
+[10] ggpubr_0.6.0         ggExtra_0.10.1       bayesplot_1.11.1    
+[13] gridExtra_2.3        patchwork_1.3.0      semTools_0.5-6      
+[16] semPlot_1.1.6        lavaan_0.6-18        psych_2.4.6.26      
+[19] scales_1.3.0         markdown_1.13        knitr_1.48          
+[22] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       
+[25] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         
+[28] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       
+[31] tidyverse_2.0.0      here_1.0.1          
+
+loaded via a namespace (and not attached):
+  [1] splines_4.4.1       later_1.3.2         pbdZMQ_0.3-13      
+  [4] XML_3.99-0.17       rpart_4.1.23        lifecycle_1.0.4    
+  [7] rstatix_0.7.2       rprojroot_2.0.4     globals_0.16.3     
+ [10] lattice_0.22-6      MASS_7.3-61         insight_0.20.4     
+ [13] rockchalk_1.8.157   backports_1.5.0     survey_4.4-2       
+ [16] magrittr_2.0.3      openxlsx_4.2.7.1    Hmisc_5.1-3        
+ [19] rmarkdown_2.28      httpuv_1.6.15       qgraph_1.9.8       
+ [22] zip_2.3.1           pbapply_1.7-2       DBI_1.2.3          
+ [25] minqa_1.2.8         multcomp_1.4-26     abind_1.4-8        
+ [28] quadprog_1.5-8      nnet_7.3-19         TH.data_1.1-2      
+ [31] sandwich_3.1-1      listenv_0.9.1       gdata_3.0.0        
+ [34] arm_1.14-4          parallelly_1.38.0   codetools_0.2-20   
+ [37] tidyselect_1.2.1    farver_2.1.2        lme4_1.1-35.5      
+ [40] broom.mixed_0.2.9.5 stats4_4.4.1        base64enc_0.1-3    
+ [43] jsonlite_1.8.9      Formula_1.2-5       survival_3.7-0     
+ [46] emmeans_1.10.4      tools_4.4.1         Rcpp_1.0.13        
+ [49] glue_1.7.0          mnormt_2.1.1        mgcv_1.9-1         
+ [52] xfun_0.47           IRdisplay_1.1       withr_3.0.1        
+ [55] fastmap_1.2.0       mitools_2.4         boot_1.3-31        
+ [58] fansi_1.0.6         digest_0.6.37       mi_1.1             
+ [61] timechange_0.3.0    R6_2.5.1            mime_0.12          
+ [64] estimability_1.5.1  colorspace_2.1-1    gtools_3.9.5       
+ [67] jpeg_0.1-10         utf8_1.2.4          generics_0.1.3     
+ [70] data.table_1.16.0   corpcor_1.6.10      htmlwidgets_1.6.4  
+ [73] pkgconfig_2.0.3     sem_3.1-16          gtable_0.3.5       
+ [76] furrr_0.3.1         htmltools_0.5.8.1   png_0.1-8          
+ [79] rstudioapi_0.16.0   tzdb_0.4.0          reshape2_1.4.4     
+ [82] uuid_1.2-1          coda_0.19-4.1       checkmate_2.3.2    
+ [85] nlme_3.1-166        nloptr_2.1.1        repr_1.1.7         
+ [88] zoo_1.8-12          parallel_4.4.1      miniUI_0.1.1.1     
+ [91] foreign_0.8-87      pillar_1.9.0        grid_4.4.1         
+ [94] vctrs_0.6.5         promises_1.3.0      OpenMx_2.21.12     
+ [97] xtable_1.8-4        cluster_2.1.6       htmlTable_2.4.3    
+[100] evaluate_1.0.0      pbivnorm_0.6.0      mvtnorm_1.3-1      
+[103] cli_3.6.3           kutils_1.73         compiler_4.4.1     
+[106] rlang_1.1.4         crayon_1.5.3        ggsignif_0.6.4     
+[109] labeling_0.4.3      fdrtool_1.2.18      plyr_1.8.9         
+[112] stringi_1.8.4       pander_0.6.5        munsell_0.5.1      
+[115] lisrelToR_0.3       pacman_0.5.1        Matrix_1.7-0       
+[118] IRkernel_1.3.2      hms_1.1.3           glasso_1.11        
+[121] future_1.34.0       shiny_1.9.1         igraph_2.0.3       
+[124] broom_1.0.6         RcppParallel_5.1.9 </code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/mokken/02_applications.html" class="pagination-link" aria-label="Applicazione Pratica">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/irt/E_01.html" class="pagination-link" aria-label="✏️ Esercizi">
+        <span class="nav-page-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/irt/01_logistic_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

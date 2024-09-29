@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>29&nbsp; Il numero dei fattori – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/extraction/04_rotazione.html" rel="next">
+<link href="../../chapters/extraction/02_estrazione.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/extraction/01_val_matrici.html">Costruzione</a></li><li class="breadcrumb-item"><a href="../../chapters/extraction/03_numero_fattori.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">29.1</span> Introduzione</a></li>
+  <li><a href="#tre-domande-sulla-dimensionalità-del-test" id="toc-tre-domande-sulla-dimensionalità-del-test" class="nav-link" data-scroll-target="#tre-domande-sulla-dimensionalità-del-test"><span class="header-section-number">29.2</span> Tre domande sulla dimensionalità del test</a></li>
+  <li><a href="#metodi-basati-sugli-autovalori" id="toc-metodi-basati-sugli-autovalori" class="nav-link" data-scroll-target="#metodi-basati-sugli-autovalori"><span class="header-section-number">29.3</span> Metodi basati sugli autovalori</a>
+  <ul class="collapse">
+  <li><a href="#quota-di-varianza-spiegata" id="toc-quota-di-varianza-spiegata" class="nav-link" data-scroll-target="#quota-di-varianza-spiegata"><span class="header-section-number">29.3.1</span> Quota di varianza spiegata</a></li>
+  <li><a href="#valore-medio-degli-autovalori" id="toc-valore-medio-degli-autovalori" class="nav-link" data-scroll-target="#valore-medio-degli-autovalori"><span class="header-section-number">29.3.2</span> Valore medio degli autovalori</a></li>
+  <li><a href="#scree-test" id="toc-scree-test" class="nav-link" data-scroll-target="#scree-test"><span class="header-section-number">29.3.3</span> Scree test</a></li>
+  <li><a href="#parallel-analysis" id="toc-parallel-analysis" class="nav-link" data-scroll-target="#parallel-analysis"><span class="header-section-number">29.3.4</span> Parallel analysis</a></li>
+  </ul></li>
+  <li><a href="#metodi-basati-sul-confronto-tra-modelli" id="toc-metodi-basati-sul-confronto-tra-modelli" class="nav-link" data-scroll-target="#metodi-basati-sul-confronto-tra-modelli"><span class="header-section-number">29.4</span> Metodi basati sul confronto tra modelli</a>
+  <ul class="collapse">
+  <li><a href="#test-del-rapporto-di-verosimiglianze" id="toc-test-del-rapporto-di-verosimiglianze" class="nav-link" data-scroll-target="#test-del-rapporto-di-verosimiglianze"><span class="header-section-number">29.4.1</span> Test del rapporto di verosimiglianze</a></li>
+  </ul></li>
+  <li><a href="#minimizzazione-dellout-of-sample-prediction-error" id="toc-minimizzazione-dellout-of-sample-prediction-error" class="nav-link" data-scroll-target="#minimizzazione-dellout-of-sample-prediction-error"><span class="header-section-number">29.5</span> Minimizzazione dell’out-of-sample prediction error</a></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">29.6</span> Considerazioni conclusive</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/extraction/03_numero_fattori.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/extraction/01_val_matrici.html">Costruzione</a></li><li class="breadcrumb-item"><a href="../../chapters/extraction/03_numero_fattori.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-number-factors" class="quarto-section-identifier"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="f5344946" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># library(devtools)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github("jmbh/fspe")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">source</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(psych, paran, fspe)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="29.1">
+<h2 data-number="29.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">29.1</span> Introduzione</h2>
+<p>Immagina un scenario in cui un collega intende utilizzare un inventario della personalità che comprende sei aggettivi: loquace, assertivo, fantasioso, creativo, estroverso e intellettuale. In questo questionario, i partecipanti esprimono il grado con cui ciascun aggettivo descrive la loro personalità. Il tuo collega chiede il tuo parere su questa forma comune di valutazione della personalità basata su aggettivi. Mentre rifletti sull’inventario, emergono vari interrogativi: cosa misura esattamente questo inventario? Misura sei aspetti distinti della personalità, con ogni aspetto rappresentato da un aggettivo? O misura un singolo costrutto? In tal caso, quale sarebbe questo costrutto e cosa hanno in comune questi sei aggettivi in termini di caratteristiche o dimensioni psicologiche? O, invece, ci sono due o tre dimensioni separate rappresentate da questi sei aggettivi? Come sarà valutato e interpretato questo questionario?</p>
+<p>Esaminando i sei aggettivi, potresti raggrupparli in base alla loro somiglianza reciproca. Alcuni potrebbero suggerire che loquace, assertivo ed estroverso rappresentano variazioni di un attributo chiamato “estroversità”, mentre fantasioso, creativo e intellettuale rappresentano variazioni di un altro attributo chiamato “apertura all’esperienza”. Da questa prospettiva, le risposte a questi aggettivi riflettono due dimensioni di base della personalità.</p>
+<p>Tuttavia, un’altra prospettiva potrebbe suggerire che i sei aggettivi riflettono tre dimensioni. In questo caso, loquace, assertivo ed estroverso potrebbero essere raggruppati insieme, così come fantasioso e creativo, ma intellettuale potrebbe rappresentare una dimensione separata. Da questa prospettiva, le risposte ai sei item riflettono tre dimensioni fondamentali.</p>
+<p>Questo esempio mette in luce la questione della dimensionalità del test, che è una considerazione cruciale nello sviluppo, nella valutazione e nell’utilizzo di un test. Emergono almeno tre questioni psicometriche fondamentali riguardo alla dimensionalità di un test, e le risposte a queste domande hanno importanti implicazioni per valutare le proprietà psicometriche di un test comportamentale, per la valutazione appropriata in un test e per l’interpretazione corretta dei punteggi del test.</p>
+<p>Il dilemma presentato richiede l’impiego di metodologie statistiche per discernere la struttura latente sottostante. L’Analisi Fattoriale Esplorativa (EFA) è uno strumento chiave in questo contesto, utilizzato per identificare le dimensioni latenti e sintetizzare i dati. Tuttavia, una sfida principale nell’EFA è la selezione del numero di fattori da considerare, dato che l’aggiunta di nuovi fattori può migliorare l’adattamento ai dati, rendendo complesso stabilire un criterio statistico per determinare il numero ottimale di fattori.</p>
+<p>La maggior parte dei metodi esistenti per selezionare il numero di fattori può essere diviso in due categorie.</p>
+<ul>
+<li>I metodi della prima categoria analizzano gli autovalori della matrice di covarianza per determinare il numero di fattori.</li>
+<li>La seconda categoria affronta la stima del numero di fattori come un problema di selezione di modelli. Poiché il modello fattoriale con il maggior numero di fattori si adatta sempre meglio ai dati, la stima del numero di fattori nella popolazione richiede un compromesso tra adattamento del modello e parsimonia della soluzione.</li>
+</ul>
+<p>Esistono altri metodi oltre alle due categorie principali: il metodo Very Simple Structure (VSS) che cerca di recuperare strutture facilmente interpretabili e l’analisi grafica esplorativa (EGA) che stima una matrice di correlazione parziale regolarizzata e applica un algoritmo di rilevamento della comunità per determinare il numero di fattori.</p>
+</section>
+<section id="tre-domande-sulla-dimensionalità-del-test" class="level2" data-number="29.2">
+<h2 data-number="29.2" class="anchored" data-anchor-id="tre-domande-sulla-dimensionalità-del-test"><span class="header-section-number">29.2</span> Tre domande sulla dimensionalità del test</h2>
+<p>Sono presenti almeno tre questioni rilevanti riguardo la dimensionalità di un test.</p>
+<ol type="1">
+<li><strong>Numero di Dimensioni</strong>:
+<ul>
+<li>La prima questione riguarda il numero di dimensioni rifletto dagli item del test. Alcuni test riflettono una sola dimensione, mentre altri ne riflettono due o più. Questa questione è importante poiché ogni dimensione del test è probabile che venga valutata separatamente, necessitando ciascuna una propria analisi psicometrica.</li>
+</ul></li>
+<li><strong>Correlazione tra Dimensioni</strong>:
+<ul>
+<li>La seconda questione indaga se, in un test con più di una dimensione, queste dimensioni siano correlate tra loro. Alcuni test presentano diverse dimensioni che sono in qualche modo correlate, mentre altri hanno dimensioni essenzialmente indipendenti e non correlate. Questa questione è rilevante, in parte, perché la natura delle associazioni tra le dimensioni di un test ha implicazioni per la significatività del “punteggio totale” del test.</li>
+</ul></li>
+<li><strong>Natura delle Dimensioni</strong>:
+<ul>
+<li>La terza questione si chiede quali sono le dimensioni in un test con più di una dimensione, ovvero, quali attributi psicologici sono riflessi dalle dimensioni del test? Ad esempio, nel test della personalità con sei aggettivi descritto precedentemente, la prima dimensione riflette l’attributo psicologico dell’estroversione o qualche altro attributo? L’importanza di questa questione è evidente: per valutare ed interpretare efficacemente una dimensione di un test, è necessario comprendere il significato psicologico del punteggio.</li>
+</ul></li>
+</ol>
+</section>
+<section id="metodi-basati-sugli-autovalori" class="level2" data-number="29.3">
+<h2 data-number="29.3" class="anchored" data-anchor-id="metodi-basati-sugli-autovalori"><span class="header-section-number">29.3</span> Metodi basati sugli autovalori</h2>
+<p>Sono stati proposti quattro criteri basati sugli autovalori per determinare il numero <span class="math inline">\(m\)</span> di fattori da estrarre (Rencher, 2002).</p>
+<ul>
+<li>Scegliere <span class="math inline">\(m\)</span> tale per cui la varianza spiegata dal modello fattoriale superi una soglia predeterminata, per esempio l’80% della varianza totale, <span class="math inline">\(tr(\textbf{S})\)</span> o <span class="math inline">\(tr(\textbf{R})\)</span>.</li>
+<li>Scegliere <span class="math inline">\(m\)</span> uguale al numero di autovalori aventi un valore maggiore del valore medio degli autovalori. Per <strong>R</strong> il valore medio degli autovalori è <span class="math inline">\(1\)</span>; per <strong>S</strong> è <span class="math inline">\(\sum_{j=1}^p \theta_j/p\)</span>.</li>
+<li>Usare lo <em>scree test</em>.</li>
+<li>Mediante la statistica <span class="math inline">\(\chi^2\)</span>, valutare l’ipotesi che <span class="math inline">\(m\)</span> sia il numero corretto di fattori, <span class="math inline">\(H_0: \boldsymbol{\Sigma} =  \boldsymbol{\Lambda}
+  \boldsymbol{\Lambda}^{\mathsf{T}} +  \boldsymbol{\Psi}\)</span>, dove <span class="math inline">\(\boldsymbol{\Lambda}\)</span> è di ordine <span class="math inline">\(p \times m\)</span>.</li>
+</ul>
+<section id="quota-di-varianza-spiegata" class="level3" data-number="29.3.1">
+<h3 data-number="29.3.1" class="anchored" data-anchor-id="quota-di-varianza-spiegata"><span class="header-section-number">29.3.1</span> Quota di varianza spiegata</h3>
+<p>Il primo criterio si applica soprattutto al metodo delle componenti principali. La proporzione della varianza capionaria spiegata dal fattore <span class="math inline">\(j\)</span>-esimo estratto da <strong>S</strong> è uguale a</p>
+<p><span class="math display">\[\sum_{i=i}^p \hat{\lambda}_{ij}^2 / tr(\textbf{S}).\]</span></p>
+<p>Nel caso in cui i fattori vengano estratti da <strong>R</strong> avremo</p>
+<p><span class="math display">\[\sum_{i=i}^p \hat{\lambda}_{ij}^2 / p.\]</span></p>
+<p>Nel caso di fattori incorrelati, ciascun fattore contribuisce con una quota complessiva di varianza spiegata pari alla somma dei quadrati delle saturazioni fattoriali contenute nella matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span>: <span class="math inline">\(\sum_{i=1}^p\sum_{j=1}^m\hat{\lambda}_{ij}^2\)</span>. Nel caso del metodo delle componenti principali, tale somma è anche uguale alla somma dei primi <span class="math inline">\(m\)</span> autovalori, o alla somma di tutte le <span class="math inline">\(p\)</span> comunalità:</p>
+<p><span class="math display">\[\sum_{i=1}^p\sum_{j=1}^m\hat{\lambda}_{ij}^2= \sum_{i=1}^p \hat{h}_i^2
+= \sum_{j=1}^m \theta_j\]</span></p>
+<p>Sulla base di queste considerazioni, il numero <span class="math inline">\(m\)</span> di fattori viene scelto in modo da spiegare una quota sufficientemente grande di <strong>S</strong> o <span class="math inline">\(p\)</span>.</p>
+<p>Il numero dei fattori può essere determinato in questo modo anche nel caso in cui l’analisi fattoriale venga eseguita con il metodo dei fattori principali (ovvero, nel caso in cui vengano usate le stime delle comunalità per generare la matrice ridotta <span class="math inline">\(\textbf{S} -
+\hat{\boldsymbol{\Psi}}\)</span> o <span class="math inline">\(\textbf{R} - \hat{\boldsymbol{\Psi}}\)</span>). In questo caso, però, è possibile che alcuni autovalori della matrice <span class="math inline">\(\textbf{S} - \hat{\boldsymbol{\Psi}}\)</span> o <span class="math inline">\(\textbf{R} -
+\hat{\boldsymbol{\Psi}}\)</span> assumano valore negativo. In tali circostanze, è possibile che la proporzione cumulativa della varianza <span class="math inline">\(\sum_{j=1}^m \theta_j / \sum_{j=1}^p \theta_j\)</span> assuma un valore maggiore di <span class="math inline">\(1.0\)</span> per <span class="math inline">\(j &lt; p\)</span>.</p>
+<p>La proporzione cumulativa della varianza si riduce poi a <span class="math inline">\(1.0\)</span> quando vengono considerati anche i successivi autovalori negativi. Di conseguenza, può succedere che, utilizzando la matrice <span class="math inline">\(\textbf{S} - \hat{\boldsymbol{\Psi}}\)</span> o <span class="math inline">\(\textbf{R} - \hat{\boldsymbol{\Psi}}\)</span>, il criterio definito in base alla quota della varianza spiegata venga raggiunto per un valore <span class="math inline">\(m\)</span> minore di quello che verrebbe trovato utilizzando la matrice <strong>S</strong> o <strong>R</strong>.</p>
+<p>Nel caso del metodo dei fattori principali iterato, <span class="math inline">\(m\)</span> viene specificato precedentemente a ciascuna iterazione e <span class="math inline">\(\sum_{i}
+\hat{h}^2_i\)</span> viene ottenuto dopo ciascuna iterazione calcolando <span class="math inline">\(\text{tr}(\textbf{S} - \hat{\boldsymbol{\Psi}})\)</span>. Per scegliere <span class="math inline">\(m\)</span>, come per il metodo delle componenti principali, possono essere usati gli autovalori di <strong>S</strong> o <strong>R</strong>.</p>
+</section>
+<section id="valore-medio-degli-autovalori" class="level3" data-number="29.3.2">
+<h3 data-number="29.3.2" class="anchored" data-anchor-id="valore-medio-degli-autovalori"><span class="header-section-number">29.3.2</span> Valore medio degli autovalori</h3>
+<p>Il calcolo del valore medio degli autovalori è una procedura euristica implementata in molti software. In una variante di tale metodo, <span class="math inline">\(m\)</span> viene scelto in modo tale da uguagliare il numero degli autovalori positivi della matrice ridotta <span class="math inline">\(\textbf{R} - \hat{\boldsymbol{\Psi}}\)</span> (in tale matrice vi sono solitamente degli autovalori negativi). Tale variante ha però lo svantaggio di produrre solitamente un numero di fattori troppo grande.</p>
+</section>
+<section id="scree-test" class="level3" data-number="29.3.3">
+<h3 data-number="29.3.3" class="anchored" data-anchor-id="scree-test"><span class="header-section-number">29.3.3</span> Scree test</h3>
+<p>Lo scree test si basa su un grafico che rappresenta gli autovalori di <strong>S</strong> o <strong>R</strong> ordinati in modo decrescente in funzione del numero dei fattori. I punti che rappresentano gli autovalori vengono collegati con una spezzata. Il valore m viene determinato in corrispondenza del fattore oltre il quale il dislivello tra fattori successivi diventa esiguo e la spezzata tende a diventare orizzontale.</p>
+</section>
+<section id="parallel-analysis" class="level3" data-number="29.3.4">
+<h3 data-number="29.3.4" class="anchored" data-anchor-id="parallel-analysis"><span class="header-section-number">29.3.4</span> Parallel analysis</h3>
+<p>La Parallel Analysis si basa sul confronto tra gli autovalori empirici della matrice di correlazione delle variabili originali e quelli generati da un campione casuale di variabili standardizzate. In questo modo si tiene conto delle variazioni dovute agli errori di campionamento. Poiché anche in presenza di variabili incorrelate la matrice di correlazione presenta sempre autovalori maggiori di uno a causa della variabilità campionaria, il confronto tra gli autovalori empirici e quelli generati dalla Parallel Analysis permette di individuare il numero di fattori significativi. Una simulazione di Monte Carlo su una matrice di correlazione di <span class="math inline">\(p=10\)</span> variabili casuali mutuamente indipendenti, ciascuna con <span class="math inline">\(n=20\)</span> osservazioni, può essere utilizzata per illustrare la procedura.</p>
+<div id="4c2848e4" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>nsim <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>e1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, nsim)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsim) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n), <span class="fu">rnorm</span>(n)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  e <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">cor</span>(Y))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  e1[i] <span class="ot">&lt;-</span> e<span class="sc">$</span>values[<span class="dv">1</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(e1)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+3.34528401303822
+</div>
+</div>
+<p>Per i dati di questa simulazione, l’autovalore maggiore ha un valore pari a <span class="math inline">\(3.35\)</span>, anche se i dati sono del tutto casuali. La Parallel Analysis tiene conto di questo fatto e determina <span class="math inline">\(m\)</span> confrontando gli autovalori empirici con le loro “controparti casuali.” Vanno a determinare <span class="math inline">\(m\)</span> solo gli autovalori empirici che hanno un valore superiore ai corrispondenti autovalori generati da una matrice di dati dello stesso ordine composta da colonne mutualmente incorrelate. Nel caso di questa simulazione di Monte Carlo, se l’autovalore maggiore derivato da una matrice di numeri casuali ha un valore di <span class="math inline">\(3.35\)</span>, verranno considerati solo gli autovalori empirici che superano questo valore per determinare il numero di fattori.</p>
+</section>
+</section>
+<section id="metodi-basati-sul-confronto-tra-modelli" class="level2" data-number="29.4">
+<h2 data-number="29.4" class="anchored" data-anchor-id="metodi-basati-sul-confronto-tra-modelli"><span class="header-section-number">29.4</span> Metodi basati sul confronto tra modelli</h2>
+<p>Il confronto tra modelli può essere eseguito usando varie statistiche. Una scelta popolare per stimare il numero di fattori nella EFA è il Criterio d’Informazione Bayesiano (BIC; Schwarz, 1978), introdotto come un miglioramento rispetto al Criterio d’Informazione di Akaike (AIC; Akaike, 1973). Un’alternativa è l’indice RMSEA, che può essere considerato come una stima della mancanza di adattamento che tiene in considerazione i gradi di libertà del modello (Browne e Cudeck, 1992). Un altro metodo di questo tipo è il test Minimum Average Partial (MAP), che stima le correlazioni parziali residue medie per diversi numeri di fattori e seleziona quello con il valore più basso (Velicer, 1976).</p>
+<section id="test-del-rapporto-di-verosimiglianze" class="level3" data-number="29.4.1">
+<h3 data-number="29.4.1" class="anchored" data-anchor-id="test-del-rapporto-di-verosimiglianze"><span class="header-section-number">29.4.1</span> Test del rapporto di verosimiglianze</h3>
+<p>In questo test si confrontano due ipotesi: l’ipotesi nulla <span class="math inline">\(H_0\)</span> e l’ipotesi alternativa <span class="math inline">\(H_1\)</span>, per valutare la bontà di adattamento di un modello fattoriale a una matrice di covarianza delle variabili oggetto di osservazione campionaria <span class="math inline">\(Y\)</span>. L’ipotesi nulla postula che la struttura di interdipendenza di <span class="math inline">\(Y\)</span> può essere spiegata da <span class="math inline">\(m\)</span> fattori comuni, mentre l’alternativa postula che i fattori comuni non sono sufficienti per spiegare la matrice di covarianza <span class="math inline">\(\boldsymbol{\Sigma}\)</span>.</p>
+<p>Il test si basa sulla statistica del chi-quadrato con gradi di libertà pari a <span class="math inline">\(\nu = \frac{1}{2}[(p-m)^2-(p-m)]\)</span>, dove <span class="math inline">\(p\)</span> è il numero di variabili e <span class="math inline">\(m\)</span> è il numero di fattori. In pratica, si inizia con <span class="math inline">\(m^*=1\)</span> e si valuta l’ipotesi <span class="math inline">\(H_0\)</span> per <span class="math inline">\(m^*\)</span>. Se <span class="math inline">\(H_0\)</span> non viene rifiutata, il procedimento si arresta. In caso contrario, si considera <span class="math inline">\(m^*+1\)</span> e si ripete il test finché <span class="math inline">\(H_0\)</span> viene accettata o finché si raggiunge il valore minimo di gradi di libertà pari a zero.</p>
+<p>Il test del rapporto di verosimiglianze è particolarmente indicato quando il numero di osservazioni è grande, ma la sua applicazione è limitata dalle dimensioni del campione. In alternativa, è possibile utilizzare gli indici AIC, BIC e RMSEA per scegliere la soluzione con il valore più piccolo di tali statistiche. Tuttavia, questi indici non forniscono un test statistico per il confronto tra modelli.</p>
+<p>In pratica, si può considerare il valore <span class="math inline">\(m\)</span> indicato dal test come il limite superiore del numero di fattori che sono importanti dal punto di vista pratico.</p>
+</section>
+</section>
+<section id="minimizzazione-dellout-of-sample-prediction-error" class="level2" data-number="29.5">
+<h2 data-number="29.5" class="anchored" data-anchor-id="minimizzazione-dellout-of-sample-prediction-error"><span class="header-section-number">29.5</span> Minimizzazione dell’out-of-sample prediction error</h2>
+<p>Recentemente è stato proposto un nuovo metodo per stimare il numero di fattori in EFA che affronta il problema come un problema di selezione del modello {cite:p}<code>haslbeck2022estimating</code>. L’obiettivo è confrontare i modelli con 1, 2, …, p fattori, dove <span class="math inline">\(p\)</span> è il numero di variabili, e selezionare il modello con l’errore di previsione atteso più basso nella popolazione. Tuttavia, questo è un compito non banale perché il modello che minimizza l’errore di previsione nel campione non minimizza sempre l’errore di previsione nella popolazione.</p>
+<p>Intuitivamente, questo problema viene affrontato suddividendo il campione di dati in due insiemi: un set di training e un set di test. Il set di training viene utilizzato per stimare i parametri del modello, le cui previsioni vengono poi verificate utilizzando i dati di test (non utilizzati per la stima dei parametri). Questo calcolo dell’errore di previsione fuori campione viene ripetuto diverse volte, suddividendo ogni volta in modo casuale il campione negli insiemi di training e test. Tale metodo per stimare il numero di fattori è implementato nel pacchetto R <code>fspe</code>.</p>
+<p><strong>Esempio.</strong> Per confrontare i metodi discussi per la scelta del numero <span class="math inline">\(m\)</span> di fattori usiamo una matrice di correlazioni calcolata sulle sottoscale della WAIS. Le 11 sottoscale del test sono le seguenti:</p>
+<ul>
+<li>X1 = Information</li>
+<li>X2 = Comprehension</li>
+<li>X3 = Arithmetic</li>
+<li>X4 = Similarities</li>
+<li>X5 = Digit.span</li>
+<li>X6 = Vocabulary</li>
+<li>X7 = Digit.symbol</li>
+<li>X8 = Picture.completion</li>
+<li>X9 = Block.design</li>
+<li>X10 = Picture.arrangement</li>
+<li>X11 = Object.</li>
+</ul>
+<p>I dati sono stati ottenuti dal manuale della III edizione.</p>
+<div id="ea9231ed" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>varnames <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IN"</span>, <span class="st">"CO"</span>, <span class="st">"AR"</span>, <span class="st">"SI"</span>, <span class="st">"DS"</span>, <span class="st">"VO"</span>, <span class="st">"SY"</span>, <span class="st">"PC"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BD"</span>, <span class="st">"PA"</span>, <span class="st">"OA"</span>, <span class="st">"AG"</span>, <span class="st">"ED"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="fl">0.67</span>, <span class="fl">0.62</span>, <span class="fl">0.66</span>, <span class="fl">0.47</span>, <span class="fl">0.81</span>, <span class="fl">0.47</span>, <span class="fl">0.60</span>, <span class="fl">0.49</span>, <span class="fl">0.51</span>, <span class="fl">0.41</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fl">0.07</span>, <span class="fl">0.66</span>, .<span class="dv">67</span>, <span class="dv">1</span>, <span class="fl">0.54</span>, <span class="fl">0.60</span>, <span class="fl">0.39</span>, <span class="fl">0.72</span>, <span class="fl">0.40</span>, <span class="fl">0.54</span>, <span class="fl">0.45</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.49</span>, <span class="fl">0.38</span>, <span class="sc">-</span><span class="fl">0.08</span>, <span class="fl">0.52</span>, .<span class="dv">62</span>, .<span class="dv">54</span>, <span class="dv">1</span>, <span class="fl">0.51</span>, <span class="fl">0.51</span>, <span class="fl">0.58</span>, <span class="fl">0.41</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.46</span>, <span class="fl">0.48</span>, <span class="fl">0.43</span>, <span class="fl">0.37</span>, <span class="sc">-</span><span class="fl">0.08</span>, <span class="fl">0.49</span>, .<span class="dv">66</span>, .<span class="dv">60</span>, .<span class="dv">51</span>, <span class="dv">1</span>, <span class="fl">0.41</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.68</span>, <span class="fl">0.49</span>, <span class="fl">0.56</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.41</span>, <span class="sc">-</span><span class="fl">0.19</span>, <span class="fl">0.55</span>, .<span class="dv">47</span>, .<span class="dv">39</span>, .<span class="dv">51</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">41</span>, <span class="dv">1</span>, <span class="fl">0.45</span>, <span class="fl">0.45</span>, <span class="fl">0.42</span>, <span class="fl">0.39</span>, <span class="fl">0.42</span>, <span class="fl">0.31</span>, <span class="sc">-</span><span class="fl">0.19</span>, <span class="fl">0.43</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">81</span>, .<span class="dv">72</span>, .<span class="dv">58</span>, .<span class="dv">68</span>, .<span class="dv">45</span>, <span class="dv">1</span>, <span class="fl">0.49</span>, <span class="fl">0.57</span>, <span class="fl">0.46</span>, <span class="fl">0.52</span>, <span class="fl">0.40</span>, <span class="sc">-</span><span class="fl">0.02</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.62</span>, .<span class="dv">47</span>, .<span class="dv">40</span>, .<span class="dv">41</span>, .<span class="dv">49</span>, .<span class="dv">45</span>, .<span class="dv">49</span>, <span class="dv">1</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="fl">0.52</span>, <span class="fl">0.46</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fl">0.46</span>, <span class="fl">0.57</span>, .<span class="dv">60</span>, .<span class="dv">54</span>, .<span class="dv">46</span>, .<span class="dv">56</span>, .<span class="dv">42</span>, .<span class="dv">57</span>, .<span class="dv">50</span>, <span class="dv">1</span>, <span class="fl">0.61</span>, <span class="fl">0.59</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.51</span>, <span class="sc">-</span><span class="fl">0.28</span>, <span class="fl">0.48</span>, .<span class="dv">49</span>, .<span class="dv">45</span>, .<span class="dv">48</span>, .<span class="dv">50</span>, .<span class="dv">39</span>, .<span class="dv">46</span>, .<span class="dv">50</span>, .<span class="dv">61</span>, <span class="dv">1</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.54</span>, <span class="fl">0.59</span>, <span class="sc">-</span><span class="fl">0.32</span>, <span class="fl">0.44</span>, .<span class="dv">51</span>, .<span class="dv">49</span>, .<span class="dv">43</span>, .<span class="dv">50</span>, .<span class="dv">42</span>, .<span class="dv">52</span>, .<span class="dv">52</span>, .<span class="dv">59</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">54</span>, <span class="dv">1</span>, <span class="fl">0.46</span>, <span class="sc">-</span><span class="fl">0.37</span>, <span class="fl">0.49</span>, .<span class="dv">41</span>, .<span class="dv">38</span>, .<span class="dv">37</span>, .<span class="dv">41</span>, .<span class="dv">31</span>, .<span class="dv">40</span>, .<span class="dv">46</span>, .<span class="dv">51</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">59</span>, .<span class="dv">46</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.28</span>, <span class="fl">0.40</span>, <span class="sc">-</span>.<span class="dv">07</span>, <span class="sc">-</span>.<span class="dv">08</span>, <span class="sc">-</span>.<span class="dv">08</span>, <span class="sc">-</span>.<span class="dv">19</span>, <span class="sc">-</span>.<span class="dv">19</span>, <span class="sc">-</span>.<span class="dv">02</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>.<span class="dv">46</span>, <span class="sc">-</span>.<span class="dv">28</span>, <span class="sc">-</span>.<span class="dv">32</span>, <span class="sc">-</span>.<span class="dv">37</span>, <span class="sc">-</span>.<span class="dv">28</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="fl">0.29</span>, .<span class="dv">66</span>, .<span class="dv">52</span>, .<span class="dv">49</span>, .<span class="dv">55</span>, .<span class="dv">43</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">62</span>, .<span class="dv">57</span>, .<span class="dv">48</span>, .<span class="dv">44</span>, .<span class="dv">49</span>, .<span class="dv">40</span>, <span class="sc">-</span>.<span class="dv">29</span>, <span class="dv">1</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>), <span class="at">nrow =</span> <span class="dv">13</span>, <span class="at">ncol =</span> <span class="dv">13</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(temp) <span class="ot">&lt;-</span> varnames</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(temp) <span class="ot">&lt;-</span> varnames</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>wais_cor <span class="ot">&lt;-</span> temp[<span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>]</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>wais_cor</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 11 x 11 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">IN</th>
+<th data-quarto-table-cell-role="th" scope="col">CO</th>
+<th data-quarto-table-cell-role="th" scope="col">AR</th>
+<th data-quarto-table-cell-role="th" scope="col">SI</th>
+<th data-quarto-table-cell-role="th" scope="col">DS</th>
+<th data-quarto-table-cell-role="th" scope="col">VO</th>
+<th data-quarto-table-cell-role="th" scope="col">SY</th>
+<th data-quarto-table-cell-role="th" scope="col">PC</th>
+<th data-quarto-table-cell-role="th" scope="col">BD</th>
+<th data-quarto-table-cell-role="th" scope="col">PA</th>
+<th data-quarto-table-cell-role="th" scope="col">OA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">IN</td>
+<td>1.00</td>
+<td>0.67</td>
+<td>0.62</td>
+<td>0.66</td>
+<td>0.47</td>
+<td>0.81</td>
+<td>0.47</td>
+<td>0.60</td>
+<td>0.49</td>
+<td>0.51</td>
+<td>0.41</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">CO</td>
+<td>0.67</td>
+<td>1.00</td>
+<td>0.54</td>
+<td>0.60</td>
+<td>0.39</td>
+<td>0.72</td>
+<td>0.40</td>
+<td>0.54</td>
+<td>0.45</td>
+<td>0.49</td>
+<td>0.38</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">AR</td>
+<td>0.62</td>
+<td>0.54</td>
+<td>1.00</td>
+<td>0.51</td>
+<td>0.51</td>
+<td>0.58</td>
+<td>0.41</td>
+<td>0.46</td>
+<td>0.48</td>
+<td>0.43</td>
+<td>0.37</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">SI</td>
+<td>0.66</td>
+<td>0.60</td>
+<td>0.51</td>
+<td>1.00</td>
+<td>0.41</td>
+<td>0.68</td>
+<td>0.49</td>
+<td>0.56</td>
+<td>0.50</td>
+<td>0.50</td>
+<td>0.41</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">DS</td>
+<td>0.47</td>
+<td>0.39</td>
+<td>0.51</td>
+<td>0.41</td>
+<td>1.00</td>
+<td>0.45</td>
+<td>0.45</td>
+<td>0.42</td>
+<td>0.39</td>
+<td>0.42</td>
+<td>0.31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">VO</td>
+<td>0.81</td>
+<td>0.72</td>
+<td>0.58</td>
+<td>0.68</td>
+<td>0.45</td>
+<td>1.00</td>
+<td>0.49</td>
+<td>0.57</td>
+<td>0.46</td>
+<td>0.52</td>
+<td>0.40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">SY</td>
+<td>0.47</td>
+<td>0.40</td>
+<td>0.41</td>
+<td>0.49</td>
+<td>0.45</td>
+<td>0.49</td>
+<td>1.00</td>
+<td>0.50</td>
+<td>0.50</td>
+<td>0.52</td>
+<td>0.46</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">PC</td>
+<td>0.60</td>
+<td>0.54</td>
+<td>0.46</td>
+<td>0.56</td>
+<td>0.42</td>
+<td>0.57</td>
+<td>0.50</td>
+<td>1.00</td>
+<td>0.61</td>
+<td>0.59</td>
+<td>0.51</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">BD</td>
+<td>0.49</td>
+<td>0.45</td>
+<td>0.48</td>
+<td>0.50</td>
+<td>0.39</td>
+<td>0.46</td>
+<td>0.50</td>
+<td>0.61</td>
+<td>1.00</td>
+<td>0.54</td>
+<td>0.59</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">PA</td>
+<td>0.51</td>
+<td>0.49</td>
+<td>0.43</td>
+<td>0.50</td>
+<td>0.42</td>
+<td>0.52</td>
+<td>0.52</td>
+<td>0.59</td>
+<td>0.54</td>
+<td>1.00</td>
+<td>0.46</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">OA</td>
+<td>0.41</td>
+<td>0.38</td>
+<td>0.37</td>
+<td>0.41</td>
+<td>0.31</td>
+<td>0.40</td>
+<td>0.46</td>
+<td>0.51</td>
+<td>0.59</td>
+<td>0.46</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Il primo metodo per la determinazione di <span class="math inline">\(m\)</span> richiede di estrarre tanti fattori quanti sono necessari per spiegare una quota predeterminata della varianza totale. Supponiamo di porre il criterio pari all’80% della varianza totale.</p>
+<div id="676e2006" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">eigen</span>(wais_cor)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(out<span class="sc">$</span>val[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">/</span> <span class="fu">sum</span>(out<span class="sc">$</span>val)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(out<span class="sc">$</span>val[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]) <span class="sc">/</span> <span class="fu">sum</span>(out<span class="sc">$</span>val)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.765678107076221
+</div>
+<div class="cell-output cell-output-display">
+0.811885250571924
+</div>
+</div>
+<p>La soluzione ottenuta in questo modo ci porterebbe a mantenere <span class="math inline">\(m=5\)</span> fattori.</p>
+<p>Il secondo metodo suggerisce di mantenere tutti gli autovalori superiori al valore medio degli autovalori (che, nel caso di <strong>R</strong> è uguale a <span class="math inline">\(1\)</span>).</p>
+<div id="82b17d37" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">round</span>(out<span class="sc">$</span>values, <span class="dv">3</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 6.074 1.015 0.746 0.587 0.508 0.431 0.423 0.377 0.351 0.310 0.177</code></pre>
+</div>
+</div>
+<p>Nel caso presente, <span class="math inline">\(m=2\)</span>.</p>
+<p>Lo scree test può essere eseguito creando il grafico seguente.</p>
+<div id="4ddef5a2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">dim</span>(wais_cor)[<span class="dv">1</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>scree_tb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">sort</span>(<span class="fu">eigen</span>(wais_cor)<span class="sc">$</span>value, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>scree_plot <span class="ot">&lt;-</span> scree_tb <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Scree plot"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>scree_plot</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_numero_fattori_files/figure-html/cell-7-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Lo scree test suggerisce la presenza di un unico fattore comune.</p>
+<p>La versione della Parallel Analysis può essere eseguita con la funzione <code>paran()</code> contenuta nel pacchetto <code>paran</code>.</p>
+<div id="751d586a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paran</span>(wais_cor, <span class="at">graph =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Using eigendecomposition of correlation matrix.
+Computing: 10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+
+
+Results of Horn's Parallel Analysis for component retention
+330 iterations, using the mean estimate
+
+-------------------------------------------------- 
+Component   Adjusted    Unadjusted    Estimated 
+            Eigenvalue  Eigenvalue    Bias 
+-------------------------------------------------- 
+1           1.647667    3.765744      2.118077
+-------------------------------------------------- 
+
+Adjusted eigenvalues &gt; 1 indicate dimensions to retain.
+(1 components retained)
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_numero_fattori_files/figure-html/cell-8-output-2.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La Parallel Analysis indica una soluzione a <span class="math inline">\(m=1\)</span> fattore.</p>
+<p>Il test inferenziale relativo al numero di fattori basato sulla statistica <span class="math inline">\(\chi^2\)</span> può essere eseguito nel modo seguente.</p>
+<div id="58cbb73e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factanal</span>(<span class="at">covmat=</span>wais_cor, <span class="at">factors=</span><span class="dv">4</span>, <span class="at">n.obs=</span><span class="dv">933</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>
+Call:
+factanal(factors = 4, covmat = wais_cor, n.obs = 933)
+
+Uniquenesses:
+   IN    CO    AR    SI    DS    VO    SY    PC    BD    PA    OA 
+0.229 0.387 0.005 0.416 0.645 0.137 0.005 0.375 0.331 0.492 0.519 
+
+Loadings:
+   Factor1 Factor2 Factor3 Factor4
+IN 0.758   0.306   0.279   0.157  
+CO 0.672   0.312   0.229   0.107  
+AR 0.368   0.247   0.886   0.120  
+SI 0.602   0.376   0.193   0.207  
+DS 0.315   0.288   0.331   0.252  
+VO 0.851   0.242   0.208   0.192  
+SY 0.238   0.359   0.144   0.888  
+PC 0.432   0.623   0.143   0.172  
+BD 0.237   0.733   0.217   0.168  
+PA 0.367   0.539   0.150   0.245  
+OA 0.207   0.620   0.133   0.190  
+
+               Factor1 Factor2 Factor3 Factor4
+SS loadings      2.826   2.264   1.233   1.137
+Proportion Var   0.257   0.206   0.112   0.103
+Cumulative Var   0.257   0.463   0.575   0.678
+
+Test of the hypothesis that 4 factors are sufficient.
+The chi square statistic is 35.4 on 17 degrees of freedom.
+The p-value is 0.00551 </code></pre>
+</div>
+</div>
+<div id="367528ff" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">factanal</span>(<span class="at">covmat =</span> wais_cor, <span class="at">factors =</span> <span class="dv">5</span>, <span class="at">n.obs =</span> <span class="dv">933</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>
+Call:
+factanal(factors = 5, covmat = wais_cor, n.obs = 933)
+
+Uniquenesses:
+   IN    CO    AR    SI    DS    VO    SY    PC    BD    PA    OA 
+0.235 0.389 0.117 0.419 0.600 0.109 0.277 0.308 0.334 0.472 0.456 
+
+Loadings:
+   Factor1 Factor2 Factor3 Factor4 Factor5
+IN  0.745   0.264   0.301   0.192   0.118 
+CO  0.667   0.278   0.244   0.129   0.111 
+AR  0.378   0.236   0.814   0.145         
+SI  0.591   0.332   0.207   0.252   0.121 
+DS  0.288   0.208   0.366   0.341   0.155 
+VO  0.865   0.216   0.207   0.229         
+SY  0.251   0.364   0.153   0.708         
+PC  0.425   0.548   0.156   0.216   0.375 
+BD  0.246   0.708   0.230   0.201   0.107 
+PA  0.355   0.457   0.163   0.325   0.245 
+OA  0.211   0.664   0.128   0.205         
+
+               Factor1 Factor2 Factor3 Factor4 Factor5
+SS loadings      2.799   1.986   1.176   1.043   0.280
+Proportion Var   0.254   0.181   0.107   0.095   0.025
+Cumulative Var   0.254   0.435   0.542   0.637   0.662
+
+Test of the hypothesis that 5 factors are sufficient.
+The chi square statistic is 12.46 on 10 degrees of freedom.
+The p-value is 0.256 </code></pre>
+</div>
+</div>
+<p>Il test del <span class="math inline">\(\chi^2\)</span> indica una soluzione a sei fattori.</p>
+<p>Per concludere, si potrebbe usare il metodo basato sulla minimizzazione dell’errore di previsione. Tuttavia, non possiamo applicare tale metodo ai dati dell’esempio in quanto sarebbe necessario disporre dei dati grezzi (la matrice di correlazioni non è sufficiente). Allo scopo di illustrare la procedura relativa al metodo basato sulla minimizzazione dell’errore di previsione useremo qui un set di dati diverso, ovvero <code>holzinger19</code>.</p>
+<div id="b9a55cc8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(holzinger19)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressWarnings</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    fspe_out <span class="ot">&lt;-</span> <span class="fu">fspe</span>(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> holzinger19,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">maxK =</span> <span class="dv">10</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">nfold =</span> <span class="dv">10</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">rep =</span> <span class="dv">10</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">"PE"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  |                                                                      |   0%</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Caricamento dei namespace richiesti: GPArotation
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  |----------------------------------------------------------------------| 100%</code></pre>
+</div>
+</div>
+<div id="0db26928" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.new</span>()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.window</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">ylim=</span><span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">8</span>))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">las=</span><span class="dv">2</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fu">min</span>(fspe_out<span class="sc">$</span>PEs), <span class="at">col=</span><span class="st">"grey"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(fspe_out<span class="sc">$</span>PEs, <span class="at">lty=</span><span class="dv">2</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(fspe_out<span class="sc">$</span>PEs, <span class="at">pch=</span><span class="dv">20</span>, <span class="at">cex=</span><span class="fl">1.5</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">xlab=</span><span class="st">"Number of Factors"</span>, <span class="at">ylab=</span><span class="st">"Prediction Error"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_numero_fattori_files/figure-html/cell-12-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Per i dati <code>holzinger19</code>, il metodo di {cite:t}<code>haslbeck2022estimating</code> produce dunque una soluzione a 4 fattori.</p>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="29.6">
+<h2 data-number="29.6" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">29.6</span> Considerazioni conclusive</h2>
+<p>In generale, la scelta del numero di fattori <span class="math inline">\(m\)</span> non è sempre ovvia e rappresenta un limite dell’analisi fattoriale. Per affrontare questo problema, tradizionalmente si utilizza uno strumento come lo scree test per valutare la proporzione di varianza spiegata di ciascun item e l’interpretabilità della soluzione ottenuta dopo una rotazione adeguata. Tuttavia, poiché la scelta di <span class="math inline">\(m\)</span> è soggettiva, i limiti della soluzione ottenuta sono evidenti. In alcuni casi, la scelta di <span class="math inline">\(m\)</span> può essere più certa quando tutti i metodi forniscono la stessa risposta. Un’alternativa più moderna potrebbe essere l’uso di un metodo basato sulla minimizzazione dell’errore di previsione come quello descritto da {cite:t}<code>haslbeck2022estimating</code>. In questo modo, si potrebbe ottenere una soluzione più affidabile e oggettiva.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/extraction/02_estrazione.html" class="pagination-link" aria-label="L'estrazione dei fattori">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/extraction/04_rotazione.html" class="pagination-link" aria-label="La rotazione fattoriale">
+        <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/extraction/03_numero_fattori.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>59&nbsp; Oltre il Modello di Rasch – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/irt/06_implementation.html" rel="next">
+<link href="../../chapters/irt/04_estimation.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/05_1pl_2pl_3pl.html"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">59.1</span> Introduzione</a></li>
+  <li><a href="#un-esempio-pratico" id="toc-un-esempio-pratico" class="nav-link" data-scroll-target="#un-esempio-pratico"><span class="header-section-number">59.2</span> Un Esempio Pratico</a></li>
+  <li><a href="#modello-ad-un-parametro" id="toc-modello-ad-un-parametro" class="nav-link" data-scroll-target="#modello-ad-un-parametro"><span class="header-section-number">59.3</span> Modello ad Un Parametro</a>
+  <ul class="collapse">
+  <li><a href="#modello-di-rasch-e-modello-1pl" id="toc-modello-di-rasch-e-modello-1pl" class="nav-link" data-scroll-target="#modello-di-rasch-e-modello-1pl"><span class="header-section-number">59.3.1</span> Modello di Rasch e Modello 1PL</a></li>
+  <li><a href="#discriminazione" id="toc-discriminazione" class="nav-link" data-scroll-target="#discriminazione"><span class="header-section-number">59.3.2</span> Discriminazione</a></li>
+  </ul></li>
+  <li><a href="#modello-irt-a-due-parametri" id="toc-modello-irt-a-due-parametri" class="nav-link" data-scroll-target="#modello-irt-a-due-parametri"><span class="header-section-number">59.4</span> Modello IRT a due parametri</a></li>
+  <li><a href="#modello-irt-a-tre-parametri" id="toc-modello-irt-a-tre-parametri" class="nav-link" data-scroll-target="#modello-irt-a-tre-parametri"><span class="header-section-number">59.5</span> Modello IRT a tre parametri</a>
+  <ul class="collapse">
+  <li><a href="#bontà-delladattamento" id="toc-bontà-delladattamento" class="nav-link" data-scroll-target="#bontà-delladattamento"><span class="header-section-number">59.5.1</span> Bontà dell’Adattamento</a></li>
+  </ul></li>
+  <li><a href="#invarianza-di-gruppo-dei-parametri-degli-item-nella-irt" id="toc-invarianza-di-gruppo-dei-parametri-degli-item-nella-irt" class="nav-link" data-scroll-target="#invarianza-di-gruppo-dei-parametri-degli-item-nella-irt"><span class="header-section-number">59.6</span> Invarianza di Gruppo dei Parametri degli Item nella IRT</a></li>
+  <li><a href="#la-curva-caratteristica-del-test-nella-irt" id="toc-la-curva-caratteristica-del-test-nella-irt" class="nav-link" data-scroll-target="#la-curva-caratteristica-del-test-nella-irt"><span class="header-section-number">59.7</span> La Curva Caratteristica del Test nella IRT</a>
+  <ul class="collapse">
+  <li><a href="#caratterizzazione-di-un-test-secondo-la-irt" id="toc-caratterizzazione-di-un-test-secondo-la-irt" class="nav-link" data-scroll-target="#caratterizzazione-di-un-test-secondo-la-irt"><span class="header-section-number">59.7.1</span> Caratterizzazione di un Test Secondo la IRT</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">59.8</span> Considerazioni Conclusive</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">59.9</span> Session Info</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/irt/05_1pl_2pl_3pl.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_logistic_regr.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/05_1pl_2pl_3pl.html"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-rasch-beyond" class="quarto-section-identifier"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    eRm, mirt, grid, TAM, ggmirt, psychotools, latex2exp</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="59.1">
+<h2 data-number="59.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">59.1</span> Introduzione</h2>
+<p>Nell’ambito dei modelli IRT, il modello di Rasch impone i vincoli più restrittivi. Tali vincoli possono essere rilassati progressivamente definendo quelli che vengono chiamati modelli 1PL, 2PL e 3Pl.</p>
+</section>
+<section id="un-esempio-pratico" class="level2" data-number="59.2">
+<h2 data-number="59.2" class="anchored" data-anchor-id="un-esempio-pratico"><span class="header-section-number">59.2</span> Un Esempio Pratico</h2>
+<p>In questo capitolo, utilizzeremo nuovamente i dati che abbiamo esaminato in precedenza.</p>
+<div id="cell-5" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(data.fims.Aus.Jpn.scored, <span class="at">package =</span> <span class="st">"TAM"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fims <span class="ot">&lt;-</span> data.fims.Aus.Jpn.scored</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo le risposte dei primi 400 partecipanti. Per facilitare la manipolazione dei dati, cambiamo il nome delle colonne.</p>
+<div id="cell-7" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>responses <span class="ot">&lt;-</span> fims[<span class="dv">1</span><span class="sc">:</span><span class="dv">400</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">15</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(responses) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"M1PTI"</span>, <span class="st">"I"</span>, <span class="fu">colnames</span>(responses))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(responses)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 400
+Columns: 14
+$ I1  &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, ~
+$ I2  &lt;dbl&gt; 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, ~
+$ I3  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, ~
+$ I6  &lt;dbl&gt; 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, ~
+$ I7  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
+$ I11 &lt;dbl&gt; 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, ~
+$ I12 &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
+$ I14 &lt;dbl&gt; 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, ~
+$ I17 &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, ~
+$ I18 &lt;dbl&gt; 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, ~
+$ I19 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
+$ I21 &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, ~
+$ I22 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, ~
+$ I23 &lt;dbl&gt; 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, ~</code></pre>
+</div>
+</div>
+<div id="cell-8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gender <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(fims<span class="sc">$</span>SEX[<span class="dv">1</span><span class="sc">:</span><span class="dv">400</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(gender) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"male"</span>, <span class="st">"female"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="modello-ad-un-parametro" class="level2" data-number="59.3">
+<h2 data-number="59.3" class="anchored" data-anchor-id="modello-ad-un-parametro"><span class="header-section-number">59.3</span> Modello ad Un Parametro</h2>
+<p>Il modello ad un parametro è formulato nel modo seguente:</p>
+<p><span class="math display">\[
+\begin{equation}
+P(X_i = 1 \mid \theta_v, \alpha, \delta_i) = \frac{\exp(\alpha(\theta_v - \delta_i))}{1 + \exp(\alpha(\theta_v - \delta_i))} = \frac{1}{1 + \exp(-\alpha(\theta_v - \delta_i))},
+\end{equation}
+\]</span> (eq-1pl-model)</p>
+<p>dove <span class="math inline">\(\alpha\)</span> rappresenta la pendenza delle ICC. L’assenza di un pedice significa che <span class="math inline">\(\alpha\)</span> non varia tra gli item.</p>
+<p>Nel contesto del modello IRT (Teoria della Risposta all’Item) a un parametro, il parametro <span class="math inline">\(\alpha\)</span> è collegato alla pendenza della Funzione di Risposta all’Item (IRF). Esso riflette quanto bene un item è in grado di discriminare tra individui situati in punti diversi lungo il continuum. Di conseguenza, <span class="math inline">\(\alpha\)</span> è noto come il parametro di discriminazione dell’item.</p>
+<p>Per facilitare la comprensione, supponiamo di avere tre item con diversi valori di <span class="math inline">\(\alpha\)</span>, tutti posizionati a <span class="math inline">\(0.0\)</span> (cioè, <span class="math inline">\(\delta_1 = \delta_2 = \delta_3 = 0\)</span>). I nostri tre parametri di discriminazione sono <span class="math inline">\(0\)</span>, <span class="math inline">\(1\)</span> e <span class="math inline">\(2\)</span>. Inoltre, abbiamo un rispondente A situato a <span class="math inline">\(-1\)</span> (<span class="math inline">\(\theta_A = -1\)</span>) e un altro rispondente B situato a <span class="math inline">\(1\)</span> (cioè, <span class="math inline">\(\theta_B = 1\)</span>). Per l’item con <span class="math inline">\(\alpha = 0.0\)</span>, la nostra IRF e la linea di regressione logit sono orizzontali. Di conseguenza, la probabilità prevista di una risposta di tipo 1 per entrambi i rispondenti è <span class="math inline">\(0.5\)</span>:</p>
+<p><span class="math display">\[
+P(X_i = 1 \mid \theta, \delta_i) = 0.5.
+\]</span></p>
+<p>In questo caso, l’item non fornisce alcuna informazione utile per differenziare tra i due rispondenti. Questa mancanza di potere discriminatorio è una funzione diretta di <span class="math inline">\(\alpha = 0.0\)</span>.</p>
+<p>Al contrario, con il secondo item (<span class="math inline">\(\alpha = 1\)</span>) abbiamo previsioni diverse per i nostri rispondenti:</p>
+<p><span class="math display">\[
+P(X_i = 1 \mid \theta, \delta_i) = \frac{1}{1 + e^{-(\theta - \delta_i)}}.
+\]</span></p>
+<p>Per il rispondente A la probabilità <span class="math inline">\(p_2 = 0.2689\)</span> e per il rispondente B <span class="math inline">\(p_2 = 0.7311\)</span>. Pertanto, il parametro <span class="math inline">\(\alpha\)</span> di questo item ci permette di distinguere tra i due rispondenti.</p>
+<p>Sviluppando ulteriormente questa idea, troviamo che il terzo item (<span class="math inline">\(\alpha = 2.0\)</span>) avrebbe l’ICC (e la linea di regressione logit) più ripida dei tre item. Questa ripidità si riflette in una maggiore differenza nelle probabilità previste per i nostri rispondenti rispetto ai due item precedenti:</p>
+<p><span class="math display">\[
+P(X_i = 1 \mid \theta, \delta_i) = \frac{1}{1 + e^{-2(\theta - \delta_i)}}.
+\]</span></p>
+<p>Ovvero, per questo item il rispondente A ha una probabilità <span class="math inline">\(p_3 = 0.1192\)</span> e per il rispondente B <span class="math inline">\(p_3 = 0.8808\)</span>. In breve, l’entità della differenza in queste probabilità previste è una funzione diretta del parametro <span class="math inline">\(\alpha\)</span> dell’item. Pertanto, gli item con <span class="math inline">\(\alpha\)</span> maggiori (cioè con linee di regressione logit e IRF più ripide) discriminano meglio tra i rispondenti situati in punti diversi del continuum rispetto agli item con <span class="math inline">\(\alpha\)</span> minori.</p>
+<p>In sintesi, maggiore è il valore di <span class="math inline">\(\alpha\)</span>, più ripida sarà la curva ICC e maggiore sarà la discriminazione tra individui con diversi livelli di abilità <span class="math inline">\(\theta\)</span>.</p>
+<section id="modello-di-rasch-e-modello-1pl" class="level3" data-number="59.3.1">
+<h3 data-number="59.3.1" class="anchored" data-anchor-id="modello-di-rasch-e-modello-1pl"><span class="header-section-number">59.3.1</span> Modello di Rasch e Modello 1PL</h3>
+<p>Per riassumere, sia il modello 1PL che il modello di Rasch richiedono che gli item abbiano un parametro <span class="math inline">\(\alpha\)</span> costante, ma permettono che gli item differiscano nelle loro posizioni. Nel modello di Rasch, questo parametro costante è fissato a <span class="math inline">\(1.0\)</span>, mentre nel modello 1PL, <span class="math inline">\(\alpha\)</span> non deve necessariamente essere uguale a <span class="math inline">\(1.0\)</span>. Matematicamente, i modelli 1PL e Rasch sono equivalenti e i valori di un modello possono essere trasformati nell’altro attraverso una riscalatura appropriata.</p>
+<p>Tuttavia, per alcuni, il modello di Rasch rappresenta una prospettiva filosofica diversa da quella incarnata nel modello 1PL. Il modello 1PL si concentra sull’adattare i dati nel miglior modo possibile, data la struttura del modello. Al contrario, il modello di Rasch viene utilizzato per costruire la variabile di interesse (cfr. Andrich, 1988; Wilson, 2005; Wright, 1984; Wright &amp; Masters, 1982; Wright &amp; Stone, 1979). In breve, questa prospettiva sostiene che il modello di Rasch sia lo standard secondo il quale si può creare uno strumento per misurare una variabile. Questa visione è analoga a ciò che avviene nelle scienze fisiche. Ad esempio, consideriamo la misurazione del tempo. La misurazione del tempo implica un processo ripetitivo che segna incrementi uguali (cioè, unità) della variabile latente del tempo. Per misurare il tempo, dobbiamo definire la nostra unità (ad esempio, un periodo standard di oscillazione). Con il modello di Rasch, l’unità è definita come il logit, ossia la distanza sul nostro continuum che porta a un aumento del rapporto di successo di un fattore uguale alla costante trascendentale <span class="math inline">\(e\)</span>. Pertanto, analogamente alla misurazione del tempo, le nostre misurazioni con un modello a un parametro si basano sull’uso (ripetitivo) di un’unità che rimane costante nella nostra metrica.</p>
+<p>Per semplicità, nel seguito utilizzeremo il termine generale modello 1PL per riferirci sia alla situazione in cui <span class="math inline">\(\alpha = 1.0\)</span> (cioè, il modello di Rasch) sia alla situazione in cui <span class="math inline">\(\alpha\)</span> è uguale a qualche altra costante. Tuttavia, quando usiamo il termine modello di Rasch, ci riferiamo alla situazione in cui <span class="math inline">\(\alpha = 1.0\)</span> e a una filosofia di misurazione che afferma che il modello di Rasch sia la base per costruire la variabile di interesse.</p>
+<div id="cell-11" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mirt_rm <span class="ot">&lt;-</span> <span class="fu">mirt</span>(responses, <span class="dv">1</span>, <span class="st">"Rasch"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 16, Log-Lik: -2816.487, Max-Change: 0.00008</code></pre>
+</div>
+</div>
+</section>
+<section id="discriminazione" class="level3" data-number="59.3.2">
+<h3 data-number="59.3.2" class="anchored" data-anchor-id="discriminazione"><span class="header-section-number">59.3.2</span> Discriminazione</h3>
+<p>La formula generale per una curva caratteristica dell’item (ICC) in un modello 1PL è:</p>
+<p><span class="math display">\[
+P(\theta) = \frac{1}{1 + \exp(-a \cdot (\theta - b))},
+\]</span></p>
+<p>dove: - $ P() $ è la probabilità di una risposta corretta. - $ $ è l’abilità del rispondente. - $ a $ è il parametro di discriminazione dell’item, fisso per tutti gli item. - $ b $ è il parametro di difficoltà dell’item.</p>
+<p>Nel modello di Rasch, il parametro di discriminazione <span class="math inline">\(a\)</span> viene fissato a 1 per tutti gli item, per cui otteniamo</p>
+<p><span class="math display">\[
+P(\theta) = \frac{1}{1 + \exp(-(\theta - b))}.
+\]</span></p>
+<p>Il concetto di “discriminazione” nel contesto dei modelli di risposta all’item (IRT) si riferisce alla capacità di un item di distinguere tra individui con abilità leggermente superiore e quelli con abilità leggermente inferiore rispetto alla difficoltà dell’item stesso. Questa capacità discriminante è caratterizzata dalla pendenza della curva caratteristica dell’item (ICC) “nel mezzo”, ovvero per livelli di abilità vicini alla difficoltà dell’item, con discriminazioni più elevate che corrispondono a pendenze più ripide.</p>
+<div id="cell-13" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definizione della funzione sigmoide per rappresentare le ICC</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sigmoid <span class="ot">&lt;-</span> <span class="cf">function</span>(x, beta) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>beta <span class="sc">*</span> (x <span class="sc">-</span> <span class="dv">0</span>)))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione di una sequenza di livelli di abilità</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>abilities <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo delle probabilità per due item con diversi valori di discriminazione</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Per l'item di sinistra (discriminazione inferiore, beta=1)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>probabilities_left <span class="ot">&lt;-</span> <span class="fu">sigmoid</span>(abilities, <span class="at">beta =</span> <span class="dv">1</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Per l'item di destra (discriminazione superiore, beta=2)</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>probabilities_right <span class="ot">&lt;-</span> <span class="fu">sigmoid</span>(abilities, <span class="at">beta =</span> <span class="dv">2</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del dataframe per ggplot</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ability =</span> <span class="fu">rep</span>(abilities, <span class="dv">2</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Probability =</span> <span class="fu">c</span>(probabilities_left, probabilities_right),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Item =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Lower Discrimination (beta=1)"</span>, <span class="st">"Higher Discrimination (beta=2)"</span>), <span class="at">each =</span> <span class="dv">100</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del grafico</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> Ability, <span class="at">y =</span> Probability, <span class="at">color =</span> Item)) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"orange"</span>)) <span class="sc">+</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">Ability =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>            <span class="at">Probability =</span> <span class="fu">c</span>(<span class="fu">sigmoid</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>), <span class="fu">sigmoid</span>(<span class="fl">0.5</span>, <span class="dv">1</span>), <span class="fu">sigmoid</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">2</span>), <span class="fu">sigmoid</span>(<span class="fl">0.5</span>, <span class="dv">2</span>)),</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">Item =</span> <span class="fu">c</span>(<span class="st">"Lower Discrimination (beta=1)"</span>, <span class="st">"Lower Discrimination (beta=1)"</span>, <span class="st">"Higher Discrimination (beta=2)"</span>, <span class="st">"Higher Discrimination (beta=2)"</span>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> Ability, <span class="at">y =</span> Probability, <span class="at">color =</span> Item)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Item Characteristic Curves (ICCs) for Different Discriminations"</span>) <span class="sc">+</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Ability (theta)"</span>) <span class="sc">+</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Probability of Correct Response"</span>) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-7-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Consideriamo due diverse Curve Caratteristiche dell’Item (ICC) per item con difficoltà zero. In questa funzione, <code>sigmoid &lt;- function(x, beta) { 1 / (1 + exp(-beta * (x - 0))) }``, il parametro</code>beta` rappresenta la discriminazione dell’item, mentre la difficoltà dell’item è implicitamente fissata a zero (b = 0). Questa funzione, quindi, non modella direttamente variazioni nella difficoltà dell’item, ma solo nella discriminazione.</p>
+<p>Le ICC sono calcolate per due item con diversi livelli di discriminazione, rappresentati come “Lower Discrimination (beta=1)” e “Higher Discrimination (beta=2)” nel grafico. Le probabilità che persone con abilità di −0.5 e +0.5 risolvano correttamente l’item sono rispettivamente approssimativamente 0.38 e 0.62 per l’item con discriminazione inferiore (beta=1, rappresentato con la curva blu)</p>
+<div id="cell-15" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sigmoid <span class="ot">&lt;-</span> <span class="cf">function</span>(x, beta) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>beta <span class="sc">*</span> (x <span class="sc">-</span> <span class="dv">0</span>)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sigmoid</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">1</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sigmoid</span>(<span class="fl">0.5</span>, <span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.377540668798145
+</div>
+<div class="cell-output cell-output-display">
+0.622459331201855
+</div>
+</div>
+<p>e 0.27 e 0.73 per l’item con discriminazione superiore (beta=2, rappresentato con la curva arancione)</p>
+<div id="cell-17" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sigmoid</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">2</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sigmoid</span>(<span class="fl">0.5</span>, <span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.268941421369995
+</div>
+<div class="cell-output cell-output-display">
+0.731058578630005
+</div>
+</div>
+<p>Ciò indica che due persone con una differenza di 1 nella loro abilità mostrano una differenza di 0.24 nella loro probabilità di risolvere correttamente l’item con discriminazione inferiore (curva blu) e una differenza di 0.46 per l’item con discriminazione superiore (curva arancione).</p>
+<p>La pendenza al centro dell’ICC, dove la curva è quasi lineare, può essere approssimata da questa differenza sull’asse y divisa per la differenza sull’asse x, risultando in circa 0.24 per l’item con discriminazione inferiore e 0.46 per quello con discriminazione superiore. In termini più semplici, la pendenza è una misura di quanto rapidamente la probabilità di una risposta corretta aumenta (o diminuisce) in relazione a un cambiamento nell’abilità dell’individuo. Una pendenza più ripida, come quella dell’item con discriminazione superiore (curva arancione), indica una maggiore discriminazione, cioè l’item è più efficace nel distinguere tra persone con livelli di abilità leggermente differenti.</p>
+<p>Nel Modello di Rasch, si assume che tutti gli item abbiano la stessa discriminazione, con una pendenza di 1. Questo è evidente dalla formula del modello, dove l’unico parametro per ciascun item <span class="math inline">\(i\)</span> è la sua difficoltà <span class="math inline">\(\beta_i\)</span>, senza parametri aggiuntivi per modellare la discriminazione. Tuttavia, questo approccio è spesso considerato troppo rigido dal punto di vista della modellazione, poiché molti test reali contengono item con discriminazioni disuguali. In contrasto, il modello logistico a due parametri (2PL) di Birnbaum incorpora un parametro di pendenza, permettendo a ciascun item di avere una discriminazione diversa.</p>
+<p>In sintesi, la discriminazione in un test psicometrico è un concetto chiave che descrive quanto efficacemente un item può differenziare tra rispondenti con abilità simili ma non identiche. Maggiore è la discriminazione, più efficacemente l’item può identificare le differenze sottili nelle abilità dei rispondenti.</p>
+</section>
+</section>
+<section id="modello-irt-a-due-parametri" class="level2" data-number="59.4">
+<h2 data-number="59.4" class="anchored" data-anchor-id="modello-irt-a-due-parametri"><span class="header-section-number">59.4</span> Modello IRT a due parametri</h2>
+<p>Il modello 2PL, noto come “Modello IRT a due parametri”, prevede che le curve caratteristiche degli item non siano tra loro parallele. Questo modello utilizza due parametri per descrivere le curve caratteristiche di ciascun item: il parametro di difficoltà <span class="math inline">\(\delta_i\)</span> e il parametro di discriminazione <span class="math inline">\(\alpha_i\)</span>. Il parametro <span class="math inline">\(\alpha_i\)</span> consente alle curve caratteristiche di avere pendenze diverse e riflette la capacità discriminante dell’item rispetto alla variabile latente. Le curve caratteristiche nel modello 2PL hanno la seguente forma:</p>
+<p><span class="math display">\[
+\begin{equation}
+  Pr(X_{vi} = 1 \mid \theta_v, \delta_i, \alpha_i) = \frac{\exp(\alpha_i(\theta_v-\delta_i))}{1+ \exp(\alpha_i(\theta_v-\delta_i))}.
+\end{equation}
+\]</span> (eq-2pl)</p>
+<p>Adattiamo il modello 2PL ai dati.</p>
+<div id="cell-21" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mirt_2pl <span class="ot">&lt;-</span> <span class="fu">mirt</span>(responses, <span class="dv">1</span>, <span class="st">"2PL"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 14, Log-Lik: -2759.601, Max-Change: 0.00009</code></pre>
+</div>
+</div>
+<p>Esaminiamo le curve caratteristiche degli item.</p>
+<div id="cell-23" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mirt_2pl, <span class="at">type =</span> <span class="st">"trace"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-11-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-24" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mirt_2pl, <span class="at">type =</span> <span class="st">"trace"</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-12-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Possiamo visualizzare le stime dei parametri degli item per il 2PL utilizzando la funzione <code>coef()</code>.</p>
+<div id="cell-26" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mirt_2pl, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<dl>
+    <dt>$items</dt>
+        <dd>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 14 x 4 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">a</th>
+<th data-quarto-table-cell-role="th" scope="col">b</th>
+<th data-quarto-table-cell-role="th" scope="col">g</th>
+<th data-quarto-table-cell-role="th" scope="col">u</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I1</td>
+<td>1.1474247</td>
+<td>-1.02151843</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I2</td>
+<td>1.7687105</td>
+<td>-0.91065318</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I3</td>
+<td>1.3724569</td>
+<td>-1.67979991</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I6</td>
+<td>1.4786119</td>
+<td>-0.04254241</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I7</td>
+<td>1.0714345</td>
+<td>2.44143950</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I11</td>
+<td>1.5944811</td>
+<td>-0.95699944</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I12</td>
+<td>0.7033227</td>
+<td>1.07888714</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I14</td>
+<td>0.7707027</td>
+<td>-0.61243178</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I17</td>
+<td>0.7066769</td>
+<td>1.75774430</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I18</td>
+<td>0.7498268</td>
+<td>-0.50187180</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I19</td>
+<td>1.8311083</td>
+<td>1.45897744</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I21</td>
+<td>-0.2139602</td>
+<td>-7.07607206</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I22</td>
+<td>0.2769275</td>
+<td>7.65692247</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I23</td>
+<td>1.5212898</td>
+<td>-1.50340795</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</dd>
+    <dt>$means</dt>
+        <dd><strong>F1:</strong> 0</dd>
+    <dt>$cov</dt>
+        <dd>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 1 x 1 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">F1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</dd>
+</dl>
+</div>
+</div>
+<p>Effettuiamo un confronto tra il modello di Rash e il modello 2PL.</p>
+<div id="cell-28" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mirt_rm, mirt_2pl)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A mirt_df: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">SABIC</th>
+<th data-quarto-table-cell-role="th" scope="col">HQ</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">logLik</th>
+<th data-quarto-table-cell-role="th" scope="col">X2</th>
+<th data-quarto-table-cell-role="th" scope="col">df</th>
+<th data-quarto-table-cell-role="th" scope="col">p</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">mirt_rm</td>
+<td>5662.973</td>
+<td>5675.249</td>
+<td>5686.683</td>
+<td>5722.845</td>
+<td>-2816.487</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">mirt_2pl</td>
+<td>5575.203</td>
+<td>5598.118</td>
+<td>5619.462</td>
+<td>5686.964</td>
+<td>-2759.601</td>
+<td>113.7703</td>
+<td>13</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Questo indica che il 2PL fornisce un adattamento significativamente migliore rispetto al modello di Rasch, suggerendo che gli item non hanno tutti la stessa pendenza.</p>
+</section>
+<section id="modello-irt-a-tre-parametri" class="level2" data-number="59.5">
+<h2 data-number="59.5" class="anchored" data-anchor-id="modello-irt-a-tre-parametri"><span class="header-section-number">59.5</span> Modello IRT a tre parametri</h2>
+<p>Per considerare l’eventuale tendenza dei rispondenti a indovinare, i modelli IRT introducono un ulteriore parametro, denotato con <span class="math inline">\(\gamma_i\)</span>. Il modello a tre parametri (3PL) assume la seguente forma:</p>
+<p><span class="math display">\[
+\begin{equation}
+Pr(X_{vi} = 1 \mid \theta_v, \delta_i, \alpha_i, \gamma_i) = \gamma_i + (1-\gamma_i) \frac{\exp(\alpha_i(\theta_v-\delta_i))}{1 + \exp(\alpha_i(\theta_v-\delta_i))}.
+\end{equation}
+\]</span> (eq-3pl)</p>
+<p>Il parametro <span class="math inline">\(\gamma_i\)</span> ha l’effetto di introdurre un asintoto orizzontale maggiore di zero per valori di <span class="math inline">\(\theta_v\)</span> tendenti a <span class="math inline">\(-\infty\)</span>. In altre parole, per item con <span class="math inline">\(\gamma_i = 0.25\)</span>, la probabilità di risposta corretta dovuta al caso è almeno pari a 0.25, anche per i livelli di abilità latente più bassi.</p>
+<div id="cell-31" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mirt_3pl <span class="ot">&lt;-</span> <span class="fu">mirt</span>(responses, <span class="dv">1</span>, <span class="st">"3PL"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 41, Log-Lik: -2740.210, Max-Change: 0.00009</code></pre>
+</div>
+</div>
+<p>Esaminiamo le curve caratteristiche degli item.</p>
+<div id="cell-33" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mirt_3pl, <span class="at">type =</span> <span class="st">"trace"</span>, <span class="at">facet_items =</span> <span class="cn">FALSE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-16-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Un elemento chiave del modello 3PL è che l’asintoto inferiore, rappresentato dal parametro <span class="math inline">\(\gamma_i\)</span>, assume un valore maggiore di zero. Questo implica che la probabilità di una risposta corretta, rappresentata da <span class="math inline">\(\gamma_i\)</span>, risulta essere superiore a 0.5 per valori relativamente bassi di abilità latente. In altre parole, gli item con <span class="math inline">\(\gamma_i &gt; 0\)</span> forniscono una probabilità di risposta corretta più alta anche per rispondenti con livelli di abilità latente relativamente bassi.</p>
+<p>Ciò comporta che tali item risultano essere più facili per i rispondenti con abilità latente inferiore, in confronto agli item con <span class="math inline">\(\gamma_i = 0\)</span>. Questa caratteristica dei modelli 3PL permette di includere il tasso di guessing nella probabilità di risposta corretta e offre una maggiore flessibilità nella modellazione del comportamento degli item rispetto al modello a due parametri (2PL), nel quale l’asintoto inferiore è pari a zero.</p>
+<p>A negative slope indicates that, all else being equal, a person with a higher value on the latent trait is less likely to give a positive response than a person with a lower value. What a negative slope estimate means for test construction depends on context. For achievement tests, a negative slope indicates that a test item is not behaving like it should. For other psychological tests, such as personality or attitude scales, nega- tive slopes may be intended for some of the items. In this setting, test designers routinely use negatively worded items. A negatively worded version of “I like long walks on the beach”, for example, might be “I do not like long walks on the beach”. A person agreeing with the first would ideally disagree with the second3, so we could legitimately get a negative slope when the version we use is in the opposite direction to the rest of the items.</p>
+<p>Possiamo visualizzare le stime dei parametri degli item per il 3PL utilizzando la funzione <code>coef()</code>.</p>
+<div id="cell-35" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mirt_3pl, <span class="at">IRTpars =</span> <span class="cn">TRUE</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<dl>
+    <dt>$items</dt>
+        <dd>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 14 x 4 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">a</th>
+<th data-quarto-table-cell-role="th" scope="col">b</th>
+<th data-quarto-table-cell-role="th" scope="col">g</th>
+<th data-quarto-table-cell-role="th" scope="col">u</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I1</td>
+<td>1.4097712</td>
+<td>-0.493210687</td>
+<td>2.441664e-01</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I2</td>
+<td>2.6665125</td>
+<td>-0.403577318</td>
+<td>2.909004e-01</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I3</td>
+<td>1.4449658</td>
+<td>-1.632526461</td>
+<td>1.224781e-04</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I6</td>
+<td>1.5135421</td>
+<td>0.008607129</td>
+<td>1.949812e-02</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I7</td>
+<td>1.1634394</td>
+<td>2.297031163</td>
+<td>1.177019e-05</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I11</td>
+<td>1.4873719</td>
+<td>-0.983622151</td>
+<td>1.450244e-05</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I12</td>
+<td>2.1309230</td>
+<td>1.275060454</td>
+<td>2.074352e-01</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I14</td>
+<td>0.8047002</td>
+<td>-0.585743232</td>
+<td>6.144279e-05</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I17</td>
+<td>3.0758348</td>
+<td>1.319978270</td>
+<td>1.380818e-01</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I18</td>
+<td>0.7239776</td>
+<td>-0.510317344</td>
+<td>4.102312e-05</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I19</td>
+<td>1.8437010</td>
+<td>1.448606523</td>
+<td>3.537302e-06</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I21</td>
+<td>-5.2635776</td>
+<td>-2.270615508</td>
+<td>1.671759e-01</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">I22</td>
+<td>9.1791590</td>
+<td>1.989994379</td>
+<td>8.967797e-02</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I23</td>
+<td>1.6252401</td>
+<td>-1.452268207</td>
+<td>4.396566e-05</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</dd>
+    <dt>$means</dt>
+        <dd><strong>F1:</strong> 0</dd>
+    <dt>$cov</dt>
+        <dd>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 1 x 1 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">F1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</dd>
+</dl>
+</div>
+</div>
+<p>Effettuiamo il confronto tra i modelli 2PL e 3PL.</p>
+<div id="cell-37" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mirt_2pl, mirt_3pl)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A mirt_df: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">SABIC</th>
+<th data-quarto-table-cell-role="th" scope="col">HQ</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">logLik</th>
+<th data-quarto-table-cell-role="th" scope="col">X2</th>
+<th data-quarto-table-cell-role="th" scope="col">df</th>
+<th data-quarto-table-cell-role="th" scope="col">p</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">mirt_2pl</td>
+<td>5575.203</td>
+<td>5598.118</td>
+<td>5619.462</td>
+<td>5686.964</td>
+<td>-2759.601</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">mirt_3pl</td>
+<td>5564.419</td>
+<td>5598.792</td>
+<td>5630.808</td>
+<td>5732.061</td>
+<td>-2740.210</td>
+<td>38.78358</td>
+<td>14</td>
+<td>0.0003938891</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Il modello 2PL deriva dal modello 3PL impostando un tipo specifico di parametro, ovvero il parametro di guessing, a un valore di 0. Il parametro di guessing nel modello 3PL rappresenta la probabilità che un candidato indovini correttamente un item, anche se non possiede la competenza richiesta per rispondere. Poiché il parametro di guessing può assumere valori tra 0 e 1, ciò significa che il modello ristretto nella nostra analisi, che è il modello 2PL, deriva dal modello più generale impostando un parametro a un valore ai limiti del suo spazio parametrico. In questo scenario, il classico test del rapporto di verosimiglianza può portare a risultati inaccurati.</p>
+<p>Pertanto, per interpretare il confronto tra i due modelli utilizziamo solo gli indici di informazione per confrontare il modello 2PL e il modello 3PL. Mentre l’AIC indica una preferenza per il modello 3PL (forse a causa del guessing presente in alcuni item), il BIC mostra una lieve preferenza per il modello 2PL più semplice, poiché penalizza maggiormente l’uso di un maggior numero di parametri nel modello.</p>
+<section id="bontà-delladattamento" class="level3" data-number="59.5.1">
+<h3 data-number="59.5.1" class="anchored" data-anchor-id="bontà-delladattamento"><span class="header-section-number">59.5.1</span> Bontà dell’Adattamento</h3>
+<p>Le precedenti comparazioni mostrano che il 3PL fornisce una rappresentazione migliore dei dati rispetto ai modelli Rasch o 2PL. Tuttavia, ciò non ci dice se la rappresentazione fornita dal modello 3PL sia ragionevole, ma semplicemente che è la più ragionevole tra i modelli che abbiamo confrontato. Possiamo ulteriormente testare l’adattamento di questo modello utilizzando la statistica M2, fornita dalla funzione <code>M2()</code> in mirt. Le prime tre colonne dell’output forniscono la statistica del test, i gradi di libertà e il valore p per la statistica M2. In questo caso, il valore p testa l’ipotesi nulla secondo cui le somme osservate per righe e colonne sono coerenti con il modello 3PL. In questo caso, il valore p è superiore al 5%, il che significa che il test non fornisce evidenza che il 3PL non possa rappresentare i dati osservati.</p>
+<div id="cell-40" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">M2</span>(mirt_3pl)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 1 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">M2</th>
+<th data-quarto-table-cell-role="th" scope="col">df</th>
+<th data-quarto-table-cell-role="th" scope="col">p</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_5</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_95</th>
+<th data-quarto-table-cell-role="th" scope="col">SRMSR</th>
+<th data-quarto-table-cell-role="th" scope="col">TLI</th>
+<th data-quarto-table-cell-role="th" scope="col">CFI</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">stats</td>
+<td>76.06463</td>
+<td>63</td>
+<td>0.1249838</td>
+<td>0.02279774</td>
+<td>0</td>
+<td>0.03943958</td>
+<td>0.04533455</td>
+<td>0.975068</td>
+<td>0.9827394</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Oltre alla statistica M2, la funzione <code>M2()</code> stampa anche l’errore quadratico medio di approssimazione (RMSEA, insieme a un intervallo di confidenza del 90%) e il residuo quadratico medio standardizzato (SRMR), così come altri due indici di adattamento dalla statistica multivariata basati sulla statistica del test χ2. La funzione <code>M2()</code> calcola ciascuna di queste statistiche, sostituendo χ2 con il suo corrispondente a informazione limitata, M2, come spiegato nella Sezione 4.3.1 e Sezione 4.3.2.</p>
+<p>La statistica più comunemente riportata tra queste è il RMSEA. Un modello è considerato di fornire una buona rappresentazione dei dati del test quando il limite superiore dell’intervallo di confidenza è inferiore a 0.05. In questo caso, il limite superiore è circa 0.039, suggerendo che il modello fornisce una buona rappresentazione dei dati.</p>
+<p>È anche possibile ottenere un numero di altre statistiche di adattamento degli item tramite l’argomento <code>fit_stats</code> della funzione <code>itemfit()</code>:</p>
+<div id="cell-42" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">itemfit</span>(mirt_3pl, <span class="at">fit_stats =</span> <span class="st">"PV_Q1"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A mirt_df: 14 x 5</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">item</th>
+<th data-quarto-table-cell-role="th" scope="col">PV_Q1</th>
+<th data-quarto-table-cell-role="th" scope="col">df.PV_Q1</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA.PV_Q1</th>
+<th data-quarto-table-cell-role="th" scope="col">p.PV_Q1</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>I1</td>
+<td>8.206189</td>
+<td>7</td>
+<td>0.02078128</td>
+<td>0.31476412</td>
+</tr>
+<tr class="even">
+<td>I2</td>
+<td>13.072024</td>
+<td>7</td>
+<td>0.04662634</td>
+<td>0.07037285</td>
+</tr>
+<tr class="odd">
+<td>I3</td>
+<td>9.077944</td>
+<td>7</td>
+<td>0.02727605</td>
+<td>0.24710836</td>
+</tr>
+<tr class="even">
+<td>I6</td>
+<td>8.956994</td>
+<td>7</td>
+<td>0.02647032</td>
+<td>0.25575849</td>
+</tr>
+<tr class="odd">
+<td>I7</td>
+<td>7.995062</td>
+<td>7</td>
+<td>0.01887512</td>
+<td>0.33302949</td>
+</tr>
+<tr class="even">
+<td>I11</td>
+<td>16.205815</td>
+<td>7</td>
+<td>0.05741107</td>
+<td>0.02330110</td>
+</tr>
+<tr class="odd">
+<td>I12</td>
+<td>8.924171</td>
+<td>7</td>
+<td>0.02624740</td>
+<td>0.25814623</td>
+</tr>
+<tr class="even">
+<td>I14</td>
+<td>9.732213</td>
+<td>7</td>
+<td>0.03127676</td>
+<td>0.20426338</td>
+</tr>
+<tr class="odd">
+<td>I17</td>
+<td>13.384634</td>
+<td>7</td>
+<td>0.04781152</td>
+<td>0.06327324</td>
+</tr>
+<tr class="even">
+<td>I18</td>
+<td>8.254458</td>
+<td>7</td>
+<td>0.02119301</td>
+<td>0.31069184</td>
+</tr>
+<tr class="odd">
+<td>I19</td>
+<td>9.125313</td>
+<td>7</td>
+<td>0.02758519</td>
+<td>0.24378391</td>
+</tr>
+<tr class="even">
+<td>I21</td>
+<td>9.636107</td>
+<td>7</td>
+<td>0.03072176</td>
+<td>0.21014965</td>
+</tr>
+<tr class="odd">
+<td>I22</td>
+<td>15.522847</td>
+<td>7</td>
+<td>0.05524041</td>
+<td>0.02985173</td>
+</tr>
+<tr class="even">
+<td>I23</td>
+<td>9.169654</td>
+<td>7</td>
+<td>0.02787146</td>
+<td>0.24070406</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In questo modo viene calcolata la statistica PV_Q1, una statistica avanzata che fornisce una misura accurata di quanto bene un item specifico si adatta a un modello IRT, tenendo conto dell’incertezza nelle stime dei parametri delle persone e offrendo l’opzione di un calcolo più accurato attraverso il bootstrap.</p>
+<p>Gli indici infit e outfit si ottengono nel modo seguente:</p>
+<div id="cell-44" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemfit</span>(mirt_3pl, <span class="at">fit_stats =</span> <span class="st">"infit"</span>, <span class="at">method =</span> <span class="st">"ML"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message:
+"The following factor score estimates failed to converge successfully:
+    127,128,169,180,189,233,263,298"</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A mirt_df: 14 x 5</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">item</th>
+<th data-quarto-table-cell-role="th" scope="col">outfit</th>
+<th data-quarto-table-cell-role="th" scope="col">z.outfit</th>
+<th data-quarto-table-cell-role="th" scope="col">infit</th>
+<th data-quarto-table-cell-role="th" scope="col">z.infit</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>I1</td>
+<td>1.0053224</td>
+<td>0.08416827</td>
+<td>0.9828264</td>
+<td>-0.2734579</td>
+</tr>
+<tr class="even">
+<td>I2</td>
+<td>0.8650919</td>
+<td>-0.36666653</td>
+<td>0.8733259</td>
+<td>-2.0161598</td>
+</tr>
+<tr class="odd">
+<td>I3</td>
+<td>0.8763686</td>
+<td>-0.40387987</td>
+<td>0.9089194</td>
+<td>-0.9403723</td>
+</tr>
+<tr class="even">
+<td>I6</td>
+<td>0.9807241</td>
+<td>-0.14508359</td>
+<td>0.9155032</td>
+<td>-1.5032687</td>
+</tr>
+<tr class="odd">
+<td>I7</td>
+<td>0.7829731</td>
+<td>-0.79735536</td>
+<td>0.8957264</td>
+<td>-0.8992810</td>
+</tr>
+<tr class="even">
+<td>I11</td>
+<td>1.4621993</td>
+<td>2.38315999</td>
+<td>0.8855767</td>
+<td>-1.5671665</td>
+</tr>
+<tr class="odd">
+<td>I12</td>
+<td>0.9450892</td>
+<td>-0.92931105</td>
+<td>0.9415297</td>
+<td>-1.1574013</td>
+</tr>
+<tr class="even">
+<td>I14</td>
+<td>0.9674548</td>
+<td>-0.56489989</td>
+<td>1.0089689</td>
+<td>0.2225748</td>
+</tr>
+<tr class="odd">
+<td>I17</td>
+<td>0.7836005</td>
+<td>-2.45664322</td>
+<td>0.8073054</td>
+<td>-2.7086428</td>
+</tr>
+<tr class="even">
+<td>I18</td>
+<td>1.0252274</td>
+<td>0.53910770</td>
+<td>1.0130304</td>
+<td>0.3486484</td>
+</tr>
+<tr class="odd">
+<td>I19</td>
+<td>0.5897564</td>
+<td>-1.39294237</td>
+<td>0.8156508</td>
+<td>-2.1647249</td>
+</tr>
+<tr class="even">
+<td>I21</td>
+<td>0.9151478</td>
+<td>-0.98342248</td>
+<td>0.9170739</td>
+<td>-0.9629679</td>
+</tr>
+<tr class="odd">
+<td>I22</td>
+<td>0.8604586</td>
+<td>-0.97831569</td>
+<td>0.8436097</td>
+<td>-1.1595145</td>
+</tr>
+<tr class="even">
+<td>I23</td>
+<td>0.7780428</td>
+<td>-0.73611602</td>
+<td>0.8723068</td>
+<td>-1.3697710</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="invarianza-di-gruppo-dei-parametri-degli-item-nella-irt" class="level2" data-number="59.6">
+<h2 data-number="59.6" class="anchored" data-anchor-id="invarianza-di-gruppo-dei-parametri-degli-item-nella-irt"><span class="header-section-number">59.6</span> Invarianza di Gruppo dei Parametri degli Item nella IRT</h2>
+<p>Una caratteristica rilevante della teoria della IRT è l’invarianza dei parametri degli item rispetto al livello di abilità degli esaminandi che rispondono agli item. Ciò significa che i parametri degli item sono ciò che si definisce “invarianti di gruppo”. Questo aspetto della teoria può essere spiegato come segue.</p>
+<p>Immaginiamo due gruppi di esaminandi, entrambi estratti dalla stessa popolazione. Il primo gruppo presenta punteggi di abilità variabili da -3 a -1, con una media di -2, mentre il secondo gruppo ha punteggi che vanno da +1 a +3, con una media di +2. Si calcola la proporzione osservata di risposte corrette a un determinato item, per ogni livello di abilità, in entrambi i gruppi. Utilizzando la procedura di stima a massima verosimiglianza, si adatta una curva caratteristica dell’item ai dati, ottenendo stime dei parametri dell’item, ad esempio, b = 0.39 e a = 1.27. La curva caratteristica dell’item definita da queste stime viene poi tracciata per l’intervallo di abilità del primo gruppo.</p>
+<div id="cell-46" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>groupinv <span class="ot">&lt;-</span> <span class="cf">function</span>(mdl, t1l, t1u, t2l, t2u) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t1l)) t1l <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">3</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t1u)) t1u <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t2l)) t2l <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span>(t2u)) t2u <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    theta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, .<span class="dv">1875</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">21</span>, <span class="fu">length</span>(theta))</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    wb <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>), <span class="dv">2</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    wa <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">2.8</span>), <span class="dv">2</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    wc <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, .<span class="dv">35</span>), <span class="dv">2</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (mdl <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> mdl <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        wc <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (mdl <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>        wa <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(theta)) {</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        P <span class="ot">&lt;-</span> wc <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> wc) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>wa <span class="sc">*</span> (theta <span class="sc">-</span> wb)))</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(theta), f, P) <span class="sc">/</span> f</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    lowerg1 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(theta)) {</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theta[g] <span class="sc">&lt;=</span> t1l) {</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>            lowerg1 <span class="ot">&lt;-</span> lowerg1 <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    upperg1 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(theta)) {</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theta[g] <span class="sc">&lt;=</span> t1u) {</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>            upperg1 <span class="ot">&lt;-</span> upperg1 <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    theta1 <span class="ot">&lt;-</span> theta[lowerg1<span class="sc">:</span>upperg1]</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    p1 <span class="ot">&lt;-</span> p[lowerg1<span class="sc">:</span>upperg1]</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    lowerg2 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(theta)) {</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theta[g] <span class="sc">&lt;=</span> t2l) {</span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>            lowerg2 <span class="ot">&lt;-</span> lowerg2 <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>    upperg2 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (g <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(theta)) {</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (theta[g] <span class="sc">&lt;=</span> t2u) {</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>            upperg2 <span class="ot">&lt;-</span> upperg2 <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>    theta2 <span class="ot">&lt;-</span> theta[lowerg2<span class="sc">:</span>upperg2]</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    p2 <span class="ot">&lt;-</span> p[lowerg2<span class="sc">:</span>upperg2]</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    theta12 <span class="ot">&lt;-</span> <span class="fu">c</span>(theta1, theta2)</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>    p12 <span class="ot">&lt;-</span> <span class="fu">c</span>(p1, p2)</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">par</span>(<span class="at">lab =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">3</span>))</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(theta12, p12,</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Ability"</span>, <span class="at">ylab =</span> <span class="st">"Probability of Correct Response"</span></span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-56"><a href="#cb26-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (mdl <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb26-57"><a href="#cb26-57" aria-hidden="true" tabindex="-1"></a>        maintext <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Pooled Groups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">"b="</span>, wb)</span>
+<span id="cb26-58"><a href="#cb26-58" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-59"><a href="#cb26-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (mdl <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb26-60"><a href="#cb26-60" aria-hidden="true" tabindex="-1"></a>        maintext <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Pooled Groups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, <span class="st">"a="</span>, wa, <span class="st">"b="</span>, wb)</span>
+<span id="cb26-61"><a href="#cb26-61" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-62"><a href="#cb26-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (mdl <span class="sc">==</span> <span class="dv">3</span>) {</span>
+<span id="cb26-63"><a href="#cb26-63" aria-hidden="true" tabindex="-1"></a>        maintext <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb26-64"><a href="#cb26-64" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Pooled Groups"</span>, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>            <span class="st">"a="</span>, wa, <span class="st">"b="</span>, wb, <span class="st">"c="</span>, wc</span>
+<span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">par</span>(<span class="at">new =</span> <span class="st">"T"</span>)</span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot</span>(theta, P,</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">main =</span> maintext</span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-47" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">groupinv</span>(<span class="dv">1</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-23-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il punto fondamentale è che gli stessi valori dei parametri a e b si otterrebbero applicando il modello IRT esclusivamente ai dati del primo o del secondo gruppo. Di conseguenza, i parametri dell’item sono invarianti di gruppo. Questa invarianza è una caratteristica potente della teoria della risposta all’item, indicando che i valori dei parametri dell’item sono una proprietà dell’item stesso, non del gruppo che ha risposto all’item. Questo si contrappone alla teoria classica dei test, dove la difficoltà di un item è determinata dalla proporzione complessiva di risposte corrette da parte di un gruppo di esaminandi.</p>
+<p>Sebbene i parametri degli item - definiti come attributi intrinseci degli item indipendentemente dalle popolazioni di esaminandi - siano teoricamente invarianti tra gruppi diversi estratti dalla medesima popolazione, le stime ottenute di tali parametri attraverso procedure di massima verosimiglianza possono differire a causa della variabilità campionaria.</p>
+<p>In termini statistici, la stima dei parametri degli item per un dato campione è uno stimatore dei parametri reali della popolazione, ma è soggetta a errore campionario. L’errore campionario è direttamente proporzionale alla dimensione del campione e alla varianza dei dati all’interno del campione. Pertanto, benché i valori reali dei parametri degli item siano costanti tra i gruppi estratti dalla stessa popolazione, le stime campionarie di questi parametri mostreranno una distribuzione attorno al vero valore popolazionale, con una variabilità che riflette l’errore campionario.</p>
+<p>Inoltre, è fondamentale che l’item venga utilizzato per misurare lo stesso tratto latente in entrambi i gruppi. I parametri di un item non mantengono l’invarianza di gruppo se utilizzati fuori contesto, ovvero per misurare un tratto latente diverso, con esaminandi da una popolazione non adeguata, o se i due gruppi provengono da popolazioni diverse.</p>
+<p>L’invarianza di gruppo dei parametri degli item illustra anche una caratteristica fondamentale della curva caratteristica dell’item. Come affermato nei capitoli precedenti, questa curva rappresenta la relazione tra la probabilità di risposta corretta all’item e la scala di abilità. Il principio di invarianza riflette questo, poiché i parametri dell’item sono indipendenti dalla distribuzione degli esaminandi sulla scala di abilità. Da un punto di vista pratico, ciò significa che i parametri dell’intera curva caratteristica dell’item possono essere stimati da qualsiasi segmento della curva.</p>
+</section>
+<section id="la-curva-caratteristica-del-test-nella-irt" class="level2" data-number="59.7">
+<h2 data-number="59.7" class="anchored" data-anchor-id="la-curva-caratteristica-del-test-nella-irt"><span class="header-section-number">59.7</span> La Curva Caratteristica del Test nella IRT</h2>
+<p>La Curva Caratteristica del Test (CCT) è un concetto fondamentale nella IRT che rappresenta la relazione tra il punteggio vero medio previsto (TS, True Score) di un campione di rispondenti e i vari livelli di abilità latente (<span class="math inline">\(\theta\)</span>) nel campione.</p>
+<section id="definizione-della-cct" class="level4" data-number="59.7.0.1">
+<h4 data-number="59.7.0.1" class="anchored" data-anchor-id="definizione-della-cct"><span class="header-section-number">59.7.0.1</span> Definizione della CCT</h4>
+<p>Per un campione di rispondenti, la CCT è definita come la somma delle probabilità medie di risposta corretta a ciascun item del test, a vari livelli di abilità. Matematicamente, è espressa come:</p>
+<p><span class="math display">\[ TS(\theta) = \sum_{j=1}^{J} P_j(\theta), \]</span></p>
+<p>dove: - $ TS() $ è il punteggio vero medio per i rispondenti con un livello di abilità <span class="math inline">\(\theta\)</span>, - $ J $ è il numero totale di item nel test, - $ P_j() $ è la probabilità media di risposta corretta all’item $ j $ per un livello di abilità <span class="math inline">\(\theta\)</span>, che dipende dal modello specifico di curva caratteristica dell’item utilizzato.</p>
+</section>
+<section id="esempio-in-r" class="level4" data-number="59.7.0.2">
+<h4 data-number="59.7.0.2" class="anchored" data-anchor-id="esempio-in-r"><span class="header-section-number">59.7.0.2</span> Esempio in R</h4>
+<p>Per illustrare la CCT, consideriamo un test di quattro item. Calcoliamo la probabilità media di risposta corretta per ciascun item a vari livelli di abilità utilizzando il modello a due parametri. I parametri di discriminazione (<span class="math inline">\(a_j\)</span>) e difficoltà (<span class="math inline">\(b_j\)</span>) per questi item sono:</p>
+<ul>
+<li>Item 1: <span class="math inline">\(a_1 = 0.5\)</span>, <span class="math inline">\(b_1 = -1.0\)</span></li>
+<li>Item 2: <span class="math inline">\(a_2 = 1.2\)</span>, <span class="math inline">\(b_2 = 0.75\)</span></li>
+<li>Item 3: <span class="math inline">\(a_3 = 0.8\)</span>, <span class="math inline">\(b_3 = 0.0\)</span></li>
+<li>Item 4: <span class="math inline">\(a_4 = 1.0\)</span>, <span class="math inline">\(b_4 = 0.5\)</span></li>
+</ul>
+<p>La formula per la probabilità media di risposta corretta è:</p>
+<p><span class="math display">\[ P_j(\theta) = \frac{1}{1 + \exp[-a_j(\theta - b_j)]}. \]</span></p>
+<p>Utilizzando <code>R</code>, calcoliamo le probabilità medie per ogni item a vari livelli di abilità e poi sommiamo queste probabilità per ottenere il punteggio vero medio.</p>
+<div id="cell-50" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Definizione dei parametri per ciascun item</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.2</span>, <span class="fl">0.8</span>, <span class="fl">1.0</span>) <span class="co"># Parametri di discriminazione</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.0</span>, <span class="fl">0.75</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>) <span class="co"># Parametri di difficoltà</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Funzione per calcolare la probabilità media di risposta corretta</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>prob_correct <span class="ot">&lt;-</span> <span class="cf">function</span>(theta, a, b) {</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>a <span class="sc">*</span> (theta <span class="sc">-</span> b)))</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Vettore di livelli di abilità (theta) da esplorare</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>theta_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcolo dei punteggi veri medi per ogni livello di abilità</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>true_scores <span class="ot">&lt;-</span> <span class="fu">sapply</span>(theta_values, <span class="cf">function</span>(theta) {</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(<span class="fu">prob_correct</span>(theta, a, b))</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione di un data frame per il plotting</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Theta =</span> theta_values, <span class="at">TrueScore =</span> true_scores)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Creazione del grafico della CCT</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Theta, <span class="at">y =</span> TrueScore)) <span class="sc">+</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Curva Caratteristica del Test (CCT)"</span>,</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Livello di Abilita' (theta)"</span>,</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Punteggio Vero Medio"</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    ) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-24-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La CCT risultante mostra come il punteggio vero medio varia al variare del livello di abilità in un campione di rispondenti. Essa fornisce informazioni preziose sull’efficacia e sulla difficoltà del test, rivelando come il test nel suo complesso discrimina tra individui a diversi livelli di abilità. Questo rende la CCT uno strumento cruciale nella valutazione e nell’interpretazione dei risultati dei test basati sulla IRT.</p>
+</section>
+<section id="caratterizzazione-di-un-test-secondo-la-irt" class="level3" data-number="59.7.1">
+<h3 data-number="59.7.1" class="anchored" data-anchor-id="caratterizzazione-di-un-test-secondo-la-irt"><span class="header-section-number">59.7.1</span> Caratterizzazione di un Test Secondo la IRT</h3>
+<p>Nella pratica attuale, molti test sono progettati secondo i principi della teoria classica dei test, ma analizzati con metodi della IRT. Per ottimizzare l’uso dell’IRT, è essenziale che la progettazione, costruzione, analisi e interpretazione dei test avvengano interamente all’interno del suo quadro teorico. Questo richiede un’armonizzazione tra la creazione del test e le procedure analitiche dell’IRT, oltrepassando il tradizionale approccio basato sulla teoria classica dei test.</p>
+<section id="processo-di-precalibrazione-degli-item" class="level4" data-number="59.7.1.1">
+<h4 data-number="59.7.1.1" class="anchored" data-anchor-id="processo-di-precalibrazione-degli-item"><span class="header-section-number">59.7.1.1</span> Processo di Precalibrazione degli Item</h4>
+<ol type="1">
+<li><p><strong>Definizione del Tratto Latente</strong>: È cruciale identificare con precisione il tratto latente (come la competenza matematica) che i test intendono misurare.</p></li>
+<li><p><strong>Creazione e Selezione degli Item</strong>: Gli item vengono sviluppati per misurare il tratto latente e selezionati per l’inclusione in un pool di item. La selezione si basa sia sul contenuto che sulle caratteristiche tecniche degli item.</p></li>
+<li><p><strong>Test Pilota e Analisi dei Dati</strong>: Gli item vengono somministrati a un campione pilota e i dati raccolti vengono analizzati per determinare i parametri degli item, come difficoltà e discriminazione.</p></li>
+<li><p><strong>Calibrazione degli Item</strong>: Utilizzando un modello di IRT, gli item vengono calibrati in base ai dati raccolti, con la stima dei parametri di difficoltà e discriminazione.</p></li>
+<li><p><strong>Stabilimento della Scala di Abilità</strong>: Qui si entra nel cuore della precalibrazione: i parametri degli item vengono espressi in termini di una metrica di scala di abilità stabilita e conosciuta. Questo passaggio permette di avere un riferimento comune per la selezione degli item nei test futuri. In pratica, ciò significa che gli item sono valutati e classificati secondo una scala uniforme, facilitando la selezione degli item più adatti per specifici obiettivi di test.</p></li>
+<li><p><strong>Costruzione del Test da un Item Pool Precalibrato</strong>: Gli item selezionati dall’item pool precalibrato permettono di assemblare un test in cui le caratteristiche tecniche (come la TCC e la TIF) possono essere predette prima della somministrazione effettiva del test.</p></li>
+</ol>
+</section>
+<section id="vantaggi-della-precalibrazione" class="level4" data-number="59.7.1.2">
+<h4 data-number="59.7.1.2" class="anchored" data-anchor-id="vantaggi-della-precalibrazione"><span class="header-section-number">59.7.1.2</span> Vantaggi della Precalibrazione</h4>
+<ul>
+<li><strong>Efficienza</strong>: Risparmio di tempo e risorse, riducendo la necessità di pilotare ogni nuova versione del test.</li>
+<li><strong>Precisione</strong>: Capacità di scegliere gli item in base ai requisiti specifici del test.</li>
+<li><strong>Flessibilità</strong>: Facilità nella creazione di versioni multiple del test o test adattivi.</li>
+</ul>
+</section>
+<section id="obiettivi-specifici-dei-test" class="level4" data-number="59.7.1.3">
+<h4 data-number="59.7.1.3" class="anchored" data-anchor-id="obiettivi-specifici-dei-test"><span class="header-section-number">59.7.1.3</span> Obiettivi Specifici dei Test</h4>
+<ul>
+<li><strong>Test di Screening</strong>: Progettati per distinguere tra esaminandi sotto e sopra un livello di abilità specifico. La TCC e la TIF sono ottimizzate per questo scopo.</li>
+<li><strong>Test a Gamma Ampia</strong>: Mirati a misurare l’abilità su un’ampia gamma della scala di abilità, con la TCC che riflette questa ampiezza.</li>
+<li><strong>Test con Picco</strong>: Focalizzati su una specifica regione della scala di abilità, misurando l’abilità efficacemente in quella regione e meno accuratamente al di fuori di essa.</li>
+</ul>
+</section>
+<section id="sperimentazione-e-personalizzazione" class="level4" data-number="59.7.1.4">
+<h4 data-number="59.7.1.4" class="anchored" data-anchor-id="sperimentazione-e-personalizzazione"><span class="header-section-number">59.7.1.4</span> Sperimentazione e Personalizzazione</h4>
+<p>I costruttori di test possono sperimentare con diverse combinazioni di obiettivi di test, modelli di curva caratteristica degli item e numero di item per conseguire TCC e TIF ottimali. L’obiettivo è la creazione di test che misurino in modo preciso e coerente il tratto latente di interesse, adattandosi agli scopi specifici per cui il test è stato progettato.</p>
+<p>In conclusione, la costruzione di test nell’ambito della IRT richiede un approccio integrato, che consideri la fase di precalibrazione degli item e la fase di selezione e combinazione di questi per creare test che soddisfino obiettivi specifici, garantendo così misurazioni accurate e utili.</p>
+<div id="cell-53" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mathdata <span class="ot">&lt;-</span> rio<span class="sc">::</span><span class="fu">import</span>(<span class="st">"../../data/mathdata.txt"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>mathdata <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 6 x 5</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">V1</th>
+<th data-quarto-table-cell-role="th" scope="col">V2</th>
+<th data-quarto-table-cell-role="th" scope="col">V3</th>
+<th data-quarto-table-cell-role="th" scope="col">V4</th>
+<th data-quarto-table-cell-role="th" scope="col">V5</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-54" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mathdata)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>19601</li><li>5</li></ol>
+</div>
+</div>
+<div id="cell-55" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rasch <span class="ot">&lt;-</span> <span class="fu">mirt</span>(mathdata, <span class="dv">1</span>, <span class="st">"Rasch"</span>, <span class="at">SE =</span> <span class="cn">TRUE</span>, <span class="at">SE.type =</span> <span class="st">"Fisher"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>TwoPL <span class="ot">&lt;-</span> <span class="fu">mirt</span>(mathdata, <span class="dv">1</span>, <span class="st">"2PL"</span>, <span class="at">SE =</span> <span class="cn">TRUE</span>, <span class="at">SE.type =</span> <span class="st">"Fisher"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 38, Log-Lik: -55387.029, Max-Change: 0.00009
+
+Calculating information matrix...
+Iteration: 20, Log-Lik: -55198.496, Max-Change: 0.00007
+
+Calculating information matrix...</code></pre>
+</div>
+</div>
+<div id="cell-56" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">M2</span>(rasch, <span class="at">CI =</span> <span class="fl">0.95</span>) <span class="co"># Maydeu-Olivares &amp; Joe statistic</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 1 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">M2</th>
+<th data-quarto-table-cell-role="th" scope="col">df</th>
+<th data-quarto-table-cell-role="th" scope="col">p</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_2.5</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_97.5</th>
+<th data-quarto-table-cell-role="th" scope="col">SRMSR</th>
+<th data-quarto-table-cell-role="th" scope="col">TLI</th>
+<th data-quarto-table-cell-role="th" scope="col">CFI</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">stats</td>
+<td>428.241</td>
+<td>9</td>
+<td>0</td>
+<td>0.04875089</td>
+<td>0.04411739</td>
+<td>0.05349489</td>
+<td>0.04211215</td>
+<td>0.9597483</td>
+<td>0.9637735</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-57" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">M2</span>(TwoPL, <span class="at">CI =</span> <span class="fl">0.95</span>) <span class="co"># Maydeu-Olivares &amp; Joe statistic</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 1 x 9</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">M2</th>
+<th data-quarto-table-cell-role="th" scope="col">df</th>
+<th data-quarto-table-cell-role="th" scope="col">p</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_2.5</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA_97.5</th>
+<th data-quarto-table-cell-role="th" scope="col">SRMSR</th>
+<th data-quarto-table-cell-role="th" scope="col">TLI</th>
+<th data-quarto-table-cell-role="th" scope="col">CFI</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">stats</td>
+<td>57.02138</td>
+<td>5</td>
+<td>5.005907e-11</td>
+<td>0.02303976</td>
+<td>0.01685003</td>
+<td>0.02961753</td>
+<td>0.01336253</td>
+<td>0.9910097</td>
+<td>0.9955048</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-58" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">itemfit</span>(TwoPL, <span class="at">fit_stats =</span> <span class="st">"S_X2"</span>), <span class="at">digits =</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  item     S_X2 df.S_X2 RMSEA.S_X2  p.S_X2
+1   V1 80.50442       2    0.04475 0.00000
+2   V2 19.40097       2    0.02107 0.00006
+3   V3 13.66416       2    0.01725 0.00108
+4   V4 65.60787       2    0.04028 0.00000
+5   V5 34.67477       2    0.02887 0.00000</code></pre>
+</div>
+</div>
+<div id="cell-59" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemfit</span>(TwoPL, <span class="at">S_X2.tables =</span> T, <span class="at">empirical.table =</span> <span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A mirt_df: 5 x 5</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">item</th>
+<th data-quarto-table-cell-role="th" scope="col">S_X2</th>
+<th data-quarto-table-cell-role="th" scope="col">df.S_X2</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA.S_X2</th>
+<th data-quarto-table-cell-role="th" scope="col">p.S_X2</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>V1</td>
+<td>80.50442</td>
+<td>2</td>
+<td>0.04475113</td>
+<td>3.301323e-18</td>
+</tr>
+<tr class="even">
+<td>V2</td>
+<td>19.40097</td>
+<td>2</td>
+<td>0.02106899</td>
+<td>6.125392e-05</td>
+</tr>
+<tr class="odd">
+<td>V3</td>
+<td>13.66416</td>
+<td>2</td>
+<td>0.01724979</td>
+<td>1.078610e-03</td>
+</tr>
+<tr class="even">
+<td>V4</td>
+<td>65.60787</td>
+<td>2</td>
+<td>0.04028213</td>
+<td>5.668037e-15</td>
+</tr>
+<tr class="odd">
+<td>V5</td>
+<td>34.67477</td>
+<td>2</td>
+<td>0.02887110</td>
+<td>2.954394e-08</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-60" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemfit</span>(TwoPL, <span class="at">group.bins =</span> <span class="dv">10</span>, <span class="at">empirical.plot =</span> <span class="dv">1</span>, <span class="at">empirical.CI =</span> <span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-32-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-61" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itemfit</span>(TwoPL,</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.bins =</span> <span class="dv">6</span>, <span class="at">empirical.plot =</span> <span class="dv">1</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">empirical.CI =</span> <span class="dv">0</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="05_1pl_2pl_3pl_files/figure-html/cell-33-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="59.8">
+<h2 data-number="59.8" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">59.8</span> Considerazioni Conclusive</h2>
+<p>Il pacchetto <code>mirt</code> (Chalmers, 2021) offre funzionalità per l’adattamento di una varietà di modelli IRT, inclusi i modelli Rasch, 2PL e 3PL, nonché diversi modelli per risposte politomiche utilizzando la massima verosimiglianza marginale. In questo capitolo, abbiamo esplorato come sia possibile confrontare i modelli 1PL, 2PL e 3PL, che sono stati adattati ai dati usando <code>mirt</code>, attraverso il test del rapporto di verosimiglianza e gli indici di informazione.</p>
+</section>
+<section id="session-info" class="level2" data-number="59.9">
+<h2 data-number="59.9" class="anchored" data-anchor-id="session-info"><span class="header-section-number">59.9</span> Session Info</h2>
+<div id="cell-64" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>R version 4.4.1 (2024-06-14)
+Platform: aarch64-apple-darwin20
+Running under: macOS 15.0
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] latex2exp_0.9.6   psychotools_0.7-4 ggmirt_0.1.0      TAM_4.2-21       
+ [5] CDM_8.2-6         mvtnorm_1.3-1     mirt_1.42         lattice_0.22-6   
+ [9] eRm_1.0-6         ggokabeito_0.1.0  viridis_0.6.5     viridisLite_0.4.2
+[13] ggpubr_0.6.0      ggExtra_0.10.1    bayesplot_1.11.1  gridExtra_2.3    
+[17] patchwork_1.3.0   semTools_0.5-6    semPlot_1.1.6     lavaan_0.6-18    
+[21] psych_2.4.6.26    scales_1.3.0      markdown_1.13     knitr_1.48       
+[25] lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4      
+[29] purrr_1.0.2       readr_2.1.5       tidyr_1.3.1       tibble_3.2.1     
+[33] ggplot2_3.5.1     tidyverse_2.0.0   here_1.0.1       
+
+loaded via a namespace (and not attached):
+  [1] splines_4.4.1        later_1.3.2          pbdZMQ_0.3-13       
+  [4] R.oo_1.26.0          XML_3.99-0.17        rpart_4.1.23        
+  [7] lifecycle_1.0.4      rstatix_0.7.2        rprojroot_2.0.4     
+ [10] globals_0.16.3       MASS_7.3-61          rockchalk_1.8.157   
+ [13] backports_1.5.0      magrittr_2.0.3       openxlsx_4.2.7.1    
+ [16] Hmisc_5.1-3          rmarkdown_2.28       httpuv_1.6.15       
+ [19] qgraph_1.9.8         zip_2.3.1            sessioninfo_1.2.2   
+ [22] pbapply_1.7-2        minqa_1.2.8          multcomp_1.4-26     
+ [25] abind_1.4-8          audio_0.1-11         quadprog_1.5-8      
+ [28] R.utils_2.12.3       nnet_7.3-19          TH.data_1.1-2       
+ [31] sandwich_3.1-1       listenv_0.9.1        testthat_3.2.1.1    
+ [34] RPushbullet_0.3.4    vegan_2.6-8          arm_1.14-4          
+ [37] parallelly_1.38.0    permute_0.9-7        codetools_0.2-20    
+ [40] tidyselect_1.2.1     farver_2.1.2         lme4_1.1-35.5       
+ [43] base64enc_0.1-3      jsonlite_1.8.9       polycor_0.8-1       
+ [46] progressr_0.14.0     Formula_1.2-5        survival_3.7-0      
+ [49] emmeans_1.10.4       tools_4.4.1          rio_1.2.2           
+ [52] snow_0.4-4           Rcpp_1.0.13          glue_1.7.0          
+ [55] mnormt_2.1.1         admisc_0.36          xfun_0.47           
+ [58] mgcv_1.9-1           IRdisplay_1.1        withr_3.0.1         
+ [61] beepr_2.0            fastmap_1.2.0        boot_1.3-31         
+ [64] fansi_1.0.6          digest_0.6.37        mi_1.1              
+ [67] timechange_0.3.0     R6_2.5.1             mime_0.12           
+ [70] estimability_1.5.1   colorspace_2.1-1     gtools_3.9.5        
+ [73] jpeg_0.1-10          R.methodsS3_1.8.2    utf8_1.2.4          
+ [76] generics_0.1.3       data.table_1.16.0    corpcor_1.6.10      
+ [79] SimDesign_2.17.1     htmlwidgets_1.6.4    pkgconfig_2.0.3     
+ [82] sem_3.1-16           gtable_0.3.5         brio_1.1.5          
+ [85] htmltools_0.5.8.1    carData_3.0-5        png_0.1-8           
+ [88] rstudioapi_0.16.0    tzdb_0.4.0           reshape2_1.4.4      
+ [91] uuid_1.2-1           coda_0.19-4.1        checkmate_2.3.2     
+ [94] nlme_3.1-166         curl_5.2.3           nloptr_2.1.1        
+ [97] repr_1.1.7           zoo_1.8-12           parallel_4.4.1      
+[100] miniUI_0.1.1.1       foreign_0.8-87       pillar_1.9.0        
+[103] vctrs_0.6.5          promises_1.3.0       car_3.1-2           
+[106] OpenMx_2.21.12       xtable_1.8-4         Deriv_4.1.6         
+[109] cluster_2.1.6        dcurver_0.9.2        GPArotation_2024.3-1
+[112] htmlTable_2.4.3      evaluate_1.0.0       pbivnorm_0.6.0      
+[115] cli_3.6.3            kutils_1.73          compiler_4.4.1      
+[118] rlang_1.1.4          crayon_1.5.3         future.apply_1.11.2 
+[121] ggsignif_0.6.4       labeling_0.4.3       fdrtool_1.2.18      
+[124] plyr_1.8.9           stringi_1.8.4        munsell_0.5.1       
+[127] lisrelToR_0.3        pacman_0.5.1         Matrix_1.7-0        
+[130] IRkernel_1.3.2       hms_1.1.3            glasso_1.11         
+[133] future_1.34.0        shiny_1.9.1          igraph_2.0.3        
+[136] broom_1.0.6          RcppParallel_5.1.9  </code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/irt/04_estimation.html" class="pagination-link" aria-label="Stima">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/irt/06_implementation.html" class="pagination-link" aria-label="Implementazione">
+        <span class="nav-page-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/irt/05_1pl_2pl_3pl.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

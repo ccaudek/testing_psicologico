@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>39&nbsp; Introduzione ai Modelli SEM – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/sem/02_data_preparation.html" rel="next">
+<link href="../../chapters/cfa/E_01.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#modello-di-regressione-lineare-multipla" id="toc-modello-di-regressione-lineare-multipla" class="nav-link active" data-scroll-target="#modello-di-regressione-lineare-multipla"><span class="header-section-number">39.0.1</span> Modello di Regressione Lineare Multipla</a></li>
+  <li><a href="#metodo-dei-minimi-quadrati" id="toc-metodo-dei-minimi-quadrati" class="nav-link" data-scroll-target="#metodo-dei-minimi-quadrati"><span class="header-section-number">39.0.2</span> Metodo dei Minimi Quadrati</a></li>
+  <li><a href="#modello-di-percorso" id="toc-modello-di-percorso" class="nav-link" data-scroll-target="#modello-di-percorso"><span class="header-section-number">39.0.3</span> Modello di Percorso</a></li>
+  <li><a href="#path-analysis-e-scomposizione-della-covarianza" id="toc-path-analysis-e-scomposizione-della-covarianza" class="nav-link" data-scroll-target="#path-analysis-e-scomposizione-della-covarianza"><span class="header-section-number">39.0.4</span> Path Analysis e Scomposizione della Covarianza</a></li>
+  <li><a href="#errore-di-specificazione" id="toc-errore-di-specificazione" class="nav-link" data-scroll-target="#errore-di-specificazione"><span class="header-section-number">39.1</span> Errore di Specificazione</a>
+  <ul class="collapse">
+  <li><a href="#soppressione" id="toc-soppressione" class="nav-link" data-scroll-target="#soppressione"><span class="header-section-number">39.1.1</span> Soppressione</a></li>
+  <li><a href="#regressione-stepwise" id="toc-regressione-stepwise" class="nav-link" data-scroll-target="#regressione-stepwise"><span class="header-section-number">39.1.2</span> Regressione Stepwise</a></li>
+  </ul></li>
+  <li><a href="#oltre-la-regressione-multipla-luso-dei-modelli-sem" id="toc-oltre-la-regressione-multipla-luso-dei-modelli-sem" class="nav-link" data-scroll-target="#oltre-la-regressione-multipla-luso-dei-modelli-sem"><span class="header-section-number">39.2</span> Oltre la Regressione Multipla: L’Uso dei Modelli SEM</a></li>
+  <li><a href="#impiego-delle-medie-nei-modelli-sem" id="toc-impiego-delle-medie-nei-modelli-sem" class="nav-link" data-scroll-target="#impiego-delle-medie-nei-modelli-sem"><span class="header-section-number">39.3</span> Impiego delle Medie nei Modelli SEM</a>
+  <ul class="collapse">
+  <li><a href="#struttura-delle-medie-nel-modello-sem" id="toc-struttura-delle-medie-nel-modello-sem" class="nav-link" data-scroll-target="#struttura-delle-medie-nel-modello-sem"><span class="header-section-number">39.3.1</span> Struttura delle Medie nel Modello SEM</a></li>
+  <li><a href="#vincoli-e-scalatura-delle-medie" id="toc-vincoli-e-scalatura-delle-medie" class="nav-link" data-scroll-target="#vincoli-e-scalatura-delle-medie"><span class="header-section-number">39.3.2</span> Vincoli e Scalatura delle Medie</a></li>
+  <li><a href="#stima-delle-intercette-con-lavaan" id="toc-stima-delle-intercette-con-lavaan" class="nav-link" data-scroll-target="#stima-delle-intercette-con-lavaan"><span class="header-section-number">39.3.3</span> Stima delle Intercette con <code>lavaan</code></a></li>
+  </ul></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">39.4</span> Considerazioni Conclusive</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">39.5</span> Session Info</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/01_sem_intro.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem-intro" class="quarto-section-identifier"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Dopo aver esaminato in dettaglio l’analisi fattoriale, sia esplorativa che confermativa, il presente capitolo si immerge nei Modelli di Equazioni Strutturali (SEM). Tipicamente, un modello SEM è articolato in due parti principali: la parte di misurazione, che collega le variabili latenti a un insieme di variabili osservate o indicatori, e la parte strutturale, che modella le relazioni ipotizzate tra queste variabili latenti.</p>
+<p>Il punto focale dei SEM è quello di testare teorie specifiche mediante la specificazione di un modello che rappresenti le predizioni di queste teorie, impiegando costrutti plausibili misurati con variabili osservate adeguate. In questo contesto, i SEM fungono da collegamento essenziale tra la teoria e l’osservazione, facilitando la traduzione di concetti astratti in entità misurabili e l’analisi delle loro interrelazioni in un modo strutturato e teoricamente valido.</p>
+<p>Tuttavia, è cruciale mantenere un approccio critico nell’uso dei SEM. Come ogni modello statistico, i SEM si basano su semplificazioni e approssimazioni della realtà. Ciò rispecchia il noto detto: “Tutti i modelli sono sbagliati, ma alcuni sono utili”. Questa espressione enfatizza l’importanza di riconoscere che, benché un modello possa mostrare un buon adattamento ai dati, non è necessariamente una rappresentazione fedele della realtà.</p>
+<p>Spesso, modelli notevolmente imprecisi possono comunque adattarsi bene ai dati, portando a conclusioni inesatte o fuorvianti. Pertanto, la selezione dei modelli diventa più di un semplice esercizio statistico; è un processo di sviluppo e raffinamento di teorie più robuste. La critica e la revisione dei modelli, basate su evidenze empiriche e riflessioni teoriche, sono quindi elementi fondamentali del processo scientifico nelle scienze sociali e psicologiche.</p>
+<p>In conclusione, i SEM offrono strumenti potenti per l’analisi e l’interpretazione dei dati in psicologia. Tuttavia, il loro impiego esige un equilibrio attento tra comprensione teorica, competenza statistica e spirito critico. Con un approccio consapevole e ben informato, i SEM possono svolgere un ruolo significativo nello sviluppo della ricerca psicologica, conducendo a una comprensione più profonda dei fenomeni studiati.</p>
+<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"../_common.R"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"lavaanExtra"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"psych"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"tidyr"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"mvnormalTest"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"semPlot"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"DiagrammeRsvg"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"rsvg"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"effectsize"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per introdurre i modelli SEM iniziamo a considerare il caso più semplice, ovvero il modello di regressione multipla espresso come un modello di equazioni strutturali. Utilizzeremo un campione di dati reali e ci concentreremo sulle 3 sottoscale del DASS-21: ansia, stress e depressione. Il campione è costituito da 526 studenti universitari di psicologia.</p>
+<div id="cell-4" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/dass_rosenberg_scs.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 6 x 11</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">stress</th>
+<th data-quarto-table-cell-role="th" scope="col">anxiety</th>
+<th data-quarto-table-cell-role="th" scope="col">depression</th>
+<th data-quarto-table-cell-role="th" scope="col">rosenberg</th>
+<th data-quarto-table-cell-role="th" scope="col">self_kindness</th>
+<th data-quarto-table-cell-role="th" scope="col">common_humanity</th>
+<th data-quarto-table-cell-role="th" scope="col">mindfulness</th>
+<th data-quarto-table-cell-role="th" scope="col">self_judgment</th>
+<th data-quarto-table-cell-role="th" scope="col">isolation</th>
+<th data-quarto-table-cell-role="th" scope="col">over_identification</th>
+<th data-quarto-table-cell-role="th" scope="col">scs_ts</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>7</td>
+<td>6</td>
+<td>4</td>
+<td>31</td>
+<td>17</td>
+<td>16</td>
+<td>16</td>
+<td>11</td>
+<td>8</td>
+<td>10</td>
+<td>98</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>32</td>
+<td>14</td>
+<td>14</td>
+<td>16</td>
+<td>16</td>
+<td>11</td>
+<td>13</td>
+<td>82</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>31</td>
+<td>20</td>
+<td>16</td>
+<td>16</td>
+<td>13</td>
+<td>6</td>
+<td>9</td>
+<td>102</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>12</td>
+<td>11</td>
+<td>13</td>
+<td>34</td>
+<td>12</td>
+<td>6</td>
+<td>6</td>
+<td>10</td>
+<td>7</td>
+<td>15</td>
+<td>70</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>10</td>
+<td>6</td>
+<td>12</td>
+<td>25</td>
+<td>16</td>
+<td>17</td>
+<td>13</td>
+<td>17</td>
+<td>16</td>
+<td>18</td>
+<td>73</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>5</td>
+<td>1</td>
+<td>2</td>
+<td>31</td>
+<td>14</td>
+<td>14</td>
+<td>10</td>
+<td>12</td>
+<td>8</td>
+<td>11</td>
+<td>85</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-5" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(dat)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>526</li><li>11</li></ol>
+</div>
+</div>
+<p>Esaminiamo i diagrammi di dispersione tra le varie misure presenti nel campione per verificare che la relazione tra le variabili sia lineare.</p>
+<div id="cell-7" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>d_mr <span class="ot">&lt;-</span> dat <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(stress, anxiety, depression, rosenberg, scs_ts)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(d_mr)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_sem_intro_files/figure-html/cell-5-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> d_mr<span class="sc">$</span>scs_ts <span class="sc">|&gt;</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>526</li><li>1</li></ol>
+</div>
+</div>
+<section id="modello-di-regressione-lineare-multipla" class="level3" data-number="39.0.1">
+<h3 data-number="39.0.1" class="anchored" data-anchor-id="modello-di-regressione-lineare-multipla"><span class="header-section-number">39.0.1</span> Modello di Regressione Lineare Multipla</h3>
+<p>Il modello generale di regressione lineare multipla (MLR) si esprime attraverso la seguente equazione:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x_{1i} + \cdots + \beta_p x_{pi} + \epsilon_i
+\]</span></p>
+<p>dove: - <span class="math inline">\(i = 1, \ldots, N\)</span> indica l’<span class="math inline">\(i\)</span>-esima osservazione, - <span class="math inline">\(\beta_0\)</span> è l’intercetta del modello, - <span class="math inline">\(\beta_1, \ldots, \beta_p\)</span> sono i coefficienti di regressione associati a ciascuna variabile indipendente, - <span class="math inline">\(\epsilon_i\)</span> è il termine di errore associato all’<span class="math inline">\(i\)</span>-esima osservazione, - Si presume che il termine di errore sia indipendente dalle variabili esplicative <span class="math inline">\(X_s\)</span>.</p>
+<p>In questa formula, ogni <span class="math inline">\(y_i\)</span> rappresenta il valore della variabile dipendente per l’<span class="math inline">\(i\)</span>-esima osservazione, i coefficienti <span class="math inline">\(\beta\)</span> quantificano l’impatto di ogni variabile indipendente sulla variabile dipendente, e <span class="math inline">\(\epsilon_i\)</span> rappresenta l’errore o la varianza non spiegata nella previsione di <span class="math inline">\(y_i\)</span>. Questa struttura consente di modellare relazioni lineari tra una variabile dipendente e più variabili indipendenti.</p>
+<p>Il modello MLR può essere rappresentato anche in forma matriciale come segue:</p>
+<p><span class="math display">\[
+y = X\beta + \epsilon
+\]</span></p>
+<p>dove: - <span class="math inline">\(y\)</span> è un vettore <span class="math inline">\(N \times 1\)</span> dei valori osservati della variabile risposta, - <span class="math inline">\(X\)</span> è una matrice di progettazione <span class="math inline">\(N \times (p+1)\)</span> che incorpora tutte le <span class="math inline">\(p\)</span> variabili indipendenti e una colonna di uno per l’intercetta, - <span class="math inline">\(\beta\)</span> è un vettore di dimensione <span class="math inline">\((p+1)\)</span> che contiene i parametri di regressione, inclusa l’intercetta, - <span class="math inline">\(\epsilon\)</span> rappresenta il vettore dei termini di errore.</p>
+<p>La matrice <span class="math inline">\(X\)</span> e i vettori <span class="math inline">\(y\)</span> e <span class="math inline">\(\epsilon\)</span> sono definiti nel modo seguente:</p>
+<p><span class="math display">\[
+y =
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_N
+\end{pmatrix}, \quad
+\epsilon =
+\begin{pmatrix}
+\epsilon_1 \\
+\epsilon_2 \\
+\vdots \\
+\epsilon_N
+\end{pmatrix}, \quad
+X =
+\begin{pmatrix}
+1 &amp; x_{11} &amp; \cdots &amp; x_{p1} \\
+1 &amp; x_{12} &amp; \cdots &amp; x_{p2} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+1 &amp; x_{1N} &amp; \cdots &amp; x_{pN}
+\end{pmatrix}
+\]</span></p>
+<p>Ogni riga di <span class="math inline">\(X\)</span> corrisponde a un’osservazione e include i valori delle variabili indipendenti per quella osservazione più un uno per l’intercetta.</p>
+</section>
+<section id="metodo-dei-minimi-quadrati" class="level3" data-number="39.0.2">
+<h3 data-number="39.0.2" class="anchored" data-anchor-id="metodo-dei-minimi-quadrati"><span class="header-section-number">39.0.2</span> Metodo dei Minimi Quadrati</h3>
+<p>Il metodo dei minimi quadrati (LSE) mira a trovare i parametri <span class="math inline">\(\beta\)</span> che minimizzano la somma dei quadrati degli errori, espressa come:</p>
+<p><span class="math display">\[
+\text{SSE} = \epsilon_i^2 = \epsilon' \epsilon = (y - X\beta)'(y - X\beta) = y'y - 2\beta'X'y + \beta'X'X\beta
+\]</span></p>
+<p>Minimizzando la SSE rispetto a <span class="math inline">\(\beta\)</span> e impostando la derivata pari a zero, si ottiene:</p>
+<p><span class="math display">\[
+X'X\hat{\beta} = X'y
+\]</span></p>
+<p>Se la matrice <span class="math inline">\(X'X\)</span> è invertibile, la soluzione è:</p>
+<p><span class="math display">\[
+\hat{\beta} = (X'X)^{-1}X'y
+\]</span></p>
+<p>Questa procedura di minimizzazione degli errori al quadrato è essenziale per determinare i coefficienti che descrivono al meglio la relazione tra le variabili indipendenti e la variabile dipendente, minimizzando la discrepanza tra i valori osservati e quelli predetti dal modello.</p>
+<p>Ora, esaminiamo queste relazioni utilizzando i dati specifici a disposizione.</p>
+<div id="cell-10" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dass <span class="ot">&lt;-</span> d_mr <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(depression, anxiety, stress)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-11" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> depression <span class="sc">+</span> anxiety <span class="sc">+</span> stress, <span class="at">data =</span> dass)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(X)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 6 x 4 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">(Intercept)</th>
+<th data-quarto-table-cell-role="th" scope="col">depression</th>
+<th data-quarto-table-cell-role="th" scope="col">anxiety</th>
+<th data-quarto-table-cell-role="th" scope="col">stress</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>1</td>
+<td>4</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>1</td>
+<td>13</td>
+<td>11</td>
+<td>12</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>1</td>
+<td>12</td>
+<td>6</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cell-12" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(beta)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  [,1]
+(Intercept) 91.3611064
+depression  -1.4841573
+anxiety      1.0493140
+stress      -0.9733368</code></pre>
+</div>
+</div>
+<p>Verifichiamo i calcoli eseguiti usando la funzione <code>lm()</code>:</p>
+<div id="cell-14" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fm <span class="ot">&lt;-</span> <span class="fu">lm</span>(scs_ts <span class="sc">~</span> depression <span class="sc">+</span> anxiety <span class="sc">+</span> stress, <span class="at">data =</span> d_mr)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">coef</span>(fm))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)  depression     anxiety      stress 
+ 91.3611064  -1.4841573   1.0493140  -0.9733368 </code></pre>
+</div>
+</div>
+<p>I valori predetti sono calcolati come:</p>
+<div id="cell-16" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>yhat <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(yhat, fm<span class="sc">$</span>fitted.values) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]    1</code></pre>
+</div>
+</div>
+<p>I residui si ottengono nel modo seguente:</p>
+<div id="cell-18" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> d_mr<span class="sc">$</span>scs_ts <span class="sc">-</span> yhat</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(e, fm<span class="sc">$</span>res) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]    1</code></pre>
+</div>
+</div>
+<p>La somma dei quadrati dei residui (Residual Sum of Squares, RSS) è definita nel modo seguente:</p>
+<div id="cell-20" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>RSS <span class="ot">&lt;-</span> <span class="fu">t</span>(e) <span class="sc">%*%</span> e</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(RSS)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 128699.9</code></pre>
+</div>
+</div>
+<p>La stima della varianza dei residui è data da:</p>
+<div id="cell-22" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>var_e <span class="ot">&lt;-</span> RSS <span class="sc">/</span> (<span class="fu">length</span>(y) <span class="sc">-</span> <span class="fu">dim</span>(X)[<span class="dv">2</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(var_e)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 246.5515</code></pre>
+</div>
+</div>
+<p>dove al denominatore abbiamo i gradi di libertà.</p>
+<p>L’errore standard della regressione è dunque dato da:</p>
+<div id="cell-24" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(var_e) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 15.70196</code></pre>
+</div>
+</div>
+<p>Verifichiamo:</p>
+<div id="cell-26" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>
+Call:
+lm(formula = scs_ts ~ depression + anxiety + stress, data = d_mr)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-36.803 -12.000  -0.348  10.739  43.669 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  91.3611     1.6231  56.288  &lt; 2e-16 ***
+depression   -1.4842     0.2376  -6.247 8.69e-10 ***
+anxiety       1.0493     0.2103   4.990 8.22e-07 ***
+stress       -0.9733     0.2553  -3.813 0.000154 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 15.7 on 522 degrees of freedom
+Multiple R-squared:  0.247, Adjusted R-squared:  0.2426 
+F-statistic: 57.06 on 3 and 522 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Infine, il coefficiente di determinazione nel modello di regressione multipla ha la stessa definizione di quello incontrato nella regressione bivariata:</p>
+<div id="cell-28" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>R2 <span class="ot">&lt;-</span> (<span class="fu">sum</span>((yhat <span class="sc">-</span> <span class="fu">mean</span>(y))<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">/</span> (<span class="fu">sum</span>((y <span class="sc">-</span> <span class="fu">mean</span>(y))<span class="sc">^</span><span class="dv">2</span>)) </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>R2</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.246961854370469
+</div>
+</div>
+</section>
+<section id="modello-di-percorso" class="level3" data-number="39.0.3">
+<h3 data-number="39.0.3" class="anchored" data-anchor-id="modello-di-percorso"><span class="header-section-number">39.0.3</span> Modello di Percorso</h3>
+<p>Formuliamo ora il modello di regressione multipla nei termini di un modello SEM.</p>
+<div id="cell-30" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mod_mr <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="st">  scs_ts ~ anxiety + depression + stress</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati usando <code>lavaan</code>:</p>
+<div id="cell-32" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit_mr <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(mod_mr, d_mr)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo i parametri ottenuti in questo modo:</p>
+<div id="cell-34" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(fit_mr) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          lhs op        rhs     est     se      z pvalue ci.lower ci.upper
+1      scs_ts  ~    anxiety   1.049  0.209  5.010      0    0.639    1.460
+2      scs_ts  ~ depression  -1.484  0.237 -6.271      0   -1.948   -1.020
+3      scs_ts  ~     stress  -0.973  0.254 -3.827      0   -1.472   -0.475
+4      scs_ts ~~     scs_ts 244.677 15.087 16.217      0  215.106  274.247
+5     anxiety ~~    anxiety  32.082  0.000     NA     NA   32.082   32.082
+6     anxiety ~~ depression  24.546  0.000     NA     NA   24.546   24.546
+7     anxiety ~~     stress  24.538  0.000     NA     NA   24.538   24.538
+8  depression ~~ depression  31.418  0.000     NA     NA   31.418   31.418
+9  depression ~~     stress  25.662  0.000     NA     NA   25.662   25.662
+10     stress ~~     stress  29.714  0.000     NA     NA   29.714   29.714</code></pre>
+</div>
+</div>
+<p>Si noti che i parametri stimati da <code>lavaan</code> sono praticamente identici a quelli trovati con il metodo della massima verosimiglianza.</p>
+</section>
+<section id="path-analysis-e-scomposizione-della-covarianza" class="level3" data-number="39.0.4">
+<h3 data-number="39.0.4" class="anchored" data-anchor-id="path-analysis-e-scomposizione-della-covarianza"><span class="header-section-number">39.0.4</span> Path Analysis e Scomposizione della Covarianza</h3>
+<p>L’obiettivo principale dei modelli SEM (Structural Equation Modeling) è quello di identificare coefficienti di percorso che permettano di ricostruire le covarianze osservate nel modello. Questo viene fatto attraverso la somma degli effetti diretti e indiretti, come specificato dal modello. Per esemplificare, consideriamo la covarianza tra il punteggio totale di self-compassion e il livello di ansia, come indicato dal DASS-21.</p>
+<p>In questo contesto, l’effetto diretto si riferisce alla relazione diretta tra ansia e auto-compassione. Tuttavia, ci sono anche effetti indiretti che contribuiscono a questa relazione. Uno di questi effetti indiretti proviene dalla covarianza tra ansia e depressione, combinata con l’influenza della depressione sull’auto-compassione. Un altro effetto indiretto deriva dalla covarianza tra ansia e stress, combinata con l’effetto dello stress sull’auto-compassione.</p>
+<p>In sostanza, nel modello SEM, la covarianza totale tra self-compassion e ansia è quindi una funzione: 1. Dell’effetto diretto dell’ansia sull’auto-compassione. 2. Dell’effetto combinato di ansia e depressione sull’auto-compassione. 3. Dell’effetto combinato di ansia e stress sull’auto-compassione.</p>
+<p>Questi effetti vengono calcolati e sommati per fornire una stima complessiva della covarianza tra i due costrutti, offrendo una visione più olistica e dettagliata delle dinamiche psicologiche in gioco.</p>
+<div id="cell-37" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(fit_mr,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">whatLabels =</span> <span class="st">"est"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sizeMan =</span> <span class="dv">10</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">edge.label.cex =</span> <span class="fl">1.15</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"mx"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">nCharNodes =</span> <span class="dv">0</span>, <span class="at">nCharEdges =</span> <span class="dv">0</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_sem_intro_files/figure-html/cell-21-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-38" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Coefficients from the model</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>beta_anxiety_scs_ts <span class="ot">&lt;-</span> <span class="fl">1.0493140</span> <span class="co"># Coefficient for anxiety predicting scs_ts</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>beta_depression_scs_ts <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">1.4841573</span> <span class="co"># Coefficient for depression predicting scs_ts</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>beta_stress_scs_ts <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.9733368</span> <span class="co"># Coefficient for stress predicting scs_ts</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariances from the model</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>cov_anxiety_depression <span class="ot">&lt;-</span> <span class="fl">24.5464225</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>cov_anxiety_stress <span class="ot">&lt;-</span> <span class="fl">24.5381096</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>cov_depression_stress <span class="ot">&lt;-</span> <span class="fl">25.6615608</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming the variances of anxiety, depression, and stress</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>var_anxiety <span class="ot">&lt;-</span> <span class="fl">32.0817418</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>var_depression <span class="ot">&lt;-</span> <span class="fl">31.4182365</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>var_stress <span class="ot">&lt;-</span> <span class="fl">29.7137880</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted covariance between anxiety and scs_ts</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>predicted_cov_anxiety_scs_ts <span class="ot">&lt;-</span> </span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    beta_anxiety_scs_ts <span class="sc">*</span> var_anxiety <span class="sc">+</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    beta_depression_scs_ts <span class="sc">*</span> cov_anxiety_depression <span class="sc">+</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    beta_stress_scs_ts <span class="sc">*</span> cov_anxiety_stress</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the predicted covariance</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(predicted_cov_anxiety_scs_ts)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -26.65078</code></pre>
+</div>
+</div>
+<p>Verifichiamo:</p>
+<div id="cell-40" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(d_mr<span class="sc">$</span>anxiety, d_mr<span class="sc">$</span>scs_ts)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+-26.7015390186493
+</div>
+</div>
+<p>Lo stesso procedimento si usa per le altre componenti della matrice di varianza/covarianza dei dati.</p>
+</section>
+<section id="errore-di-specificazione" class="level2" data-number="39.1">
+<h2 data-number="39.1" class="anchored" data-anchor-id="errore-di-specificazione"><span class="header-section-number">39.1</span> Errore di Specificazione</h2>
+<p>Spiritosamente chiamato “heartbreak of L.O.V.E.” [Left-Out Variable Error; {cite:t}<code>mauro1990understanding</code>], l’errore di specificazione è una caratteristica fondamentale dei modelli di regressione che deve sempre essere tenuta a mente quando interpretiamo i risultati di questa tecnica di analisi statistica.</p>
+<p>L’errore di specificazione si verifica quando escludiamo dal modello di regressione una variabile che ha due caratteristiche:</p>
+<ul>
+<li>è associata con altre variabili inserite nel modello,</li>
+<li>ha un effetto diretto sulla <span class="math inline">\(y\)</span>.</li>
+</ul>
+<p>Come conseguenza dell’errore di specificazione, l’intensità e il segno dei coefficienti parziali di regressione risultano sistematicamente distorti.</p>
+<p>Consideriamo un esempio con dati simulati nei quali immaginiamo che la prestazione sia positivamente associata alla motivazione e negativamente associata all’ansia. Immaginiamo inoltre che vi sia una correlazione positiva tra ansia a motivazione. Ci chiediamo cosa succede al coefficiente parziale della variabile “motivazione” se la variabile “ansia” viene esclusa dal modello di regressione.</p>
+<div id="cell-43" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">400</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>anxiety <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">10</span>, <span class="fl">1.5</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>motivation <span class="ot">&lt;-</span> <span class="fl">4.0</span> <span class="sc">*</span> anxiety <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">3.5</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(anxiety, motivation)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+0.861770572096147
+</div>
+</div>
+<p>Creiamo la variabile <code>performance</code> come una combinazione lineare di motivazione e ansia nella quale la motivazione ha un effetto piccolo, ma positivo, sulla prestazione, e l’ansia ha un grande effetto negativo sulla prestazione:</p>
+<div id="cell-45" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>performance <span class="ot">&lt;-</span>  <span class="fl">0.5</span> <span class="sc">*</span> motivation <span class="sc">-</span> <span class="fl">5.0</span> <span class="sc">*</span> anxiety <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Salviamo i dati in un data frame:</p>
+<div id="cell-47" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sim_dat2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(performance, motivation, anxiety)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>sim_dat2 <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A tibble: 6 x 3</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">performance</th>
+<th data-quarto-table-cell-role="th" scope="col">motivation</th>
+<th data-quarto-table-cell-role="th" scope="col">anxiety</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-26.53773</td>
+<td>36.37970</td>
+<td>9.159287</td>
+</tr>
+<tr class="even">
+<td>-32.98337</td>
+<td>34.52866</td>
+<td>9.654734</td>
+</tr>
+<tr class="odd">
+<td>-35.55939</td>
+<td>47.13063</td>
+<td>12.338062</td>
+</tr>
+<tr class="even">
+<td>-26.90895</td>
+<td>40.32210</td>
+<td>10.105763</td>
+</tr>
+<tr class="odd">
+<td>-28.57925</td>
+<td>43.12316</td>
+<td>10.193932</td>
+</tr>
+<tr class="even">
+<td>-40.17393</td>
+<td>44.51348</td>
+<td>12.572597</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Eseguiamo l’analisi di regressione specificando il modello in maniera corretta, ovvero usando come predittori l’ansia e la depressione:</p>
+<div id="cell-49" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> motivation <span class="sc">+</span> anxiety, sim_dat2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Le stime dei coefficienti parziali di regressione recuperano correttamente l’intensità e il segno dei coefficienti utilizzati nel modello generatore dei dati:</p>
+<div id="cell-51" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">coef</span>(fm1))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)  motivation     anxiety 
+  1.3711965   0.4953886  -5.1052176 </code></pre>
+</div>
+</div>
+<p>Eseguiamo ora l’analisi di regressione ignorando il predittore <code>anxiety</code> che ha le due caratteristiche di essere associato a <code>motivation</code> e di avere un effetto diretto sulla prestazione:</p>
+<div id="cell-53" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(performance <span class="sc">~</span> motivation, sim_dat2)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fm2) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>
+Call:
+lm(formula = performance ~ motivation, data = sim_dat2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-13.501  -3.409   0.005   3.311  12.616 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -12.39720    1.44591  -8.574 2.24e-16 ***
+motivation   -0.43717    0.03553 -12.305  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.866 on 398 degrees of freedom
+Multiple R-squared:  0.2756,    Adjusted R-squared:  0.2738 
+F-statistic: 151.4 on 1 and 398 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Si noti che il risultato prodotto dal modello di regressione è totalmente sbagliato: come conseguenza dell’errore di specificazione, il segno del coefficiente parziale di regressione della variabile “motivazione” è negativo, anche se nel modello generatore dei dati tale coefficiente aveva il segno opposto.</p>
+<p>Quindi, se interpretassimo il coefficiente parziale ottenuto in termini casuali, saremmo portati a concludere che la motivazione fa diminuire la prestazione. Ma in realtà è vero l’opposto.</p>
+<p>È facile vedere perché si verifica l’errore di specificazione. Supponiamo che il vero modello sia</p>
+<p><span class="math display">\[
+y = \alpha + \beta_1 X_1 + \beta_2 X_2 + \varepsilon
+\]</span></p>
+<p>il quale verrebbe stimato da</p>
+<p><span class="math display">\[
+y = a + b_1 X_1 + b_2 X_2 + e.
+\]</span></p>
+<p>Supponiamo però che il ricercatore creda invece che</p>
+<p><span class="math display">\[
+y = \alpha^\prime + \beta_1^\prime X_1 + \varepsilon^\prime
+\]</span></p>
+<p>e quindi stimi</p>
+<p><span class="math display">\[
+y = a^\prime + b_1^\prime X_1 + e^\prime
+\]</span></p>
+<p>omettendo <span class="math inline">\(X_2\)</span> dal modello.</p>
+<p>Per capire che relazione intercorre tra <span class="math inline">\(b_1^\prime\)</span> e <span class="math inline">\(b_1\)</span>, iniziamo a scrivere la formula per <span class="math inline">\(b_1^\prime\)</span>:</p>
+<p><span class="math display">\[
+\begin{equation}
+b_1^\prime = \frac{Cov(X_1, Y)}{Var(X_1)}.
+\end{equation}
+\]</span></p>
+<p>Sviluppando, otteniamo</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{aligned}
+b_1^\prime &amp;= \frac{Cov(X_1, a + b_1 X_1 + b_2 X_2 + e)}{Var(X_1)}\notag\\
+&amp;= \frac{Cov(X_1, a)+b_1 Cov(X_1, X_1) + b_2 Cov(X_1, X_2) + Cov(X_1, e)}{Var(X_1)}\notag\\
+&amp;= \frac{0 + b_1 Var(X_1) + b_2 Cov(X_1, X_2) + 0}{Var(X_1)}\notag\\
+&amp;= b_1 + b_2 \frac{Cov(X_1, X_2)}{Var(X_1)}.
+\end{aligned}
+\end{equation}
+\]</span></p>
+<p>Quindi, se erroneamente omettiamo <span class="math inline">\(X_2\)</span> dal modello, abbiamo che</p>
+<p><span class="math display">\[
+\begin{equation}
+\mathbb{E}(b_1^\prime) = \beta_1 + \beta_2 \frac{\sigma_{12}}{\sigma_1^2}.
+\end{equation}
+\]</span>(eq-specific-err)</p>
+<p>Verifichiamo tale conclusione per i dati dell’esempio che stiamo discutendo. Nel caso presente, <span class="math inline">\(X_1\)</span> è <code>motivation</code> e <span class="math inline">\(X_2\)</span> è <code>anxiety</code>. Applicando l’eq. {eq}<code>eq-specific-err</code> otteniamo lo stesso valore per il coefficiente di regressione associato a <code>motivation</code> che era stato ottenuto adattando ai dati il modello <code>performance ~ motivation</code>:</p>
+<div id="cell-55" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>fm1<span class="sc">$</span>coef[<span class="dv">2</span>] <span class="sc">+</span>  fm1<span class="sc">$</span>coef[<span class="dv">3</span>] <span class="sc">*</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cov</span>(sim_dat2<span class="sc">$</span>motivation, sim_dat2<span class="sc">$</span>anxiety) <span class="sc">/</span> </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var</span>(sim_dat2<span class="sc">$</span>motivation)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<strong>motivation:</strong> -0.437167456259783
+</div>
+</div>
+<p>Possiamo dunque concludere che <span class="math inline">\(b_1^\prime\)</span> è uno stimatore distorto di <span class="math inline">\(\beta_1\)</span>. Si noti che questa distorsione non scompare all’aumentare della numerosità campionaria, il che (in termini statistici) significa che un tale stimatore è <em>inconsistente</em>. Quello che succede in pratica è che alla variabile <span class="math inline">\(X_1\)</span> vengono attribuiti gli effetti delle variabili che sono state omesse dal modello. Si noti che una tale distorsione sistematica di <span class="math inline">\(b_1^\prime\)</span> può essere evitata solo se si verificano due condizioni:</p>
+<ul>
+<li><span class="math inline">\(\beta_2 = 0\)</span>. Questo è ovvio, dato che, se <span class="math inline">\(\beta_2 = 0\)</span>, ciò significa che il modello non è specificato in modo errato, cioè <span class="math inline">\(X_2\)</span> non appartiene al modello perché non ha un effetto diretto sulla <span class="math inline">\(Y\)</span>.</li>
+<li><span class="math inline">\(\sigma_{12} = 0\)</span>. Cioè, se <span class="math inline">\(X_1\)</span> e <span class="math inline">\(X_2\)</span> sono incorrelate, allora l’omissione di una delle due variabili non comporta stime distorte dell’effetto dell’altra.</li>
+</ul>
+<section id="soppressione" class="level3" data-number="39.1.1">
+<h3 data-number="39.1.1" class="anchored" data-anchor-id="soppressione"><span class="header-section-number">39.1.1</span> Soppressione</h3>
+<p>Le conseguenze dell’errore di specificazione sono chiamate “soppressione” (<em>suppression</em>). In generale, si ha soppressione quando (1) il valore assoluto del peso beta di un predittore è maggiore di quello della sua correlazione bivariata con il criterio o (2) i due hanno segni opposti.</p>
+<ul>
+<li>L’esempio descritto sopra è un caso di <em>soppressione negativa</em>, dove il predittore ha correlazioni bivariate positive con il criterio, ma si riceve un peso beta negativo nell’analisi di regressione multipla.</li>
+<li>Un secondo tipo di soppressione è la <em>soppressione classica</em>, in cui un predittore non è correlato al criterio ma riceve un peso beta diverso da zero.</li>
+<li>C’è anche la <em>soppressione reciproca</em> che può verificarsi quando due variabili sono correlate positivamente con il criterio ma negativamente tra loro.</li>
+</ul>
+</section>
+<section id="regressione-stepwise" class="level3" data-number="39.1.2">
+<h3 data-number="39.1.2" class="anchored" data-anchor-id="regressione-stepwise"><span class="header-section-number">39.1.2</span> Regressione Stepwise</h3>
+<p>Nel contesto della regressione, è importante comprendere che i predittori non dovrebbero essere selezionati basandosi unicamente sulle loro correlazioni bivariate con la variabile dipendente (il criterio). Queste correlazioni, note come associazioni di “ordine zero”, non tengono conto dell’influenza degli altri predittori. Di conseguenza, i valori delle correlazioni bivariate possono risultare fuorvianti quando si considerano i coefficienti di regressione parziale per le stesse variabili.</p>
+<p>La significatività statistica delle correlazioni bivariate con la variabile dipendente non è un criterio affidabile per la selezione dei predittori. Questo perché tali correlazioni non considerano gli effetti complessivi degli altri predittori nel modello.</p>
+<p>Le procedure di selezione automatica dei predittori, come quelle impiegate nelle regressioni stepwise, possono essere seducenti per la loro facilità d’uso. Tuttavia, queste procedure sono rischiose. Anche piccole non-linearità o effetti indiretti tra i predittori, che potrebbero non essere immediatamente evidenti, possono distorcere in modo significativo i coefficienti di regressione parziale.</p>
+<p>Invece di affidarsi a metodi automatici, è preferibile selezionare un numero limitato di predittori basandosi su considerazioni teoriche o sui risultati di ricerche precedenti. Questo approccio più ponderato aiuta a evitare le distorsioni che possono emergere dall’uso di procedure di selezione automatica.</p>
+<p>Una volta che sono stati selezionati, i predittori possono essere inseriti nell’equazione di regressione in due modi diversi:</p>
+<ul>
+<li>tutti i predittori possono essere inseriti nel modello contemporaneamente;</li>
+<li>i predittori possono essere inseriti nel modello sequenzialmente, mediante una serie di passaggi.</li>
+</ul>
+<p>L’ordine di ingresso può essere determinato in base a standard: teorici (razionali) o empirici (statistici). Lo standard razionale corrisponde alla <em>regressione gerarchica</em>, in cui si comunica al computer un ordine fisso per inserire i predittori. Ad esempio, a volte le variabili demografiche vengono inserite nel primo passaggio, quindi nel secondo passaggio viene inserita una variabile psicologica di interesse. Questo ordine non solo controlla le variabili demografiche ma permette anche di valutare il potere predittivo della variabile psicologica, al di là di quello delle semplici variabili demografiche. Quest’ultimo può essere stimato come l’aumento della correlazione multipla al quadrato, o <span class="math inline">\(\Delta R^2\)</span>, da quella della fase 1 con solo predittori demografici a quella della fase 2 con tutti i predittori nell’equazione di regressione.</p>
+<p>Un esempio di standard statistico è la regressione <em>stepwise</em>, in cui il computer seleziona l’inserimento dei predittori in base esclusivamente alla significatività statistica; cioè, viene chiesto: quale predittore, se inserito nell’equazione, avrebbe il valore_<span class="math inline">\(p\)</span> più piccolo per il test del suo coefficiente di regressione parziale? Dopo la selezione, i predittori in una fase successiva possono essere rimossi dall’equazione di regressione in base ai loro valori-<span class="math inline">\(p\)</span> (ad esempio, se <span class="math inline">\(p \geq\)</span> .05). Il processo stepwise si interrompe quando, aggiungendo più predittori, <span class="math inline">\(\Delta R^2\)</span> non migliora. Varianti della regressione stepwise includono <em>forward inclusion</em>, in cui i predittori selezionati non vengono successivamente rimossi dal modello, e <em>backward elimination</em>, che inizia con tutti i predittori nel modello per poi rimuoverne alcuni in passi successivi. Per le ragioni descritte nel paragrafo sull’errore di specificazione, i metodi basati sulle procedure di stepwise regression non dovrebbero mai essere usati. Infatti, i problemi relativi a tale procedura sono così gravi che varie riviste non accettano studi che fanno uso di una tale tecnica statistica. I risultati ottenuti con tali metodi, infatti, sono quasi certamente non replicabili in campioni diversi.</p>
+<p>Una considerazione finale riguarda l’idea di rimuovere i predittori “non significativi” dal modello di regressione. Questa è una cattiva idea. Il ricercatore non deve sentirsi in dovere di trascurare quei predittore che non risultano “statisticamente significativi”. In campioni piccoli, la potenza dei test di significatività è bassa e la rimozione di un predittore non significativo può alterare sostanzialmente la soluzione. Se c’è una buona ragione per includere un predittore, allora è meglio lasciarlo nel modello, fino a prova contraria. In termini generali, qualsiasi considerazione basata sulla “significatività statistia” è fuorviante.</p>
+</section>
+</section>
+<section id="oltre-la-regressione-multipla-luso-dei-modelli-sem" class="level2" data-number="39.2">
+<h2 data-number="39.2" class="anchored" data-anchor-id="oltre-la-regressione-multipla-luso-dei-modelli-sem"><span class="header-section-number">39.2</span> Oltre la Regressione Multipla: L’Uso dei Modelli SEM</h2>
+<p>Analizziamo un esempio in cui il modello di Equazioni Strutturali (SEM) viene impiegato per studiare la relazione tra autocompassione e malessere psicologico, utilizzando come indicatori le sotto-scale della DASS-21 (Depressione, Ansia, Stress) e della Self-Compassion Scale. In questo contesto, definiamo due variabili latenti: “malessere psicologico” e “autocompassione”. La variabile latente “malessere psicologico” è composta dalle tre sotto-scale della DASS-21, mentre la variabile “autocompassione” è formata dalle sei sotto-scale della Self-Compassion Scale.</p>
+<p>Il modello strutturale esplora la relazione tra queste due variabili latenti. L’autocompassione è considerata una variabile esogena, ipotizzata come un fattore di protezione che riduce il malessere psicologico, che a sua volta è trattato come variabile endogena. L’ipotesi principale del modello è che esista una relazione di regressione negativa tra autocompassione e malessere psicologico, indicando che livelli più elevati di autocompassione sono associati a minori livelli di malessere psicologico.</p>
+<p>Un elemento chiave dei modelli SEM è la gestione dell’errore di misurazione. Le variabili latenti sono progettate per riflettere il nucleo vero dei costrutti teorici, in questo caso autocompassione e malessere psicologico, isolando gli effetti degli errori di misurazione che possono affliggere gli indicatori osservati. Questo approccio consente di esaminare la “vera” relazione tra i costrutti, eliminando le distorsioni introdotte dagli errori di misurazione nelle misure osservate.</p>
+<p>La capacità del modello SEM di separare la variabilità attribuibile ai costrutti latenti da quella dovuta agli errori di misurazione aumenta l’accuratezza e l’affidabilità dell’analisi. Questo è particolarmente vantaggioso in campi come la psicologia, dove i costrutti teorici non sono direttamente osservabili e devono essere inferiti attraverso misure potenzialmente errate.</p>
+<div id="cell-59" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mod_sc <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="st">  F =~ anxiety + depression + stress</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="st">  SC =~ self_kindness   + common_humanity   + mindfulness   + self_judgment + isolation + over_identification</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="st">  F ~ SC </span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati.</p>
+<div id="cell-61" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fit_sc <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(mod_sc, dat, <span class="at">std.lv =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo la soluzione ottenuta.</p>
+<div id="cell-63" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">standardizedSolution</span>(fit_sc) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   lhs op                 rhs est.std    se       z pvalue
+1                    F =~             anxiety   0.847 0.014  58.505      0
+2                    F =~          depression   0.909 0.011  82.503      0
+3                    F =~              stress   0.929 0.010  91.945      0
+4                   SC =~       self_kindness   0.757 0.022  33.984      0
+5                   SC =~     common_humanity   0.621 0.030  20.695      0
+6                   SC =~         mindfulness   0.689 0.026  26.235      0
+7                   SC =~       self_judgment  -0.770 0.022 -35.799      0
+8                   SC =~           isolation  -0.770 0.022 -35.822      0
+9                   SC =~ over_identification  -0.767 0.022 -35.416      0
+10                   F  ~                  SC  -0.476 0.038 -12.385      0
+11             anxiety ~~             anxiety   0.282 0.025  11.495      0
+12          depression ~~          depression   0.173 0.020   8.633      0
+13              stress ~~              stress   0.136 0.019   7.246      0
+14       self_kindness ~~       self_kindness   0.427 0.034  12.647      0
+15     common_humanity ~~     common_humanity   0.615 0.037  16.527      0
+16         mindfulness ~~         mindfulness   0.525 0.036  14.522      0
+17       self_judgment ~~       self_judgment   0.407 0.033  12.285      0
+18           isolation ~~           isolation   0.407 0.033  12.280      0
+19 over_identification ~~ over_identification   0.411 0.033  12.360      0
+20                   F ~~                   F   0.774 0.037  21.167      0
+21                  SC ~~                  SC   1.000 0.000      NA     NA
+   ci.lower ci.upper
+1     0.819    0.876
+2     0.888    0.931
+3     0.910    0.949
+4     0.713    0.801
+5     0.562    0.679
+6     0.637    0.740
+7    -0.812   -0.728
+8    -0.812   -0.728
+9    -0.810   -0.725
+10   -0.551   -0.400
+11    0.234    0.330
+12    0.134    0.212
+13    0.099    0.173
+14    0.361    0.493
+15    0.542    0.688
+16    0.454    0.596
+17    0.342    0.472
+18    0.342    0.472
+19    0.346    0.476
+20    0.702    0.845
+21    1.000    1.000</code></pre>
+</div>
+</div>
+<ol type="1">
+<li><strong>Saturazioni Fattoriali (Loadings) per le Variabili Latenti:</strong>
+<ul>
+<li><strong>F:</strong> Le variabili osservate “anxiety”, “depression”, e “stress” hanno elevate saturazioni fattoriali sulla variabile latente “F”. Questo suggerisce che ciascuna di queste misure è un buon indicatore della variabile latente “F”.</li>
+<li><strong>SC:</strong> Le variabili “self_kindness”, “common_humanity”, “mindfulness”, “self_judgment”, “isolation”, e “over_identification” hanno anch’esse significative saturazioni sulla variabile latente “SC”. Si noti che “self_judgment”, “isolation”, e “over_identification” hanno saturazioni negative, indicando che queste variabili sono inversamente associate con “SC”.</li>
+</ul></li>
+<li><strong>Regressione tra Variabili Latenti:</strong>
+<ul>
+<li>La relazione di regressione tra “F” e “SC” mostra un coefficiente negativo (-0.48), il che indica una relazione inversa tra queste due variabili latenti. Questo significa che livelli più alti di “SC” sono associati a livelli più bassi di “F”.</li>
+</ul></li>
+<li><strong>Varianza delle Variabili Latenti:</strong>
+<ul>
+<li>La varianza di “F” e “SC” indica quanto della variazione nelle variabili latenti è spiegata dai loro rispettivi indicatori. La varianza di “F” (0.77) è relativamente alta, suggerendo che gli indicatori spiegano una buona parte della varianza in “F”. La varianza di “SC” è fissata a 1, un approccio comune per identificare il modello.</li>
+</ul></li>
+<li><strong>Varianze Residue degli Indicatori:</strong>
+<ul>
+<li>Le varianze residue (ad esempio, “anxiety ~~ anxiety”) rappresentano la varianza non spiegata in ciascun indicatore dalle variabili latenti. Valori più bassi indicano che la variabile latente spiega una maggior parte della varianza dell’indicatore. Ad esempio, “anxiety” ha una varianza residua di 0.28, suggerendo che “F” spiega una buona parte, ma non tutta, della varianza in “anxiety”.</li>
+</ul></li>
+</ol>
+<p>Generiamo una rappresentazione grafica del modello.</p>
+<div id="cell-66" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">semPaths</span>(fit_sc,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">whatLabels =</span> <span class="st">"std"</span>,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sizeMan =</span> <span class="dv">10</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">edge.label.cex =</span> <span class="fl">0.9</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"mx"</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">nCharNodes =</span> <span class="dv">5</span>, <span class="at">nCharEdges =</span> <span class="dv">0</span>, </span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fade=</span><span class="cn">FALSE</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_sem_intro_files/figure-html/cell-34-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I coefficienti stimati nel modello SEM appaiono coerenti e in linea con le aspettative, in particolare il coefficiente che descrive l’effetto “causale” del fattore dell’autocompassione sul malessere psicologico, che si attesta a -0.48. Questo valore negativo corrobora l’ipotesi secondo cui l’autocompassione svolge un ruolo di fattore protettivo contro il malessere psicologico. Tuttavia, prima di confermare definitivamente questa conclusione, è cruciale esaminare gli indici di bontà di adattamento del modello. Questi indici ci permetteranno di valutare quanto accuratamente il modello SEM si adatta ai dati osservati, fornendo un quadro più chiaro della validità delle nostre inferenze. In altre parole, sebbene il modello suggerisca una relazione negativa tra autocompassione e malessere psicologico, la conferma finale di questa associazione dipenderà dall’adeguatezza complessiva del modello rispetto ai dati. Questo argomento verrà affrontato nel prossimo capitolo.</p>
+</section>
+<section id="impiego-delle-medie-nei-modelli-sem" class="level2" data-number="39.3">
+<h2 data-number="39.3" class="anchored" data-anchor-id="impiego-delle-medie-nei-modelli-sem"><span class="header-section-number">39.3</span> Impiego delle Medie nei Modelli SEM</h2>
+<p>Nei modelli di equazioni strutturali (SEM), come nell’analisi fattoriale, l’accento è posto sull’analisi delle covarianze tra variabili. Tuttavia, a differenza dell’analisi fattoriale, i modelli SEM consentono di includere anche le medie delle variabili osservate e latenti. Questo arricchisce l’analisi, fornendo informazioni preziose in molti contesti, come nei modelli CFA longitudinali, dove le ipotesi centrali riguardano proprio le medie dei costrutti.</p>
+<section id="struttura-delle-medie-nel-modello-sem" class="level3" data-number="39.3.1">
+<h3 data-number="39.3.1" class="anchored" data-anchor-id="struttura-delle-medie-nel-modello-sem"><span class="header-section-number">39.3.1</span> Struttura delle Medie nel Modello SEM</h3>
+<p>L’equazione generale per la struttura delle medie in un modello SEM è la seguente:</p>
+<p><span class="math display">\[
+E(y) = \mu_y = T + \Lambda A
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>( y ) indica i punteggi degli indicatori.</li>
+<li>( E(y) ) rappresenta la media attesa di ( y ).</li>
+<li>( _y ) è il vettore delle medie dei modelli degli indicatori, analogo a ( ) nelle strutture di covarianza.</li>
+<li>( ) è la matrice dei carichi fattoriali, che stima le relazioni degli indicatori con i costrutti.</li>
+<li>( T ) è il vettore delle medie degli indicatori.</li>
+<li>( A ) è un vettore delle medie dei costrutti latenti.</li>
+</ul>
+<p>In un diagramma a percorsi, un triangolo contrassegnato con il numero 1 rappresenta la costante di regressione. Questo simbolo indica l’intercetta, che viene utilizzata per stimare la media quando una variabile viene regredita su di essa.</p>
+<p>La media di ciascun indicatore è stimata nel vettore ( ), mentre ( ) rappresenta la matrice di saturazioni fattoriali del modello di misurazione CFA. Questo collegamento tra i carichi e le medie indica che gli indicatori con carichi più elevati hanno un impatto maggiore sulla media del costrutto.</p>
+<p>Il simbolo ( ) rappresenta le medie stimate dei costrutti latenti. Questa simbologia aiuta a distinguere tra le medie degli indicatori (( )) e quelle dei costrutti latenti (( )) nelle equazioni.</p>
+</section>
+<section id="vincoli-e-scalatura-delle-medie" class="level3" data-number="39.3.2">
+<h3 data-number="39.3.2" class="anchored" data-anchor-id="vincoli-e-scalatura-delle-medie"><span class="header-section-number">39.3.2</span> Vincoli e Scalatura delle Medie</h3>
+<p>Similmente alla gestione delle strutture di covarianza nei modelli SEM, anche per le strutture delle medie è necessario impostare un vincolo per definire la scala. Per le medie, lo zero viene spesso adottato come riferimento. Stabilire questo vincolo aiuta a calcolare le distanze dai punti fissati, che possono essere sia positive sia negative.</p>
+</section>
+<section id="stima-delle-intercette-con-lavaan" class="level3" data-number="39.3.3">
+<h3 data-number="39.3.3" class="anchored" data-anchor-id="stima-delle-intercette-con-lavaan"><span class="header-section-number">39.3.3</span> Stima delle Intercette con <code>lavaan</code></h3>
+<p>Per stimare le intercette in un modello SEM, è essenziale avere accesso ai dati originali o a una matrice di covarianza, oltre alle medie di tutte le variabili coinvolte. L’utilizzo del software <code>lavaan</code> facilita questo processo. Impostando <code>meanstructure = true</code>, si indica a <code>lavaan</code> di integrare automaticamente una costante “1” in tutte le equazioni del modello, facilitando il calcolo delle intercette per le variabili endogene. Questo permette di calcolare con precisione le intercette, che sono cruciali per il modello delle strutture delle medie.</p>
+<p>In conclusione, la struttura delle medie in un modello SEM è essenziale per ottenere stime accurate delle medie delle variabili, permettendo di confrontare queste stime con le medie osservate nei dati raccolti, proprio come si confrontano le covarianze nel modello con quelle osservate nei dati. Questo approccio arricchisce significativamente l’analisi fornita dai modelli SEM.</p>
+</section>
+</section>
+<section id="considerazioni-conclusive" class="level2" data-number="39.4">
+<h2 data-number="39.4" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">39.4</span> Considerazioni Conclusive</h2>
+<p>In questo capitolo, abbiamo esplorato i Modelli di Equazioni Strutturali (SEM), evidenziando come questi modelli non si limitino a descrivere le correlazioni tra variabili osservabili, ma permettano anche di analizzare le relazioni tra variabili latenti. La forza dei SEM risiede nella loro capacità di integrare il modello di misurazione, che definisce le relazioni tra gli indicatori e le variabili latenti, con il modello strutturale, che esamina le interazioni tra le stesse variabili latenti.</p>
+<p>Nei prossimi capitoli, approfondiremo vari aspetti della modellazione SEM. Esamineremo la bontà di adattamento del modello, un criterio fondamentale per verificare la fedeltà con cui il modello riflette la realtà osservata. Analizzeremo anche il confronto tra modelli alternativi, un passaggio cruciale per identificare il modello che migliora l’interpretazione dei dati.</p>
+<p>Un altro tema importante sarà l’analisi dell’applicabilità dei modelli a gruppi diversi, vitale per valutare la loro generalizzabilità e la pertinenza in contesti specifici. Inoltre, discuteremo le sfide metodologiche legate alla gestione di dati categoriali, all’implementazione di modelli SEM multilivello e alla gestione di dati mancanti. Questi approfondimenti ci permetteranno di comprendere meglio come i modelli SEM possono essere adattati e applicati efficacemente in diversi ambiti di ricerca.</p>
+</section>
+<section id="session-info" class="level2" data-number="39.5">
+<h2 data-number="39.5" class="anchored" data-anchor-id="session-info"><span class="header-section-number">39.5</span> Session Info</h2>
+<div id="cell-71" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] C
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] effectsize_0.8.7   rsvg_2.6.0         DiagrammeRsvg_0.1  mvnormalTest_1.0.0
+ [5] lavaanExtra_0.2.0  ggokabeito_0.1.0   viridis_0.6.5      viridisLite_0.4.2 
+ [9] ggpubr_0.6.0       ggExtra_0.10.1     bayesplot_1.11.1   gridExtra_2.3     
+[13] patchwork_1.2.0    semTools_0.5-6     semPlot_1.1.6      lavaan_0.6-17     
+[17] psych_2.4.3        scales_1.3.0       markdown_1.12      knitr_1.45        
+[21] lubridate_1.9.3    forcats_1.0.0      stringr_1.5.1      dplyr_1.1.4       
+[25] purrr_1.0.2        readr_2.1.5        tidyr_1.3.1        tibble_3.2.1      
+[29] ggplot2_3.5.0      tidyverse_2.0.0    here_1.0.1        
+
+loaded via a namespace (and not attached):
+  [1] splines_4.3.3       later_1.3.2         pbdZMQ_0.3-11      
+  [4] datawizard_0.9.1    XML_3.99-0.16.1     rpart_4.1.23       
+  [7] lifecycle_1.0.4     rstatix_0.7.2       rprojroot_2.0.4    
+ [10] lattice_0.22-5      MASS_7.3-60.0.1     insight_0.19.10    
+ [13] rockchalk_1.8.157   backports_1.4.1     magrittr_2.0.3     
+ [16] openxlsx_4.2.5.2    Hmisc_5.1-1         rmarkdown_2.26     
+ [19] httpuv_1.6.14       qgraph_1.9.8        zip_2.3.1          
+ [22] pbapply_1.7-2       minqa_1.2.6         ADGofTest_0.3      
+ [25] multcomp_1.4-25     abind_1.4-5         quadprog_1.5-8     
+ [28] pspline_1.0-19      nnet_7.3-19         TH.data_1.1-2      
+ [31] sandwich_3.1-0      moments_0.14.1      nortest_1.0-4      
+ [34] arm_1.13-1          codetools_0.2-19    tidyselect_1.2.0   
+ [37] lme4_1.1-35.1       stats4_4.3.3        base64enc_0.1-3    
+ [40] jsonlite_1.8.8      ellipsis_0.3.2      Formula_1.2-5      
+ [43] survival_3.5-8      emmeans_1.10.0      tools_4.3.3        
+ [46] Rcpp_1.0.12         glue_1.7.0          mnormt_2.1.1       
+ [49] xfun_0.42           IRdisplay_1.1       withr_3.0.0        
+ [52] numDeriv_2016.8-1.1 fastmap_1.1.1       boot_1.3-29        
+ [55] fansi_1.0.6         digest_0.6.35       mi_1.1             
+ [58] timechange_0.3.0    R6_2.5.1            mime_0.12          
+ [61] estimability_1.5    colorspace_2.1-0    gtools_3.9.5       
+ [64] jpeg_0.1-10         copula_1.1-3        utf8_1.2.4         
+ [67] generics_0.1.3      data.table_1.15.2   corpcor_1.6.10     
+ [70] htmlwidgets_1.6.4   parameters_0.21.6   pkgconfig_2.0.3    
+ [73] sem_3.1-15          gtable_0.3.4        pcaPP_2.0-4        
+ [76] htmltools_0.5.7     carData_3.0-5       png_0.1-8          
+ [79] rstudioapi_0.15.0   tzdb_0.4.0          reshape2_1.4.4     
+ [82] uuid_1.2-0          coda_0.19-4.1       checkmate_2.3.1    
+ [85] nlme_3.1-164        curl_5.2.1          nloptr_2.0.3       
+ [88] repr_1.1.6          zoo_1.8-12          parallel_4.3.3     
+ [91] miniUI_0.1.1.1      foreign_0.8-86      pillar_1.9.0       
+ [94] grid_4.3.3          vctrs_0.6.5         promises_1.2.1     
+ [97] car_3.1-2           OpenMx_2.21.11      xtable_1.8-4       
+[100] cluster_2.1.6       htmlTable_2.4.2     evaluate_0.23      
+[103] pbivnorm_0.6.0      mvtnorm_1.2-4       cli_3.6.2          
+[106] kutils_1.73         compiler_4.3.3      rlang_1.1.3        
+[109] crayon_1.5.2        ggsignif_0.6.4      fdrtool_1.2.17     
+[112] plyr_1.8.9          stringi_1.8.3       munsell_0.5.0      
+[115] gsl_2.1-8           lisrelToR_0.3       bayestestR_0.13.2  
+[118] V8_4.4.2            Matrix_1.6-5        IRkernel_1.3.2     
+[121] hms_1.1.3           stabledist_0.7-1    glasso_1.11        
+[124] shiny_1.8.0         igraph_2.0.2        broom_1.0.5        
+[127] RcppParallel_5.1.7 </code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/cfa/E_01.html" class="pagination-link" aria-label="✏️ Esercizi">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/sem/02_data_preparation.html" class="pagination-link" aria-label="Preparazione dei Dati">
+        <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/01_sem_intro.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>5&nbsp; Sviluppo dello strumento – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/ctt/01_ctt_1.html" rel="next">
+<link href="../../chapters/measurement/E3_thurstone.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/measurement/01_scores_scales.html">Punteggi e scale</a></li><li class="breadcrumb-item"><a href="../../chapters/measurement/02_development.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/02_development.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">5.1</span> Introduzione</a></li>
+  <li><a href="#fasi-di-sviluppo" id="toc-fasi-di-sviluppo" class="nav-link" data-scroll-target="#fasi-di-sviluppo"><span class="header-section-number">5.2</span> Fasi di sviluppo</a>
+  <ul class="collapse">
+  <li><a href="#identificazione-del-costrutto" id="toc-identificazione-del-costrutto" class="nav-link" data-scroll-target="#identificazione-del-costrutto"><span class="header-section-number">5.2.1</span> Identificazione del costrutto</a></li>
+  <li><a href="#obiettivo" id="toc-obiettivo" class="nav-link" data-scroll-target="#obiettivo"><span class="header-section-number">5.2.2</span> Obiettivo</a></li>
+  <li><a href="#utenti" id="toc-utenti" class="nav-link" data-scroll-target="#utenti"><span class="header-section-number">5.2.3</span> Utenti</a></li>
+  <li><a href="#definizione-concettuale-e-operativa" id="toc-definizione-concettuale-e-operativa" class="nav-link" data-scroll-target="#definizione-concettuale-e-operativa"><span class="header-section-number">5.2.4</span> 4. Definizione concettuale e operativa</a></li>
+  <li><a href="#dissimulazione" id="toc-dissimulazione" class="nav-link" data-scroll-target="#dissimulazione"><span class="header-section-number">5.2.5</span> Dissimulazione</a></li>
+  <li><a href="#formato-degli-item" id="toc-formato-degli-item" class="nav-link" data-scroll-target="#formato-degli-item"><span class="header-section-number">5.2.6</span> Formato degli Item</a></li>
+  <li><a href="#sviluppare-una-struttura-del-test" id="toc-sviluppare-una-struttura-del-test" class="nav-link" data-scroll-target="#sviluppare-una-struttura-del-test"><span class="header-section-number">5.2.7</span> Sviluppare una struttura del test</a></li>
+  <li><a href="#tabella-delle-specifiche" id="toc-tabella-delle-specifiche" class="nav-link" data-scroll-target="#tabella-delle-specifiche"><span class="header-section-number">5.2.8</span> Tabella delle Specifiche</a></li>
+  <li><a href="#pool-iniziale-degli-item" id="toc-pool-iniziale-degli-item" class="nav-link" data-scroll-target="#pool-iniziale-degli-item"><span class="header-section-number">5.2.9</span> Pool Iniziale degli Item</a></li>
+  <li><a href="#revisione" id="toc-revisione" class="nav-link" data-scroll-target="#revisione"><span class="header-section-number">5.2.10</span> Revisione</a></li>
+  <li><a href="#validazione" id="toc-validazione" class="nav-link" data-scroll-target="#validazione"><span class="header-section-number">5.2.11</span> Validazione</a></li>
+  <li><a href="#analisi-degli-item" id="toc-analisi-degli-item" class="nav-link" data-scroll-target="#analisi-degli-item"><span class="header-section-number">5.2.12</span> Analisi degli item</a></li>
+  <li><a href="#revisione-degli-item" id="toc-revisione-degli-item" class="nav-link" data-scroll-target="#revisione-degli-item"><span class="header-section-number">5.2.13</span> Revisione degli item</a></li>
+  <li><a href="#calcolo-dellaffidabilità" id="toc-calcolo-dellaffidabilità" class="nav-link" data-scroll-target="#calcolo-dellaffidabilità"><span class="header-section-number">5.2.14</span> Calcolo dell’Affidabilità</a></li>
+  <li><a href="#seconda-somministrazione" id="toc-seconda-somministrazione" class="nav-link" data-scroll-target="#seconda-somministrazione"><span class="header-section-number">5.2.15</span> Seconda Somministrazione</a></li>
+  <li><a href="#ripetere-i-passaggi-precedenti" id="toc-ripetere-i-passaggi-precedenti" class="nav-link" data-scroll-target="#ripetere-i-passaggi-precedenti"><span class="header-section-number">5.2.16</span> Ripetere i Passaggi Precedenti</a></li>
+  <li><a href="#studi-di-validazione" id="toc-studi-di-validazione" class="nav-link" data-scroll-target="#studi-di-validazione"><span class="header-section-number">5.2.17</span> Studi di validazione</a></li>
+  <li><a href="#linee-guida" id="toc-linee-guida" class="nav-link" data-scroll-target="#linee-guida"><span class="header-section-number">5.2.18</span> Linee Guida</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-finali" id="toc-considerazioni-finali" class="nav-link" data-scroll-target="#considerazioni-finali"><span class="header-section-number">5.3</span> Considerazioni Finali</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/measurement/02_development.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/measurement/01_scores_scales.html">Punteggi e scale</a></li><li class="breadcrumb-item"><a href="../../chapters/measurement/02_development.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-development" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduzione" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">5.1</span> Introduzione</h2>
+<p>Lo sviluppo di un buon test psicologico non è semplice come potrebbe sembrare a prima vista. Si tratta di un processo articolato in più fasi, che richiede generalmente un notevole investimento di tempo, ricerca e, aspetto fondamentale, la disponibilità di partecipanti disposti a sottoporsi al test. Questo capitolo offre una panoramica del processo di sviluppo del test distinguendo quattro fasi principali: la concettualizzazione del test, la definizione della sua struttura e formato, la pianificazione delle standardizzazioni e degli studi psicometrici, e l’implementazione del piano <span class="citation" data-cites="reynolds2021mastering">(<a href="../../99-references.html#ref-reynolds2021mastering" role="doc-biblioref">Reynolds e Livingston 2021</a>)</span>.</p>
+</section>
+<section id="fasi-di-sviluppo" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="fasi-di-sviluppo"><span class="header-section-number">5.2</span> Fasi di sviluppo</h2>
+<section id="identificazione-del-costrutto" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="identificazione-del-costrutto"><span class="header-section-number">5.2.1</span> Identificazione del costrutto</h3>
+<p>Lo sviluppo di un test psicologico o educativo è un processo che inizia con la chiara identificazione di una necessità specifica all’interno del campo. È imperativo che lo sviluppatore del test determini il costrutto che desidera misurare e dimostri la necessità di un nuovo metodo di misurazione. Con l’ampia varietà di test psicologici disponibili, diventa cruciale identificare una lacuna specifica o un bisogno non ancora soddisfatto.</p>
+<p>Prima di procedere con la creazione di un nuovo strumento di valutazione, è vitale condurre un’indagine approfondita per stabilire se esistano già misure valide e affidabili per il costrutto di interesse. Questo implica un’analisi meticolosa della letteratura scientifica e una revisione dei test psicometrici esistenti. Un tale approccio permette di scoprire se strumenti adeguati siano già disponibili, evitando così di duplicare inutilmente il lavoro già fatto. Inoltre, l’esistenza di misure preesistenti può servire da prezioso punto di riferimento per confrontare e validare il nuovo test in fase di sviluppo, assicurando che il nuovo strumento apporti un contributo significativo e unico al campo della psicologia e dell’educazione.</p>
+<p>Con il progredire della psicologia, nuovi costrutti vengono definiti e quelli esistenti vengono modificati. Ad esempio, la concezione dell’intelligenza è cambiata nel tempo, passando dalla misurazione del tempo di reazione e dell’acume sensoriale, all’enfasi sulla conoscenza, fino all’attuale enfasi sul problem solving in termini di intelligenza cristallizzata e fluida.</p>
+<p>In alcuni casi, un clinico o ricercatore potrebbe avere la necessità di misurare una variabile ben definita, ma i test esistenti potrebbero essere di qualità dubbia o con qualità psicometriche obsolete. In tali situazioni, potrebbe essere necessario sviluppare un metodo di misurazione migliore o più esatto. Per esempio, le misurazioni del tempo di reazione, un tempo effettuate con l’osservazione umana e il cronometraggio, sono state sostituite da metodi elettronici molto più precisi.</p>
+<p>Tuttavia, alcuni test possono valutare costrutti clinicamente utili ma essere impraticabili per l’applicazione clinica reale. Per esempio, la ricerca di sensazioni è stata misurata in modo lungo e complicato fino agli anni ’90, quando sono state sviluppate misurazioni rapide e affidabili che hanno reso il costrutto pratico per l’applicazione clinica.</p>
+<p>Inoltre, i campioni standardizzati usati nei test possono diventare obsoleti e inapplicabili ai soggetti attuali, creando opportunità per lo sviluppo di nuovi test se persiste la necessità di misurare i costrutti in questione.</p>
+<p>Nuovi costrutti vengono talvolta definiti anche nei campi della psicologia e dell’educazione. Questi costrutti, di solito derivati da osservazioni teoriche, devono essere studiati e manipolati per essere compresi, e ciò richiede regole per assegnare valori numerici alle osservazioni, ovvero la definizione stessa di un test. Di conseguenza, c’è sempre bisogno di nuovi strumenti di test, sia per modernizzare quelli esistenti sia per misurare nuovi costrutti. Gli sviluppatori e i ricercatori di test possono condurre ricerche letterarie dettagliate per determinare quali strumenti sono disponibili per valutare un costrutto e valutarne la qualità e l’applicabilità prima di stabilire un reale bisogno.</p>
+<p>In conclusione, la decisione di sviluppare un nuovo test dovrebbe basarsi sulla domanda se questo migliorerebbe la pratica o la ricerca in un determinato campo, o se potrebbe migliorare la condizione umana o la nostra comprensione di essa.</p>
+<p><strong>Esempio di Studio:</strong> Nello studio di Watson et al.&nbsp;(2007), una notevole parte dell’introduzione è dedicata all’analisi critica della letteratura esistente. Questa analisi mira a evidenziare i limiti degli strumenti di misurazione disponibili, esaminando le caratteristiche degli item utilizzati, la correlazione tra gli indicatori impiegati dagli strumenti esistenti e gli approcci teorici relativi alla depressione e all’ansia, nonché le soluzioni fattoriali risultanti dai dati raccolti attraverso tali strumenti. Viene inoltre considerata l’insufficiente esplorazione di alcune aree del costrutto da parte degli strumenti esistenti.</p>
+<p>Watson et al.&nbsp;(2007) si sono proposti di sviluppare uno strumento per la misurazione della depressione che superi i limiti di strumenti preesistenti come il Beck Depression Inventory-II (BDI-II; Beck, Steer, &amp; Brown, 1996) e il Center for Epidemiological Studies Depression Scale (CES-D; Radloff, 1977). La scala sviluppata prende il nome di Inventory of Depression and Anxiety Symptoms (IDAS).</p>
+<p>Per rispondere alla prima questione, gli autori sottolineano che gli strumenti esistenti includono contenuti non specifici o non direttamente legati alla depressione. Sia il BDI-II sia il CES-D, per esempio, contengono item relativi a vari tipi di ansia, compromettendo così la loro validità discriminante. Gli strumenti esistenti non coprono inoltre l’intero dominio del costrutto della depressione maggiore come definito dal Diagnostic and Statistical Manual of Mental Disorders (4ª edizione). Presentano inoltre il limite di produrre un unico punteggio di severità dei sintomi, ignorando così l’eterogeneità e la multidimensionalità del fenomeno depressivo. Ciò si riflette nella struttura fattoriale poco chiara di tali strumenti, con diverse soluzioni fattoriali trovate da vari autori. L’IDAS, sviluppato da Watson et al.&nbsp;(2007), mira a superare queste difficoltà, creando sottoscale che riflettano direttamente gli aspetti distintivi della depressione.</p>
+<p>Per rispondere alla seconda questione, gli autori evidenziano come la depressione sia collocata all’interno di una rete nomologica di costrutti che include primariamente l’ansia. A differenza di strumenti preesistenti come BDI-II e CES-D, l’IDAS è stato progettato esplicitamente per creare scale che riflettano aspetti specifici della depressione, distinti dall’ansia. Questo è stato realizzato considerando un’ampia gamma di item che rappresentano sintomi associati all’ansia, al fine di esplorare la relazione tra i sintomi di ansia e quelli della depressione e creare scale distinte per queste dimensioni, aumentando così la validità discriminante dello strumento.</p>
+<p>Infine, per rispondere alla terza questione, Watson et al.&nbsp;(2007) dichiarano l’intento di sviluppare uno strumento che, nel suo punteggio complessivo, rifletta le caratteristiche generali della depressione e che, nelle sue sottoscale, misuri con precisione le varie dimensioni del costrutto esaminato.</p>
+</section>
+<section id="obiettivo" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="obiettivo"><span class="header-section-number">5.2.2</span> Obiettivo</h3>
+<p>Dopo aver identificato la necessità di un nuovo test per misurare un costrutto, è importante descrivere l’obiettivo primario nello sviluppo di una scala psicologica, gli usi previsti e le possibili interpretazioni dei risultati. Ci si dovrebbe chiedere: in quali contesti e per quali scopi verrà impiegato questo strumento? Quali interpretazioni dei risultati sono previste una volta che il test è stato somministrato e i risultati sono stati raccolti?</p>
+<p>La risposta a queste domande dovrebbe scaturire logicamente dal passo precedente. Se risulta difficile rispondere, ciò potrebbe indicare che la concezione del test e dei costrutti da misurare è ancora troppo vaga. In tal caso, sarebbe opportuno ritornare al primo passo e sviluppare ulteriormente le idee e il concetto del test.</p>
+<p>Comprendere come e in quale contesto un test può essere utilizzato è fondamentale per molti aspetti del suo sviluppo. Ad esempio, esistono numerosi test di personalità, ma ciascuno tende a enfatizzare aspetti diversi della personalità, delle emozioni e dell’affettività. Alcuni si concentrano sulla personalità normale, altri sugli stati psicopatologici. Il contesto (ad esempio, un ospedale psichiatrico rispetto alla selezione del personale) e l’uso previsto dei risultati determineranno contenuti e schemi interpretativi differenti.</p>
+<p>Conoscere lo scopo del test e il contesto in cui verrà utilizzato influenza quindi la risposta a tutti gli altri fattori nel processo di sviluppo, dalla definizione dell’utente del test, al campione normativo appropriato, fino ai tipi di studi di validità necessari per convalidare le interpretazioni proposte dei punteggi.</p>
+</section>
+<section id="utenti" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="utenti"><span class="header-section-number">5.2.3</span> Utenti</h3>
+<p>Nello sviluppo di un test, è cruciale determinare chi lo utilizzerà e per quale motivo. I test dovrebbero essere progettati tenendo conto degli utenti specifici, ovvero individui che svolgono funzioni particolari facilitati dall’uso di test psicologici ed educativi. È importante considerare il tipo di formazione accademica formale e le esperienze supervisionate che potrebbero essere richieste agli utenti per applicare correttamente i risultati dei test. Ad esempio, per la maggior parte dei test psicometrici, esistono requisiti di formazione imposti dalle leggi che limitano l’uso dei test agli psicologi. Tuttavia, è anche possibile pensare di sviluppare un test che non sarà somministrato da psicologi.</p>
+<p>È anche utile, in questa fase, determinare quali individui in quali contesti troveranno il test proposto utile nel loro ruolo. Questo dovrebbe derivare direttamente dallo scopo del test e dalle interpretazioni proposte dei risultati. Ad esempio, se lo scopo del test è diagnosticare una condizione clinica come il disturbo bipolare pediatrico, l’utente target sarà probabilmente uno psicologo clinico, o forse un psichiatra. Tuttavia, un test progettato per esaminare un gran numero di bambini per verificare se presentano livelli di rischio elevati per disturbi emotivi e comportamentali potrebbe essere concepito in modo da poter essere somministrato e valutato da insegnanti o infermieri.</p>
+<p>La conoscenza dell’utente previsto influenzerà le caratteristiche del test, in particolare riguardo alla complessità della sua somministrazione, valutazione e interpretazione, poiché diverse categorie di utenti possiedono diversi livelli di competenza.</p>
+</section>
+<section id="definizione-concettuale-e-operativa" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="definizione-concettuale-e-operativa"><span class="header-section-number">5.2.4</span> 4. Definizione concettuale e operativa</h3>
+<p>La creazione di un test psicologico efficace inizia con l’identificazione e la definizione precisa del costrutto o della caratteristica psicologica che si intende misurare. Questo processo non è banale: spesso crediamo di comprendere pienamente costrutti come depressione, ansia, intelligenza cristallizzata, intelligenza fluida, aggressività, amabilità, fino a quando non tentiamo di esprimerli a parole. È in questo momento che possiamo renderci conto che la nostra comprensione del costrutto potrebbe non essere così chiara come inizialmente pensavamo.</p>
+<p>Si raccomanda di scrivere due tipi di definizioni: una concettuale e una operativa. Una definizione concettuale spiega il costrutto a livello teorico. Per esempio, una possibile definizione concettuale della depressione potrebbe essere: “La depressione è uno stato di malinconia, tristezza e bassi livelli di energia che porta all’anedonia, sentimenti di inutilità e stanchezza cronica.” Una definizione operativa, invece, dice esattamente come il nostro test definirà o misurerà il costrutto. Ad esempio: “Nella Scala di Valutazione della Depressione degli Studenti, la depressione sarà valutata sommando le valutazioni in direzione punteggiata su osservazioni di comportamento come espressioni di sentimenti di tristezza, sentimenti di solitudine, di sentirsi incompresi e non apprezzati, mancanza di coinvolgimento in attività piacevoli, troppo o troppo poco sonno, pianto in momenti inappropriati e lamentele di stanchezza.” Quindi, mentre la definizione concettuale ci dice ciò che vogliamo misurare in astratto, la definizione operativa ci informa in modo più diretto e specifico su come sarà derivato il punteggio del costrutto. Anche se questi sforzi possono sembrare tediosi per scale che hanno molti costrutti, più costrutti sono presenti in un test, più tali definizioni si rivelano utili.</p>
+<p><strong>Esempio:</strong> Nel loro studio sulla depressione, Watson et al.&nbsp;(2007) si riferiscono al DSM-IV, che elenca nove criteri sintomatici per diagnosticare un episodio depressivo maggiore. Questi includono: (1) umore depresso per la maggior parte del giorno; (2) notevole riduzione di interesse o piacere per quasi tutte le attività; (3) variazione significativa del peso o dell’appetito; (4) insonnia o ipersonnia; (5) agitazione o rallentamento psicomotorio; (6) affaticamento o perdita di energia; (7) sentimenti di inutilità o eccessiva colpa; (8) difficoltà di concentrazione o indecisione; (9) pensieri di morte o ideazione suicidaria.</p>
+<p>Per ottimizzare l’utilità dell’Inventory of Depression and Anxiety Symptoms (IDAS), Watson et al.&nbsp;(2007) hanno incluso diversi item per ciascuno di questi nove criteri. Con l’intento di garantire una rappresentazione adeguata di ciascuna potenziale dimensione del costrutto, gli autori hanno inizialmente organizzato gli item in gruppi denominati <em>homogeneous item composites</em> (HIC). Tuttavia, hanno precisato che la formazione di questi HIC non implica necessariamente l’emergere di un fattore corrispondente, ma serve piuttosto a coprire l’intero dominio potenziale del costrutto di depressione.</p>
+</section>
+<section id="dissimulazione" class="level3" data-number="5.2.5">
+<h3 data-number="5.2.5" class="anchored" data-anchor-id="dissimulazione"><span class="header-section-number">5.2.5</span> Dissimulazione</h3>
+<p>Determinare la necessità di misure per rilevare la dissimulazione. La dissimulazione è il comportamento di presentare se stessi in modo diverso dalla realtà. Per esempio, una persona che si sente triste ma non vuole ammetterlo potrebbe rispondere falsamente a una domanda di un test di personalità riguardo la tristezza per nascondere i propri sentimenti. La dissimulazione può verificarsi anche quando si valutano altre persone, ad esempio compilando una scala di valutazione per un bambino, coniuge o genitore anziano.</p>
+<p>Le persone possono impegnarsi nella dissimulazione per vari motivi, come negare sintomi in una valutazione di personalità o psicopatologia per non apparire con tratti indesiderati o comportamenti inaccettabili. Questo fenomeno si verifica anche tra coloro che cercano trattamento. Nell’ambito lavorativo, non è insolito che i candidati rispondano alle domande in modo da aumentare le possibilità di ottenere il lavoro.</p>
+<p>In altri casi, le persone possono esagerare i sintomi per apparire più compromessi di quanto siano in realtà, un comportamento noto come simulazione, spesso motivato dal guadagno personale. Ad esempio, possono fingere problemi di personalità, comportamentali o cognitivi per ottenere benefici di invalidità, aumentare i risarcimenti in cause legali o evitare punizioni.</p>
+<p>Nelle valutazioni cognitive, la dissimulazione può essere rilevata attraverso test di sforzo, ossia test che chiunque può completare correttamente se ci prova. Questi test sono raccomandati in quasi tutte le situazioni forensi e quando un paziente ha qualcosa da guadagnare fingendo deficit cognitivi.</p>
+<p>La dissimulazione può manifestarsi in molti modi e talvolta si vedono definizioni più specifiche. Ad esempio, la validità dei sintomi si riferisce all’accuratezza o veridicità della presentazione comportamentale del soggetto, mentre il bias di risposta è un tentativo di ingannare l’esaminatore con risposte inesatte o incomplete. L’effort riguarda l’impegno nell’eseguire al meglio delle proprie capacità.</p>
+<p>Capire lo scopo del test, chi lo utilizzerà e in quali circostanze aiuta a determinare se includere scale per rilevare la dissimulazione. La psicologia ha sviluppato nel tempo metodi sofisticati per rilevare la dissimulazione, e le tecniche comuni verranno ora esaminate.</p>
+<p>Le scale più comuni per rilevare la dissimulazione (spesso note come scale di validità) nelle misure di personalità e comportamento includono le scale F, le scale L e gli indici di inconsistenza. Queste sono brevemente descritte qui sotto:</p>
+<ul>
+<li><strong>Scale F (Infrequency Scales):</strong> Queste scale sono progettate per rilevare la presentazione esagerata dei sintomi. Gli item delle scale F riflettono sintomi raramente segnalati anche da persone con livelli significativi di psicopatologia, o rappresentano approvazioni estreme di sintomi comuni che sono anch’essi rari. Poiché questi item rappresentano risposte infrequenti e scarsamente correlate tra loro, i soggetti che indicano di sperimentare un gran numero di questi sintomi forniscono probabilmente una presentazione esagerata della psicopatologia.</li>
+<li><strong>Scale L (Social Desirability Scales):</strong> Sono progettate per rilevare la negazione inaccurata di sintomi realmente presenti, rilevando il bias opposto della scala F. Le scale L includono item speciali che riflettono piccoli difetti comuni che quasi tutti sperimentano in qualche momento. Ad esempio, una risposta negativa a un item come “Talvolta mi sento triste” può indicare dissimulazione.</li>
+<li><strong>Scale di Inconsistenza:</strong> Sono progettate per rilevare incongruenze nelle risposte a item simili su scale di personalità e comportamento. Quando un rispondente non è coerente nel rispondere a item simili, i risultati non sono considerati affidabili. Per esempio, un rispondente che afferma sia “Sono pieno di energia” sia “Mi sento affaticato” potrebbe essere incoerente.</li>
+</ul>
+<p>Per alcuni tipi di test, possono essere utili altre scale di dissimulazione per scopi speciali. Ad esempio, nello sviluppo di misure per la selezione di personale, potrebbe essere utile includere indicatori più avanzati e sottili di bias di risposta.</p>
+<p>Nonostante non siano misure di dissimulazione, gli autori dei test a volte includono anche scale che esaminano la comprensione degli item e il livello di cooperazione del soggetto nei test auto-somministrati e nelle scale di valutazione. Queste scale, a volte chiamate <strong>V-scale</strong> o scale di validità, contengono tipicamente item privi di senso dove la risposta è la stessa per tutti coloro che prendono il test seriamente e cooperano con il processo di esame.</p>
+<p>Nelle valutazioni attitudinali e nei test di profitto, alcune persone potrebbero non impegnarsi adeguatamente nei test per ragioni di guadagno, un comportamento comunemente visto come simulazione. Tuttavia, ci sono altre ragioni plausibili, come la sindrome amotivazionale a seguito di infortuni cerebrali o la avolizione in disturbi psichiatrici come la schizofrenia.</p>
+<p>Pochi test cognitivi hanno misure incorporate di dissimulazione o mancanza di sforzo. Tuttavia, alcuni costruiscono scale o item per rilevare la mancanza di sforzo. Spesso, la simulazione su misure cognitive è valutata attraverso modelli di prestazione indicativi di risposte non valide, incongruenze tra risultati del test e comportamenti osservati, e discrepanze tra i risultati dei test e le informazioni di background documentate.</p>
+<p>In conclusione, le scale di dissimulazione sono strumenti essenziali nel processo di sviluppo dei test, aiutando a garantire che i risultati riflettano accuratamente le caratteristiche e le abilità del soggetto.</p>
+</section>
+<section id="formato-degli-item" class="level3" data-number="5.2.6">
+<h3 data-number="5.2.6" class="anchored" data-anchor-id="formato-degli-item"><span class="header-section-number">5.2.6</span> Formato degli Item</h3>
+<p>La determinazione del formato degli item è un passo cruciale nello sviluppo di un test psicologico o educativo. Questa fase comporta la scelta della struttura e del formato degli item, i quali devono essere in linea con il costrutto da misurare e gli obiettivi specifici del test. I formati possono variare, includendo domande a scelta multipla, scale Likert o altri tipi di risposta. È importante sottolineare che la scelta del formato influisce sull’accuratezza e sull’affidabilità del test, richiedendo quindi un’attenta valutazione.</p>
+<p>In questa fase, si devono considerare anche aspetti pratici come la modalità di somministrazione del test, che può essere individuale o di gruppo, e il formato del test, che può essere cartaceo o computerizzato. Un’ulteriore considerazione riguarda chi completerà effettivamente il test o il foglio delle risposte, che potrebbe essere l’esaminatore, l’esaminando o un informatore terzo, come nel caso delle scale di valutazione comportamentale.</p>
+<p>Differenti tipi di item sono utili in diverse circostanze e possono misurare caratteristiche in modi diversi. Per esempio, la valutazione di sentimenti, pensieri e altri comportamenti non osservabili è solitamente meglio realizzata tramite autovalutazione. Una volta selezionato il formato di autovalutazione, è importante decidere il tipo di item da utilizzare, poiché esistono diverse opzioni di item per l’autovalutazione. Ad esempio, l’item “Mi sento triste” può variare significativamente a seconda del formato di risposta scelto, influenzando l’intento e l’interpretazione delle risposte.</p>
+<p>Dopo aver scelto i formati degli item appropriati, è fondamentale scrivere esempi di item per ciascun formato che si prevede di utilizzare nel test. Questo include anche la redazione delle istruzioni per la somministrazione e la valutazione del test, che dovrebbero essere chiare e comprensibili anche per chi non è familiare con il test.</p>
+<p>Infine, è utile stimare il numero di item necessari per valutare in modo affidabile i costrutti. Come regola generale, si dovrebbe inizialmente scrivere almeno il doppio del numero di item che si prevede di utilizzare nel test finale. Questo perché molti item potrebbero essere scartati a causa di statistiche insufficienti, pregiudizi o ambiguità. La lunghezza del test dovrebbe essere adeguata alla popolazione bersaglio, tenendo conto della sensibilità di alcuni gruppi, come i giovani o gli anziani, al tempo richiesto per completare il test.</p>
+<p>Un altro aspetto fondamentale da considerare è chi completerà effettivamente il test o il foglio delle risposte. Questo può variare a seconda delle circostanze: potrebbe essere l’esaminatore, l’esaminato, o un terzo informatore, come nel caso delle scale di valutazione comportamentale, dove i rispondenti possono essere genitori, insegnanti o altre figure rilevanti. La scelta di chi completerà il test può influenzare non solo la logistica della somministrazione del test, ma anche la natura delle informazioni raccolte, e quindi la validità e l’utilità dei risultati.</p>
+<p><strong>Scala Likert.</strong> Una scala Likert è un tipo di scala ordinale che viene utilizzata per misurare gli atteggiamenti di una persona. Viene chiesto al rispondente di valutare il grado di accordo o disaccordo con un’affermazione utilizzando un’alternativa di risposta che di solito varia da cinque a sette punti. Tuttavia, poiché è una scala ordinale, le distanze tra i livelli della scala non sono quantificabili e non possiamo assumere che le differenze tra i livelli di risposta siano equidistanti. Pertanto, c’è una lunga controversia sulla possibilità di trattare i valori numerici di una scala ordinale come se provenissero da una scala ad intervalli. Alcuni autori ritengono problematico non potere trattare i dati provenienti da scale di tipo Likert come se fossero a livello di scala ad intervalli, mentre altri autori lo considerano giustificato in presenza di un’ampia numerosità campionaria e di una distribuzione approssimativamente normale dei dati. In ogni caso, la procedura che sta alla base delle scale Likert consiste nella somma dei punti attribuiti ad ogni singola domanda. I vantaggi della scala Likert sono la sua semplicità e applicabilità, mentre i suoi svantaggi sono il fatto che i suoi elementi vengono trattati come scale cardinali pur essendo ordinali e il fatto che il punteggio finale non rappresenta una variabile cardinale.</p>
+<p><strong>Item a codifica inversa.</strong> In parole più semplici, ci sono alcune domande in un test che sono strettamente correlate in modo negativo con le altre domande e con il punteggio totale del test. Queste domande richiedono una risposta diversa rispetto alle altre domande. Ad esempio, in un questionario sull’ansia, una domanda potrebbe chiedere “Sono preoccupata” e la scala di risposta potrebbe essere “Per nulla”, “Un po’”, “Abbastanza” e “Moltissimo” con valori 1, 2, 3 e 4 rispettivamente. Tuttavia, un’altra domanda potrebbe chiedere “Mi sento bene” e la scala di risposta potrebbe essere la stessa, ma con valori 4, 3, 2 e 1 rispettivamente. Questo perché le proprietà contrarie si trovano sullo stesso continuum latente. Questo è importante nella costruzione di un test psicologico, dove è consigliato utilizzare sia domande orientate nella direzione del costrutto (chiamate “straight item”) sia nella direzione opposta (chiamate “reverse item”) per contrastare l’acquiescenza e ottenere risposte più accurate.</p>
+</section>
+<section id="sviluppare-una-struttura-del-test" class="level3" data-number="5.2.7">
+<h3 data-number="5.2.7" class="anchored" data-anchor-id="sviluppare-una-struttura-del-test"><span class="header-section-number">5.2.7</span> Sviluppare una struttura del test</h3>
+<p>Lo sviluppo di una struttura per un test psicologico o educativo richiede passaggi ben definiti prima di procedere alla creazione dei singoli item della scala. Prima di tutto, è essenziale stabilire un’organizzazione strutturale del test, delineando gli obiettivi specifici che si intendono raggiungere attraverso la sua somministrazione. Questo passaggio comporta la definizione dei sottodomini o delle dimensioni che si vogliono misurare e di come questi contribuiranno alla valutazione complessiva del costrutto.</p>
+<p>Una questione fondamentale da risolvere è se il test produrrà un unico punteggio, come somma di tutte le risposte agli item, o se sarà necessario suddividerlo in sottoscale. La struttura del test è spesso determinata dai costrutti che si intendono misurare, quindi le definizioni precedentemente scritte sono di grande importanza in questa fase decisionale. Se il test include sottoscale o sotto-test, è importante considerare anche se ci saranno punteggi compositi che forniscono indici riassuntivi dei raggruppamenti dei sotto-test.</p>
+<p>Nella fase di sviluppo del test, è cruciale spiegare come gli item e le sottoscale (se presenti) saranno organizzati. Se la logica alla base del test e la discussione sui costrutti sottostanti non rendono evidente la specifica organizzazione degli item e dei sotto-test, è importante affrontare il motivo per cui questa particolare organizzazione è la più appropriata. Naturalmente, è da tenere in considerazione che la ricerca condotta durante il processo di sviluppo del test potrebbe portare a modifiche della struttura intesa, in base ai dati effettivamente raccolti.</p>
+<p><strong>Esempio:</strong> Nello studio di Watson et al.&nbsp;(2007), per garantire un campionamento esaustivo dell’intero ambito del costrutto, sono stati definiti 20 <em>homogeneous item composites</em> (HIC), che includono: Umore Depresso, Perdita di Interesse o Piacere, Disturbi dell’Appetito, Disturbi del Sonno, Problemi Psicomotori, Fatica/Anergia, Sentimenti di Inutilità o Colpa, Problemi Cognitivi, Ideazione Suicidaria, Senso di Speranza, Depressione Melanconica, Umore Arrabbiato/Irritabile, Alta Energia/Affetto Positivo, Umore Ansioso, Preoccupazione, Panico, Agorafobia, Ansia Sociale, Intrusioni Traumatiche, Sintomi Ossessivo-Compulsivi.</p>
+<p>Di questi, 13 HIC (comprendenti in totale 117 item) sono stati dedicati agli indicatori specifici della depressione. Nove di questi HIC (79 item in totale) coprono i sintomi fondamentali della depressione maggiore secondo il DSM-IV, tra cui umore depresso, perdita di interesse o piacere, disturbi dell’appetito, del sonno, problemi psicomotori, fatica/anergia, senso di inutilità e colpa, problemi cognitivi e ideazione suicidaria. I restanti quattro HIC trattano temi quali la disperazione (Hopelessness, secondo Abramson, Metalsky, &amp; Alloy, 1989), sintomi specifici della depressione melanconica (Joiner et al., 2005), umore arrabbiato/irritabile (una forma alternativa di depressione negli adolescenti secondo il DSM-IV, American Psychiatric Association, 1994, p.&nbsp;327), e indicatori di energia e affetto positivo (associati alla depressione secondo Mineka et al., 1998).</p>
+<p>I rimanenti sette HIC (63 item totali) sono stati introdotti per valutare sintomi associati all’ansia. Questi HIC includono categorie come umore ansioso, preoccupazione, panico, agorafobia, ansia sociale e intrusioni traumatiche associate al PTSD. Questa approfondita categorizzazione mira a una valutazione comprensiva e differenziata dei sintomi legati sia alla depressione sia all’ansia, fornendo così una visione più completa del panorama psicopatologico.</p>
+</section>
+<section id="tabella-delle-specifiche" class="level3" data-number="5.2.8">
+<h3 data-number="5.2.8" class="anchored" data-anchor-id="tabella-delle-specifiche"><span class="header-section-number">5.2.8</span> Tabella delle Specifiche</h3>
+<p>La creazione di un test psicologico o educativo implica lo sviluppo di una Tabella delle Specifiche (TOS), che funge da “schema” per assicurare l’allineamento tra le definizioni dei costrutti, le definizioni operative e il contenuto del test stesso. La TOS è particolarmente utile nelle misure di rendimento, dove serve a garantire che il test sia in congruenza con un determinato curriculum o campo di studio. Questo strumento definisce in modo chiaro le aree di contenuto principali che il test intende esplorare, selezionate attraverso un’analisi accurata degli obiettivi educativi. Questo processo è fondamentale per assicurare che il contenuto del test sia direttamente collegato agli obiettivi di apprendimento e di valutazione, rendendo il test pertinente e focalizzato sui temi chiave.</p>
+<p>È importante che gli autori di test evitino di affidarsi eccessivamente a processi cognitivi di livello inferiore, come la memorizzazione meccanica, e che includano anche processi di livello superiore per garantire una valutazione equilibrata e completa delle capacità cognitive. Inoltre, la distribuzione degli item tra le varie aree di contenuto dovrebbe essere bilanciata per riflettere adeguatamente l’importanza di ciascuna area nel quadro complessivo del curriculum o dell’area di studio.</p>
+<p>Le TOS non sono utili solo per test di rendimento e attitudine, ma anche per quelli di personalità e comportamento. Ad esempio, nello sviluppo di un test sulla depressione, la TOS può aiutare a garantire che il test esamini accuratamente il vasto dominio dei sintomi depressivi, coprendo le diverse sfaccettature della depressione in proporzioni adeguate. La TOS può elencare le diverse aree o aspetti dei sintomi depressivi da valutare, includendo sia comportamenti osservabili sia pensieri e sentimenti interni, rilevanti per la diagnosi. In questo modo, la TOS funge da guida nella redazione degli item, assicurando che tutte le dimensioni rilevanti della depressione siano adeguatamente rappresentate nel test.</p>
+</section>
+<section id="pool-iniziale-degli-item" class="level3" data-number="5.2.9">
+<h3 data-number="5.2.9" class="anchored" data-anchor-id="pool-iniziale-degli-item"><span class="header-section-number">5.2.9</span> Pool Iniziale degli Item</h3>
+<p>Creare il pool iniziale di item. A questo punto, si procede a sviluppare una vasta gamma di item che coprano i diversi aspetti del costrutto di interesse. Questo pool iniziale di item dovrebbe essere variegato e ben bilanciato, rappresentando in modo adeguato la complessità del costrutto e i diversi livelli di abilità o atteggiamenti che si vogliono misurare. È importante anche scrivere le risposte corrette secondo ciò che si intende misurare e la direzione del punteggio del test.</p>
+</section>
+<section id="revisione" class="level3" data-number="5.2.10">
+<h3 data-number="5.2.10" class="anchored" data-anchor-id="revisione"><span class="header-section-number">5.2.10</span> Revisione</h3>
+<p>Condurre la revisione iniziale degli item (e apportare modifiche). Gli item raccolti nel pool iniziale vengono sottoposti a un esame attento da parte di esperti nel campo. Si valuta la pertinenza, la chiarezza, la coerenza e la validità dei singoli item. Sulla base dei feedback ricevuti dagli esperti, possono essere apportate modifiche o eliminati item problematici.</p>
+</section>
+<section id="validazione" class="level3" data-number="5.2.11">
+<h3 data-number="5.2.11" class="anchored" data-anchor-id="validazione"><span class="header-section-number">5.2.11</span> Validazione</h3>
+<p>Nella fase di validazione di un test, l’implementazione di un ampio trial empirico degli item è un passaggio metodologico fondamentale. Tale processo prevede la somministrazione degli item a un campione rappresentativo della popolazione di riferimento. L’obiettivo è di valutare la discriminazione item-partecipante e di identificare eventuali anomalie o limitazioni strutturali della scala.</p>
+<p>La definizione del campione target, ovvero la popolazione di riferimento per la quale il test è stato progettato, costituisce il primo passo nella pianificazione del campionamento. La selezione del campione di standardizzazione è cruciale in quanto determina il gruppo di riferimento per il confronto dei punteggi nei test normativi, oltre a stabilire le norme o i punteggi normativi del test. Questo è rilevante sia nei test normativi sia nei test basati su criteri, dove la performance delle popolazioni target è fondamentale nella definizione dei punteggi di taglio e nelle decisioni correlate alle prestazioni.</p>
+<p>Una volta identificata la popolazione target, si procede alla formulazione di un piano di campionamento. Idealmente, si ricercano campioni casuali veri della popolazione target, tuttavia, tale approccio è spesso impraticabile data l’impossibilità di conoscere e coinvolgere tutti i membri della popolazione. È quindi essenziale garantire la rappresentatività del campione attraverso un piano di campionamento stratificato proporzionale. Questo implica la definizione delle caratteristiche salienti (strati) della popolazione e la determinazione delle percentuali necessarie di soggetti con tali caratteristiche per assicurare la rappresentatività del campione.</p>
+<p>In conclusione, il processo di campionamento deve essere accuratamente progettato per assicurare che il campione sia rappresentativo della popolazione target, superando le limitazioni pratiche e metodologiche incontrate nella selezione del campione stesso.</p>
+<p><strong>Numero di soggetti.</strong> In ambito psicometrico non c’è un accordo univoco sulla dimensione del campione necessaria per condurre un’analisi fattoriale. Tuttavia, gli autori hanno fornito alcune indicazioni che possono essere utili come riferimento. Nunnally (1978) ha suggerito che il campione debba essere composto da almeno 10 soggetti per ogni item. Comrey e Lee (1992) hanno fornito una scala che valuta la qualità del campione in base alla dimensione: “molto scarsa” per 50, “scarso” per 100, “sufficiente” per 200, “buona” per 300, “molto buona” per 500 e “eccellente” per 1.000 o più. Altri autori hanno suggerito come regola generale di avere almeno 300 casi per l’analisi fattoriale (Tabachnick e Fidell, 2001). In ogni caso, è importante tenere presente che la scelta della dimensione del campione dipende anche dalla complessità del costrutto che si intende analizzare e dalla qualità degli item utilizzati nel test.</p>
+</section>
+<section id="analisi-degli-item" class="level3" data-number="5.2.12">
+<h3 data-number="5.2.12" class="anchored" data-anchor-id="analisi-degli-item"><span class="header-section-number">5.2.12</span> Analisi degli item</h3>
+<p>I dati raccolti dal test di campo vengono analizzati utilizzando metodi statistici adeguati. Questo processo mira a identificare item che non funzionano correttamente, che mostrano una bassa discriminazione o che potrebbero causare distorsioni nelle risposte. Gli item che superano questa fase sono considerati per la versione finale della scala.</p>
+</section>
+<section id="revisione-degli-item" class="level3" data-number="5.2.13">
+<h3 data-number="5.2.13" class="anchored" data-anchor-id="revisione-degli-item"><span class="header-section-number">5.2.13</span> Revisione degli item</h3>
+<p>Sulla base dei risultati dell’analisi, gli item della scala possono essere rivisti o sostituiti, al fine di migliorarne l’accuratezza, la coerenza e l’affidabilità.</p>
+<p><strong>Numero di item.</strong> La lunghezza del test dovrebbe essere adatta al suo scopo. Ad esempio, un test per valutare le abilità degli studenti delle scuole primarie non dovrebbe richiedere più di 30 minuti per essere completato, perché l’affaticamento e la noia possono influire sui risultati. Lo stesso vale per un test di personalità per adulti. In generale, un test dovrebbe essere il più breve possibile, ma deve raggiungere un livello accettabile di validità. Come regola generale, Kline (1986) suggerisce di avere almeno 50 domande nella versione finale del test.</p>
+</section>
+<section id="calcolo-dellaffidabilità" class="level3" data-number="5.2.14">
+<h3 data-number="5.2.14" class="anchored" data-anchor-id="calcolo-dellaffidabilità"><span class="header-section-number">5.2.14</span> Calcolo dell’Affidabilità</h3>
+<p>La consistenza interna della scala viene valutata tramite il calcolo dell’affidabilità, ad esempio utilizzando il coefficiente alpha di Cronbach. Questo passaggio assicura che gli item scelti per la scala si correlino tra loro in modo coerente, riflettendo così la coerenza delle misure.</p>
+</section>
+<section id="seconda-somministrazione" class="level3" data-number="5.2.15">
+<h3 data-number="5.2.15" class="anchored" data-anchor-id="seconda-somministrazione"><span class="header-section-number">5.2.15</span> Seconda Somministrazione</h3>
+<p>Una volta apportate le revisioni agli item, viene eseguita una seconda somministrazione per confermare l’efficacia delle modifiche e per valutare l’affidabilità della versione rivista della scala su un nuovo campione.</p>
+</section>
+<section id="ripetere-i-passaggi-precedenti" class="level3" data-number="5.2.16">
+<h3 data-number="5.2.16" class="anchored" data-anchor-id="ripetere-i-passaggi-precedenti"><span class="header-section-number">5.2.16</span> Ripetere i Passaggi Precedenti</h3>
+<p>Se durante la seconda somministrazione emergono ancora problemi o se l’affidabilità della scala non raggiunge i livelli desiderati, è necessario ripetere i passaggi precedenti fino a raggiungere una versione della scala che soddisfi gli standard di qualità e affidabilità.</p>
+</section>
+<section id="studi-di-validazione" class="level3" data-number="5.2.17">
+<h3 data-number="5.2.17" class="anchored" data-anchor-id="studi-di-validazione"><span class="header-section-number">5.2.17</span> Studi di validazione</h3>
+<p>Per garantire la validità di una scala, è fondamentale condurre studi di validazione che dimostrino la capacità della scala di misurare con precisione il costrutto di interesse. Questi studi possono includere l’analisi delle relazioni tra i punteggi della scala e altre misure correlate, nonché il confronto tra gruppi con differenze note nel costrutto.</p>
+<p>Come per gli studi di affidabilità, è cruciale pianificare in anticipo gli studi di validità, assicurandosi che siano concettualizzati e progettati in modo da consentire la valutazione dell’adeguatezza delle interpretazioni proposte dei punteggi del test una volta completato. In linea con quanto discusso nel Capitolo 5, ciascuna delle cinque categorie fondamentali di evidenza di validità deve essere affrontata, pur variando l’enfasi e il livello di dettaglio a seconda dei costrutti valutati, delle interpretazioni proposte dei punteggi e degli scopi per i quali i punteggi saranno applicati.</p>
+<p>Ad esempio, nei test di intelligenza progettati per predire il successo accademico, dovrebbero essere sottolineati e resi prioritari gli studi predittivi basati su criteri specifici che rappresentino il successo accademico, quali il tasso di laurea o i punteggi ACT. In maniera simile, i test destinati alla selezione del personale richiedono studi accurati sulla capacità predittiva dei punteggi in relazione al successo lavorativo, il quale dovrebbe essere definito in anticipo dall’ente o dall’individuo che utilizza il test. È importante riconoscere che la definizione di successo lavorativo può variare ampiamente; pertanto, è necessario chiarire e specificare le definizioni dei criteri utilizzati.</p>
+<p>Per una misura della psicopatologia dello sviluppo, ad esempio quella finalizzata a perfezionare l’accuratezza diagnostica nei Disturbi dello Spettro Autistico (ASD), l’accento dovrebbe essere posto sulla capacità dei punteggi del test di discriminare tra gruppi di soggetti diagnosticati (indipendentemente dal test) con ciascuno dei disturbi rilevanti. Gli studi di validità frequentemente si concentrano soltanto sulla distinzione tra gruppi diagnosticati e soggetti non diagnosticati o normodotati; tuttavia, questo approccio di ricerca risulta spesso di limitata utilità, in quanto la maggior parte dei test è in grado di differenziare tra normalità e patologia grazie ad un’alta affidabilità dei punteggi e a campioni di ampia dimensione. La sfida effettiva consiste nel distinguere tra le diverse diagnosi all’interno di un campione specifico, come ad esempio differenziare bambini con ASD da quelli con ADHD o depressione.</p>
+<p>In definitiva, è fondamentale che gli studi di validità si concentrino sulle interpretazioni proposte dei punteggi e sulle loro applicazioni intenzionali. Non esistono limiti a ciò che può essere progettato come studi di validità; sono limitati solo dalla creatività del ricercatore e dalla loro conoscenza del costrutto e delle teorie pertinenti che incarnano il costrutto misurato.</p>
+</section>
+<section id="linee-guida" class="level3" data-number="5.2.18">
+<h3 data-number="5.2.18" class="anchored" data-anchor-id="linee-guida"><span class="header-section-number">5.2.18</span> Linee Guida</h3>
+<p>Nel processo di sviluppo di un test, la fase finale si concentra sull’elaborazione di linee guida dettagliate, fondamentali per garantire una somministrazione appropriata e un’accurata valutazione dei punteggi. Questo passaggio si rivela cruciale per assicurare che il test sia utilizzato nel modo previsto e che i risultati siano interpretati correttamente.</p>
+<p>Le istruzioni per partecipare allo studio devono essere chiare e concise, fornendo un’idea generale degli obiettivi della ricerca e dei trattamenti previsti. I partecipanti devono essere informati dei benefici prevedibili e dei rischi, e della libertà di scegliere di non partecipare. Inoltre, la privacy dei partecipanti è protetta dalla legge sulla protezione dei dati personali e i loro dati verranno raccolti e conservati in forma anonima, tranne che per il nominativo. I partecipanti possono esercitare i propri diritti di protezione dei dati personali e interrompere la partecipazione in qualsiasi momento. Alla fine dello studio, i partecipanti possono ricevere i risultati della ricerca e possono rivolgersi al Comitato Etico dell’Università degli Studi di Firenze per segnalare qualsiasi problema. Prima di partecipare, i partecipanti devono firmare una dichiarazione di consenso informato per accettare di partecipare alla ricerca e di autorizzare il trattamento dei loro dati personali.</p>
+</section>
+</section>
+<section id="considerazioni-finali" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="considerazioni-finali"><span class="header-section-number">5.3</span> Considerazioni Finali</h2>
+<p>Questo capitolo ha offerto un quadro pratico, così come discuso da <span class="citation" data-cites="reynolds2021mastering">Reynolds e Livingston (<a href="../../99-references.html#ref-reynolds2021mastering" role="doc-biblioref">2021</a>)</span>, riguardante le tappe cruciali e gli elementi fondamentali implicati nel processo di creazione di un test. Una particolare attenzione è stata rivolta alle fasi iniziali di concettualizzazione, vitali per la riuscita del progetto. Tali fasi includono l’identificazione della necessità di sviluppare un nuovo test e la formulazione di definizioni sia concettuali che operative dei costrutti da valutare.</p>
+<p>Abbiamo anche messo in evidenza l’importanza di delineare anticipatamente gli scopi specifici per cui il test è stato progettato, le modalità di interpretazione dei risultati e il pubblico target che ne farà uso. Questo approccio preliminare aiuta a definire chiaramente il contesto e le aspettative relative all’uso del test.</p>
+<p>Un altro aspetto trattato riguarda la stesura di una descrizione esauriente del test, che comprende la creazione di una tabella delle specifiche o di uno schema del test. Questo strumento si rivela essenziale per guidare sistematicamente lo sviluppatore attraverso le varie fasi di creazione del test, assicurando che tutti gli aspetti cruciali siano presi in considerazione.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-reynolds2021mastering" class="csl-entry" role="listitem">
+Reynolds, Cecil R, e RA Livingston. 2021. <em>Mastering modern psychological testing</em>. Springer.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/measurement/E3_thurstone.html" class="pagination-link" aria-label="✏️ Esercizi">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/ctt/01_ctt_1.html" class="pagination-link" aria-label="Fondamenti teorici">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/measurement/02_development.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

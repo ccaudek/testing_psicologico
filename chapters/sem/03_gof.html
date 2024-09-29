@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>41&nbsp; Test del Modello e Indicizzazione – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/sem/04_mod_comp.html" rel="next">
+<link href="../../chapters/sem/02_data_preparation.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/03_gof.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">41.1</span> Introduzione</a></li>
+  <li><a href="#valutazione-della-bontà-di-adattamento-nel-modello-sem" id="toc-valutazione-della-bontà-di-adattamento-nel-modello-sem" class="nav-link" data-scroll-target="#valutazione-della-bontà-di-adattamento-nel-modello-sem"><span class="header-section-number">41.2</span> Valutazione della Bontà di Adattamento nel Modello SEM</a>
+  <ul class="collapse">
+  <li><a href="#gradi-di-libertà-e-identificabilità-del-modello" id="toc-gradi-di-libertà-e-identificabilità-del-modello" class="nav-link" data-scroll-target="#gradi-di-libertà-e-identificabilità-del-modello"><span class="header-section-number">41.2.1</span> Gradi di Libertà e Identificabilità del Modello</a></li>
+  <li><a href="#funzione-di-discrepanza-e-valutazione-della-bontà-di-adattamento" id="toc-funzione-di-discrepanza-e-valutazione-della-bontà-di-adattamento" class="nav-link" data-scroll-target="#funzione-di-discrepanza-e-valutazione-della-bontà-di-adattamento"><span class="header-section-number">41.2.2</span> Funzione di Discrepanza e Valutazione della Bontà di Adattamento</a></li>
+  </ul></li>
+  <li><a href="#test-chi2" id="toc-test-chi2" class="nav-link" data-scroll-target="#test-chi2"><span class="header-section-number">41.3</span> Test <span class="math inline">\(\chi^2\)</span></a>
+  <ul class="collapse">
+  <li><a href="#interpretazione-del-test-del-chi2" id="toc-interpretazione-del-test-del-chi2" class="nav-link" data-scroll-target="#interpretazione-del-test-del-chi2"><span class="header-section-number">41.3.1</span> Interpretazione del Test del <span class="math inline">\(\chi^2\)</span></a></li>
+  <li><a href="#limitazioni" id="toc-limitazioni" class="nav-link" data-scroll-target="#limitazioni"><span class="header-section-number">41.3.2</span> Limitazioni</a></li>
+  <li><a href="#test-di-rapporto-di-verosimiglianza" id="toc-test-di-rapporto-di-verosimiglianza" class="nav-link" data-scroll-target="#test-di-rapporto-di-verosimiglianza"><span class="header-section-number">41.3.3</span> Test di rapporto di verosimiglianza</a></li>
+  </ul></li>
+  <li><a href="#chi-quadrato-normalizzato-nc" id="toc-chi-quadrato-normalizzato-nc" class="nav-link" data-scroll-target="#chi-quadrato-normalizzato-nc"><span class="header-section-number">41.4</span> Chi Quadrato Normalizzato (NC)</a></li>
+  <li><a href="#chi-quadrato-scalato-e-errori-standard-robusti-per-distribuzioni-non-normali" id="toc-chi-quadrato-scalato-e-errori-standard-robusti-per-distribuzioni-non-normali" class="nav-link" data-scroll-target="#chi-quadrato-scalato-e-errori-standard-robusti-per-distribuzioni-non-normali"><span class="header-section-number">41.5</span> Chi Quadrato Scalato e Errori Standard Robusti per Distribuzioni Non Normali</a></li>
+  <li><a href="#indicizzazione-delladattamento-del-modello" id="toc-indicizzazione-delladattamento-del-modello" class="nav-link" data-scroll-target="#indicizzazione-delladattamento-del-modello"><span class="header-section-number">41.6</span> Indicizzazione dell’Adattamento del Modello</a></li>
+  <li><a href="#tipologie-di-indici-di-adattamento-approssimati" id="toc-tipologie-di-indici-di-adattamento-approssimati" class="nav-link" data-scroll-target="#tipologie-di-indici-di-adattamento-approssimati"><span class="header-section-number">41.7</span> Tipologie di Indici di Adattamento Approssimati</a>
+  <ul class="collapse">
+  <li><a href="#set-di-indici-di-adattamento-consigliati" id="toc-set-di-indici-di-adattamento-consigliati" class="nav-link" data-scroll-target="#set-di-indici-di-adattamento-consigliati"><span class="header-section-number">41.7.1</span> Set di Indici di Adattamento Consigliati</a></li>
+  </ul></li>
+  <li><a href="#misure-di-adeguamento-per-il-confronto" id="toc-misure-di-adeguamento-per-il-confronto" class="nav-link" data-scroll-target="#misure-di-adeguamento-per-il-confronto"><span class="header-section-number">41.8</span> Misure di adeguamento per il confronto</a>
+  <ul class="collapse">
+  <li><a href="#cfi" id="toc-cfi" class="nav-link" data-scroll-target="#cfi"><span class="header-section-number">41.8.1</span> CFI</a></li>
+  </ul></li>
+  <li><a href="#misure-di-adeguamento-parsimonioso" id="toc-misure-di-adeguamento-parsimonioso" class="nav-link" data-scroll-target="#misure-di-adeguamento-parsimonioso"><span class="header-section-number">41.9</span> Misure di adeguamento parsimonioso</a>
+  <ul class="collapse">
+  <li><a href="#tli" id="toc-tli" class="nav-link" data-scroll-target="#tli"><span class="header-section-number">41.9.1</span> TLI</a></li>
+  </ul></li>
+  <li><a href="#misure-di-adeguamento-assoluto" id="toc-misure-di-adeguamento-assoluto" class="nav-link" data-scroll-target="#misure-di-adeguamento-assoluto"><span class="header-section-number">41.10</span> Misure di adeguamento assoluto</a>
+  <ul class="collapse">
+  <li><a href="#root-mean-square-error-of-approximation-rmsea" id="toc-root-mean-square-error-of-approximation-rmsea" class="nav-link" data-scroll-target="#root-mean-square-error-of-approximation-rmsea"><span class="header-section-number">41.10.1</span> Root Mean Square Error of Approximation (RMSEA)</a></li>
+  <li><a href="#root-mean-square-residual-rmrs" id="toc-root-mean-square-residual-rmrs" class="nav-link" data-scroll-target="#root-mean-square-residual-rmrs"><span class="header-section-number">41.10.2</span> Root Mean Square Residual (RMRS)</a></li>
+  <li><a href="#interpretazione-con-lavaan" id="toc-interpretazione-con-lavaan" class="nav-link" data-scroll-target="#interpretazione-con-lavaan"><span class="header-section-number">41.10.3</span> Interpretazione con <code>lavaan</code></a></li>
+  </ul></li>
+  <li><a href="#adattamento-locale" id="toc-adattamento-locale" class="nav-link" data-scroll-target="#adattamento-locale"><span class="header-section-number">41.11</span> Adattamento Locale</a>
+  <ul class="collapse">
+  <li><a href="#residui-di-covarianza-residui-standardizzati-residui-normalizzati" id="toc-residui-di-covarianza-residui-standardizzati-residui-normalizzati" class="nav-link" data-scroll-target="#residui-di-covarianza-residui-standardizzati-residui-normalizzati"><span class="header-section-number">41.11.1</span> Residui di Covarianza, Residui Standardizzati, Residui Normalizzati</a></li>
+  </ul></li>
+  <li><a href="#esempio-1" id="toc-esempio-1" class="nav-link" data-scroll-target="#esempio-1"><span class="header-section-number">41.12</span> Esempio 1</a></li>
+  <li><a href="#potere-statistico-e-precisione" id="toc-potere-statistico-e-precisione" class="nav-link" data-scroll-target="#potere-statistico-e-precisione"><span class="header-section-number">41.13</span> Potere Statistico e Precisione</a></li>
+  <li><a href="#commenti-e-considerazioni-finali" id="toc-commenti-e-considerazioni-finali" class="nav-link" data-scroll-target="#commenti-e-considerazioni-finali"><span class="header-section-number">41.14</span> Commenti e considerazioni finali</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/03_gof.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/03_gof.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem-gof" class="quarto-section-identifier"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    lavaan, lavaanExtra, lavaanPlot, semTools, semPlot, mvnormalTest, lme4, </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    DiagrammeRsvg, tidyr, psych, rsvg, effectsize</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Caricamento dei namespace richiesti: pacman
+</code></pre>
+</div>
+</div>
+<section id="introduzione" class="level2" data-number="41.1">
+<h2 data-number="41.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">41.1</span> Introduzione</h2>
+<p>In questo capitolo, focalizziamo l’attenzione sulle due principali categorie di statistiche per la valutazione dell’adattamento globale nei modelli SEM: le statistiche di test del modello e gli indici di adattamento approssimativo. Queste due categorie corrispondono, rispettivamente, al test del modello e all’indicizzazione dell’adattamento del modello, come delineato da Hayduk nel 2014.</p>
+<ol type="1">
+<li><p><strong>Statistiche di Test del Modello:</strong> Queste statistiche si basano su una decisione binaria, ovvero se respingere o mantenere le ipotesi nulle relative al modello. Tale decisione è determinata dai valori p derivati dai test di significatività. In questo contesto, l’obiettivo è stabilire se il modello, nella sua interezza, si adatta ai dati osservati.</p></li>
+<li><p><strong>Indici di Adattamento Approssimativo:</strong> A differenza delle statistiche di test del modello, gli indici di adattamento approssimativo si basano su misure continue che valutano quanto il modello corrisponda ai dati. Questo approccio è simile alla stima della dimensione dell’effetto quantitativo piuttosto che al test di significatività dicotomico. Questi indici forniscono una valutazione più sfumata dell’adattamento del modello, andando oltre il semplice rifiuto o accettazione dell’ipotesi nulla.</p></li>
+</ol>
+<p>Un aspetto critico da considerare è che, nonostante le statistiche di adattamento globale in entrambe le categorie misurino la corrispondenza media o generale tra modello e dati, esse possono non rilevare un cattivo adattamento locale. Questo si riferisce a specifiche coppie di variabili osservate per le quali il modello non spiega adeguatamente le loro associazioni osservate nel campione. È importante riconoscere che i modelli con un cattivo adattamento locale non dovrebbero essere mantenuti, indipendentemente dal loro adattamento globale.</p>
+<p>La valutazione complessiva del modello SEM segue una sequenza metodica che include la specificazione del modello, la stima dei parametri, l’esame dell’adattamento del modello e dei parametri, e la possibile modifica del modello. Questo processo iterativo prosegue fino all’identificazione di un modello considerato accettabile.</p>
+<p>In aggiunta, questo capitolo si propone di esplorare due metodi fondamentali per la pianificazione della dimensione del campione in SEM: l’analisi della potenza e l’accuratezza nella stima dei parametri, anche nota come precisione nella pianificazione. Questi approcci sono essenziali per garantire che la ricerca sia adeguatamente dimensionata e che i parametri del modello siano stimati con la massima precisione possibile. La valutazione degli indici di bontà dell’adattamento, largamente utilizzati nella letteratura, sarà un focus chiave in questo contesto, fornendo una panoramica completa degli strumenti a disposizione dei ricercatori per valutare l’efficacia dei loro modelli SEM.</p>
+</section>
+<section id="valutazione-della-bontà-di-adattamento-nel-modello-sem" class="level2" data-number="41.2">
+<h2 data-number="41.2" class="anchored" data-anchor-id="valutazione-della-bontà-di-adattamento-nel-modello-sem"><span class="header-section-number">41.2</span> Valutazione della Bontà di Adattamento nel Modello SEM</h2>
+<p>Nel contesto dei modelli SEM (Structural Equation Modeling), la valutazione dell’adattamento del modello si basa sul confronto tra la matrice di varianze e covarianze stimata dal modello, <span class="math inline">\(\Sigma(\hat{\theta})\)</span>, e la matrice di covarianza campionaria, <span class="math inline">\(S\)</span>. Il nostro obiettivo è verificare se la discrepanza tra queste due matrici indica possibili inadeguatezze nel modello proposto. Ecco alcuni aspetti rilevanti da considerare:</p>
+<ul>
+<li><p><strong>Modelli Saturi vs Modelli Ristretti</strong>: Un modello saturo include un numero di parametri in <span class="math inline">\(\theta\)</span> pari al numero di elementi distinti nella matrice di covarianza. In contrasto, un modello ristretto ha meno parametri rispetto al numero degli elementi distinti nella matrice di covarianza. La differenza tra questi due numeri corrisponde ai gradi di libertà del modello. Per esempio, in un modello saturo, se il numero dei parametri in <span class="math inline">\(\theta\)</span> e il numero degli elementi distinti nella matrice di covarianza sono entrambi 3, allora il modello ha zero gradi di libertà.</p></li>
+<li><p><strong>Perfetto Adattamento dei Modelli Saturi</strong>: In un modello saturo, <span class="math inline">\(\Sigma(\hat{\theta})\)</span> coincide sempre con <span class="math inline">\(S\)</span>, poiché il modello ha abbastanza parametri per adattarsi perfettamente ai dati del campione. Tuttavia, ciò non implica necessariamente che il modello rappresenti fedelmente la popolazione più ampia. Le stime dei parametri in un modello saturo possono fornire informazioni sui pattern di relazione tra le variabili nel campione specifico, ma è cruciale interpretarle con cautela.</p></li>
+<li><p><strong>Stima e Identificabilità del Modello</strong>: Generalmente, la stima dei parametri non si basa sul semplice risolvere un sistema di equazioni matematiche. Invece, si utilizza una funzione di adattamento o discrepanza tra <span class="math inline">\(\Sigma(\theta)\)</span> e <span class="math inline">\(S\)</span>, cercando il valore ottimale di <span class="math inline">\(\hat{\theta}\)</span> attraverso tecniche di ottimizzazione numerica. Un modello SEM deve essere identificabile, il che significa che deve essere possibile stimare univocamente i parametri del modello. L’identificabilità implica che il numero di unità di informazione, come elementi nella matrice di covarianza, sia maggiore o uguale al numero di parametri da stimare.</p></li>
+</ul>
+<section id="gradi-di-libertà-e-identificabilità-del-modello" class="level3" data-number="41.2.1">
+<h3 data-number="41.2.1" class="anchored" data-anchor-id="gradi-di-libertà-e-identificabilità-del-modello"><span class="header-section-number">41.2.1</span> Gradi di Libertà e Identificabilità del Modello</h3>
+<p>I gradi di libertà (dof) in un modello SEM sono calcolati come:</p>
+<p><span class="math display">\[
+dof = \# (\text{unità di informazione}) - \# (\text{parametri da stimare})
+\]</span></p>
+<p>Per una matrice di covarianza di ordine $ p $, il numero di unità di informazione è $ $. Per garantire l’identificabilità, è necessario soddisfare alcune condizioni:</p>
+<ol type="1">
+<li>In tutti i modelli, l’unità di misura delle variabili latenti deve essere specificata.</li>
+<li>Il numero di unità di informazione deve essere uguale o superiore al numero di parametri da stimare.</li>
+<li>In modelli ad un fattore, è richiesto un minimo di tre indicatori per una soluzione “appena identificata”.</li>
+<li>In modelli a più fattori, si raccomanda un minimo di tre indicatori per ogni variabile latente.</li>
+</ol>
+<p>Un modello è: - <em>Non identificato</em> se $ dof &lt; 0 $. - <em>Appena identificato</em> o “saturo” se $ dof = 0 $. - <em>Sovra-identificato</em> se $ dof &gt; 0 $.</p>
+<p>È importante notare che un’analisi fattoriale con solo due indicatori per un fattore non è possibile, poiché ci sono meno unità di informazione rispetto ai parametri da stimare. Un modello con tre indicatori e un fattore è “appena identificato”, senza gradi di libertà per valutare la bontà dell’adattamento. Per modelli ad un solo fattore comune latente, è quindi necessario disporre di almeno quattro indicatori.</p>
+</section>
+<section id="funzione-di-discrepanza-e-valutazione-della-bontà-di-adattamento" class="level3" data-number="41.2.2">
+<h3 data-number="41.2.2" class="anchored" data-anchor-id="funzione-di-discrepanza-e-valutazione-della-bontà-di-adattamento"><span class="header-section-number">41.2.2</span> Funzione di Discrepanza e Valutazione della Bontà di Adattamento</h3>
+<p>La funzione di discrepanza tra <span class="math inline">\(|S|\)</span> e <span class="math inline">\(|\Sigma(\theta)|\)</span> basata sulla massima verosimiglianza (ML) deriva dalla verosimiglianza normale multivariata dei dati ed è formulata nel seguente modo:</p>
+<p><span class="math display">\[
+FML(S, \Sigma(\theta)) = \log|\Sigma(\theta)| - \log|S| + \text{traccia}(S\Sigma(\theta)^{-1}) - p
+\]</span></p>
+<p>dove <span class="math inline">\(|S|\)</span> e <span class="math inline">\(|\Sigma(\theta)|\)</span> sono i determinanti di <span class="math inline">\(S\)</span> e <span class="math inline">\(\Sigma(\theta)\)</span> rispettivamente, e <span class="math inline">\(p\)</span> è la dimensione di <span class="math inline">\(S\)</span> o <span class="math inline">\(\Sigma(\theta)\)</span>. In questo contesto, <span class="math inline">\(\log|\Sigma(\theta)|\)</span> rappresenta il logaritmo del determinante della matrice di covarianza stimata dal modello, mentre <span class="math inline">\(\log|S|\)</span> è il logaritmo del determinante della matrice di covarianza campionaria. La “traccia” (<span class="math inline">\(S\Sigma(\theta)^{-1}\)</span>) è la somma degli elementi della diagonale principale del prodotto di <span class="math inline">\(S\)</span> per l’inverso di <span class="math inline">\(\Sigma(\theta)\)</span>. Questa funzione di discrepanza misura la differenza tra le covarianze osservate e quelle stimate dal modello, prendendo in considerazione sia le dimensioni delle matrici sia la loro forma.</p>
+<p>La funzione di discrepanza basata sulla massima verosimiglianza (ML), come quella descritta dalla formula precedente, si distribuisce asintoticamente come una variabile casuale seguente una distribuzione chi quadrato (χ²) sotto l’ipotesi nulla che il modello specificato si adatti perfettamente ai dati.</p>
+<p>La distribuzione chi quadrato è utilizzata per testare l’adattamento del modello nei contesti di modellazione di equazioni strutturali (SEM) e di analisi fattoriale. Il valore calcolato dalla funzione di discrepanza viene confrontato con un valore critico dalla distribuzione chi quadrato. Il numero di gradi di libertà per la distribuzione chi quadrato è tipicamente calcolato come la differenza tra il numero di stime indipendenti nella matrice di covarianza e il numero di parametri stimati nel modello.</p>
+<p>Se il valore calcolato dalla funzione di discrepanza è inferiore al valore critico della distribuzione chi quadrato per i dati gradi di libertà, allora non si rifiuta l’ipotesi nulla e si conclude che il modello ha un buon adattamento. Se invece è maggiore, si rifiuta l’ipotesi nulla, indicando che il modello non si adatta bene ai dati.</p>
+<p>In pratica, questo test è utilizzato per valutare la bontà di adattamento del modello ai dati osservati e per decidere se il modello specificato è adeguato o se sono necessarie ulteriori modifiche.</p>
+</section>
+</section>
+<section id="test-chi2" class="level2" data-number="41.3">
+<h2 data-number="41.3" class="anchored" data-anchor-id="test-chi2"><span class="header-section-number">41.3</span> Test <span class="math inline">\(\chi^2\)</span></h2>
+<p>Il test del chi quadrato (<span class="math inline">\(\chi^2\)</span>) è utilizzato per determinare quanto bene un modello teorico si adatta ai dati osservati. La formula per calcolare la statistica <span class="math inline">\(\chi^2\)</span> è:</p>
+<p><span class="math display">\[
+\chi^2 = N \times F_{\text{min}},
+\]</span></p>
+<p>dove: - $ N $ rappresenta la dimensione del campione. - $ F_{} $ è il valore minimo della funzione di discrepanza.</p>
+<p>La funzione di discrepanza, $ F $, è una misura di quanto le covarianze (o le varianze) osservate nei dati differiscano da quelle previste dal modello. Durante il processo di stima dei parametri del modello, questa funzione viene minimizzata. Il valore di $ F $ al suo minimo, $ F_{} $, rappresenta la discrepanza minima tra i dati osservati e quelli previsti dal modello.</p>
+<p>Nell’ambito dell’analisi strutturale di covarianza, il valore di $ F_{} $ è tipicamente ottenuto attraverso la stima di massima verosimiglianza (Maximum Likelihood, ML). Tuttavia, ci sono due modi comuni per calcolare $ ^2 $, che possono variare a seconda del software utilizzato: 1. $ ^2 = (N - 1) F_{} $ 2. $ ^2 = N F_{} $</p>
+<p>La scelta tra $ N $ e $ N-1 $ dipende da come il software gestisce la normalizzazione e l’adattamento delle strutture di covarianza.</p>
+<section id="interpretazione-del-test-del-chi2" class="level3" data-number="41.3.1">
+<h3 data-number="41.3.1" class="anchored" data-anchor-id="interpretazione-del-test-del-chi2"><span class="header-section-number">41.3.1</span> Interpretazione del Test del <span class="math inline">\(\chi^2\)</span></h3>
+<ul>
+<li><strong>Ipotesi Nulla $ H_0 $</strong>: Il modello si adatta bene ai dati. Ciò significa che non c’è una differenza significativa tra le covarianze osservate e quelle previste dal modello.</li>
+<li><strong>Valore p</strong>: Un valore p basso (ad esempio, minore di 0,05) suggerisce che dovremmo rifiutare l’ipotesi nulla, indicando che il modello non si adatta bene ai dati.</li>
+</ul>
+</section>
+<section id="limitazioni" class="level3" data-number="41.3.2">
+<h3 data-number="41.3.2" class="anchored" data-anchor-id="limitazioni"><span class="header-section-number">41.3.2</span> Limitazioni</h3>
+<p>La statistica <span class="math inline">\(\chi^2\)</span> è influenzata dalla dimensione del campione. Con campioni più grandi, anche piccole discrepanze tra il modello e i dati possono risultare in un valore di <span class="math inline">\(\chi^2\)</span> elevato, portando a rifiutare erroneamente un buon modello. Inoltre, il test del <span class="math inline">\(\chi^2\)</span> - Non indica la direzione o la natura della discrepanza tra modello e dati. - Non sempre adatto per modelli complessi o in situazioni in cui le ipotesi di base (come la normalità multivariata) non sono soddisfatte.</p>
+<p>Per queste ragioni, il test del <span class="math inline">\(\chi^2\)</span> è spesso accompagnato da altri indici di adattamento del modello, come l’indice di adattamento comparativo (CFI) o l’indice di adattamento radice quadrata media dell’errore approssimativo (RMSEA), per ottenere una valutazione più completa della bontà di adattamento del modello ai dati.</p>
+<p>In conclusione, il test del <span class="math inline">\(\chi^2\)</span> è utile ma ha limitazioni e deve essere interpretato con cautela, considerando la dimensione del campione e altri fattori influenti. Nonostante i suoi limiti, la statistica <span class="math inline">\(\chi^2\)</span> viene comunque utilizzata per altri scopi, come il confronto di modelli nidificati, il calcolo di altri indici di adattamento (ad es. l’indice di Tucker–Lewis) e il calcolo del rapporto tra <span class="math inline">\(\chi^2\)</span> e gradi di libertà.</p>
+</section>
+<section id="test-di-rapporto-di-verosimiglianza" class="level3" data-number="41.3.3">
+<h3 data-number="41.3.3" class="anchored" data-anchor-id="test-di-rapporto-di-verosimiglianza"><span class="header-section-number">41.3.3</span> Test di rapporto di verosimiglianza</h3>
+<p>Il test del <span class="math inline">\(\chi^2\)</span> può essere impiegato come un test di rapporto di verosimiglianza per confrontare due modelli nidificati. In questo contesto, “nidificati” significa che uno dei modelli (considerato il modello più semplice o ristretto) è un caso speciale dell’altro (il modello più complesso), con meno parametri liberi da stimare. Questo tipo di test è particolarmente utile per valutare se l’aggiunta di parametri supplementari (rendendo il modello più complesso) migliora significativamente l’adattamento del modello ai dati.</p>
+<p>Il processo di confronto tra i due modelli avviene nel seguente modo: 1. Si stima il modello più semplice e si calcola il suo valore di <span class="math inline">\(\chi^2\)</span>. 2. Si stima il modello più complesso e si calcola il suo valore di <span class="math inline">\(\chi^2\)</span>. 3. Si confrontano i due valori di <span class="math inline">\(\chi^2\)</span> per determinare se l’aggiunta di parametri aggiuntivi giustifica un miglioramento dell’adattamento del modello ai dati, dati i gradi di libertà aggiuntivi.</p>
+<p>Se il valore p associato al <span class="math inline">\(\chi^2\)</span> del modello più complesso è significativamente più basso rispetto a quello del modello più semplice, questo suggerisce che l’aggiunta dei parametri fornisce un miglioramento significativo nell’adattamento del modello. Al contrario, se non vi è un miglioramento significativo, si può concludere che il modello più semplice è preferibile in termini di parsimonia e adattamento.</p>
+</section>
+</section>
+<section id="chi-quadrato-normalizzato-nc" class="level2" data-number="41.4">
+<h2 data-number="41.4" class="anchored" data-anchor-id="chi-quadrato-normalizzato-nc"><span class="header-section-number">41.4</span> Chi Quadrato Normalizzato (NC)</h2>
+<p>Il Chi Quadrato Normalizzato (NC) emerge come un tentativo di attenuare l’effetto della dimensione del campione sulla statistica del chi quadrato del modello (<span class="math inline">\(\chi^2\)</span>). Questa pratica, adottata da alcuni ricercatori, consiste nel dividere <span class="math inline">\(\chi^2\)</span> per il numero dei gradi di libertà del modello (dfM), risultando nella formula <span class="math inline">\(\frac{\chi_{ML}}{dfM}\)</span>. Nonostante l’intento di mitigare l’impatto della dimensione del campione (N), l’impiego di NC presenta limitazioni sostanziali:</p>
+<ol type="1">
+<li><p><strong>Influenza di N sui Modelli Erronei</strong>: La statistica <span class="math inline">\(\chi_{ML}\)</span> è sensibile a N esclusivamente per i modelli non corretti. Questo implica che l’uso di NC per modelli veritieri potrebbe essere fuorviante.</p></li>
+<li><p><strong>Indipendenza di dfM da N</strong>: I gradi di libertà del modello (dfM) non sono correlati con la dimensione del campione, rendendo la divisione di <span class="math inline">\(\chi_{ML}\)</span> per dfM arbitraria e priva di fondamento statistico.</p></li>
+<li><p><strong>Mancanza di Linee Guida</strong>: Non esistono criteri consolidati che definiscano i limiti “accettabili” per il valore di NC. Per esempio, non è chiaro se un valore massimo di NC debba essere inferiore a 2.0, 3.0, o altro.</p></li>
+</ol>
+<p>In conclusione, data la mancanza di una solida giustificazione statistica o logica, {cite:r}<code>kline2023principles</code> sconsiglia l’utilizzo del Chi Quadrato Normalizzato come strumento di valutazione della bontà di adattamento del modello.</p>
+</section>
+<section id="chi-quadrato-scalato-e-errori-standard-robusti-per-distribuzioni-non-normali" class="level2" data-number="41.5">
+<h2 data-number="41.5" class="anchored" data-anchor-id="chi-quadrato-scalato-e-errori-standard-robusti-per-distribuzioni-non-normali"><span class="header-section-number">41.5</span> Chi Quadrato Scalato e Errori Standard Robusti per Distribuzioni Non Normali</h2>
+<p>Nell’ambito dell’analisi di massima verosimiglianza (ML), sia l’approccio ML standard che quello robusto forniscono le stesse stime dei parametri. Tuttavia, il ML robusto differisce nell’introduzione di chi quadrati scalati (<span class="math inline">\(\chi^2\)</span> scalati) e di errori standard robusti, i quali sono adattati per controbilanciare gli effetti della non normalità dei dati.</p>
+<p>Un metodo pionieristico sviluppato da Satorra e Bentler, che si basa sull’utilizzo di dati completi, calcola il chi quadrato scalato (<span class="math inline">\(\chi_{SB}\)</span>) applicando un fattore di correzione di scala, indicato con $ c <span class="math inline">\(, al valore del chi quadrato non scalato del modello (\)</span>_{ML}$). Questo fattore di scala $ c $ è determinato dalla curtosi multivariata media osservata nei dati grezzi. La formula specifica per il calcolo di <span class="math inline">\(\chi_{SB}\)</span> è:</p>
+<p><span class="math display">\[
+\chi_{SB} = \frac{\chi_{ML}}{c}.
+\]</span></p>
+<p>Questa formula evidenzia come il chi quadrato scalato di Satorra-Bentler modifica il chi quadrato tradizionale per tenere conto della curtosi nei dati, fornendo così una misura più affidabile della bontà di adattamento del modello in presenza di distribuzioni non normali.</p>
+<p>Quando si utilizza il Chi Quadrato Scalato di Satorra-Bentler (<span class="math inline">\(\chi_{SB}\)</span>), è importante comprendere come esso si comporti in campioni casuali. Le distribuzioni di <span class="math inline">\(\chi_{SB}\)</span> tendono ad avvicinarsi alle distribuzioni chi quadrato centrali, ma con una caratteristica fondamentale: le loro medie sono asintoticamente corrette. Questo significa che, su larga scala, <span class="math inline">\(\chi_{SB}\)</span> fornisce una stima media accurata della discrepanza tra i dati osservati e quelli previsti dal modello, correggendo per eventuali distorsioni causate dalla non normalità dei dati.</p>
+<p>Un altro tipo di chi quadrato, sviluppato da Asparouhov e Muthén, non si basa sul <span class="math inline">\(\chi_{ML}\)</span> standard. Invece, nei campioni di grandi dimensioni, il loro chi quadrato scalato corrisponde alla statistica T2* di Yuan e Bentler. Questa versione del chi quadrato è particolarmente adatta per gestire dati non normali o con valori mancanti. I gradi di libertà, sia per <span class="math inline">\(\chi_{SB}\)</span> che per T2*, sono rappresentati da dfM, indicando la flessibilità del modello in termini di numero di parametri stimabili.</p>
+<p>Al di là di questi, esistono chi quadrati che sono corretti sia per la media che per la varianza. Questi chi quadrati utilizzano fattori di scala diversi e, in genere, seguono distribuzioni chi quadrato centrali con medie e varianze che sono corrette in modo asintotico. Sebbene questi metodi richiedano maggiori risorse computazionali rispetto ai metodi che correggono solo per la media, tendono ad essere più precisi, specialmente in campioni di grandi dimensioni. Questa precisione aggiuntiva è particolarmente utile quando si affrontano set di dati complessi o di ampie dimensioni, permettendo una stima più accurata della bontà di adattamento del modello.</p>
+<p>Per quanto riguarda il software <code>lavaan</code>, ci sono diverse opzioni per il metodo ML robusto:</p>
+<ol type="1">
+<li>“MLM” per dati completi, genera un chi quadrato scalato per la media di Satorra-Bentler.</li>
+<li>“MLR” per dati completi o incompleti, produce un chi quadrato corretto per la media basato sulla statistica T2* di Yuan-Bentler.</li>
+<li>“MLMV” per dati completi, calcola un chi quadrato scalato corretto per media e varianza.</li>
+<li>“MLMVS” genera un chi quadrato corretto per media e varianza con una correzione per l’eteroschedasticità di Satterthwaite.</li>
+</ol>
+<p>Nel contesto dei metodi ML robusti utilizzati nel software lavaan, la “matrice di informazione” è un concetto fondamentale che incide sul calcolo degli errori standard. La matrice di informazione, in statistica, è una matrice che contiene informazioni sulla varianza e covarianza dei parametri stimati di un modello. Viene utilizzata per calcolare gli errori standard delle stime dei parametri, che sono essenziali per testare l’ipotesi statistica e per la costruzione di intervalli di confidenza.</p>
+<p>Nel software <code>lavaan</code>, la matrice di informazione può essere di due tipi:</p>
+<ol type="1">
+<li><p><strong>Matrice di Informazione Attesa</strong>: Questa è la matrice predefinita utilizzata da lavaan per calcolare gli errori standard nei metodi ML robusti. La matrice di informazione attesa si basa sulle aspettative teoriche della varianza e covarianza dei parametri stimati, derivanti dal modello e dall’insieme dei dati.</p></li>
+<li><p><strong>Matrice di Informazione Osservata</strong>: Quando si hanno dati mancanti, lavaan passa all’utilizzo della matrice di informazione osservata. Questa matrice utilizza i dati effettivamente osservati per calcolare la varianza e la covarianza dei parametri stimati. Essa può fornire stime più accurate degli errori standard in presenza di dati mancanti.</p></li>
+</ol>
+<p>Gli utenti di <code>lavaan</code> hanno la possibilità di specificare se utilizzare la matrice di informazione attesa anche in presenza di dati incompleti, in base alle esigenze specifiche della loro analisi.</p>
+<p>È importante per i ricercatori utilizzare questi strumenti in modo etico e metodologicamente corretto. Evitare di selezionare in modo opportunistico le combinazioni di chi quadrati scalati e errori standard robusti che sembrano meglio supportare le ipotesi, e dichiarare chiaramente qualsiasi variabilità nei risultati dovuta alla scelta del metodo di calcolo, è cruciale per mantenere l’integrità e l’affidabilità della ricerca.</p>
+</section>
+<section id="indicizzazione-delladattamento-del-modello" class="level2" data-number="41.6">
+<h2 data-number="41.6" class="anchored" data-anchor-id="indicizzazione-delladattamento-del-modello"><span class="header-section-number">41.6</span> Indicizzazione dell’Adattamento del Modello</h2>
+<p>L’indicizzazione dell’adattamento del modello si basa sull’uso di indici di adattamento approssimati, i quali si differenziano dai test di significatività tradizionali. Invece di fornire una decisione dicotomica, come il rifiuto o l’accettazione di un’ipotesi nulla, questi indici offrono una misura continua di quanto bene un modello si adatta ai dati osservati. Non essendoci una separazione netta tra i limiti dell’errore di campionamento, gli indici di adattamento forniscono una valutazione più sfumata e graduale della bontà di adattamento.</p>
+<p>Questi indici possono essere classificati in due categorie principali: 1. <strong>Statistiche di Cattivo Adattamento</strong>: In questa categoria, valori più elevati indicano un peggior adattamento del modello ai dati. Un esempio tipico di questa categoria è il chi quadrato del modello, dove valori più alti suggeriscono una maggiore discrepanza tra il modello e i dati.</p>
+<ol start="2" type="1">
+<li><strong>Statistiche di Buon Adattamento</strong>: Al contrario, per gli indici in questa categoria, valori più alti segnalano un migliore adattamento del modello ai dati. Molti di questi indici sono normalizzati in modo che il loro intervallo varii da 0 a 1.0, dove 1.0 rappresenta l’adattamento ottimale del modello.</li>
+</ol>
+<p>A differenza del test del chi quadrato, che si basa su un framework teorico ben definito, l’interpretazione e l’applicazione degli indici di adattamento approssimati non sono guidate da un unico insieme di principi teorici consolidati. Questa situazione fa sì che la valutazione dell’adattamento del modello si allinei maggiormente a ciò che Little (2013) ha descritto come “scuola di modellazione”. Questo approccio contempla l’analisi di modelli statistici complessi in un contesto in cui le regole decisionali sono meno rigide e più soggette a interpretazione.</p>
+<p>La natura flessibile di questo approccio rispecchia la varietà e la complessità dei modelli statistici, che devono essere personalizzati per rispondere a specifiche domande di ricerca. Questa flessibilità, tuttavia, porta con sé una certa ambiguità nelle regole di valutazione dei modelli statistici. Pur offrendo la possibilità di adattare l’analisi alle particolarità di ogni studio, questa mancanza di rigore teorico uniforme può talvolta non tradursi in pratiche ottimali di modellazione.</p>
+<p>La questione filosofica relativa all’adattamento esatto dei modelli statistici solleva dubbi sull’idea di perfezione come standard per questi modelli. In effetti, è ampiamente riconosciuto che tutti i modelli statistici sono in qualche misura imperfetti; sono piuttosto strumenti di approssimazione che aiutano i ricercatori a organizzare e interpretare le loro osservazioni sui fenomeni di interesse. Un modello troppo semplificato, che non cattura la complessità del fenomeno, può essere inadeguato e quindi rifiutato. Allo stesso tempo, un modello eccessivamente complesso, che cerca di replicare fedelmente il fenomeno, può risultare di scarsa utilità scientifica a causa della sua complessità eccessiva.</p>
+<p>George Box, nel suo influente lavoro del 1976, avanzò l’idea che nessun modello statistico potesse essere considerato perfettamente “corretto”. Questa visione nasce dalla consapevolezza che tutti i modelli hanno una certa dose di imperfezione intrinseca. Box suggeriva che lo scopo principale di uno scienziato dovrebbe essere la ricerca di una “descrizione economica” dei fenomeni naturali, cercando cioè di formulare modelli che siano semplici, ma al contempo efficaci, nella rappresentazione della realtà. Egli criticava la tendenza a sovraelaborare o sovraparametrizzare i modelli, considerandola un segno di mediocrità nella pratica scientifica. Box enfatizzava l’importanza di concentrarsi sugli errori significativi, o “tigri”, piuttosto che su piccole imperfezioni, o “topi”, affermando:</p>
+<blockquote class="blockquote">
+<p>“Since all models are wrong the scientist must be alert to what is importantly wrong. It is inappropriate to be concerned about mice when there are tigers abroad.”</p>
+</blockquote>
+<p>Ciò implica che l’obiettivo nella modellazione statistica non dovrebbe essere una perfezione irraggiungibile, ma piuttosto lo sviluppo di modelli che, pur nella loro semplicità, riescano a cogliere gli aspetti fondamentali dei fenomeni analizzati. Questo richiede un equilibrio tra la complessità necessaria per una descrizione accurata e la semplicità che rende un modello pratico e interpretabile.</p>
+<p>Hayduk (2014), nel commentare l’affermazione di Box, si focalizza specificatamente sul contesto della modellizzazione SEM (Structural Equation Modeling). Egli identifica le “tigri”, ovvero gli errori gravi nei modelli, come indicatori di una specificazione errata del modello. Hayduk sottolinea l’importanza critica di riconoscere e correggere gli errori significativi piuttosto che disperdere energie su dettagli minori. In sostanza, Hayduk rafforza l’idea che è essenziale distinguere tra errori minori e maggiori, questi ultimi potendo compromettere seriamente la validità e l’utilità di un modello statistico.</p>
+</section>
+<section id="tipologie-di-indici-di-adattamento-approssimati" class="level2" data-number="41.7">
+<h2 data-number="41.7" class="anchored" data-anchor-id="tipologie-di-indici-di-adattamento-approssimati"><span class="header-section-number">41.7</span> Tipologie di Indici di Adattamento Approssimati</h2>
+<p>Gli indici di adattamento approssimati possono essere classificati in diverse categorie, che riflettono diversi aspetti della bontà di adattamento di un modello statistico ai dati. Sebbene questa classificazione non sia esaustiva né le categorie siano mutualmente esclusive, i tipi principali di indici di adattamento sono i seguenti:</p>
+<ol type="1">
+<li><p><strong>Indici di Adattamento Assoluto</strong>: Questi indici, come il GFI (Goodness of Fit Index), misurano quanto bene un modello spiega i dati senza riferimento ad altri modelli. Indicano l’abilità del modello di riprodurre i dati osservati.</p></li>
+<li><p><strong>Indici di Adattamento Parsimonioso</strong>: Questi indici confrontano i gradi di libertà del modello (dfM) con il numero massimo possibile di gradi di libertà disponibili nei dati. Un esempio è l’AGFI (Adjusted Goodness of Fit Index), che incorpora una penalità per la complessità del modello, benché non sia un indice di adattamento parsimonioso come definito in questa categoria.</p></li>
+<li><p><strong>Indici di Adattamento Incrementale (Relativo o Comparativo)</strong>: Questi indici confrontano l’adattamento del modello del ricercatore con quello di un modello di base, tipicamente un modello di indipendenza che assume covarianze nulle tra le variabili osservate. È possibile scegliere un modello di base diverso, sebbene il calcolo manuale dell’indice possa essere necessario se il modello di base desiderato differisce da quello predefinito nel software.</p></li>
+<li><p><strong>Indici di Adattamento Non Centrale</strong>: Stimano il grado in cui l’ipotesi di adattamento esatto è falsa, dati il modello e i dati. Questi indici approssimano parametri nelle distribuzioni chi quadrato non centrali, che descrivono anche le distribuzioni campionarie per gli indici di adattamento di questo tipo.</p></li>
+<li><p><strong>Indici di Adattamento Predittivo (o basati sulla Teoria dell’Informazione)</strong>: Derivati dalla teoria dell’informazione, stimano l’adattamento del modello in campioni di replica ipotetici della stessa dimensione, estratti casualmente dalla stessa popolazione del campione originale. Sono utilizzati principalmente per confrontare modelli alternativi basati sulle stesse variabili e adattati agli stessi dati, ma dove i modelli non sono gerarchicamente correlati.</p></li>
+</ol>
+<p>Non tutti gli indici di adattamento approssimati hanno resistito alla prova del tempo. Ad esempio, gli indici di adattamento parsimonioso non hanno mai raggiunto una popolarità significativa tra i ricercatori applicati, restando relativamente oscuri. Altri indici, come il GFI e l’AGFI, sono stati criticati per la loro sensibilità alla dimensione del campione e al numero di indicatori nei modelli di analisi fattoriale.</p>
+<p>I software moderni per la Structural Equation Modeling (SEM) presentano una notevole varietà nel numero di indici di adattamento approssimati forniti nei loro output. Programmi come Amos e LISREL elencano un numero elevato di indici (oltre 12), mentre altri come lavaan e Mplus ne includono un numero più limitato (circa 4-5). Questa abbondanza di indici può portare al rischio di “cherry-picking”, cioè la tendenza a selezionare e riportare solo quegli indici che mostrano risultati favorevoli al modello proposto dal ricercatore. Per mitigare questo rischio, è consigliabile limitarsi a un insieme essenziale di indici e prestare attenzione all’analisi dei residui.</p>
+<section id="set-di-indici-di-adattamento-consigliati" class="level3" data-number="41.7.1">
+<h3 data-number="41.7.1" class="anchored" data-anchor-id="set-di-indici-di-adattamento-consigliati"><span class="header-section-number">41.7.1</span> Set di Indici di Adattamento Consigliati</h3>
+<p><span class="citation" data-cites="kline2023principles">Kline (<a href="../../99-references.html#ref-kline2023principles" role="doc-biblioref">2023</a>)</span> suggerisce un insieme essenziale di soli tre indici di adattamento approssimati, che sono ampiamente utilizzati nei software SEM e frequentemente presenti negli studi pubblicati. Questi indici sono stati selezionati per le seguenti ragioni:</p>
+<ol type="1">
+<li><p><strong>Ampia Presenza nella Letteratura</strong>: Sono ampiamente riportati in numerosi studi SEM, rendendoli familiari sia ai ricercatori che ai revisori.</p></li>
+<li><p><strong>Standardizzazione</strong>: Le scale di questi indici non dipendono dalle variabili osservate o latenti, fornendo così una misura standardizzata di adattamento.</p></li>
+<li><p><strong>Validità Statistica Estesa</strong>: Almeno uno di questi indici, l’RMSEA, possiede un solido fondamento statistico e un quadro interpretativo più ampio per la stima degli intervalli, i test delle ipotesi e la pianificazione della dimensione del campione.</p></li>
+</ol>
+<p>Nonostante la loro utilità, è fondamentale usare questi indici con attenzione. I ricercatori dovrebbero evitare l’uso acritico di soglie o punti di taglio, sia fissi sia variabili, che si suppone differenzino tra modelli con un buon o cattivo adattamento. L’applicazione di queste soglie può essere problematica, poiché non sono valide universalmente per tutti i tipi di modelli e set di dati. L’uso improprio di tali soglie può portare a decisioni errate, in particolare se si trascura l’analisi dei residui.</p>
+<p>Il gruppo principale di tre indici di adattamento approssimati raccomandato comprende:</p>
+<ol type="1">
+<li><p><strong>Root Mean Square Error of Approximation (RMSEA) di Steiger-Lind</strong> (Steiger, 1990), accompagnato dal suo intervallo di confidenza al 90%. L’RMSEA valuta l’adattamento assoluto del modello, penalizzando la complessità del modello, ma non è un indice di adattamento parsimonioso. È un indice di cattivo adattamento dove il valore zero rappresenta l’adattamento ideale, senza un limite massimo teorico.</p></li>
+<li><p><strong>Comparative Fit Index (CFI) di Bentler</strong> (Bentler, 1990). Il CFI è un indice di adattamento incrementale e valuta la bontà di adattamento relativa del modello rispetto a un modello di base. Si estende su una scala da 0 a 1.0, dove 1.0 indica l’adattamento ottimale, e non impone penalità per la complessità del modello.</p></li>
+<li><p><strong>Standardized Root Mean Square Residual (SRMR)</strong> (Jöreskog &amp; Sörbom; 1981). L’SRMR è un indice di adattamento assoluto che misura la discrepanza tra le correlazioni osservate e quelle previste dal modello. Un valore di zero indica un adattamento perfetto.</p></li>
+</ol>
+<p>Sia l’RMSEA sia il CFI incorporano il chi quadrato del modello e i suoi gradi di libertà nelle loro formule. Questo implica che condividono le stesse assunzioni distributive della corrispondente statistica di test. Se tali assunzioni non sono valide, i valori degli indici e della statistica di test (incluso il valore p) potrebbero non essere accurati. Entrambi gli indici sono stati inizialmente definiti per dati continui con distribuzioni normali analizzati tramite ML standard. Tuttavia, in presenza di dati significativamente non normali, i valori di chiML, RMSEA e CFI possono risultare distorti. Alcuni software SEM implementano correzioni ad hoc per la non normalità.</p>
+</section>
+</section>
+<section id="misure-di-adeguamento-per-il-confronto" class="level2" data-number="41.8">
+<h2 data-number="41.8" class="anchored" data-anchor-id="misure-di-adeguamento-per-il-confronto"><span class="header-section-number">41.8</span> Misure di adeguamento per il confronto</h2>
+<section id="cfi" class="level3" data-number="41.8.1">
+<h3 data-number="41.8.1" class="anchored" data-anchor-id="cfi"><span class="header-section-number">41.8.1</span> CFI</h3>
+<p>Gli indici di <em>adattamento comparativo</em> [detti anche <em>indici di adattamento incrementale</em>; ad es. <span class="citation" data-cites="hu1998fit">Hu e Bentler (<a href="../../99-references.html#ref-hu1998fit" role="doc-biblioref">1998</a>)</span>] valutano l’adattamento di una soluzione specificata dall’utente in relazione a un modello di base nidificato più ristretto. Tipicamente, il modello base è un modello “nullo” o “di indipendenza” in cui le covarianze tra tutti gli indicatori di input sono fissate a zero, ma nessun vincolo viene posto sulle varianze degli indicatori.</p>
+<p>Uno di questi indici, l’<em>indice di adattamento comparativo</em> (<em>comparative fit index</em>, CFI; Bentler, 1990), è calcolato come segue. Sia <span class="math inline">\(\delta = \chi^2 - dof\)</span>, dove <span class="math inline">\(dof\)</span> sono i gradi di libertà di un particolare modello. Tanto più <span class="math inline">\(\delta\)</span> è prossimo allo zero tanto maggiore è la bontà dell’adattamento. La formula di CFI è</p>
+<p><span class="math display">\[
+\begin{equation}
+CFI = \frac{\delta_B - \delta_T}{\delta_B},
+\end{equation}
+\]</span></p>
+<p>dove il pedice <span class="math inline">\(T\)</span> denota il modello target (cioè il modello in valutazione) e il pedice <span class="math inline">\(B\)</span> denota il modello baseline (cioè il modello “nullo”).</p>
+<p>Hu e Bentler (1995) suggerirono che un valore del Comparative Fit Index (CFI) maggiore o uguale a 0.95 rappresenta un risultato favorevole. Questa soglia è in linea con i risultati di alcuni studi successivi, come quello di Hu e Bentler del 1999, che utilizzarono metodi di simulazione di Monte Carlo. Tuttavia, studi di simulazione più recenti, come quelli di Fan e Sivo nel 2005 e di Yuan nel 2005, hanno messo in dubbio l’universalità di un valore soglia specifico per il CFI, evidenziando che l’adeguatezza di tale valore può variare a seconda delle caratteristiche dei modelli e del grado di non normalità nei dati.</p>
+<p>Inoltre, Brosseau-Liard e Savalei (2014) hanno descritto delle versioni robuste del CFI adatte per dati non normali. Queste versioni del CFI sono calcolate e fornite dal software <code>lavaan</code> quando si utilizzano metodi di stima Maximum Likelihood (ML) robusti. Questo implica che, quando si lavora con dati che presentano deviazioni dalla normalità, queste versioni robuste del CFI possono offrire una misura più affidabile dell’adattamento del modello.</p>
+</section>
+</section>
+<section id="misure-di-adeguamento-parsimonioso" class="level2" data-number="41.9">
+<h2 data-number="41.9" class="anchored" data-anchor-id="misure-di-adeguamento-parsimonioso"><span class="header-section-number">41.9</span> Misure di adeguamento parsimonioso</h2>
+<section id="tli" class="level3" data-number="41.9.1">
+<h3 data-number="41.9.1" class="anchored" data-anchor-id="tli"><span class="header-section-number">41.9.1</span> TLI</h3>
+<p>Un indice che rientra nella degli indici di adeguamento parsimonioso è l’<em>indice Tucker-Lewis</em> (<em>Tucker–Lewis index</em>, TLI, anche chiamato indice di adattamento non normato). Il TLI si pone il problema di penalizzare la complessità del modello, ovvero include una funzione di penalizzazione per l’addizione di parametri che non migliorano in maniera sostanziale l’adattamento del modello. Il TLI è calcolato con la seguente formula:</p>
+<p><span class="math display">\[
+\begin{equation}
+TLI = \frac{(\chi^2_B / dof_B)–(\chi^2_T / dof_T)}{(\chi^2_B / dof_B) – 1},
+\end{equation}
+\]</span></p>
+<p>dove <span class="math inline">\(\chi^2_T\)</span> è il valore <span class="math inline">\(\chi^2\)</span> del modello target, <span class="math inline">\(dof_T\)</span> sono i gradi di libertà del modello target, <span class="math inline">\(\chi^2_B\)</span> è il valore <span class="math inline">\(\chi^2\)</span> del modello baseline e <span class="math inline">\(dof_B\)</span> sono i gradi di libertà del modello base.</p>
+<p>L’Indice di Tucker-Lewis (TLI) può, in teoria, assumere valori inferiori a zero se il modello di base, ovvero un modello diverso da quello studiato dal ricercatore, mostra un ottimo adattamento ai dati. Tuttavia, questa eventualità è rara nella pratica. Al contrario, il TLI può superare il valore di 1.0 se il modello analizzato dal ricercatore si adatta in modo particolarmente stretto ai dati. Marsh e Balla (1994) hanno evidenziato che la dimensione del campione influenza poco i valori del TLI.</p>
+<p>Secondo quanto osservato da Kenny (2020), si possono trarre due conclusioni importanti:</p>
+<ol type="1">
+<li>Il Comparative Fit Index (CFI) e il TLI sono entrambi influenzati dall’entità delle correlazioni tra le variabili misurate. Ciò significa che valori medi di correlazione più elevati risultano in valori più alti sia per il CFI che per il TLI, e il contrario è vero per correlazioni medie più basse.</li>
+<li>I valori del CFI e del TLI mostrano una forte correlazione tra loro. Di conseguenza, è consigliabile riportare solo uno dei due indici per evitare ripetizioni e per mantenere la chiarezza del report. La scelta tra CFI e TLI dovrebbe basarsi su criteri specifici relativi al contesto e agli obiettivi dello studio in questione.</li>
+</ol>
+</section>
+</section>
+<section id="misure-di-adeguamento-assoluto" class="level2" data-number="41.10">
+<h2 data-number="41.10" class="anchored" data-anchor-id="misure-di-adeguamento-assoluto"><span class="header-section-number">41.10</span> Misure di adeguamento assoluto</h2>
+<section id="root-mean-square-error-of-approximation-rmsea" class="level3" data-number="41.10.1">
+<h3 data-number="41.10.1" class="anchored" data-anchor-id="root-mean-square-error-of-approximation-rmsea"><span class="header-section-number">41.10.1</span> Root Mean Square Error of Approximation (RMSEA)</h3>
+<p>L’Errore Quadratico Medio di Approssimazione (RMSEA) è un indicatore che misura quanto bene un modello statistico si adatta ai dati. A differenza di altri indici come il CFI o il TLI, che confrontano il modello con un modello di base, l’RMSEA valuta l’adattamento del modello in maniera assoluta.</p>
+<p>Il calcolo dell’RMSEA si basa sull’utilizzo del chi quadrato (<span class="math inline">\(\chi^2\)</span>), che quantifica la discrepanza tra le covarianze osservate nei dati e quelle stimate dal modello. Questa discrepanza, che indichiamo con <span class="math inline">\(\delta\)</span>, è la differenza tra il valore del chi quadrato e i gradi di libertà (df) del modello: <span class="math inline">\(\delta = \chi^2 - df\)</span>. Un valore di <span class="math inline">\(\delta\)</span> più alto indica una maggiore discrepanza e quindi un peggior adattamento del modello ai dati.</p>
+<p>La formula dell’RMSEA è la seguente:</p>
+<p><span class="math display">\[
+RMSEA = \sqrt{\frac{\max(0, \delta)}{df \cdot (n-1)}},
+\]</span></p>
+<p>dove <span class="math inline">\(n\)</span> è il numero di osservazioni nel campione. L’RMSEA stima l’errore nell’approssimare la matrice di correlazione (o covarianza) osservata con quella derivante dal modello. Fornisce un’indicazione sulla qualità dell’adattamento del modello alla popolazione, considerando i gradi di libertà e la parsimonia del modello.</p>
+<p>Assumendo che i dati seguano una distribuzione normale multivariata, che il modello sia corretto, e che il campione sia ampio e casuale, il chi quadrato del modello (<span class="math inline">\(\chi^2_{ML}\)</span>) segue una distribuzione chi quadrato con gradi di libertà <span class="math inline">\(dfM\)</span>. Se il modello non è corretto, il chi quadrato segue una distribuzione non centrale <span class="math inline">\(\chi^2(dfM, \delta)\)</span>, dove <span class="math inline">\(\delta\)</span> rappresenta il grado di discrepanza tra modello e dati. Se <span class="math inline">\(\delta = 0\)</span>, il modello è perfetto; se <span class="math inline">\(\delta &gt; 0\)</span>, il modello non è adeguato.</p>
+<p>Il parametro di non centralità normalizzato (<span class="math inline">\(\delta_{nor}\)</span>), meno sensibile alla dimensione del campione, si calcola così:</p>
+<p><span class="math display">\[
+\delta_{nor} = \max(0, \chi^2_{ML} - dfM).
+\]</span></p>
+<p>Questo parametro fa parte di una funzione che stima gli errori di approssimazione, ossia la discrepanza tra le matrici di covarianza del campione e della popolazione quando il modello è applicato alla matrice di popolazione.</p>
+<p>Il valore finale dell’RMSEA, indicato come <span class="math inline">\(eˆ\)</span> (epsilon minuscolo), si ottiene dalla formula:</p>
+<p><span class="math display">\[
+eˆ = \sqrt{\frac{\delta_{nor}}{dfM (N - 1)}}
+\]</span></p>
+<p>Sebbene la stima di <span class="math inline">\(eˆ\)</span> non sia imparziale a causa della restrizione <span class="math inline">\(eˆ ≥ 0\)</span>, è considerata una buona approssimazione. Browne e Cudeck (1993) suggerirono che un valore di <span class="math inline">\(eˆ ≤ 0.05\)</span> indichi un buon adattamento del modello, ma ricerche successive hanno evidenziato che non esiste una soglia universale precisa. È quindi raccomandato valutare anche il limite superiore dell’intervallo di confidenza di <span class="math inline">\(eˆ\)</span> (indicato come <span class="math inline">\(eˆU\)</span>) per una valutazione più accurata dell’adattamento del modello.</p>
+<p>Altre caratteristiche del RMSEA sono riassunte di seguito:</p>
+<ol type="1">
+<li><p>L’interpretazione di <span class="math inline">\(eˆ\)</span>, <span class="math inline">\(eˆL\)</span> e <span class="math inline">\(eˆU\)</span> in relazione a soglie fisse è generalmente appropriata in grandi campioni con modelli ben specificati; in modelli più piccoli o con errori di specificazione significativi, questa interpretazione può richiedere maggiore cautela.</p></li>
+<li><p>Studi di simulazione hanno rilevato che l’RMSEA tende a imporre una penalità più severa per la complessità su modelli più piccoli con poche variabili. Ciò è dovuto al fatto che i modelli più piccoli tendono ad avere meno gradi di libertà, mentre i modelli più grandi hanno più “spazio” per valori di dfM più alti.</p></li>
+<li><p>Studi di simulazione hanno valutato le prestazioni di forme robuste dell’RMSEA corrette per la non normalità, una delle quali è basata sul chi quadrato scalato di Satorra-Bentler. Questa versione robusta corretta per la popolazione dell’RMSEA generalmente supera la versione non corretta, che tende ad essere sovrastimata in condizioni di non normalità.</p></li>
+<li><p>Sono stati sviluppati metodi per stimare la potenza statistica delle varie ipotesi nulle basate sull’RMSEA, così come metodi per generare le dimensioni minime del campione richieste per ottenere livelli target di potenza statistica.</p></li>
+</ol>
+</section>
+<section id="root-mean-square-residual-rmrs" class="level3" data-number="41.10.2">
+<h3 data-number="41.10.2" class="anchored" data-anchor-id="root-mean-square-residual-rmrs"><span class="header-section-number">41.10.2</span> Root Mean Square Residual (RMRS)</h3>
+<p>A differenza del chi quadrato del modello e dei gradi di libertà, che valutano la bontà di adattamento di un modello in base a criteri di adattamento globale, l’indice RMRS (Root Mean Square Residual) si concentra esclusivamente sui residui del modello, ovvero le discrepanze tra le correlazioni osservate e quelle previste dal modello.</p>
+<p>La formula per calcolare l’RMRS è la seguente:</p>
+<p><span class="math display">\[ RMRS = \sqrt{ \frac{2 \sum_i\sum_j(r_{ij} - \hat{r}_{ij})^2}{p(p+1)}}, \]</span></p>
+<p>dove: - $ p $ rappresenta il numero di item (variabili) nel modello, - $ r_{ij} $ è la correlazione osservata tra le variabili $ i $ e $ j $, - $ _{ij} $ è la correlazione prevista dal modello tra le variabili $ i $ e $ j $.</p>
+<p>Un valore di RMRS pari a 0 indica un adattamento perfetto del modello, mentre valori crescenti indicano un adattamento meno preciso. In generale, un valore di SRMR inferiore a 0.08 è considerato favorevole (Hu e Bentler, 1999).</p>
+<p>Tuttavia, è importante notare che il SRMR è una misura media e può nascondere variazioni significative tra i residui di correlazione individuali. Ad esempio, se il SRMR è 0.03, potrebbe sembrare un buon adattamento. Ma se i residui di correlazione variano da -0.12 a 0.18, con alcuni residui superiori a 0.10, potrebbe indicare problemi di adattamento locali più gravi.</p>
+<p>Pertanto, quando si riportano i risultati in un report, per ottenere una comprensione più completa dell’adattamento del modello è consigliabile descrivere i residui di correlazione o, meglio ancora, presentare l’intera matrice dei residui, anziché basarsi esclusivamente su un valore medio come il SRMR.</p>
+</section>
+<section id="interpretazione-con-lavaan" class="level3" data-number="41.10.3">
+<h3 data-number="41.10.3" class="anchored" data-anchor-id="interpretazione-con-lavaan"><span class="header-section-number">41.10.3</span> Interpretazione con <code>lavaan</code></h3>
+<p>L’interpretazione degli indici di bontà di adattamento trovati nella CFA o nella modellazione di equazioni strutturali può essere ottenuta usando le funzioni del pacchetto <code>effectsize</code>.</p>
+</section>
+</section>
+<section id="adattamento-locale" class="level2" data-number="41.11">
+<h2 data-number="41.11" class="anchored" data-anchor-id="adattamento-locale"><span class="header-section-number">41.11</span> Adattamento Locale</h2>
+<p>I modelli SEM possono teoricamente superare i test di adattamento globale ma fallire nei test di adattamento locale. Questi dettagli, relativi all’adattamento del modello, sono esaminati direttamente nei test di adattamento locale. L’analisi dei residui (sia standardizzati che di correlazione) è quindi cruciale per una valutazione completa del modello (Maydeu-Olivares e Shi, 2017). Le recenti norme di reportistica per il SEM richiedono agli autori di descrivere sia l’adattamento globale che quello locale (Appelbaum et al., 2018); Greiff e Heene, 2017; Vernon e Eysenck, 2007).</p>
+<section id="residui-di-covarianza-residui-standardizzati-residui-normalizzati" class="level3" data-number="41.11.1">
+<h3 data-number="41.11.1" class="anchored" data-anchor-id="residui-di-covarianza-residui-standardizzati-residui-normalizzati"><span class="header-section-number">41.11.1</span> Residui di Covarianza, Residui Standardizzati, Residui Normalizzati</h3>
+<ol type="1">
+<li><p><strong>Residui di Covarianza</strong>: Sono le differenze tra le covarianze osservate e quelle previste dal modello. Questi residui possono essere difficili da interpretare perché non sono standardizzati, ovvero la loro metrica dipende dalle scale delle variabili coinvolte. Pertanto, residui di covarianza per coppie di variabili diverse non sono direttamente confrontabili a meno che tutte le variabili non siano sulla stessa metrica.</p></li>
+<li><p><strong>Residui Standardizzati</strong>: Sono versioni standardizzate dei residui di covarianza, interpretati come un test z in campioni grandi. Un residuo standardizzato significativamente diverso da zero indica una discrepanza tra modello e dati. Tuttavia, la significatività di questi residui può dipendere dalla dimensione del campione, con residui vicini allo zero che possono essere significativi in campioni grandi, mentre residui relativamente grandi potrebbero non essere significativi in campioni piccoli.</p></li>
+<li><p><strong>Residui Normalizzati</strong>: Sono i rapporti tra i residui di covarianza e l’errore standard della covarianza campionaria. Sono generalmente più conservativi dei residui standardizzati in termini di test di significatività. In modelli complessi, quando non è possibile calcolare il denominatore di un residuo standardizzato, il residuo normalizzato fornisce un’alternativa più conservativa.</p></li>
+</ol>
+<p>Nel software <code>lavaan</code> ci sono due opzioni principali per calcolare i residui di correlazione:</p>
+<ul>
+<li><strong>Opzione <code>cor.bollen</code></strong>: Questa specifica indica al computer di convertire separatamente le matrici di covarianza del campione e quelle implicite dal modello in matrici di correlazione prima di calcolare i residui. Questo processo comporta la standardizzazione di ciascuna matrice in base alle varianze (deviazioni standard quadrate) presenti nella diagonale principale di ciascuna matrice. Le varianze nella matrice di covarianza del campione sono osservate direttamente, mentre le varianze per le variabili endogene nella matrice di covarianza implicata dal modello sono previste dal modello e possono differire dalle varianze osservate corrispondenti.</li>
+<li><strong>Opzione <code>cor.bentler</code></strong>: Questa opzione standardizza sia la matrice di covarianza del campione che quella implicata dal modello basandosi sulle varianze presenti solo nella matrice di covarianza del campione. Poiché non tutti gli elementi della diagonale principale nella matrice di covarianza implicata dal modello sono varianze osservate, alcuni valori dei residui di correlazione del tipo Bentler potrebbero non essere pari a zero. Tuttavia, i valori dei residui fuori diagonale per entrambi i metodi sono generalmente simili.</li>
+</ul>
+<p>Per impostazione predefinita, <code>lavaan</code> utilizza il metodo <code>cor.bollen</code> per calcolare i residui di correlazione nelle sue analisi.</p>
+</section>
+</section>
+<section id="esempio-1" class="level2" data-number="41.12">
+<h2 data-number="41.12" class="anchored" data-anchor-id="esempio-1"><span class="header-section-number">41.12</span> Esempio 1</h2>
+<p>Nel capitolo precedente abbiamo formulato un modello SEM nel quale abbiamo definito una variabile latente con le sei sottoscale della Self-Compassion Scale e una seconda variabile latente con le tre sottoscale della DASS-21. Abbiamo ipotizzato che il fattore dell’autocompassione eserciti un effetto (protettivo) nei confronti del disagio psicologico misurato dal fattore definito dalle sottoscale della DASS-21.</p>
+<div id="cell-9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d_sc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/dass_rosenberg_scs.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-10" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod_sc <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">  F =~ anxiety + depression + stress</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  SC =~ self_kindness   + common_humanity   + mindfulness   + self_judgment + isolation + over_identification</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  F ~ SC</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-11" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit_sc <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(mod_sc, d_sc)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-12" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(fit_sc,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"std"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03_gof_files/figure-html/cell-6-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I coefficienti stimati nel modello SEM appaiono coerenti e in linea con le aspettative, in particolare il coefficiente che descrive l’effetto “causale” del fattore dell’autocompassione sul malessere psicologico, che si attesta a -0.48. Questo valore negativo corrobora l’ipotesi secondo cui l’autocompassione svolge un ruolo di fattore protettivo contro il malessere psicologico. Tuttavia, prima di confermare definitivamente questa conclusione, è cruciale esaminare gli indici di bontà di adattamento del modello. Questi indici ci permetteranno di valutare quanto accuratamente il modello SEM si adatta ai dati osservati, fornendo un quadro più chiaro della validità delle nostre inferenze. In altre parole, sebbene il modello suggerisca una relazione negativa tra autocompassione e malessere psicologico, la conferma finale di questa associazione dipenderà dall’adeguatezza complessiva del modello rispetto ai dati.</p>
+<div id="cell-14" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(fit_sc) <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 npar                  fmin                 chisq 
+               19.000                 0.427               449.141 
+                   df                pvalue        baseline.chisq 
+               26.000                 0.000              3129.133 
+          baseline.df       baseline.pvalue                   cfi 
+               36.000                 0.000                 0.863 
+                  tli                  nnfi                   rfi 
+                0.811                 0.811                 0.801 
+                  nfi                  pnfi                   ifi 
+                0.856                 0.619                 0.864 
+                  rni                  logl     unrestricted.logl 
+                0.863            -12308.490            -12083.920 
+                  aic                   bic                ntotal 
+            24654.980             24736.021               526.000 
+                 bic2                 rmsea        rmsea.ci.lower 
+            24675.710                 0.176                 0.162 
+       rmsea.ci.upper        rmsea.ci.level          rmsea.pvalue 
+                0.190                 0.900                 0.000 
+       rmsea.close.h0 rmsea.notclose.pvalue     rmsea.notclose.h0 
+                0.050                 1.000                 0.080 
+                  rmr            rmr_nomean                  srmr 
+                1.203                 1.203                 0.071 
+         srmr_bentler   srmr_bentler_nomean                  crmr 
+                0.071                 0.071                 0.079 
+          crmr_nomean            srmr_mplus     srmr_mplus_nomean 
+                0.079                 0.071                 0.071 
+                cn_05                 cn_01                   gfi 
+               46.539                54.452                 0.846 
+                 agfi                  pgfi                   mfi 
+                0.733                 0.489                 0.669 
+                 ecvi 
+                0.926 </code></pre>
+</div>
+</div>
+<p>L’analisi degli indici di bontà di adattamento rivela alcune preoccupazioni significative riguardo alla validità del nostro modello SEM. Il rapporto <span class="math inline">\(\chi^2 / df\)</span> emerge come eccessivamente elevato, segnalando una possibile mancanza di adattamento:</p>
+<div id="cell-16" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fl">449.141</span> <span class="sc">/</span> <span class="dv">26</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+17.2746538461538
+</div>
+</div>
+<p>Analogamente, i valori di CFI e TLI sono inferiori al livello desiderato, suggerendo che il modello non rappresenta adeguatamente la struttura dei dati. In aggiunta, gli indici RMSEA e SRMR superano le soglie accettabili, indicando ulteriormente un’inadeguata aderenza del modello ai dati.</p>
+<p>Di fronte a questi risultati, è imprudente accettare la conclusione precedentemente formulata secondo cui l’autocompassione agisce come un fattore protettivo contro il malessere psicologico. Questa interpretazione, benché teoricamente fondata, non trova un solido supporto empirico nel contesto del modello attuale.</p>
+<p>In questa situazione, un percorso costruttivo potrebbe essere quello di rivedere e potenzialmente modificare il modello. L’obiettivo sarebbe quello di esplorare alternative che potrebbero risultare in un migliore adattamento ai dati, mantenendo al contempo l’adeguatezza teorica. Ciò potrebbe includere la revisione delle assunzioni del modello, la riconsiderazione delle variabili incluse o la ristrutturazione delle relazioni ipotizzate tra di esse. Solo attraverso un modello che dimostra una bontà di adattamento adeguata possiamo affermare con maggiore sicurezza che i dati empirici sostengono l’ipotesi dell’effetto protettivo dell’autocompassione sul malessere psicologico.</p>
+</section>
+<section id="potere-statistico-e-precisione" class="level2" data-number="41.13">
+<h2 data-number="41.13" class="anchored" data-anchor-id="potere-statistico-e-precisione"><span class="header-section-number">41.13</span> Potere Statistico e Precisione</h2>
+<p>Nell’ambito dei modelli di Structural Equation Modeling (SEM), l’analisi della potenza statistica è fondamentale per garantire l’affidabilità e la validità dei risultati. Esistono due approcci principali per quest’analisi: la potenza a priori (prospettica) e la potenza retrospettiva (post hoc, osservata).</p>
+<ol type="1">
+<li><p><strong>Potenza a priori (Prospettica):</strong> Questa analisi viene effettuata prima della raccolta dei dati e mira a stimare la probabilità che uno studio identifichi un effetto significativo, se presente nella popolazione. È cruciale nella pianificazione della ricerca per determinare la dimensione del campione necessaria, aumentando così l’efficienza dello studio e prevenendo l’uso di campioni eccessivamente grandi o inadeguati. In SEM, la potenza a priori si stima specificando nel software le caratteristiche del modello di popolazione, ipotesi nulle e alternative, il livello di significatività statistica e la dimensione campionaria prevista.</p></li>
+<li><p><strong>Potenza Retrospettiva (Post Hoc, Osservata):</strong> A differenza dell’analisi a priori, questa viene condotta dopo la raccolta dei dati. Le statistiche campionarie vengono trattate come parametri reali della popolazione, ma questa pratica presenta limitazioni significative. Le stime possono essere distorte, e una maggiore potenza osservata non implica necessariamente una forte evidenza a favore delle ipotesi nulle non rifiutate. Inoltre, essendo una misura post hoc, non aiuta nella progettazione proattiva della ricerca.</p></li>
+</ol>
+<p>Per l’analisi della potenza in SEM, sono stati sviluppati diversi metodi, tra cui:</p>
+<ol type="1">
+<li>Il metodo Satorra–Saris stima la potenza del test del rapporto di verosimiglianza per un singolo parametro.</li>
+<li>Il metodo MacCallum–RMSEA si basa sulla RMSEA di popolazione e sulle distribuzioni chi-quadrato non centrali.</li>
+<li>Il metodo di simulazione Monte Carlo è un’alternativa moderna e flessibile che non presuppone né risultati continui né stima ML predefinita.</li>
+</ol>
+<p>Con l’avanzamento degli strumenti informatici, l’analisi della potenza statistica in SEM è diventata più accessibile:</p>
+<p><strong>Software SEM con Simulazione Monte Carlo:</strong> Software come Mplus e LISREL includono capacità di simulazione Monte Carlo, permettendo di generare dati campionari basati su ipotesi del modello e di valutare la frequenza con cui i risultati significativi vengono ottenuti.</p>
+<p><strong>Metodo Kelley–Lai Precision:</strong> Calcola la dimensione campionaria minima necessaria per stimare parametri come l’indice RMSEA entro un margine di errore specificato.</p>
+<p>Nel contesto di <code>R</code>, le funzioni <code>semTools::findRMSEApower</code> e <code>semTools::findRMSEAsamplesize</code> del pacchetto <code>semTools</code> facilitano queste analisi:</p>
+<ol type="1">
+<li><p><code>semTools::findRMSEApower</code>: Determina la potenza di un test SEM data una dimensione specifica del campione, basandosi sull’RMSEA e altri parametri del test.</p></li>
+<li><p><code>semTools::findRMSEAsamplesize</code>: Calcola la dimensione del campione necessaria per raggiungere una specifica potenza statistica in un test SEM, considerando l’RMSEA e altri criteri come il livello di significatività e la potenza desiderata.</p></li>
+</ol>
+<p>Questi strumenti sono importanti per ottimizzare la progettazione della ricerca SEM, garantendo campioni adeguati e potenza statistica sufficiente per rilevare gli effetti di interesse.</p>
+</section>
+<section id="commenti-e-considerazioni-finali" class="level2" data-number="41.14">
+<h2 data-number="41.14" class="anchored" data-anchor-id="commenti-e-considerazioni-finali"><span class="header-section-number">41.14</span> Commenti e considerazioni finali</h2>
+<p>Nella letteratura SEM sono state sollevate forti argomentazioni contro l’applicazione di RMSEA, CFI e TLI e i loro valori di cutoff convenzionali [si veda, ad esempio, {cite:t}<code>barrett2007structural</code>]. Tuttavia, prima che i ricercatori propongano e accettino alternative migliori, questi indici di bontà dell’adattamento continueranno ad essere applicati nella maggior parte degli studi SEM. {cite:t}<code>xia2019rmsea</code> fanno notare come, in base alla consuetudine corrente, valori RMSEA più grandi e valori CFI e TLI più piccoli indicano un adattamento peggiore. Ciò spinge i ricercatori a modificare i loro modelli per cercare di ottenere indici migliori. Tuttavia, la pratica attuale si è evoluta a tal punto da raggiungere la fase per cui gli indici di adattamento servono come <em>gli unici</em> criteri (in molte situazioni) per determinare se accettare o rifiutare un modello ipotizzato: se i valori degli indici di adattamento raggiungono la soglia “di pubblicabilità” (ad es. RMSEA &lt; .06), allora non si ritiene più necessario migliorare il modello. In realtà, un’affermazione come la seguente non è sufficiente: “poiché i valori RMSEA, CFI e TLI suggeriscono un buon adattamento, questo modello è stato scelto come modello finale”. Il raggiungimento di una serie di soglie desiderate di RMSEA, CFI e TLI è solo uno dei possibili indicatori che devono essere considerati nel processo di selezione di modelli. I ricercatori dovrebbero anche spiegare se esistono altre opzioni per migliorare il modello, perché tali opzioni sono o non sono adottate, e quali sono le conseguenze scientifiche e cliniche che derivano dalla scelta del modello in questione come quello finale.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-hu1998fit" class="csl-entry" role="listitem">
+Hu, Li-tze, e Peter M Bentler. 1998. <span>«Fit indices in covariance structure modeling: Sensitivity to underparameterized model misspecification.»</span> <em>Psychological Methods</em> 3 (4): 424--453.
+</div>
+<div id="ref-kline2023principles" class="csl-entry" role="listitem">
+Kline, Rex B. 2023. <em>Principles and practice of structural equation modeling</em>. Guilford publications.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/sem/02_data_preparation.html" class="pagination-link" aria-label="Preparazione dei Dati">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/sem/04_mod_comp.html" class="pagination-link" aria-label="Confronto tra modelli">
+        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/03_gof.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

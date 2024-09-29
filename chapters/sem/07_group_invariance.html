@@ -1,0 +1,2690 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>45&nbsp; Invarianza di misura – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/sem/08_multilevel_sem.html" rel="next">
+<link href="../../chapters/sem/06_refine_solution.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/07_group_invariance.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#indicatori-continui" id="toc-indicatori-continui" class="nav-link active" data-scroll-target="#indicatori-continui"><span class="header-section-number">45.1</span> Indicatori continui</a>
+  <ul class="collapse">
+  <li><a href="#intercette-degli-item" id="toc-intercette-degli-item" class="nav-link" data-scroll-target="#intercette-degli-item"><span class="header-section-number">45.1.1</span> Intercette degli item</a></li>
+  <li><a href="#tipologie-di-invarianza" id="toc-tipologie-di-invarianza" class="nav-link" data-scroll-target="#tipologie-di-invarianza"><span class="header-section-number">45.1.2</span> Tipologie di Invarianza</a></li>
+  <li><a href="#un-esempio-concreto" id="toc-un-esempio-concreto" class="nav-link" data-scroll-target="#un-esempio-concreto"><span class="header-section-number">45.1.3</span> Un esempio concreto</a></li>
+  </ul></li>
+  <li><a href="#indicatori-a-livello-di-scala-ordinale" id="toc-indicatori-a-livello-di-scala-ordinale" class="nav-link" data-scroll-target="#indicatori-a-livello-di-scala-ordinale"><span class="header-section-number">45.2</span> Indicatori a livello di scala ordinale</a>
+  <ul class="collapse">
+  <li><a href="#un-esempio-concreto-1" id="toc-un-esempio-concreto-1" class="nav-link" data-scroll-target="#un-esempio-concreto-1"><span class="header-section-number">45.2.1</span> Un esempio concreto</a></li>
+  <li><a href="#baseline-model" id="toc-baseline-model" class="nav-link" data-scroll-target="#baseline-model"><span class="header-section-number">45.2.2</span> Baseline model</a></li>
+  <li><a href="#invarianza-delle-soglie" id="toc-invarianza-delle-soglie" class="nav-link" data-scroll-target="#invarianza-delle-soglie"><span class="header-section-number">45.2.3</span> Invarianza delle soglie</a></li>
+  <li><a href="#invarianza-delle-soglie-e-delle-saturazioni-fattoriali" id="toc-invarianza-delle-soglie-e-delle-saturazioni-fattoriali" class="nav-link" data-scroll-target="#invarianza-delle-soglie-e-delle-saturazioni-fattoriali"><span class="header-section-number">45.2.4</span> Invarianza delle soglie e delle saturazioni fattoriali</a></li>
+  </ul></li>
+  <li><a href="#vincoli-inter-gruppi" id="toc-vincoli-inter-gruppi" class="nav-link" data-scroll-target="#vincoli-inter-gruppi"><span class="header-section-number">45.3</span> Vincoli Inter-gruppi</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/07_group_invariance.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/07_group_invariance.html"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem-fact-inv" class="quarto-section-identifier"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="a8e1a699" class="cell" data-tags="[&quot;remove_cell&quot;]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"lavaan"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"semTools"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Gli esempi di modelli SEM che abbiamo esaminato fino ad ora sono stati calcolati all’interno di un singolo gruppo. Questi modelli hanno utilizzato come input una sola matrice di covarianza e hanno portato alla stima dei parametri del modello senza imporre restrizioni specifiche. In questo capitolo, ci occuperemo del concetto di invarianza, estendendo le analisi precedenti ad un contesto multi-gruppo.</p>
+<p>L’invarianza in un’analisi SEM multi-gruppo può riferirsi a diversi aspetti del modello. Un approccio utile è suddividere lo studio dell’invarianza in due componenti:</p>
+<ol type="1">
+<li><p><strong>Invarianza nei modelli di misurazione</strong>: si verifica se gli strumenti di misurazione sono invarianti o equivalenti tra diversi gruppi. Questo tipo di analisi testa l’uguaglianza dei parametri associati al modello di misurazione tra i gruppi, inclusi i carichi fattoriali, gli intercetti delle variabili di misura e le varianze e covarianze residue.</p></li>
+<li><p><strong>Invarianza nei modelli strutturali</strong>: si verifica se le strutture latenti sono invarianti o equivalenti tra diversi gruppi. Questa analisi testa l’uguaglianza dei parametri associati al modello di struttura latente tra i gruppi, inclusi i coefficienti di percorso, le medie e le varianze dei fattori e le covarianze tra i fattori.</p></li>
+</ol>
+<p>In generale, nella modellazione SEM multi-gruppo si cerca di ottenere la massima parsimonia (semplicità) possibile, desiderando un grado elevato di invarianza sia nelle misure che nelle strutture. Tuttavia, i modelli invarianti sono restrittivi e comportano un compromesso tra adattamento del modello e parsimonia. Pertanto, nella pratica, il ricercatore deve trovare un equilibrio tra questi due aspetti. Di conseguenza, quando si adatta un modello multi-gruppo, si tende a scegliere modelli con un certo grado di invarianza che mantengano un adeguato adattamento del modello. Questo può significare invarianza solo nella misurazione, solo nella struttura, o in un sottoinsieme di parametri in entrambi i componenti.</p>
+<p>Nel presente capitolo, per valutare l’invarianza di misura, utilizzeremo l’approccio dell’analisi fattoriale confermativa a gruppi multipli (MG-CFA). Esploreremo se sia sensato considerare la stessa struttura fattoriale in gruppi diversi, ossia se la stessa variabile latente viene misurata in modo equivalente tra i diversi gruppi. Questo aspetto, noto come <em>invarianza di misura</em>, è fondamentale perché permette di effettuare confronti tra le medie dei gruppi. Se un dato strumento di misura valuta dimensioni diverse in gruppi differenti, allora non è possibile fare confronti validi tra questi gruppi utilizzando quella misura. In questo capitolo, affronteremo la questione dell’invarianza di misura considerando prima gli indicatori continui e poi quelli categoriali.</p>
+<section id="indicatori-continui" class="level2" data-number="45.1">
+<h2 data-number="45.1" class="anchored" data-anchor-id="indicatori-continui"><span class="header-section-number">45.1</span> Indicatori continui</h2>
+<section id="intercette-degli-item" class="level3" data-number="45.1.1">
+<h3 data-number="45.1.1" class="anchored" data-anchor-id="intercette-degli-item"><span class="header-section-number">45.1.1</span> Intercette degli item</h3>
+<p>In generale, i modelli di equazioni strutturali vengono utilizzati per modellare unicamente la matrice di covarianza delle variabili osservate in un set di dati. Ricordiamo che, quando abbiamo introdotto il modello dell’analisi fattoriale,</p>
+<p><span class="math display">\[
+y_i = \mu + \lambda_j \xi_k + \delta_i,
+\]</span></p>
+<p>per semplicità abbiamo ignorato la media <span class="math inline">\(\mu\)</span> degli indicatori esprimendo i dati osservati nei termini degli scarti dalla media, <span class="math inline">\(y_i -\mu\)</span>, in quanto ciò lascia immutate le covarianze. Tuttavia, in alcune applicazioni (quali, appunto, l’invarianza di misura), è utile considerare anche le medie delle variabili osservate. Per includere nel modello fattoriale le informazioni sulle medie facciamo esplicito riferimento all’intercetta della precedente equazione. Usando la sintassi <code>lavaan</code>, la media di una variabile manifesta viene inserita nel modello specificando l’intercetta dell’equazione precedente come segue</p>
+<div id="ed01294c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>my_item <span class="sc">~</span> <span class="dv">1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>my_item ~ 1</code></pre>
+</div>
+</div>
+<p>La parte sinistra dell’espressione precedente contiene il nome della variabile manifesta a cui si fa riferimento; la parte destra dell’espressione precedente specifica la presenza dell’intercetta.</p>
+<p>Per esempio, nella specificazione di un modello a due fattori comuni, è possibile aggiungere al modello le medie delle variabili manifeste nel modo seguente:</p>
+<div id="1f8ec6d2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">  # two-factor model</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  f1 =~ x1 + x2 + x3</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  f2 =~ x4 + x5 + x6</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">  # intercepts</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  x1 ~ 1</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">  x2 ~ 1</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">  x3 ~ 1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">  x4 ~ 1</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  x5 ~ 1</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">  x6 ~ 1</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Tuttavia, è più conveniente omettere le intercette nella specificazione del modello e aggiungere l’argomento <code>meanstructure = TRUE</code> nella funzione <code>cfa()</code>.</p>
+<div id="39df785a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">  f1 =~ x1 + x2 + x3</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">  f2 =~ x4 + x5 + x6</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>fit &lt;- cfa(
+  mod2,
+  data = d,
+  meanstructure = TRUE
+)</code></pre>
+<p>Si noti che modelli con o senza <code>meanstructure</code> avranno la stessa statistica chi-quadrato e lo stesso numero di gradi di libertà. Il motivo è che, nel caso di un modello con <code>meanstructure</code>, vengono introdotti <span class="math inline">\(p\)</span> nuovi dati (ovvero, il valore della media per ciascuno dei <span class="math inline">\(p\)</span> indicatori) ma vengono anche stimati ulteriori <span class="math inline">\(p\)</span> parametri (ovvero, un’intercetta per ciascuno dei <span class="math inline">\(p\)</span> indicatori). Il risultato finale è che la bontà dell’adattamento resta immutata. In pratica, l’unico motivo per aggiungere le intercette nella sintassi del modello è quello di introdurre dei vincoli nella stima di tali parametri.</p>
+</section>
+<section id="tipologie-di-invarianza" class="level3" data-number="45.1.2">
+<h3 data-number="45.1.2" class="anchored" data-anchor-id="tipologie-di-invarianza"><span class="header-section-number">45.1.2</span> Tipologie di Invarianza</h3>
+<p>È possibile definire diversi livelli di invarianza tra gruppi nel contesto di un’analisi fattoriale confermativa (CFA) multigruppo:</p>
+<ol type="1">
+<li><p><strong>Invarianza Configurale (fit_ef)</strong>: Questo è il livello più basilare di invarianza. Si verifica quando la stessa struttura fattoriale si adatta a ogni gruppo. Questo significa che gli stessi fattori sono presenti in ogni gruppo e che gli stessi item misurano questi fattori in tutti i gruppi. Non si assumono ancora uguaglianze nelle saturazioni fattoriali o in altri parametri del modello.</p></li>
+<li><p><strong>Invarianza Metrica (fit_efl)</strong>: Oltre all’invarianza configurale, si testa l’uguaglianza delle saturazioni fattoriali (“loadings”) attraverso i gruppi. Questo passo verifica se gli item hanno lo stesso rapporto con il fattore latente in tutti i gruppi. L’invarianza metrica è fondamentale per affermare che la scala del fattore latente è la stessa tra i gruppi.</p></li>
+<li><p><strong>Invarianza delle Intercette degli Indicatori (fit_eii)</strong>: A questo livello, si testa se le intercette degli item sono uguali tra i gruppi, oltre all’uguaglianza delle saturazioni fattoriali. Questo passo è cruciale per sostenere che i gruppi interpretano il significato dei punteggi degli item allo stesso modo.</p></li>
+<li><p><strong>Invarianza delle Varianze degli Errori degli Indicatori (fit_eir)</strong>: Qui si aggiunge il test sull’uguaglianza delle varianze degli errori degli indicatori tra i gruppi. Questo implica che l’affidabilità di ciascun item (in termini di errore di misurazione) è la stessa in tutti i gruppi.</p></li>
+<li><p><strong>Invarianza delle Varianze dei Fattori Latenti (fit_fv)</strong>: In questo modello, si testa l’uguaglianza delle varianze dei fattori latenti tra i gruppi, oltre ai livelli precedenti di invarianza. Questo indica che la variabilità dei fattori latenti è simile tra i gruppi.</p></li>
+<li><p><strong>Invarianza delle Medie dei Fattori Latenti (fit_fm)</strong>: Questo è il livello più stringente di invarianza, dove si testa anche l’uguaglianza delle medie dei fattori latenti tra i gruppi. Questo significa che non solo la struttura e il funzionamento del modello sono simili tra i gruppi, ma anche che i gruppi hanno medie latenti equivalenti.</p></li>
+</ol>
+<p>Ogni livello successivo di invarianza include i vincoli del livello precedente. Il passaggio da un livello all’altro richiede un confronto degli indici di adattamento per determinare se l’aggiunta di nuovi vincoli peggiora significativamente l’adattamento del modello. Questa sequenza di modelli aiuta a comprendere in modo rigoroso se e come un costrutto misurato dal modello CFA si manifesti in modo simile o diverso tra i gruppi.</p>
+</section>
+<section id="un-esempio-concreto" class="level3" data-number="45.1.3">
+<h3 data-number="45.1.3" class="anchored" data-anchor-id="un-esempio-concreto"><span class="header-section-number">45.1.3</span> Un esempio concreto</h3>
+<p>Consideriamo qui un esempio discusso da {cite:t}<code>brown2015confirmatory</code>. Il modello CFA riguarda un modello di misurazione per la depressione maggiore così come è definita nel DSM-IV. Il campione include 9 indicatori:</p>
+<ul>
+<li>MDD1, depressed mood;</li>
+<li>MDD2, loss of interest in usual activities;</li>
+<li>MDD3, weight/appetite change;</li>
+<li>MDD4, sleep disturbance;</li>
+<li>MDD5, psychomotor agitation/retardation;</li>
+<li>MDD6, fatigue/loss of energy;</li>
+<li>MDD7, feelings of worthlessness/guilt;</li>
+<li>MDD8, concentration difficulties;</li>
+<li>MDD9, thoughts of death/suicidality.</li>
+</ul>
+<p>Leggiamo i dati in <span class="math inline">\(\mathsf{R}\)</span>:</p>
+<div id="84fffdec" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"mdd_sex.RDS"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="42ba206a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 6 x 10</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">sex</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd1</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd2</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd3</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd4</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd5</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd6</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd7</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd8</th>
+<th data-quarto-table-cell-role="th" scope="col">mdd9</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;fct&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>female</td>
+<td>5</td>
+<td>4</td>
+<td>1</td>
+<td>6</td>
+<td>5</td>
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>female</td>
+<td>5</td>
+<td>5</td>
+<td>5</td>
+<td>5</td>
+<td>4</td>
+<td>5</td>
+<td>4</td>
+<td>5</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>female</td>
+<td>4</td>
+<td>5</td>
+<td>4</td>
+<td>2</td>
+<td>6</td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>female</td>
+<td>5</td>
+<td>5</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>5</td>
+<td>6</td>
+<td>4</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>female</td>
+<td>5</td>
+<td>5</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>4</td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>female</td>
+<td>6</td>
+<td>6</td>
+<td>4</td>
+<td>6</td>
+<td>4</td>
+<td>6</td>
+<td>5</td>
+<td>6</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Nel caso presente, i gruppi corrispondono al genere. Confrontiamo le distribuzioni di densità empirica degli item tra i due gruppi.</p>
+<div id="89462194" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d_long <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">!</span>sex, <span class="at">names_to =</span> <span class="st">"item"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>d_long <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(value, <span class="at">col=</span>sex)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">linewidth=</span><span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>item, <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">scales=</span><span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">" "</span>, <span class="at">y=</span><span class="st">"Density"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_group_invariance_files/figure-html/cell-8-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ci poniamo dunque il problema di stabilire l’invarianza fattoriale in funzione del genere. Consideriamo il seguente modello:</p>
+<div id="14749259" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_mdd <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">  MDD =~ mdd1 + mdd2 + mdd3 + mdd4 + mdd5 + mdd6 + mdd7 + mdd8 +</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">         mdd9</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">  mdd1 ~~ mdd2</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si noti la presenza di una correlazione residua tra gli indicatori <code>mdd1</code> e <code>mdd2</code>.</p>
+<p>In precedenza, abbiamo discusso le strutture di media e covarianza dei modelli CFA nel contesto di un’analisi a singolo gruppo. La stima dei parametri del modello, data un campione, può essere effettuata selezionando o individuando il miglior insieme di stime che minimizza una funzione di discrepanza.</p>
+<p>L’estensione di questo metodo di stima per un singolo campione all’analisi CFA multi-gruppo è diretta. Prima di tutto, si definisce una funzione di discrepanza individuale per ogni gruppo o campione. Per stimare tutti i parametri in gruppi indipendenti simultaneamente, si definisce una funzione di discrepanza complessiva come somma ponderata delle funzioni di discrepanza specifiche per gruppo.</p>
+<p>Procediamo quindi con la definizione di modelli che facilitano il confronto tra diversi tipi di invarianza fattoriale. È importante prestare attenzione ai vincoli che vengono progressivamente introdotti man mano che si specificano modelli sempre più restrittivi. Nella sintassi del software <code>lavaan</code>, utilizzato per l’analisi SEM, questi vincoli vengono impostati tramite l’argomento <code>group.equal</code>.</p>
+<div id="722971fc" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># configural invariance</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit_ef <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  model_mdd,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"sex"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">meanstructure =</span> <span class="cn">TRUE</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plus equal factor loadings- metric invariance</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>fit_efl <span class="ot">&lt;-</span> <span class="fu">update</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  fit_ef,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"loadings"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plus equal indicator intercepts</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>fit_eii <span class="ot">&lt;-</span> <span class="fu">update</span>(</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  fit_efl,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"loadings"</span>, <span class="st">"intercepts"</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co"># plus equal indicator error variances</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>fit_eir <span class="ot">&lt;-</span> <span class="fu">update</span>(</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  fit_eii,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"loadings"</span>, <span class="st">"intercepts"</span>, <span class="st">"residuals"</span>)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co"># plus equal factor variances</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>fit_fv <span class="ot">&lt;-</span> <span class="fu">update</span>(</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  fit_eir,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loadings"</span>, <span class="st">"intercepts"</span>, <span class="st">"residuals"</span>,</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lv.variances"</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co"># plus equal latent means</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>fit_fm <span class="ot">&lt;-</span> <span class="fu">update</span>(</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  fit_fv,</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loadings"</span>, <span class="st">"intercepts"</span>, <span class="st">"residuals"</span>,</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"lv.variances"</span>, <span class="st">"means"</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Confrontiamo i modelli mediate il test del rapporto di verosimiglianze:</p>
+<div id="c7ed4060" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">lavTestLRT</span>(fit_ef, fit_efl, fit_eii, fit_eir, fit_fv, fit_fm)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Chi-Squared Difference Test
+
+        Df   AIC   BIC   Chisq Chisq diff    RMSEA Df diff Pr(&gt;Chisq)
+fit_ef  52 27526 27784  98.911                                       
+fit_efl 60 27514 27736 102.839     3.9286 0.000000       8     0.8635
+fit_eii 68 27510 27695 115.309    12.4699 0.038600       8     0.1314
+fit_eir 77 27502 27645 125.021     9.7115 0.014520       9     0.3743
+fit_fv  78 27501 27639 125.814     0.7931 0.000000       1     0.3732
+fit_fm  79 27501 27635 127.734     1.9201 0.049533       1     0.1659</code></pre>
+</div>
+</div>
+<p>Il confronto tra i precedenti modelli nidificati che introducono vincoli sempre più stringenti sui parametri indica che non vi è una “significativa” perdita di bontà dell’adattamento passando dal modello congenerico al modello che assume l’uguaglianza delle saturazioni fattoriali, delle intercette, delle varianze residue, delle varianze delle variabili latenti e delle medie dei due gruppi. Per i dati discussi da {cite:t}<code>brown2015confirmatory</code>, dunque, possiamo concludere che vi sono forti evidenze di invarianza fattoriale tra maschi e femmine in relazione al costrutto di depressione maggiore. L’invarianza fattoriali giustifica, per questi dati, un confronto tra le medie dei punteggi totali del test calcolate nei due gruppi.</p>
+</section>
+</section>
+<section id="indicatori-a-livello-di-scala-ordinale" class="level2" data-number="45.2">
+<h2 data-number="45.2" class="anchored" data-anchor-id="indicatori-a-livello-di-scala-ordinale"><span class="header-section-number">45.2</span> Indicatori a livello di scala ordinale</h2>
+<p>Nell’analisi multi-gruppo per dati ordinali devono essere affrontati problemi specifici per questo tipo di dati. I dati ordinali si distinguono dalle variabili continue in due modi principali: per il metodo utilizzato nella stima delle saturazioni fattoriali e per l’approccio nell’analisi statistica.</p>
+<p>Le variabili ordinali sono formate da categorie con un ordine logico. Ad esempio, risposte come “fortemente in disaccordo” fino a “fortemente d’accordo”, o “mai”, “a volte”, “spesso”, “sempre” sono sequenze logiche. Sebbene queste categorie siano ordinate, la distanza tra di loro non è necessariamente uniforme o misurabile in termini quantitativi. Pertanto, assegnare valori numerici a queste risposte è un processo arbitrario e non riflette differenze di intensità o grandezza.</p>
+<p>Uno dei problemi principali nell’analizzare dati ordinali è come calcolare le correlazioni. Le correlazioni policoriche offrono una soluzione, presupponendo l’esistenza di una variabile latente continua e normalmente distribuita che influisce sulla distribuzione delle risposte. In questo modello, ogni categoria di risposta ordinale corrisponde a un intervallo specifico sulla variabile latente sottostante. I punti di taglio o soglie (<span class="math inline">\(\tau_1, \tau_2, \dots, \tau_k\)</span>) dividono la distribuzione normale in sezioni che rappresentano le frequenze osservate per ogni categoria.</p>
+<p>Nell’ambito dell’invarianza fattoriale per dati ordinali, si pone inizialmente la questione dell’invarianza delle soglie (treshold invariance). Questo concetto presuppone che le soglie che definiscono le correlazioni policoriche rimangano costanti tra i gruppi. La stabilità di queste soglie è fondamentale per assicurare che le relazioni tra le categorie di risposta siano comparabili tra diversi gruppi.</p>
+<p>Un secondo aspetto cruciale è la scelta dello stimatore per la stima delle saturazioni fattoriali. Per i dati ordinali, lo stimatore raccomandato è quello dei minimi quadrati ponderati (Weighted Least Squares, WLS). Questo metodo è preferito perché tiene conto della natura specifica dei dati ordinali, fornendo stime più accurate e affidabili delle saturazioni fattoriali rispetto a metodi pensati per dati continui.</p>
+<p>In sintesi, l’analisi di invarianza fattoriale con dati ordinali richiede considerazioni e tecniche specifiche, che includono l’utilizzo di correlazioni policoriche e l’impiego di stimatori adeguati, per garantire risultati validi e interpretabili.</p>
+<section id="un-esempio-concreto-1" class="level3" data-number="45.2.1">
+<h3 data-number="45.2.1" class="anchored" data-anchor-id="un-esempio-concreto-1"><span class="header-section-number">45.2.1</span> Un esempio concreto</h3>
+<p>{cite:t}<code>wu2016identification</code> sostengono che la metodologia convenzionale per valutare l’invarianza fattoriale nei dati continui richiede adattamenti significativi quando applicata a indicatori categoriali. Il processo standard inizia con la definizione di un modello di base, seguito dall’applicazione di restrizioni incrementali ai parametri. Tuttavia, secondo {cite:t}<code>wu2016identification</code>, questo approccio risulta subottimale per i dati categoriali, a causa della sua dipendenza critica dalla definizione delle soglie utilizzate per stabilire le correlazioni policoriche con le variabili latenti continue nel modello configurale.</p>
+<p>{cite:t}<code>wu2016identification</code> enfatizzano che, in contesti con dati categoriali, è primario valutare prima l’equivalenza delle soglie tra i gruppi, definendo ciò che viene chiamato un “modello di soglia” (threshold model). Solo dopo questa valutazione preliminare è consigliabile procedere con l’analisi dell’equivalenza delle saturazioni fattoriali tra i gruppi. Questo cambiamento nell’ordine di valutazione è cruciale per garantire che le soglie, che sono fondamentali per la definizione delle correlazioni policoriche nei dati categoriali, siano coerenti e comparabili tra i gruppi prima di procedere con ulteriori analisi sull’invarianza fattoriale. In sostanza, ciò che {cite:t}<code>wu2016identification</code> propongono è una riconsiderazione della sequenza di passaggi nell’analisi dell’invarianza per dati categoriali, ponendo una maggiore enfasi sull’allineamento delle soglie prima di esplorare altre forme di equivalenza nei modelli multigruppo.</p>
+<p>Per illustrare tale procedura, replichiamo qui il tutorial messo a punto da {cite:t}<code>svetina2020multiple</code>. Questi autori utilizzano quattro item di una scala del bullismo ed esaminano i dati raccolti in tre paesi (31 = Azerbaigian; 40 = Austria; 246 = Finlandia). Tutti gli item sono misurati su una scala di tipo Likert a 4 punti, che va da 0 (mai) a 3 (almeno una volta alla settimana). Gli item chiedono al partecipante di valutare delle affermazioni relative ad episodi di bullismo. Per esempio, “mi prendevano in giro o mi insultavano”. Per l’Azerbaigian, l’Austria e la Finlandia, le dimensioni del campione sono rispettivamente pari a 3,808, 4,457 e 4,520.</p>
+<p>Leggiamo in dati in <span class="math inline">\(\textsf{R}\)</span>:</p>
+<div id="97a16afa" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"../data/BULLY.dat"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"IDCNTRY"</span>, <span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 6 x 5</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">IDCNTRY</th>
+<th data-quarto-table-cell-role="th" scope="col">R09A</th>
+<th data-quarto-table-cell-role="th" scope="col">R09B</th>
+<th data-quarto-table-cell-role="th" scope="col">R09C</th>
+<th data-quarto-table-cell-role="th" scope="col">R09D</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>31</td>
+<td>3</td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>31</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>31</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Viene creata la matrice <code>all.results</code> per immagazzinare i risultati dei diversi modelli che verranno confrontati, chiamati <em>baseline</em> (nessun vincolo tra i gruppi), <em>proposition 4</em> (equivalenza delle soglie tra i gruppi), e <em>proposition 7</em> (equivalenza delle soglie e delle saturazioni fattoriali tra i gruppi). Gli indici di bontà dell’adattamento che verranno considerati sono: chi-square, df, p, RMSEA, CFI, e TLI.</p>
+<div id="ba49f1ab" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>all.results <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="baseline-model" class="level3" data-number="45.2.2">
+<h3 data-number="45.2.2" class="anchored" data-anchor-id="baseline-model"><span class="header-section-number">45.2.2</span> Baseline model</h3>
+<p>Nel <em>baseline model</em> non viene posto alcun vincolo tra i gruppi. È quello dell’invarianza configurale.</p>
+<div id="ff7339b8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mod.cat <span class="ot">&lt;-</span> <span class="st">"F1 =~ R09A + R09B + R09C + R09D"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="dd42dbfd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="ot">&lt;-</span> <span class="fu">measEq.syntax</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">configural.model =</span> mod.cat,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameterization =</span> <span class="st">"delta"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.fac =</span> <span class="st">"std.lv"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.cat =</span> <span class="st">"Wu.Estabrook.2016"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"IDCNTRY"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="st">"configural"</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Informazioni sul modello baseline si ottengono nel modo seguente:</p>
+<div id="86a721b8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(baseline)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This lavaan model syntax specifies a CFA with 4 manifest indicators (4 of which are ordinal) of 1 common factor(s).
+
+To identify the location and scale of each common factor, the factor means and variances were fixed to 0 and 1, respectively, unless equality constraints on measurement parameters allow them to be freed.
+
+The location and scale of each latent item-response underlying 4 ordinal indicators were identified using the "delta" parameterization, and the identification constraints recommended by Wu &amp; Estabrook (2016). For details, read:
+
+    https://doi.org/10.1007/s11336-016-9506-0 
+
+Pattern matrix indicating num(eric), ord(ered), and lat(ent) indicators per factor:
+
+     F1 
+R09A ord
+R09B ord
+R09C ord
+R09D ord
+
+The following types of parameter were constrained to equality across groups:
+
+    configural
+
+     F1   
+R09A "ord"
+R09B "ord"
+R09C "ord"
+R09D "ord"</code></pre>
+</div>
+</div>
+<p>Le proprietà del modello possono essere esplicitate con la seguente istruzione:</p>
+<div id="b5c46493" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">as.character</span>(baseline))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>## LOADINGS:
+
+F1 =~ c(NA, NA, NA)*R09A + c(lambda.1_1.g1, lambda.1_1.g2, lambda.1_1.g3)*R09A
+F1 =~ c(NA, NA, NA)*R09B + c(lambda.2_1.g1, lambda.2_1.g2, lambda.2_1.g3)*R09B
+F1 =~ c(NA, NA, NA)*R09C + c(lambda.3_1.g1, lambda.3_1.g2, lambda.3_1.g3)*R09C
+F1 =~ c(NA, NA, NA)*R09D + c(lambda.4_1.g1, lambda.4_1.g2, lambda.4_1.g3)*R09D
+
+## THRESHOLDS:
+
+R09A | c(NA, NA, NA)*t1 + c(R09A.thr1.g1, R09A.thr1.g2, R09A.thr1.g3)*t1
+R09A | c(NA, NA, NA)*t2 + c(R09A.thr2.g1, R09A.thr2.g2, R09A.thr2.g3)*t2
+R09A | c(NA, NA, NA)*t3 + c(R09A.thr3.g1, R09A.thr3.g2, R09A.thr3.g3)*t3
+R09B | c(NA, NA, NA)*t1 + c(R09B.thr1.g1, R09B.thr1.g2, R09B.thr1.g3)*t1
+R09B | c(NA, NA, NA)*t2 + c(R09B.thr2.g1, R09B.thr2.g2, R09B.thr2.g3)*t2
+R09B | c(NA, NA, NA)*t3 + c(R09B.thr3.g1, R09B.thr3.g2, R09B.thr3.g3)*t3
+R09C | c(NA, NA, NA)*t1 + c(R09C.thr1.g1, R09C.thr1.g2, R09C.thr1.g3)*t1
+R09C | c(NA, NA, NA)*t2 + c(R09C.thr2.g1, R09C.thr2.g2, R09C.thr2.g3)*t2
+R09C | c(NA, NA, NA)*t3 + c(R09C.thr3.g1, R09C.thr3.g2, R09C.thr3.g3)*t3
+R09D | c(NA, NA, NA)*t1 + c(R09D.thr1.g1, R09D.thr1.g2, R09D.thr1.g3)*t1
+R09D | c(NA, NA, NA)*t2 + c(R09D.thr2.g1, R09D.thr2.g2, R09D.thr2.g3)*t2
+R09D | c(NA, NA, NA)*t3 + c(R09D.thr3.g1, R09D.thr3.g2, R09D.thr3.g3)*t3
+
+## INTERCEPTS:
+
+R09A ~ c(0, 0, 0)*1 + c(nu.1.g1, nu.1.g2, nu.1.g3)*1
+R09B ~ c(0, 0, 0)*1 + c(nu.2.g1, nu.2.g2, nu.2.g3)*1
+R09C ~ c(0, 0, 0)*1 + c(nu.3.g1, nu.3.g2, nu.3.g3)*1
+R09D ~ c(0, 0, 0)*1 + c(nu.4.g1, nu.4.g2, nu.4.g3)*1
+
+## SCALING FACTORS:
+
+R09A ~*~ c(1, 1, 1)*R09A
+R09B ~*~ c(1, 1, 1)*R09B
+R09C ~*~ c(1, 1, 1)*R09C
+R09D ~*~ c(1, 1, 1)*R09D
+
+
+## LATENT MEANS/INTERCEPTS:
+
+F1 ~ c(0, 0, 0)*1 + c(alpha.1.g1, alpha.1.g2, alpha.1.g3)*1
+
+## COMMON-FACTOR VARIANCES:
+
+F1 ~~ c(1, 1, 1)*F1 + c(psi.1_1.g1, psi.1_1.g2, psi.1_1.g3)*F1</code></pre>
+</div>
+</div>
+<p>Per potere essere passato a <code>lavaan</code>, l’oggetto <code>baseline</code> deve essere in formato <code>char</code>:</p>
+<div id="b035ee71" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model.baseline <span class="ot">&lt;-</span> <span class="fu">as.character</span>(baseline)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati:</p>
+<div id="ed070e97" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit.baseline <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  model.baseline, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"IDCNTRY"</span>, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Salviamo i risultati:</p>
+<div id="55305b93" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>all.results[<span class="dv">1</span>, ] <span class="ot">&lt;-</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.matrix</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">fitmeasures</span>(fit.baseline, <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"rmsea.scaled"</span>, <span class="st">"cfi.scaled"</span>, <span class="st">"tli.scaled"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>      ))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits =</span> <span class="dv">3</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="invarianza-delle-soglie" class="level3" data-number="45.2.3">
+<h3 data-number="45.2.3" class="anchored" data-anchor-id="invarianza-delle-soglie"><span class="header-section-number">45.2.3</span> Invarianza delle soglie</h3>
+<p>Consideriamo ora il modello <em>threshold invariance</em> <span class="citation" data-cites="wu2016identification">(chiamato <em>Proposition 4</em> da <a href="../../99-references.html#ref-wu2016identification" role="doc-biblioref">Wu e Estabrook 2016</a>)</span>.</p>
+<div id="afd61edb" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>prop4 <span class="ot">&lt;-</span> <span class="fu">measEq.syntax</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">configural.model =</span> mod.cat,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameterization =</span> <span class="st">"delta"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.fac =</span> <span class="st">"std.lv"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.cat =</span> <span class="st">"Wu.Estabrook.2016"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"IDCNTRY"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"thresholds"</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati:</p>
+<div id="bda7954b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model.prop4 <span class="ot">&lt;-</span> <span class="fu">as.character</span>(prop4)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fit.prop4 <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  model.prop4,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"IDCNTRY"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Salviamo i risulati</p>
+<div id="dda02af9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#store model fit information for proposition 4</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>all.results[<span class="dv">2</span>, ] <span class="ot">&lt;-</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">data.matrix</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitmeasures</span>(fit.prop4,<span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chisq.scaled"</span>,<span class="st">"df.scaled"</span>,<span class="st">"pvalue.scaled"</span>, </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rmsea.scaled"</span>, <span class="st">"cfi.scaled"</span>, <span class="st">"tli.scaled"</span>))), </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits=</span><span class="dv">3</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo il confronto tra il modello <em>threshold invariance</em> e il modello <em>baseline</em>:</p>
+<div id="3b7a7f0b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(fit.baseline, fit.prop4)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 7</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">fit.baseline</td>
+<td>6</td>
+<td>NA</td>
+<td>NA</td>
+<td>26.94149</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">fit.prop4</td>
+<td>14</td>
+<td>NA</td>
+<td>NA</td>
+<td>42.16983</td>
+<td>61.01121</td>
+<td>8</td>
+<td>2.950764e-10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="invarianza-delle-soglie-e-delle-saturazioni-fattoriali" class="level3" data-number="45.2.4">
+<h3 data-number="45.2.4" class="anchored" data-anchor-id="invarianza-delle-soglie-e-delle-saturazioni-fattoriali"><span class="header-section-number">45.2.4</span> Invarianza delle soglie e delle saturazioni fattoriali</h3>
+<p>Consideriamo ora il modello <em>threshold and loading invariance</em> <span class="citation" data-cites="wu2016identification">(chiamato <em>Proposition 7</em> da <a href="../../99-references.html#ref-wu2016identification" role="doc-biblioref">Wu e Estabrook 2016</a>)</span>.</p>
+<div id="3e61525f" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>prop7 <span class="ot">&lt;-</span> <span class="fu">measEq.syntax</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">configural.model =</span> mod.cat,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>),</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">parameterization =</span> <span class="st">"delta"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.fac =</span> <span class="st">"std.lv"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID.cat =</span> <span class="st">"Wu.Estabrook.2016"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="st">"IDCNTRY"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"thresholds"</span>, <span class="st">"loadings"</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo il modello ai dati:</p>
+<div id="8db24bf2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>model.prop7 <span class="ot">&lt;-</span> <span class="fu">as.character</span>(prop7)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>fit.prop7 <span class="ot">&lt;-</span> <span class="fu">cfa</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  model.prop7, </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat, <span class="at">group =</span> <span class="st">"IDCNTRY"</span>, </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ordered =</span> <span class="fu">c</span>(<span class="st">"R09A"</span>, <span class="st">"R09B"</span>, <span class="st">"R09C"</span>, <span class="st">"R09D"</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Salviamo i risultati:</p>
+<div id="cea613f3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>all.results[<span class="dv">3</span>, ] <span class="ot">&lt;-</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="fu">data.matrix</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fitmeasures</span>(fit.prop7, <span class="at">fit.measures =</span> <span class="fu">c</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">"rmsea.scaled"</span>, <span class="st">"cfi.scaled"</span>, <span class="st">"tli.scaled"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>column.names <span class="ot">&lt;-</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chisq.scaled"</span>, <span class="st">"df.scaled"</span>, <span class="st">"pvalue.scaled"</span>, <span class="st">"rmsea.scaled"</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cfi.scaled"</span>, <span class="st">"tli.scaled"</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>row.names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"baseline"</span>, <span class="st">"prop4"</span>, <span class="st">"prop7"</span>)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(all.results) <span class="ot">&lt;-</span> column.names</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(all.results) <span class="ot">&lt;-</span> row.names</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo i confronti tra modelli:</p>
+<div id="c20399c3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(fit.prop4, fit.prop7)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 7</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">fit.prop4</td>
+<td>14</td>
+<td>NA</td>
+<td>NA</td>
+<td>42.16983</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">fit.prop7</td>
+<td>20</td>
+<td>NA</td>
+<td>NA</td>
+<td>93.11534</td>
+<td>73.70792</td>
+<td>6</td>
+<td>7.079865e-14</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="9885319b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(fit.prop7, fit.baseline)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 7</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;lgl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">fit.baseline</td>
+<td>6</td>
+<td>NA</td>
+<td>NA</td>
+<td>26.94149</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">fit.prop7</td>
+<td>20</td>
+<td>NA</td>
+<td>NA</td>
+<td>93.11534</td>
+<td>136.1424</td>
+<td>14</td>
+<td>4.139318e-22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Un confronto tra gli indici di bontà di adattamento dei tre modelli è fornito di seguito:</p>
+<div id="ae200653" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(all.results)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         chisq.scaled df.scaled pvalue.scaled rmsea.scaled cfi.scaled
+baseline       50.944         6             0        0.042      0.997
+prop4         107.839        14             0        0.040      0.994
+prop7         186.542        20             0        0.044      0.989
+         tli.scaled
+baseline      0.991
+prop4         0.992
+prop7         0.990</code></pre>
+</div>
+</div>
+<p>In conclusione, nel caso presente, il test del rapporto di verosimiglianza indica che non viene rispettata neppure l’invarianza delle soglie tra gruppi. Gli altri confronti, dunque, sono superflui e sono stati qui presentati solo allo scopo di illustrare la procedura.</p>
+</section>
+</section>
+<section id="vincoli-inter-gruppi" class="level2" data-number="45.3">
+<h2 data-number="45.3" class="anchored" data-anchor-id="vincoli-inter-gruppi"><span class="header-section-number">45.3</span> Vincoli Inter-gruppi</h2>
+<p>Quando si adatta un modello di equazioni strutturali ai dati provenienti da più gruppi, è comune imporre vincoli di uguaglianza inter-gruppi su certe stime di parametri non standardizzati. Questi parametri possono riguardare effetti causali, inclusi effetti diretti, indiretti o totali, o per varianze, covarianze, medie o intercette. La scelta tra questi dovrebbe essere correlata a specifiche ipotesi riguardo le differenze tra i gruppi. Se l’adattamento del modello vincolato è molto peggiore rispetto a quello del modello non vincolato—e il modello non vincolato si adatta bene ai dati—possiamo concludere che le popolazioni da cui sono stati selezionati i gruppi possono differire rispetto ai parametri soggetti a vincoli di uguaglianza. Un’alternativa all’analisi multi-gruppo consiste nel rappresentare l’appartenenza al gruppo in un modello a singolo gruppo, adattato ai dati di tutti i gruppi combinati. Alcune variabili endogene nel modello sono regresse sul gruppo e su termini prodotto che coinvolgono il gruppo e altre variabili moderatrici presunte. I coefficienti per i termini prodotto stimano gli effetti interattivi del gruppo con altre variabili causali, e i loro valori possono essere convertiti in stime di effetti indiretti condizionali. Un inconveniente è che i modelli a singolo gruppo generalmente assumono l’omoscedasticità tra i gruppi, e le stime possono essere inesatte se tali assunzioni sono insostenibili. In contrasto, è semplice testare le ipotesi di omogeneità in un approccio multi-gruppo.</p>
+<p>Esaminiamo un esempio discuso da {cite:t}<code>kline2023principles</code>. Lynam e colleghi (1993) hanno misurato lo status socioeconomico familiare (SES), il quoziente intellettivo verbale (QI verbale), la motivazione dell’esaminato durante il test del QI, il rendimento scolastico e i comportamenti delinquenzali in campioni di adolescenti maschi bianchi (n = 181) e neri (n = 214) di età compresa tra i 12 e i 13 anni. Erano studenti di quarta elementare in scuole pubbliche urbane negli Stati Uniti ed erano parte di uno studio longitudinale su individui ad alto rischio di forme precoci di delinquenza.</p>
+<p>La figura mostra un modello di percorso con una struttura di media (rappresentata con linee tratteggiate) basato sulle variabili dello studio. La figura rappresenta l’ipotesi che SES, motivazione e QI verbale siano cause correlate che influenzano la delinquenza sia direttamente che indirettamente attraverso il rendimento scolastico. Ad esempio, i ragazzi adolescenti con scarsa abilità verbale potrebbero essere più propensi ad abbandonare la scuola, contribuendo così alla delinquenza a causa di prospettive di impiego ridotte o del maggiore tempo non supervisionato per strada.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>```txgaoinm ../images/lynam.png</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>height: 450px</td>
+</tr>
+<tr class="even">
+<td>name: path_01-fig</td>
+</tr>
+</tbody>
+</table>
+<p>Diagramma di percorso proposto da Lynam et al.&nbsp;(1993).</p>
+<pre><code>
+Lo studio di Lynam et al. (1993) era trasversale, senza precedenza temporale nelle misurazioni, quindi l'unica base per la specificazione della direzionalità è l'argomentazione. La logica appena riassunta è soggetta a critiche. Ad esempio, Block (1995) ha sostenuto che Lynam et al. (1993) hanno trascurato il ruolo potenziale dell'impulsività come mediatore degli effetti dell'abilità verbale sulla delinquenza. Ovvero, Block (1995) ha sostenuto che non è l'abilità verbale compromessa di per sé che è causalmente correlata alla delinquenza; piuttosto, una capacità ridotta di ritardare la gratificazione, pensare prima di agire o rimanere concentrati su un obiettivo sono fattori più importanti nella delinquenza. 
+
+1. Senza vincoli, il modello di percorso nella figura è "appena identificato" (*just identified*) e si adatterebbe perfettamente ai dati in entrambi i gruppi. Vincoli di uguaglianza inter-gruppi sono stati imposti su parametri chiave in questo esempio per testare l'ipotesi che rimanere a scuola sia un fattore protettivo relativamente più forte contro la delinquenza tra i giovani maschi neri rispetto ai giovani maschi bianchi, specialmente in aree urbane a basso SES con relativamente più famiglie monogenitoriali dove i giovani neri sono rappresentati sproporzionatamente (Lynam et al., 1993). La strategia di analisi è delineata di seguito: per il modello 1, tutti i 7 effetti diretti non standardizzati sono vincolati all'uguaglianza nei due gruppi. Ci si aspettava che il modello 1 fosse incoerente con i dati, se l'effetto del rendimento scolastico sull'illegalità è diverso tra i gruppi.
+2. Per il modello 2, il vincolo di uguaglianza per l'effetto diretto del rendimento sulla delinquenza è rilasciato, ciò che ci si aspettava migliorasse notevolmente l'adattamento rispetto a quello del modello 1.
+3. Assumendo un adattamento globale e locale soddisfacente del modello 2 in entrambi i gruppi, vengono testati due modelli aggiuntivi. Per il modello 3, l'intercetta per la regressione del rendimento su SES, sforzo nel test e QI verbale è vincolata all'uguaglianza
+4. Modello 4: l'intercetta per la regressione della delinquenza su SES, sforzo nel test, QI verbale e rendimento è vincolata all'uguaglianza. Il confronto degli adattamenti relativi dei modelli 3 e 4 con il modello 2 testa l'uguaglianza delle intercette di regressione per le variabili endogene tra i gruppi.
+
+Specifichiamo i dati.
+
+::: {#823dc6b1 .cell vscode='{"languageId":"r"}' execution_count=51}
+``` {.r .cell-code}
+# black, n = 214
+# white, n = 181
+# input the correlations in lower diagnonal form
+
+blackLower.cor &lt;- "
+ 1.00
+  .08 1.00
+  .28  .30 1.00
+  .05  .21  .50 1.00
+ -.11 -.17 -.26 -.33 1.00 "
+
+whiteLower.cor &lt;- "
+ 1.00
+  .25 1.00
+  .37  .40 1.00
+  .27  .28  .61 1.00
+ -.11 -.20 -.31 -.21 1.00 "
+
+# name the variables and convert to full correlation matrix
+black.cor &lt;- lavaan::getCov(blackLower.cor, names = c(
+    "ses", "effort", "viq",
+    "achieve", "delinq"
+))
+white.cor &lt;- lavaan::getCov(whiteLower.cor, names = c(
+    "ses", "effort", "viq",
+    "achieve", "delinq"
+))
+
+# display the correlations
+black.cor</code></pre>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 5 x 5 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">ses</th>
+<th data-quarto-table-cell-role="th" scope="col">effort</th>
+<th data-quarto-table-cell-role="th" scope="col">viq</th>
+<th data-quarto-table-cell-role="th" scope="col">achieve</th>
+<th data-quarto-table-cell-role="th" scope="col">delinq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ses</td>
+<td>1.00</td>
+<td>0.08</td>
+<td>0.28</td>
+<td>0.05</td>
+<td>-0.11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">effort</td>
+<td>0.08</td>
+<td>1.00</td>
+<td>0.30</td>
+<td>0.21</td>
+<td>-0.17</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">viq</td>
+<td>0.28</td>
+<td>0.30</td>
+<td>1.00</td>
+<td>0.50</td>
+<td>-0.26</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">achieve</td>
+<td>0.05</td>
+<td>0.21</td>
+<td>0.50</td>
+<td>1.00</td>
+<td>-0.33</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">delinq</td>
+<td>-0.11</td>
+<td>-0.17</td>
+<td>-0.26</td>
+<td>-0.33</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>:::</p>
+<div id="54a2c43b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>white.cor</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 5 x 5 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">ses</th>
+<th data-quarto-table-cell-role="th" scope="col">effort</th>
+<th data-quarto-table-cell-role="th" scope="col">viq</th>
+<th data-quarto-table-cell-role="th" scope="col">achieve</th>
+<th data-quarto-table-cell-role="th" scope="col">delinq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ses</td>
+<td>1.00</td>
+<td>0.25</td>
+<td>0.37</td>
+<td>0.27</td>
+<td>-0.11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">effort</td>
+<td>0.25</td>
+<td>1.00</td>
+<td>0.40</td>
+<td>0.28</td>
+<td>-0.20</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">viq</td>
+<td>0.37</td>
+<td>0.40</td>
+<td>1.00</td>
+<td>0.61</td>
+<td>-0.31</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">achieve</td>
+<td>0.27</td>
+<td>0.28</td>
+<td>0.61</td>
+<td>1.00</td>
+<td>-0.21</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">delinq</td>
+<td>-0.11</td>
+<td>-0.20</td>
+<td>-0.31</td>
+<td>-0.21</td>
+<td>1.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="c8f4b2c3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add the standard deviations and convert to covariances</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>black.cov <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cor2cov</span>(black.cor, <span class="at">sds =</span> <span class="fu">c</span>(<span class="fl">10.58</span>, <span class="fl">1.35</span>, <span class="fl">13.62</span>, .<span class="dv">79</span>, <span class="fl">1.63</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>white.cov <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cor2cov</span>(white.cor, <span class="at">sds =</span> <span class="fu">c</span>(<span class="fl">11.53</span>, <span class="fl">1.32</span>, <span class="fl">16.32</span>, .<span class="dv">96</span>, <span class="fl">1.45</span>))</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># input group means</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>black.mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">31.96</span>, <span class="sc">-</span>.<span class="dv">01</span>, <span class="fl">93.76</span>, <span class="fl">2.51</span>, <span class="fl">1.40</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>white.mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">34.64</span>, .<span class="dv">05</span>, <span class="fl">104.18</span>, <span class="fl">2.88</span>, <span class="fl">1.22</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co"># display the covariances and means</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>black.cov</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 5 x 5 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">ses</th>
+<th data-quarto-table-cell-role="th" scope="col">effort</th>
+<th data-quarto-table-cell-role="th" scope="col">viq</th>
+<th data-quarto-table-cell-role="th" scope="col">achieve</th>
+<th data-quarto-table-cell-role="th" scope="col">delinq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ses</td>
+<td>111.936400</td>
+<td>1.142640</td>
+<td>40.347888</td>
+<td>0.417910</td>
+<td>-1.896994</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">effort</td>
+<td>1.142640</td>
+<td>1.822500</td>
+<td>5.516100</td>
+<td>0.223965</td>
+<td>-0.374085</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">viq</td>
+<td>40.347888</td>
+<td>5.516100</td>
+<td>185.504400</td>
+<td>5.379900</td>
+<td>-5.772156</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">achieve</td>
+<td>0.417910</td>
+<td>0.223965</td>
+<td>5.379900</td>
+<td>0.624100</td>
+<td>-0.424941</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">delinq</td>
+<td>-1.896994</td>
+<td>-0.374085</td>
+<td>-5.772156</td>
+<td>-0.424941</td>
+<td>2.656900</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="cba450cd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>black.mean</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>31.96</li><li>-0.01</li><li>93.76</li><li>2.51</li><li>1.4</li></ol>
+</div>
+</div>
+<div id="8a7216d9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>white.cov</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 5 x 5 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">ses</th>
+<th data-quarto-table-cell-role="th" scope="col">effort</th>
+<th data-quarto-table-cell-role="th" scope="col">viq</th>
+<th data-quarto-table-cell-role="th" scope="col">achieve</th>
+<th data-quarto-table-cell-role="th" scope="col">delinq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">ses</td>
+<td>132.940900</td>
+<td>3.804900</td>
+<td>69.622752</td>
+<td>2.988576</td>
+<td>-1.839035</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">effort</td>
+<td>3.804900</td>
+<td>1.742400</td>
+<td>8.616960</td>
+<td>0.354816</td>
+<td>-0.382800</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">viq</td>
+<td>69.622752</td>
+<td>8.616960</td>
+<td>266.342400</td>
+<td>9.556992</td>
+<td>-7.335840</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">achieve</td>
+<td>2.988576</td>
+<td>0.354816</td>
+<td>9.556992</td>
+<td>0.921600</td>
+<td>-0.292320</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">delinq</td>
+<td>-1.839035</td>
+<td>-0.382800</td>
+<td>-7.335840</td>
+<td>-0.292320</td>
+<td>2.102500</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="02b2ce48" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>white.mean</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<style>
+.list-inline {list-style: none; margin:0; padding: 0}
+.list-inline>li {display: inline-block}
+.list-inline>li:not(:last-child)::after {content: "\00b7"; padding: 0 .5ex}
+</style>
+<ol class="list-inline"><li>34.64</li><li>0.05</li><li>104.18</li><li>2.88</li><li>1.22</li></ol>
+</div>
+</div>
+<div id="9ae6a5b1" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify fit statistics for abbreviated output</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>fit.stats <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rmsea"</span>, <span class="st">"rmsea.ci.lower"</span>, <span class="st">"rmsea.ci.upper"</span>, <span class="st">"cfi"</span>, <span class="st">"srmr"</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># combine covariances matrices, mean vectors, and group sizes</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="co"># into single list objects</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>combined.cov <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">black =</span> black.cov, <span class="at">white =</span> white.cov)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>combined.mean <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">black =</span> black.mean, <span class="at">white =</span> white.mean)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>combined.n <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">black =</span> <span class="dv">214</span>, <span class="at">white =</span> <span class="dv">181</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adattiamo i quattro modelli ai dati:</p>
+<div id="1bb84e4b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># specify basic covariance model</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>lynam.model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="st"> achieve ~ ses + effort + viq</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="st"> delinq ~ achieve + ses + effort + viq "</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b1548837" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model 1</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># all 7 direct effect constrained to equality</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># over groups</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>lynam1 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    lynam.model,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> combined.cov,</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.mean =</span> combined.mean, <span class="at">sample.nobs =</span> combined.n,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"regressions"</span>), <span class="at">fixed.x =</span> <span class="cn">FALSE</span>, <span class="at">meanstructure =</span> <span class="cn">TRUE</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e09c8176" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model 2</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># direct effects constrained to equality over groups</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># but the constraint on achievement -&gt; delinguency is</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># released in syntax for "group.partial"</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="co"># so 6 direct effects are constrained over groups</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>lynam2 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    lynam.model,</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> combined.cov,</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.mean =</span> combined.mean, <span class="at">sample.nobs =</span> combined.n,</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"regressions"</span>), <span class="at">group.partial =</span> <span class="fu">c</span>(<span class="st">"delinq ~ achieve"</span>),</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed.x =</span> <span class="cn">FALSE</span>, <span class="at">meanstructure =</span> <span class="cn">TRUE</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1f2aee7b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model 3</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># retained model</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 direct effects constrained to equality over groups</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># achievement -&gt; delinguency is a free parameter in both groups</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="co"># intercept for achievement constrained to equality</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>lynam3 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(lynam.model,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> combined.cov,</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.mean =</span> combined.mean, <span class="at">sample.nobs =</span> combined.n,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"regressions"</span>, <span class="st">"intercepts"</span>),</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.partial =</span> <span class="fu">c</span>(<span class="st">"delinq ~ achieve"</span>, <span class="st">"delinq ~ 1"</span>),</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed.x =</span> <span class="cn">FALSE</span>, <span class="at">meanstructure =</span> <span class="cn">TRUE</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fdd8974d" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model 4</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 direct effects constrained to equality over groups</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># achievement -&gt; delinguency is a free parameter in both groups</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># intercept for deleinquency constrained to equality</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>lynam4 <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(lynam.model,</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> combined.cov,</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.mean =</span> combined.mean, <span class="at">sample.nobs =</span> combined.n,</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.equal =</span> <span class="fu">c</span>(<span class="st">"regressions"</span>, <span class="st">"intercepts"</span>),</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">group.partial =</span> <span class="fu">c</span>(<span class="st">"delinq ~ achieve"</span>, <span class="st">"achieve ~ 1"</span>),</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed.x =</span> <span class="cn">FALSE</span>, <span class="at">meanstructure =</span> <span class="cn">TRUE</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo la bontà di adattamento.</p>
+<div id="2cc453b8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># global fit statistics</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">fitMeasures</span>(lynam1, fit.stats) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         chisq             df         pvalue          rmsea rmsea.ci.lower 
+        11.736          7.000          0.110          0.059          0.000 
+rmsea.ci.upper            cfi           srmr 
+         0.115          0.975          0.036 </code></pre>
+</div>
+</div>
+<div id="32cad246" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">fitMeasures</span>(lynam2, fit.stats) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         chisq             df         pvalue          rmsea rmsea.ci.lower 
+         6.107          6.000          0.411          0.010          0.000 
+rmsea.ci.upper            cfi           srmr 
+         0.093          0.999          0.029 </code></pre>
+</div>
+</div>
+<div id="93af54e1" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">fitMeasures</span>(lynam3, fit.stats) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         chisq             df         pvalue          rmsea rmsea.ci.lower 
+         6.409          7.000          0.493          0.000          0.000 
+rmsea.ci.upper            cfi           srmr 
+         0.083          1.000          0.030 </code></pre>
+</div>
+</div>
+<div id="bf6a7ba3" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">fitMeasures</span>(lynam4, fit.stats) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         chisq             df         pvalue          rmsea rmsea.ci.lower 
+        10.237          7.000          0.176          0.048          0.000 
+rmsea.ci.upper            cfi           srmr 
+         0.107          0.983          0.033 </code></pre>
+</div>
+</div>
+<p>Eseguiamo il test del rapporto tra verosimiglianze.</p>
+<div id="0dc1574b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># chi square difference tests</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">anova</span>(lynam1, lynam2)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">lynam2</td>
+<td>6</td>
+<td>9850.196</td>
+<td>9985.478</td>
+<td>6.107287</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">lynam1</td>
+<td>7</td>
+<td>9853.825</td>
+<td>9985.128</td>
+<td>11.735711</td>
+<td>5.628424</td>
+<td>0.1530851</td>
+<td>1</td>
+<td>0.01767152</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="89b240e1" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">anova</span>(lynam2, lynam3)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">lynam2</td>
+<td>6</td>
+<td>9850.196</td>
+<td>9985.478</td>
+<td>6.107287</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">lynam3</td>
+<td>7</td>
+<td>9848.498</td>
+<td>9979.801</td>
+<td>6.409026</td>
+<td>0.3017387</td>
+<td>0</td>
+<td>1</td>
+<td>0.5827945</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="be402ac9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">anova</span>(lynam2, lynam4)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">lynam2</td>
+<td>6</td>
+<td>9850.196</td>
+<td>9985.478</td>
+<td>6.107287</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">lynam4</td>
+<td>7</td>
+<td>9852.326</td>
+<td>9983.629</td>
+<td>10.236768</td>
+<td>4.129481</td>
+<td>0.1258788</td>
+<td>1</td>
+<td>0.04214226</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I risultati finora descritti sono coerenti con l’ipotesi che l’effetto diretto non standardizzato del rendimento sulla delinquenza vari in base all’appartenenza al gruppo. Tuttavia, prima di stabilire una scelta definitiva per questo esempio, consideriamo due modelli aggiuntivi. Queste analisi sono più esplorative poiché i modelli di percorso di Lynam et al.&nbsp;(1993) non avevano strutture di media. Il modello 3, rispetto al modello 2, presenta intercette vincolate all’uguaglianza per il rendimento. Si prevedeva che vincolare questo parametro avrebbe leggermente degradato l’adattamento globale rispetto al modello 2, in cui la stessa intercetta è liberamente stimata in entrambi i gruppi. Questo perché il modello 2 con effetti diretti uguali per le cause del rendimento - SES, sforzo nel test e QI verbale - nei due gruppi è generalmente coerente con i dati. I risultati del modello 3 supportano questa previsione.</p>
+<p>Poiché l’intercetta per il rendimento è ugualmente vincolata nel modello 3, la sua intera struttura di media non è più solo identificata; specificamente, ha gradi di libertà (df) = 1, quindi non tutte le medie previste per le variabili endogene, rendimento e delinquenza, corrisponderanno esattamente alle loro controparti osservate. I residui delle medie per le variabili esogene - SES, sforzo nel test e QI verbale - saranno tutti uguali a zero poiché nessun vincolo ha influenzato le loro medie previste. Il modello 3 prevede quindi accuratamente covarianze e medie in entrambi i gruppi, quindi viene mantenuto.</p>
+<p>Nel modello 4, l’intercetta per la regressione della delinquenza su SES, sforzo nel test, QI verbale e rendimento è vincolata all’uguaglianza nei gruppi più tutti gli effetti diretti eccetto quello del rendimento sulla delinquenza, che è liberamente stimato in entrambi i campioni. Poiché l’effetto diretto appena menzionato contribuisce all’intercetta per la delinquenza, si prevedeva che vincolare l’intercetta appena menzionata all’uguaglianza avrebbe peggiorato notevolmente l’adattamento rispetto al modello 2. Questa previsione è coerente con i risultati; in particolare, sebbene il modello 4 superi il test chi-quadrato, il suo adattamento è relativamente peggiore rispetto a quello del modello 2. Anche i residui per il modello 4 sono simili a quelli del modello 1; cioè, insoddisfacenti. Pertanto, il modello 4 viene rifiutato.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-wu2016identification" class="csl-entry" role="listitem">
+Wu, Hao, e Ryne Estabrook. 2016. <span>«Identification of confirmatory factor analysis models of different levels of invariance for ordered categorical outcomes»</span>. <em>Psychometrika</em> 81 (4): 1014–45.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/sem/06_refine_solution.html" class="pagination-link" aria-label="La revisione del modello">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/sem/08_multilevel_sem.html" class="pagination-link" aria-label="Modelli di Equazioni Strutturali Multilivello">
+        <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/07_group_invariance.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

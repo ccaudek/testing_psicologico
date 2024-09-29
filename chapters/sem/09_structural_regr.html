@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>47&nbsp; Modelli di Regressione Strutturale – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/sem/10_missing_data.html" rel="next">
+<link href="../../chapters/sem/08_multilevel_sem.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/09_structural_regr.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#una-applicazione-concreta" id="toc-una-applicazione-concreta" class="nav-link active" data-scroll-target="#una-applicazione-concreta"><span class="header-section-number">47.1</span> Una Applicazione Concreta</a></li>
+  <li><a href="#strategie-avanzate-di-modellazione-per-i-modelli-di-regressione-strutturale" id="toc-strategie-avanzate-di-modellazione-per-i-modelli-di-regressione-strutturale" class="nav-link" data-scroll-target="#strategie-avanzate-di-modellazione-per-i-modelli-di-regressione-strutturale"><span class="header-section-number">47.2</span> Strategie Avanzate di Modellazione per i Modelli di Regressione Strutturale</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/09_structural_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/sem/01_sem_intro.html">SEM</a></li><li class="breadcrumb-item"><a href="../../chapters/sem/09_structural_regr.html"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-sem-struct-regr" class="quarto-section-identifier"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="cell-1" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"lavaan"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"semPlot"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"markdown"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"patchwork"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">"lme4"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Un comune modello nell’analisi delle equazioni strutturali (SEM) è il modello di regressione strutturale (Sr), noto anche come modello di percorso con variabili latenti o modello LISREL completo. La parte “strutturale” di un modello Sr rappresenta ipotesi sugli effetti diretti o indiretti tra variabili osservate o fattori comuni, mentre la parte di “misurazione” rappresenta la corrispondenza tra i fattori comuni e i loro indicatori.</p>
+<p>La specificazione di modelli Sr con indicatori continui e i requisiti per la loro identificazione saranno considerati per primi in questo capitolo. Successivamente, vengono delineate due diverse strategie per analizzare i modelli Sr completi in cui ogni variabile nel modello strutturale è un fattore comune e ciascuno ha molteplici indicatori. Queste strategie affrontano il problema di come identificare la fonte o le fonti di errore di specificazione, separando la valutazione della parte di misurazione del modello dall’analisi della sua parte strutturale.</p>
+<p>Inoltre, in questo capitolo vengono discussi anche i modelli Sr parziali con indicatori singoli per alcune, ma non tutte, le variabili nella parte strutturale del modello. Viene inoltre spiegato un metodo per specificare il modello che controlla esplicitamente la misurazione negli indicatori singoli senza influenzare l’adattamento del modello.</p>
+<p>Nella {numref}<code>kline-15-1-fig</code> (a), è rappresentato un modello di percorso con variabili manifeste. Viene assunto che la variabile esogena X1 sia misurata senza errore, sebbene questa assunzione sia spesso violata nella pratica. Le variabili endogene nel modello, come Y1 e Y4, possono avere errori casuali che si manifestano nelle loro perturbazioni.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>```iafxquid ../images/kline_15_1.png</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>height: 500px</td>
+</tr>
+<tr class="even">
+<td>name: kline-15-1-fig</td>
+</tr>
+</tbody>
+</table>
+<p>Esempi di un modello di percorso con variabili manifeste (a) e di un corrispondente modello di regressione strutturale completo con indicatori multipli per ogni fattore comune nella parte strutturale (b). (Figura tratta da {cite:t}<code>kline2023principles</code>)</p>
+<pre><code>
+La Figura {numref}`kline-15-1-fig` (b) illustra un modello di Regressione Strutturale (SR) completo, che integra sia componenti strutturali sia di misurazione. In questo modello SR, a differenza del modello di percorso, ciascun indicatore (X1, Y1, Y4) è definito come uno tra numerosi indicatori associati a un fattore comune. Di conseguenza, tutte le variabili osservabili in questa figura includono termini di errore.
+
+Nella parte strutturale del modello, presentata nella Figura {numref}`kline-15-1-fig` (b), si osserva la rappresentazione degli stessi schemi di effetti causali diretti e indiretti trovati nel modello di percorso (mostrato nella Figura {numref}`kline-15-1-fig` (a)), ma applicati ai fattori comuni. Tale modello strutturale è di tipo ricorsivo, sebbene sia anche fattibile la progettazione di un modello SR con componenti strutturali non ricorsive. In questa figura, ogni fattore endogeno possiede una perturbazione specifica ($D_B$, $D_C$), che, a differenza dei modelli di percorso con variabili manifeste, riflettono unicamente cause non considerate e non errori di misurazione degli indicatori del fattore.
+
+Per quanto riguarda l'analisi delle medie, le osservazioni e i parametri nei modelli SR sono trattati allo stesso modo di quelli nei modelli di percorso e nei modelli di Analisi Fattoriale Confermativa (CFA), conformemente alle regole precedentemente stabilite. L'identificazione di un modello SR completo avviene quando sia la sua componente di misurazione, riformulata come un modello CFA, sia la parte strutturale risultano identificate. La regola di identificazione in due fasi implica che, per determinare se un modello SR completo sia identificato, è necessario esaminare separatamente ciascuna delle sue parti, ovvero quelle di misurazione e strutturale.
+
+## Modellazione in Due Fasi
+
+Immaginiamo che un ricercatore abbia definito un modello di Regressione Strutturale (SR) completo, come mostrato nella {numref}`kline-15-2-fig`(a). Dopo aver raccolto i dati, il ricercatore adotta un approccio monofase per analizzare il modello, eseguendo una stima simultanea delle componenti di misurazione e strutturali. Tuttavia, i risultati rivelano che il modello non si adatta bene ai dati. Ciò solleva interrogativi sulla localizzazione del problema: è nella parte di misurazione, nella parte strutturale, o in entrambe? Identificare la fonte del problema con precisione può essere complesso usando un approccio monofase.
+
+```{figure} ../images/kline_15_2.png
+---
+height: 600px
+name: kline-15-2-fig
+---
+Valutazione della regola in due fasi per l'identificazione di un modello di regressione strutturale completo presentato con simbolismo grafico compatto per i termini di errore degli indicatori nella parte di misurazione e le perturbazioni nella parte strutturale. (Figura tratta da {cite:t}`kline2023principles`)</code></pre>
+<p>Per affrontare questa sfida, la modellazione bifase, suggerita da Anderson e Gerbing (1988), propone un’euristica in due fasi per l’identificazione dei modelli SR completi:</p>
+<ol type="1">
+<li><p><strong>Primo Passaggio</strong>: Il modello SR originale viene trasformato in un modello di misurazione CFA. Questo modello riformulato viene quindi analizzato per valutare l’adattamento ai dati. Un cattivo adattamento del modello CFA potrebbe indicare errori nelle ipotesi di misurazione del ricercatore e suggerire che l’adattamento del modello SR originale potrebbe essere compromesso, specialmente se la sua parte strutturale è sovraidentificata.</p></li>
+<li><p><strong>Secondo Passaggio</strong>: Con un modello di misurazione CFA ritenuto valido dal primo passaggio, il secondo confronta l’adattamento del modello SR originale con quello di diversi modelli strutturali alternativi, utilizzando il test di differenza del chi-quadro.</p></li>
+</ol>
+<p>La modellazione bifase presenta diversi problemi. Primo, richiede di considerare tutte le opzioni possibili di riformulazione sia del modello CFA che del modello strutturale. Secondo, il processo può essere paragonato a un “giardino dei sentieri che si biforcano”, dove ogni decisione può portare a diverse possibili modifiche del modello originale. Terzo, esiste il rischio di capitalizzare sulle variazioni casuali quando si testano e si riformulano modelli correlati usando gli stessi dati.</p>
+<p>Un’altra sfida è rappresentata dai modelli equivalenti. Ad esempio, un modello CFA al Primo Passaggio e un modello SR corrispondente con una parte strutturale appena identificata al Secondo Passaggio potrebbero risultare equivalenti. La preferenza per il modello SR dovrebbe quindi basarsi su ragionamenti logici o essere supportata dal design dello studio.</p>
+<p>Se un modello di misurazione viene mantenuto al Primo Passaggio, esistono due approcci principali per testare il modello strutturale nel Secondo Passaggio: il Model building (ricerca in avanti) e il Model trimming (ricerca all’indietro). Chou e Bentler (2002) hanno osservato che la probabilità di identificare il modello SR corretto dipende significativamente dal modello inizialmente specificato. Inoltre, hanno trovato che il modello corretto veniva identificato circa il 60% delle volte nel Model trimming.</p>
+<p>È importante notare che se i carichi fattoriali variano notevolmente con diversi modelli strutturali, ciò indica che il modello di misurazione non è invariante e aumenta il rischio di confondimento interpretativo.</p>
+<p>Infine, alcuni studi hanno mostrato che le statistiche globali di adattamento standard possono essere più influenzate dalla componente di misurazione dei modelli SR rispetto alla parte strutturale. Tuttavia, i risultati delle simulazioni al computer indicano che non esiste un insieme universale di soglie per gli indici di adattamento approssimato che siano validi per tutti i tipi di modelli e dati.</p>
+<section id="una-applicazione-concreta" class="level2" data-number="47.1">
+<h2 data-number="47.1" class="anchored" data-anchor-id="una-applicazione-concreta"><span class="header-section-number">47.1</span> Una Applicazione Concreta</h2>
+<p>La {numref}<code>kline-15-3-fig</code> illustra un modello SR (Regressione Strutturale) iniziale che esplora il rendimento scolastico e l’adattamento in aula di studenti di età media corrispondente ai gradi 7-8. Il modello considera l’influenza dell’abilità cognitiva generale e del livello di rischio di disturbi psicopatologici. Uno degli indicatori di rischio deriva dalla diagnosi di disturbi psichiatrici maggiori nei genitori, mentre il secondo è basato sul livello socio-economico (SES) della famiglia, con punteggi più alti che indicano un SES inferiore. Le abilità cognitive sono valutate tramite i punteggi in ragionamento verbale, analisi visivo-spaziale e memoria, ottenuti da un test di QI somministrato individualmente.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>```iafxquid ../images/kline_15_3.png</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>height: 600px</td>
+</tr>
+<tr class="even">
+<td>name: kline-15-3-fig</td>
+</tr>
+</tbody>
+</table>
+<p>Modello iniziale completo di regressione strutturale del rendimento scolastico e dell’adattamento in classe come funzione dell’abilità cognitiva e del rischio di psicopatologia. (Figura tratta da {cite:t}<code>kline2023principles</code>)</p>
+<pre><code>
+Il modello comprende due fattori endogeni: il rendimento scolastico, valutato attraverso test standardizzati di lettura, aritmetica e ortografia, e l'adattamento in classe, misurato con tre indicatori forniti dagli insegnanti riguardo alla motivazione, stabilità emotiva e qualità delle relazioni sociali degli studenti. In questo modello strutturale, sia il rendimento scolastico sia l'adattamento in classe sono influenzati dall'abilità cognitiva e dal rischio, ma non vi è un effetto diretto o una covarianza delle perturbazioni tra questi due fattori endogeni, indicando che eventuali associazioni tra di essi sono attribuibili alle loro cause comuni, i fattori esogeni.
+
+::: {#cell-6 .cell vscode='{"languageId":"r"}' execution_count=2}
+``` {.r .cell-code}
+# input the correlations in lower diagnonal form
+worlandLower.cor &lt;- "
+1.00
+ .70 1.00
+ .65  .60 1.00
+ .55  .50  .45 1.00
+ .50  .45  .40  .70 1.00
+ .35  .35  .30  .55  .50 1.00
+ .30  .30  .30  .50  .45  .44 1.00
+ .25  .20  .22  .41  .28  .34  .40 1.00
+ .35  .32  .32  .48  .45  .42  .60  .45 1.00
+-.25 -.24 -.22 -.21 -.18 -.15 -.15 -.12 -.17 1.00
+-.22 -.26 -.30 -.25 -.22 -.18 -.17 -.14 -.20  .42 1.00 "
+
+# name the variables and convert to full correlation matrix
+worland.cor &lt;- lavaan::getCov(worlandLower.cor, names = c(
+    "verbal", "visual",
+    "memory", "read", "math", "spell", "motive", "harmony", "stable", "parent", "ses"
+))
+
+# add the standard deviations and convert to covariances
+worland.cov &lt;- lavaan::cor2cov(worland.cor,
+    sds = c(
+        13.75, 14.80, 12.60, 14.90, 15.25, 13.85, 9.50, 11.10, 8.70,
+        12.00, 8.50
+    )
+)</code></pre>
+<p>:::</p>
+<p><strong>Primo Passaggio nella modellazione in due fasi per un modello SR completo di rendimento scolastico e adattamento in classe</strong></p>
+<div id="cell-8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4-factor CFA</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>worlandCFA.model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Cognitive =~ verbal + visual + memory</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    Achieve =~ read + math + spell</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust =~ motive + harmony + stable</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">    Risk =~ parent + ses </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st"> "</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>worlandCFA <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">cfa</span>(worlandCFA.model,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> worland.cov,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.nobs =</span> <span class="dv">158</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-10" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(worlandCFA,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_structural_regr_files/figure-html/cell-6-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-11" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(worlandCFA, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chisq     df    cfi    tli  rmsea   srmr 
+16.212 38.000  1.000  1.049  0.000  0.023 </code></pre>
+</div>
+</div>
+<div id="cell-12" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predicted correlation matrix for factors</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">lavInspect</span>(worlandCFA, <span class="st">"cor.lv"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Cogntv Achiev Adjust   Risk
+Cognitive  1.000                     
+Achieve    0.703  1.000              
+Adjust     0.500  0.751  1.000       
+Risk      -0.459 -0.401 -0.349  1.000</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandCFA, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal   0.000                                                               
+visual   0.000  0.000                                                        
+memory   0.123 -0.130  0.000                                                 
+read     0.598  0.113 -0.285  0.000                                          
+math     0.505  0.038 -0.377  0.597  0.000                                   
+spell   -0.952 -0.255 -0.704 -0.667 -0.206  0.000                            
+motive  -0.821 -0.157  0.310 -0.042 -0.078  1.484  0.000                     
+harmony  0.117 -0.453  0.171  0.942 -1.179  1.196 -1.010  0.000              
+stable   0.285  0.112  0.566 -1.893 -0.467  0.942  0.422  0.436  0.000       
+parent  -0.092 -0.260 -0.157  0.234  0.379  0.157  0.301  0.020 -0.022  0.000
+ses      1.890 -0.247 -1.417 -0.370 -0.114 -0.112  0.213 -0.125 -0.362  0.000
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses      0.000
+</code></pre>
+</div>
+</div>
+<div id="cell-14" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandCFA, <span class="at">type =</span> <span class="st">"cor.bollen"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "cor.bollen"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal   0.000                                                               
+visual   0.000  0.000                                                        
+memory   0.001 -0.002  0.000                                                 
+read     0.015  0.003 -0.010  0.000                                          
+math     0.017  0.001 -0.016  0.007  0.000                                   
+spell   -0.040 -0.012 -0.035 -0.010 -0.006  0.000                            
+motive  -0.031 -0.007  0.016 -0.001 -0.003  0.075  0.000                     
+harmony  0.006 -0.026  0.010  0.041 -0.053  0.071 -0.027  0.000              
+stable   0.011  0.005  0.028 -0.034 -0.015  0.045  0.005  0.012  0.000       
+parent  -0.003 -0.010 -0.007  0.008  0.017  0.009  0.015  0.001 -0.001  0.000
+ses      0.050 -0.010 -0.068 -0.012 -0.005 -0.006  0.010 -0.008 -0.016  0.000
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses      0.000
+</code></pre>
+</div>
+</div>
+<div id="cell-15" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate factor reliability coefficients (semTools)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>semTools<span class="sc">::</span><span class="fu">reliability</span>(worlandCFA) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Cognitive   Achieve    Adjust      Risk
+alpha  0.8463118 0.8087788 0.7249416 0.5675488
+omega  0.8513712 0.8207835 0.7296141 0.5770344
+omega2 0.8513712 0.8207835 0.7296141 0.5770344
+omega3 0.8515872 0.8227890 0.7327431 0.5770344
+avevar 0.6588592 0.6101369 0.4744677 0.4094519</code></pre>
+</div>
+</div>
+<p><strong>Secondo Passaggio nella modellazione in due fasi per un modello SR completo di rendimento scolastico e adattamento in classe</strong></p>
+<p>I risultati del Passaggio 1 del metodo in due fasi, che si concentrava sul modello di misurazione, consentono di procedere all’analisi del modello SR originale, che prevede cinque percorsi nella {numref}<code>kline-15-3-fig</code>, nel Passaggio 2 del metodo. Anche questa seconda analisi ha portato a una soluzione ammissibile.</p>
+<div id="cell-17" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2a</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 4-factor SR model with 5 paths among factors</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, lavaan frees the disturbance covariance</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># between a pair of outcomes in a structural model</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># when there is no direct effect between them</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># thus, this parameter is explicitly fixed to zero</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># in this analysis</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>worlandSRa_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="st">    # measurement part</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="st">    Cognitive =~ verbal + visual + memory</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="st">    Achieve =~ read + math + spell</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust =~ motive + harmony + stable</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="st">    Risk =~ parent + ses</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="st">    # structural part (5 paths)</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="st">    Achieve ~ Cognitive + Risk</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust ~ Cognitive + Risk</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="st">    # constrain disturbance covariance to zero</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust ~~ 0*Achieve </span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-18" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>worlandSRa <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(worlandSRa_model,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> worland.cov,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.nobs =</span> <span class="dv">158</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-19" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(worlandSRa,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_structural_regr_files/figure-html/cell-14-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-20" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(worlandSRa, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chisq     df    cfi    tli  rmsea   srmr 
+49.747 39.000  0.983  0.976  0.042  0.074 </code></pre>
+</div>
+</div>
+<div id="cell-21" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandSRa, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal   0.135                                                               
+visual   0.892  0.122                                                        
+memory   0.670  0.193  0.098                                                 
+read    -0.270 -0.710 -1.047  0.009                                          
+math    -0.004 -0.498 -0.910 -0.340     NA                                   
+spell   -1.008 -0.332 -0.808  0.034  0.202  0.030                            
+motive  -1.540 -0.721 -0.155  3.466  3.022  3.348  0.034                     
+harmony -0.289 -0.858 -0.173  2.903  1.340  2.579 -0.244  0.057              
+stable  -1.412 -1.235 -0.441  2.917  2.763  2.910  0.169  0.092  0.050       
+parent  -0.309 -0.394 -0.260  0.960  0.849  0.340  0.625  0.244  0.702     NA
+ses      1.413 -0.337 -1.439  0.567  0.478  0.135  0.653  0.157  0.546  1.467
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses         NA
+</code></pre>
+</div>
+</div>
+<div id="cell-22" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandSRa, <span class="at">type =</span> <span class="st">"cor.bollen"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "cor.bollen"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal   0.000                                                               
+visual   0.013  0.000                                                        
+memory   0.011  0.004  0.000                                                 
+read    -0.006 -0.019 -0.032  0.000                                          
+math     0.000 -0.017 -0.034 -0.002  0.000                                   
+spell   -0.042 -0.016 -0.040  0.000  0.005  0.000                            
+motive  -0.054 -0.031 -0.008  0.219  0.197  0.242  0.000                     
+harmony -0.015 -0.048 -0.010  0.199  0.090  0.192 -0.007  0.000              
+stable  -0.041 -0.045 -0.019  0.170  0.171  0.201  0.001  0.002  0.000       
+parent  -0.011 -0.017 -0.013  0.031  0.037  0.020  0.031  0.015  0.029  0.000
+ses      0.044 -0.014 -0.071  0.016  0.020  0.008  0.030  0.010  0.020  0.012
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses      0.000
+</code></pre>
+</div>
+</div>
+<p>Sebbene gli indici di fit siano buoni, l’adattamento locale del modello con cinque percorsi tra i fattori è scarso. Ad esempio, i residui standardizzati per diverse coppie di indicatori dei fattori di rendimento e adattamento hanno spesso un valore maggiore di 2:</p>
+<ul>
+<li>Lettura, Motivazione, 3.466</li>
+<li>Ortografia, Motivazione, 3.348</li>
+<li>Lettura, Armonia, 2.903</li>
+</ul>
+<p>Basandosi su tutti questi risultati relativi all’adattamento globale e locale, il modello SR iniziale nella {numref}<code>kline-15-3-fig</code> con cinque percorsi tra i fattori è rifiutato.</p>
+<p>Esaminiamo i <em>modification indices</em>.</p>
+<div id="cell-24" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modificationIndices</span>(worlandSRa, <span class="at">sort =</span> <span class="cn">TRUE</span>, <span class="at">minimum.value =</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A lavaan.data.frame: 6 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">lhs</th>
+<th data-quarto-table-cell-role="th" scope="col">op</th>
+<th data-quarto-table-cell-role="th" scope="col">rhs</th>
+<th data-quarto-table-cell-role="th" scope="col">mi</th>
+<th data-quarto-table-cell-role="th" scope="col">epc</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.lv</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.all</th>
+<th data-quarto-table-cell-role="th" scope="col">sepc.nox</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">126</td>
+<td>Adjust</td>
+<td>~</td>
+<td>Achieve</td>
+<td>31.938548</td>
+<td>0.4553494</td>
+<td>0.8558291</td>
+<td>0.8558291</td>
+<td>0.8558291</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">16</td>
+<td>Achieve</td>
+<td>~~</td>
+<td>Adjust</td>
+<td>31.938547</td>
+<td>34.8789498</td>
+<td>0.7039273</td>
+<td>0.7039273</td>
+<td>0.7039273</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">125</td>
+<td>Achieve</td>
+<td>~</td>
+<td>Adjust</td>
+<td>31.938539</td>
+<td>1.0882050</td>
+<td>0.5789865</td>
+<td>0.5789865</td>
+<td>0.5789865</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">44</td>
+<td>Achieve</td>
+<td>=~</td>
+<td>motive</td>
+<td>5.438535</td>
+<td>0.1491767</td>
+<td>1.9561758</td>
+<td>0.2065710</td>
+<td>0.2065710</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">54</td>
+<td>Adjust</td>
+<td>=~</td>
+<td>spell</td>
+<td>5.240735</td>
+<td>0.3894844</td>
+<td>2.7174077</td>
+<td>0.1968289</td>
+<td>0.1968289</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">52</td>
+<td>Adjust</td>
+<td>=~</td>
+<td>read</td>
+<td>5.038370</td>
+<td>0.3467951</td>
+<td>2.4195674</td>
+<td>0.1629036</td>
+<td>0.1629036</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I risultati dei <em>modification indices</em> mostrano che l’assenza di un percorso tra i fattori di rendimento e adattamento nella {numref}<code>kline-15-3-fig</code> è chiaramente incoerente con i dati. Per aggiungere una covariazione tra i fattori di rendimento e adattamento abbiamo due opzioni: o aggiungere un effetto diretto tra i fattori o permettere alle loro perturbazioni di covariare. Ma sarebbe difficile giustificare un effetto diretto rispetto all’altro: scarse abilità scolastiche potrebbero peggiorare l’adattamento in classe tanto quanto i problemi comportamentali a scuola potrebbero influire negativamente sul rendimento. La specificazione di una causalità reciproca tra Rendimento e Adattamento renderebbe il modello strutturale non ricorsivo, ma il modello non sarebbe identificato senza imporre vincoli irrealistici. Riformuliamo dunque il modello della {numref}<code>kline-15-3-fig</code> permettendo alle perturbazioni tra i fattori di rendimento e adattamento di covariare.</p>
+<div id="cell-26" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step 2b</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 4-factor SR model with 6 paths among factors</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># this model is equivalent to the basic 4-factor</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CFA measurement model analyzed in step 1</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>worlandSRb_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="st">    # measurement part</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="st">    Cognitive =~ verbal + visual + memory</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="st">    Achieve =~ read + math + spell</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust =~ motive + harmony + stable</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="st">    Risk =~ parent + ses</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="st">    # structural part (6 paths)</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="st">    Achieve ~ Cognitive + Risk</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust ~ Cognitive + Risk</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="st">    Adjust ~~ Achieve </span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-27" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>worlandSRb <span class="ot">&lt;-</span> lavaan<span class="sc">::</span><span class="fu">sem</span>(worlandSRb_model,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.cov =</span> worland.cov,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample.nobs =</span> <span class="dv">158</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-28" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>semPlot<span class="sc">::</span><span class="fu">semPaths</span>(worlandSRb,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">what =</span> <span class="st">"col"</span>, <span class="at">whatLabels =</span> <span class="st">"par"</span>, <span class="at">style =</span> <span class="st">"mx"</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">layout =</span> <span class="st">"tree2"</span>, <span class="at">nCharNodes =</span> <span class="dv">7</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">shapeMan =</span> <span class="st">"rectangle"</span>, <span class="at">sizeMan =</span> <span class="dv">8</span>, <span class="at">sizeMan2 =</span> <span class="dv">5</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="09_structural_regr_files/figure-html/cell-21-output-1.png" width="420" height="420" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-29" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">parameterEstimates</span>(worlandSRb) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         lhs op       rhs     est     se      z pvalue ci.lower ci.upper
+1  Cognitive =~    verbal   1.000  0.000     NA     NA    1.000    1.000
+2  Cognitive =~    visual   1.000  0.090 11.144  0.000    0.824    1.175
+3  Cognitive =~    memory   0.788  0.077 10.217  0.000    0.637    0.940
+4    Achieve =~      read   1.000  0.000     NA     NA    1.000    1.000
+5    Achieve =~      math   0.925  0.083 11.100  0.000    0.761    1.088
+6    Achieve =~     spell   0.678  0.080  8.480  0.000    0.521    0.835
+7     Adjust =~    motive   1.000  0.000     NA     NA    1.000    1.000
+8     Adjust =~   harmony   0.861  0.136  6.311  0.000    0.593    1.128
+9     Adjust =~    stable   0.940  0.114  8.231  0.000    0.716    1.164
+10      Risk =~    parent   1.000  0.000     NA     NA    1.000    1.000
+11      Risk =~       ses   0.773  0.224  3.445  0.001    0.333    1.212
+12   Achieve  ~ Cognitive   0.719  0.109  6.574  0.000    0.504    0.933
+13   Achieve  ~      Risk  -0.175  0.190 -0.922  0.357   -0.548    0.198
+14    Adjust  ~ Cognitive   0.261  0.070  3.743  0.000    0.124    0.398
+15    Adjust  ~      Risk  -0.146  0.127 -1.153  0.249   -0.395    0.102
+16   Achieve ~~    Adjust  36.374  7.967  4.565  0.000   20.758   51.989
+17    verbal ~~    verbal  46.253  9.782  4.728  0.000   27.080   65.426
+18    visual ~~    visual  76.171 12.153  6.268  0.000   52.351   99.991
+19    memory ~~    memory  69.732  9.717  7.177  0.000   50.688   88.776
+20      read ~~      read  51.273 11.238  4.562  0.000   29.246   73.299
+21      math ~~      math  86.341 13.049  6.616  0.000   60.764  111.917
+22     spell ~~     spell 112.797 14.078  8.012  0.000   85.205  140.389
+23    motive ~~    motive  37.737  6.463  5.839  0.000   25.071   50.404
+24   harmony ~~   harmony  83.953 10.590  7.927  0.000   63.197  104.709
+25    stable ~~    stable  29.306  5.386  5.441  0.000   18.749   39.863
+26    parent ~~    parent  88.005 18.343  4.798  0.000   52.053  123.958
+27       ses ~~       ses  38.896 10.208  3.810  0.000   18.889   58.904
+28 Cognitive ~~ Cognitive 141.617 22.098  6.409  0.000   98.307  184.928
+29   Achieve ~~   Achieve  84.317 16.324  5.165  0.000   52.322  116.312
+30    Adjust ~~    Adjust  38.008  8.188  4.642  0.000   21.960   54.055
+31      Risk ~~      Risk  55.079 19.989  2.755  0.006   15.902   94.257
+32 Cognitive ~~      Risk -40.517 12.448 -3.255  0.001  -64.914  -16.119</code></pre>
+</div>
+</div>
+<div id="cell-30" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitMeasures</span>(worlandSRb, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"cfi"</span>, <span class="st">"tli"</span>, <span class="st">"rmsea"</span>, <span class="st">"srmr"</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chisq     df    cfi    tli  rmsea   srmr 
+16.212 38.000  1.000  1.049  0.000  0.023 </code></pre>
+</div>
+</div>
+<div id="cell-31" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predicted correlation matrix for factors</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">lavInspect</span>(worlandSRb, <span class="st">"cor.lv"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Cogntv Achiev Adjust   Risk
+Cognitive  1.000                     
+Achieve    0.703  1.000              
+Adjust     0.500  0.751  1.000       
+Risk      -0.459 -0.401 -0.349  1.000</code></pre>
+</div>
+</div>
+<div id="cell-32" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandSRb, <span class="at">type =</span> <span class="st">"standardized.mplus"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "standardized.mplus"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal      NA                                                               
+visual  -0.002     NA                                                        
+memory   0.122 -0.131     NA                                                 
+read     0.597  0.113 -0.285     NA                                          
+math     0.504  0.038 -0.377  0.597     NA                                   
+spell   -0.952 -0.255 -0.704 -0.667 -0.206     NA                            
+motive  -0.821 -0.157  0.309 -0.042 -0.078  1.484     NA                     
+harmony  0.117 -0.453  0.171  0.942 -1.179  1.196 -1.010     NA              
+stable   0.284  0.112  0.566 -1.893 -0.467  0.942  0.422  0.436     NA       
+parent  -0.093 -0.261 -0.157  0.234  0.378  0.157  0.300  0.019 -0.022  0.034
+ses      1.891 -0.247 -1.417 -0.370 -0.114 -0.112  0.213 -0.125 -0.362  0.043
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses      0.017
+</code></pre>
+</div>
+</div>
+<div id="cell-33" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">residuals</span>(worlandSRb, <span class="at">type =</span> <span class="st">"cor.bollen"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$type
+[1] "cor.bollen"
+
+$cov
+        verbal visual memory   read   math  spell motive harmny stable parent
+verbal   0.000                                                               
+visual   0.000  0.000                                                        
+memory   0.001 -0.002  0.000                                                 
+read     0.015  0.003 -0.010  0.000                                          
+math     0.017  0.001 -0.016  0.007  0.000                                   
+spell   -0.040 -0.012 -0.036 -0.010 -0.006  0.000                            
+motive  -0.031 -0.007  0.016 -0.001 -0.003  0.075  0.000                     
+harmony  0.006 -0.026  0.010  0.041 -0.053  0.071 -0.027  0.000              
+stable   0.011  0.005  0.028 -0.034 -0.015  0.045  0.005  0.012  0.000       
+parent  -0.003 -0.011 -0.007  0.008  0.017  0.009  0.015  0.001 -0.001  0.000
+ses      0.050 -0.010 -0.068 -0.012 -0.005 -0.006  0.010 -0.008 -0.016  0.000
+           ses
+verbal        
+visual        
+memory        
+read          
+math          
+spell         
+motive        
+harmony       
+stable        
+parent        
+ses      0.000
+</code></pre>
+</div>
+</div>
+<p>Confrontiamo i due modelli con il test del rapporto di verosimiglianza.</p>
+<div id="cell-35" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lavTestLRT</span>(worlandSRa, worlandSRb)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A anova: 2 x 8</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">Df</th>
+<th data-quarto-table-cell-role="th" scope="col">AIC</th>
+<th data-quarto-table-cell-role="th" scope="col">BIC</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq</th>
+<th data-quarto-table-cell-role="th" scope="col">Chisq diff</th>
+<th data-quarto-table-cell-role="th" scope="col">RMSEA</th>
+<th data-quarto-table-cell-role="th" scope="col">Df diff</th>
+<th data-quarto-table-cell-role="th" scope="col">Pr(&gt;Chisq)</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">worlandSRb</td>
+<td>38</td>
+<td>12938.16</td>
+<td>13023.92</td>
+<td>16.21231</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+<td>NA</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">worlandSRa</td>
+<td>39</td>
+<td>12969.70</td>
+<td>13052.39</td>
+<td>49.74654</td>
+<td>33.53423</td>
+<td>0.4537762</td>
+<td>1</td>
+<td>7.002091e-09</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>L’adattamento del modello SR con 5 percorsi tra i fattori è significativamente peggiore rispetto a quello del modello CFA con 6 percorsi. Gli indici di fit del modello con 6 percorsi sono buoni così come il suo adattamento locale.</p>
+<div id="cell-37" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standardized estimates with standard errors</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>lavaan<span class="sc">::</span><span class="fu">standardizedSolution</span>(worlandSRb) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         lhs op       rhs est.std    se      z pvalue ci.lower ci.upper
+1  Cognitive =~    verbal   0.868 0.032 27.075  0.000    0.805    0.931
+2  Cognitive =~    visual   0.806 0.037 21.720  0.000    0.733    0.879
+3  Cognitive =~    memory   0.747 0.043 17.470  0.000    0.663    0.831
+4    Achieve =~      read   0.876 0.031 28.212  0.000    0.815    0.937
+5    Achieve =~      math   0.791 0.038 20.777  0.000    0.717    0.866
+6    Achieve =~     spell   0.639 0.053 11.984  0.000    0.534    0.743
+7     Adjust =~    motive   0.761 0.049 15.552  0.000    0.665    0.857
+8     Adjust =~   harmony   0.561 0.065  8.657  0.000    0.434    0.688
+9     Adjust =~    stable   0.781 0.048 16.381  0.000    0.688    0.875
+10      Risk =~    parent   0.620 0.100  6.217  0.000    0.425    0.816
+11      Risk =~       ses   0.677 0.104  6.495  0.000    0.473    0.881
+12   Achieve  ~ Cognitive   0.657 0.079  8.357  0.000    0.503    0.811
+13   Achieve  ~      Risk  -0.100 0.107 -0.935  0.350   -0.310    0.110
+14    Adjust  ~ Cognitive   0.431 0.103  4.179  0.000    0.229    0.633
+15    Adjust  ~      Risk  -0.151 0.127 -1.186  0.236   -0.400    0.098
+16   Achieve ~~    Adjust   0.643 0.085  7.592  0.000    0.477    0.808
+17    verbal ~~    verbal   0.246 0.056  4.421  0.000    0.137    0.355
+18    visual ~~    visual   0.350 0.060  5.847  0.000    0.233    0.467
+19    memory ~~    memory   0.442 0.064  6.920  0.000    0.317    0.567
+20      read ~~      read   0.232 0.054  4.271  0.000    0.126    0.339
+21      math ~~      math   0.374 0.060  6.197  0.000    0.255    0.492
+22     spell ~~     spell   0.592 0.068  8.686  0.000    0.458    0.725
+23    motive ~~    motive   0.421 0.074  5.649  0.000    0.275    0.567
+24   harmony ~~   harmony   0.686 0.073  9.445  0.000    0.543    0.828
+25    stable ~~    stable   0.390 0.075  5.229  0.000    0.244    0.536
+26    parent ~~    parent   0.615 0.124  4.967  0.000    0.372    0.858
+27       ses ~~       ses   0.542 0.141  3.840  0.000    0.265    0.818
+28 Cognitive ~~ Cognitive   1.000 0.000     NA     NA    1.000    1.000
+29   Achieve ~~   Achieve   0.498 0.077  6.470  0.000    0.347    0.649
+30    Adjust ~~    Adjust   0.732 0.080  9.108  0.000    0.574    0.889
+31      Risk ~~      Risk   1.000 0.000     NA     NA    1.000    1.000
+32 Cognitive ~~      Risk  -0.459 0.098 -4.686  0.000   -0.651   -0.267</code></pre>
+</div>
+</div>
+<p>La correlazione stimata tra i fattori esogeni abilità cognitiva e rischio, –.459, è sensata: è negativa (più alto il rischio, minore l’abilità cognitiva). Questa correlazione non è prossima a -1.0, il che suggerisce che i due fattori sono distinti e non quasi identici, confermando così l’ipotesi di validità discriminante.</p>
+<p>Analizzando gli impatti specifici, un incremento di un punto nel fattore cognitivo (misurato come varianza comune del ragionamento verbale) prevede un aumento di .719 punti nel rendimento scolastico (misurato come varianza comune dell’abilità di lettura), tenendo conto del fattore di rischio. In termini standardizzati, un aumento di una deviazione standard nell’abilità cognitiva si traduce in un aumento di .657 deviazioni standard nel rendimento scolastico, sempre controllando per il rischio.</p>
+<p>L’influenza del rischio sul rendimento scolastico è meno marcata: un incremento di un punto nel rischio (misurato come varianza comune del disturbo genitoriale) prevede una diminuzione di .175 punti nel rendimento scolastico. Standardizzando, un aumento di una deviazione standard nel rischio si associa a una diminuzione di .100 deviazioni standard nel rendimento, controllando per l’abilità cognitiva.</p>
+<p>La correlazione di perturbazione di .643 misura la relazione tra il rendimento scolastico e l’adattamento in classe, dopo aver escluso l’influenza di altri fattori noti, in questo caso l’abilità cognitiva e il rischio di psicopatologia. In termini più semplici, la correlazione di perturbazione ci dice quanto sono correlati il rendimento scolastico e l’adattamento in classe quando si tiene conto (o si “controlla”) dell’effetto dell’abilità cognitiva e del rischio. Un valore di .643 indica una correlazione moderatamente forte, suggerendo che quando il rendimento scolastico di uno studente migliora (o peggiora), anche il suo adattamento in classe tende a migliorare (o peggiorare) in modo simile, indipendentemente dal suo livello di abilità cognitiva o dal grado di rischio di psicopatologia.</p>
+<p>La presenza di questa correlazione parziale sostanziale implica che ci sono fattori non misurati nel modello che influenzano sia il rendimento scolastico sia l’adattamento in classe. Questi fattori non misurati potrebbero includere variabili come il sostegno familiare, la qualità dell’insegnamento, fattori ambientali o personalità dello studente. Importante è che questi fattori non misurati sono distinti sia dall’abilità cognitiva dello studente sia dal suo rischio di psicopatologia. In conclusione, il valore di .643 non solo mette in luce l’interdipendenza tra rendimento scolastico e adattamento in classe, ma suggerisce anche l’esistenza di altre variabili influenti che non sono state direttamente misurate o incluse nel modello. Questa informazione può essere preziosa per indirizzare ulteriori ricerche o interventi educativi.</p>
+</section>
+<section id="strategie-avanzate-di-modellazione-per-i-modelli-di-regressione-strutturale" class="level2" data-number="47.2">
+<h2 data-number="47.2" class="anchored" data-anchor-id="strategie-avanzate-di-modellazione-per-i-modelli-di-regressione-strutturale"><span class="header-section-number">47.2</span> Strategie Avanzate di Modellazione per i Modelli di Regressione Strutturale</h2>
+<p>Oltre all’approccio tradizionale di modellazione in due fasi, esiste un metodo più complesso a quattro fasi per analizzare i modelli SR completi. Questa strategia, introdotta da Mulaik e Millsap nel 2000, amplia la modellazione bifase aggiungendo ulteriori analisi esplorative che possono portare a conclusioni più definitive in una serie più estesa di studi. Questo metodo prevede che ogni fattore comune abbia almeno quattro indicatori, numero ritenuto sufficiente per testare l’unidimensionalità con il test dell’annullamento della tetrade. I quattro indicatori rappresentano anche il numero minimo perché un modello CFA a singolo fattore sia considerato sovraidentificato. Il ricercatore testa quindi una serie di almeno quattro modelli gerarchicamente correlati, seguendo questi passaggi:</p>
+<ol type="1">
+<li><p><strong>Primo Passaggio</strong>: Il modello iniziale meno restrittivo è un modello EFA, dove ogni indicatore satura su tutti i fattori. Il numero di fattori è lo stesso dei modelli analizzati nei passaggi successivi. Questo modello viene analizzato con lo stesso metodo di stima utilizzato nei passaggi successivi, ad esempio il metodo ML per indicatori continui e normalmente distribuiti. Alternativamente, si possono usare tecniche come ESEM o E/CFA al posto dell’EFA. Questo passaggio serve a testare la correttezza provvisoria delle ipotesi riguardo al numero di fattori.</p></li>
+<li><p><strong>Secondo Passaggio</strong>: Corrisponde al Primo Passaggio della modellazione bifase. Qui, si specifica un modello CFA con alcuni carichi incrociati fissati a zero, identificando gli indicatori che non dipendono da certi fattori comuni. Se l’adattamento del modello CFA è ragionevole, si può procedere al test del modello SR; in caso contrario, il modello di misurazione va rivisto.</p></li>
+<li><p><strong>Terzo Passaggio</strong>: Si specifica il modello SR target con lo stesso schema di carichi incrociati fissati a zero del modello CFA del Secondo Passaggio. Tipicamente, la parte strutturale del modello SR include meno effetti diretti rispetto al totale delle covarianze tra fattori nel modello CFA. Se la parte strutturale del modello SR ha tanti percorsi quanti il modello CFA, i due modelli saranno equivalenti e questo passaggio può essere omesso.</p></li>
+<li><p><strong>Quarto Passaggio</strong>: Coinvolge test su ipotesi specifiche sui parametri definiti dall’inizio del processo. Questi test possono comportare l’applicazione di vincoli zero o altri, aumentando di uno dfM. I Passaggi 3 e 4 della modellazione a quattro fasi rappresentano una precisazione delle attività generali del Secondo Passaggio della modellazione bifase.</p></li>
+</ol>
+<p>Una delle critiche alla modellazione a quattro fasi riguarda la necessità di avere almeno quattro indicatori per fattore, condizione non sempre pratica o desiderabile, specialmente quando pochi indicatori, o anche un singolo indicatore ottimale, presentano migliori caratteristiche psicometriche rispetto a quattro. Tuttavia, Mulaik e Millsap hanno osservato che avere almeno quattro indicatori può compensare, in parte, le limitazioni di un campione più piccolo incrementando dfM.</p>
+<p>Entrambi gli approcci, bifase e quattro fasi, sfruttano la variazione casuale quando i modelli vengono testati e riformulati utilizzando gli stessi dati, e sono considerati migliori della modellazione monofase, dove non esiste una distinzione tra questioni di misurazione e struttura.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/sem/08_multilevel_sem.html" class="pagination-link" aria-label="Modelli di Equazioni Strutturali Multilivello">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/sem/10_missing_data.html" class="pagination-link" aria-label="Dati mancanti">
+        <span class="nav-page-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/sem/09_structural_regr.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

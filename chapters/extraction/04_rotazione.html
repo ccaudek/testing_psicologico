@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>30&nbsp; La rotazione fattoriale – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/extraction/05_val_soluzione.html" rel="next">
+<link href="../../chapters/extraction/03_numero_fattori.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/extraction/01_val_matrici.html">Costruzione</a></li><li class="breadcrumb-item"><a href="../../chapters/extraction/04_rotazione.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling (ESEM)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Oltre il Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/07_irt_poly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modelli per Risposte Politomiche</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#indeterminatezza-della-soluzione-fattoriale" id="toc-indeterminatezza-della-soluzione-fattoriale" class="nav-link active" data-scroll-target="#indeterminatezza-della-soluzione-fattoriale"><span class="header-section-number">30.1</span> Indeterminatezza della soluzione fattoriale</a></li>
+  <li><a href="#parsimonia-e-semplicità" id="toc-parsimonia-e-semplicità" class="nav-link" data-scroll-target="#parsimonia-e-semplicità"><span class="header-section-number">30.2</span> Parsimonia e semplicità</a>
+  <ul class="collapse">
+  <li><a href="#il-criterio-della-struttura-semplice-nellanalisi-fattoriale" id="toc-il-criterio-della-struttura-semplice-nellanalisi-fattoriale" class="nav-link" data-scroll-target="#il-criterio-della-struttura-semplice-nellanalisi-fattoriale"><span class="header-section-number">30.2.1</span> Il Criterio della Struttura Semplice nell’Analisi Fattoriale</a></li>
+  </ul></li>
+  <li><a href="#rotazione-nello-spazio-geometrico" id="toc-rotazione-nello-spazio-geometrico" class="nav-link" data-scroll-target="#rotazione-nello-spazio-geometrico"><span class="header-section-number">30.3</span> Rotazione nello Spazio Geometrico</a>
+  <ul class="collapse">
+  <li><a href="#rotazione-ortogonale" id="toc-rotazione-ortogonale" class="nav-link" data-scroll-target="#rotazione-ortogonale"><span class="header-section-number">30.3.1</span> Rotazione Ortogonale</a></li>
+  <li><a href="#vincoli-alla-rotazione-dei-fattori" id="toc-vincoli-alla-rotazione-dei-fattori" class="nav-link" data-scroll-target="#vincoli-alla-rotazione-dei-fattori"><span class="header-section-number">30.3.2</span> Vincoli alla Rotazione dei Fattori</a></li>
+  <li><a href="#metodo-grafico-per-la-rotazione-dei-fattori" id="toc-metodo-grafico-per-la-rotazione-dei-fattori" class="nav-link" data-scroll-target="#metodo-grafico-per-la-rotazione-dei-fattori"><span class="header-section-number">30.3.3</span> Metodo Grafico per la Rotazione dei Fattori</a></li>
+  <li><a href="#medodi-di-rotazione-ortogonale" id="toc-medodi-di-rotazione-ortogonale" class="nav-link" data-scroll-target="#medodi-di-rotazione-ortogonale"><span class="header-section-number">30.3.4</span> Medodi di rotazione ortogonale</a></li>
+  <li><a href="#metodi-di-rotazione-obliqua" id="toc-metodi-di-rotazione-obliqua" class="nav-link" data-scroll-target="#metodi-di-rotazione-obliqua"><span class="header-section-number">30.3.5</span> Metodi di Rotazione Obliqua</a></li>
+  </ul></li>
+  <li><a href="#matrice-dei-pesi-fattoriali-e-matrice-di-struttura" id="toc-matrice-dei-pesi-fattoriali-e-matrice-di-struttura" class="nav-link" data-scroll-target="#matrice-dei-pesi-fattoriali-e-matrice-di-struttura"><span class="header-section-number">30.4</span> Matrice dei Pesi Fattoriali e Matrice di Struttura</a>
+  <ul class="collapse">
+  <li><a href="#rotazione-ortogonale-1" id="toc-rotazione-ortogonale-1" class="nav-link" data-scroll-target="#rotazione-ortogonale-1"><span class="header-section-number">30.4.1</span> Rotazione Ortogonale</a></li>
+  <li><a href="#rotazione-obliqua" id="toc-rotazione-obliqua" class="nav-link" data-scroll-target="#rotazione-obliqua"><span class="header-section-number">30.4.2</span> Rotazione Obliqua</a></li>
+  </ul></li>
+  <li><a href="#esempio-con-semtools" id="toc-esempio-con-semtools" class="nav-link" data-scroll-target="#esempio-con-semtools"><span class="header-section-number">30.5</span> Esempio con <code>semTools</code></a>
+  <ul class="collapse">
+  <li><a href="#orthogonal-varimax" id="toc-orthogonal-varimax" class="nav-link" data-scroll-target="#orthogonal-varimax"><span class="header-section-number">30.5.1</span> Orthogonal varimax</a></li>
+  <li><a href="#orthogonal-quartimin" id="toc-orthogonal-quartimin" class="nav-link" data-scroll-target="#orthogonal-quartimin"><span class="header-section-number">30.5.2</span> Orthogonal Quartimin</a></li>
+  <li><a href="#oblique-quartimin" id="toc-oblique-quartimin" class="nav-link" data-scroll-target="#oblique-quartimin"><span class="header-section-number">30.5.3</span> Oblique Quartimin</a></li>
+  <li><a href="#orthogonal-geomin" id="toc-orthogonal-geomin" class="nav-link" data-scroll-target="#orthogonal-geomin"><span class="header-section-number">30.5.4</span> Orthogonal Geomin</a></li>
+  <li><a href="#oblique-geomin" id="toc-oblique-geomin" class="nav-link" data-scroll-target="#oblique-geomin"><span class="header-section-number">30.5.5</span> Oblique Geomin</a></li>
+  </ul></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">30.6</span> Interpretazione</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/extraction/04_rotazione.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/extraction/01_val_matrici.html">Costruzione</a></li><li class="breadcrumb-item"><a href="../../chapters/extraction/04_rotazione.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-rotation" class="quarto-section-identifier"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Prerequisiti</strong></p>
+<p><strong>Concetti e Competenze Chiave</strong></p>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="fedea705" class="cell" data-tags="[&quot;remove_cell&quot;]" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(lavaan, psych)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Caricamento dei namespace richiesti: pacman
+</code></pre>
+</div>
+</div>
+<p>Nel capitolo {ref}<code>extraction-notebook</code> abbiamo visto come sia possibile ottenere la soluzione fattoriale non ruotata per il numero di fattori comuni che meglio riassume l’informazione contenuta nella matrice di correlazioni (o covarianze). Tuttavia, questa soluzione non garantisce l’identificazione di gruppi omogenei e interpretabili di variabili osservate. Pertanto, si ricorre alla rotazione degli assi fattoriali per ottenere una soluzione più facilmente interpretabile rispetto a quella iniziale.</p>
+<section id="indeterminatezza-della-soluzione-fattoriale" class="level2" data-number="30.1">
+<h2 data-number="30.1" class="anchored" data-anchor-id="indeterminatezza-della-soluzione-fattoriale"><span class="header-section-number">30.1</span> Indeterminatezza della soluzione fattoriale</h2>
+<p>La necessità di effettuare la rotazione deriva dal fatto che la matrice delle saturazioni non ha un’unica soluzione. Attraverso trasformazioni matematiche, è possibile ottenere infinite matrici dello stesso ordine. Questo fenomeno è noto come indeterminatezza della soluzione fattoriale.</p>
+<p>La matrice delle saturazioni fattoriali <span class="math inline">\(\boldsymbol{\Lambda}\)</span> non è univocamente definita poiché non esiste una soluzione unica per determinare le saturazioni fattoriali. Una matrice di correlazioni <span class="math inline">\(\boldsymbol{R}\)</span> può produrre diverse soluzioni fattoriali, ovvero matrici con lo stesso numero di fattori comuni ma con diverse configurazioni di saturazioni fattoriali, o matrici di saturazioni fattoriali corrispondenti a un diverso numero di fattori comuni.</p>
+<p><strong>Esempio.</strong> Siano <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> e <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> due matrici aventi lo stesso numero di righe e colonne, ma contenenti saturazioni fattoriali diverse. <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> è definita dai valori seguenti</p>
+<div id="4ec4ac23" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.766</span>,  <span class="sc">-</span><span class="fl">0.232</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.670</span>,  <span class="sc">-</span><span class="fl">0.203</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.574</span>,  <span class="sc">-</span><span class="fl">0.174</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.454</span>,   <span class="fl">0.533</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.389</span>,   <span class="fl">0.457</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.324</span>,   <span class="fl">0.381</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>mentre per <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> abbiamo</p>
+<div id="87db0193" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.783</span>,  <span class="fl">0.163</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.685</span>,  <span class="fl">0.143</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.587</span>,  <span class="fl">0.123</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.143</span>,  <span class="fl">0.685</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.123</span>,  <span class="fl">0.587</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.102</span>,  <span class="fl">0.489</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esaminiamo la matrice delle correlazioni riprodotte dalle due matrici di pesi fattoriali (con le comunalità sulla diagonale di <span class="math inline">\(\boldsymbol{R}\)</span>):</p>
+<div id="911cb8dd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 6 x 6 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.64</td>
+<td>0.56</td>
+<td>0.48</td>
+<td>0.22</td>
+<td>0.19</td>
+<td>0.16</td>
+</tr>
+<tr class="even">
+<td>0.56</td>
+<td>0.49</td>
+<td>0.42</td>
+<td>0.20</td>
+<td>0.17</td>
+<td>0.14</td>
+</tr>
+<tr class="odd">
+<td>0.48</td>
+<td>0.42</td>
+<td>0.36</td>
+<td>0.17</td>
+<td>0.14</td>
+<td>0.12</td>
+</tr>
+<tr class="even">
+<td>0.22</td>
+<td>0.20</td>
+<td>0.17</td>
+<td>0.49</td>
+<td>0.42</td>
+<td>0.35</td>
+</tr>
+<tr class="odd">
+<td>0.19</td>
+<td>0.17</td>
+<td>0.14</td>
+<td>0.42</td>
+<td>0.36</td>
+<td>0.30</td>
+</tr>
+<tr class="even">
+<td>0.16</td>
+<td>0.14</td>
+<td>0.12</td>
+<td>0.35</td>
+<td>0.30</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="6ab3ba92" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 6 x 6 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.64</td>
+<td>0.56</td>
+<td>0.48</td>
+<td>0.22</td>
+<td>0.19</td>
+<td>0.16</td>
+</tr>
+<tr class="even">
+<td>0.56</td>
+<td>0.49</td>
+<td>0.42</td>
+<td>0.20</td>
+<td>0.17</td>
+<td>0.14</td>
+</tr>
+<tr class="odd">
+<td>0.48</td>
+<td>0.42</td>
+<td>0.36</td>
+<td>0.17</td>
+<td>0.14</td>
+<td>0.12</td>
+</tr>
+<tr class="even">
+<td>0.22</td>
+<td>0.20</td>
+<td>0.17</td>
+<td>0.49</td>
+<td>0.42</td>
+<td>0.35</td>
+</tr>
+<tr class="odd">
+<td>0.19</td>
+<td>0.17</td>
+<td>0.14</td>
+<td>0.42</td>
+<td>0.36</td>
+<td>0.30</td>
+</tr>
+<tr class="even">
+<td>0.16</td>
+<td>0.14</td>
+<td>0.12</td>
+<td>0.35</td>
+<td>0.30</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Come si vede, viene ottenuto lo stesso risultato utilizzando matrici <span class="math inline">\(\boldsymbol{\Lambda}\)</span> con lo stesso numero <span class="math inline">\(m\)</span> di colonne ma saturazioni fattoriali diverse.</p>
+<p>Si consideri ora il caso di matrici <span class="math inline">\(\boldsymbol{\Lambda}\)</span> corrispondenti a soluzioni fattoriali con un diverso numero di fattori comuni. Siano <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> e <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> due matrici aventi lo stesso numero di righe ma un numero diverso di colonne:</p>
+<div id="a72e4a5e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.9</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.7</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.5</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">1</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.78</span>, <span class="fl">0.45</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.61</span>, <span class="fl">0.35</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.43</span>, <span class="fl">0.25</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.25</span>, <span class="fl">0.15</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si noti che la stessa matrice di correlazioni riprodotte (con le comunalità sulla diagonale principale) viene generata dalle saturazioni fattoriali corrispondenti ad un numero diverso di fattori comuni:</p>
+<div id="fd547347" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 4 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.81</td>
+<td>0.63</td>
+<td>0.45</td>
+<td>0.27</td>
+</tr>
+<tr class="even">
+<td>0.63</td>
+<td>0.49</td>
+<td>0.35</td>
+<td>0.21</td>
+</tr>
+<tr class="odd">
+<td>0.45</td>
+<td>0.35</td>
+<td>0.25</td>
+<td>0.15</td>
+</tr>
+<tr class="even">
+<td>0.27</td>
+<td>0.21</td>
+<td>0.15</td>
+<td>0.09</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="06f83478" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 4 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.81</td>
+<td>0.63</td>
+<td>0.45</td>
+<td>0.26</td>
+</tr>
+<tr class="even">
+<td>0.63</td>
+<td>0.49</td>
+<td>0.35</td>
+<td>0.20</td>
+</tr>
+<tr class="odd">
+<td>0.45</td>
+<td>0.35</td>
+<td>0.25</td>
+<td>0.14</td>
+</tr>
+<tr class="even">
+<td>0.26</td>
+<td>0.20</td>
+<td>0.14</td>
+<td>0.08</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="parsimonia-e-semplicità" class="level2" data-number="30.2">
+<h2 data-number="30.2" class="anchored" data-anchor-id="parsimonia-e-semplicità"><span class="header-section-number">30.2</span> Parsimonia e semplicità</h2>
+<p>Per ottenere risultati affidabili dall’analisi fattoriale, si affronta il problema dell’indeterminazione fattoriale scegliendo la soluzione che soddisfa due criteri fondamentali: il criterio della parsimonia e il criterio della semplicità.</p>
+<p>Il criterio della parsimonia richiede di scegliere il modello con il minor numero di fattori comuni che può spiegare la covarianza tra le variabili. In pratica, se ci sono due soluzioni fattoriali con un diverso numero di fattori che riproducono allo stesso modo la matrice di covarianza o di correlazione, si sceglie quella con il minor numero di fattori.</p>
+<p>In caso invece ci siano diverse soluzioni fattoriali con lo stesso numero m di fattori, il criterio della semplicità guida nella scelta della trasformazione più appropriata della matrice di saturazioni fattoriali <span class="math inline">\(\boldsymbol{\Lambda}\)</span>. Questa trasformazione, nota come rotazione, cerca di rendere i fattori più interpretabili. Ci sono due tipi di rotazione: ortogonale e obliqua.</p>
+<p>La rotazione ortogonale assume che i fattori siano incorrelati, mentre la rotazione obliqua consente correlazioni tra i fattori. L’obiettivo della rotazione è di trovare una soluzione che renda i fattori più facilmente interpretabili e, quindi, in grado di spiegare meglio i dati.</p>
+<section id="il-criterio-della-struttura-semplice-nellanalisi-fattoriale" class="level3" data-number="30.2.1">
+<h3 data-number="30.2.1" class="anchored" data-anchor-id="il-criterio-della-struttura-semplice-nellanalisi-fattoriale"><span class="header-section-number">30.2.1</span> Il Criterio della Struttura Semplice nell’Analisi Fattoriale</h3>
+<p>L’analisi fattoriale impiega la rotazione degli assi fattoriali per ottenere una “struttura semplice” nella matrice delle saturazioni fattoriali. Questo criterio, proposto originariamente da Thurstone nel 1947, mira a realizzare una matrice caratterizzata da un numero limitato di saturazioni (o carichi fattoriali) significative e diverse da zero, minimizzando al contempo la presenza di variabili influenzate da più di un fattore.</p>
+<p>Per raggiungere una struttura semplice, Thurstone ha delineato specifiche condizioni che la matrice fattoriale ruotata deve soddisfare: 1. Ogni variabile deve presentare saturazioni nulle con la maggior parte dei fattori, escludendo uno o pochi con cui mostra saturazioni significative. 2. Per ciascun fattore, devono esistere almeno <span class="math inline">\(m\)</span> saturazioni nulle, dove <span class="math inline">\(m\)</span> è il numero totale di fattori comuni.</p>
+<p>L’obiettivo della rotazione è quindi massimizzare il numero di saturazioni nulle o quasi nulle, facilitando l’interpretazione dei fattori. Analizzando la matrice ruotata, è possibile identificare le variabili che sono fortemente associate a specifici fattori e valutare l’intensità di tali associazioni.</p>
+<p>Un fattore si interpreta efficacemente quando i suoi carichi sono elevati e positivi su un gruppo ristretto di variabili; ciò suggerisce che il fattore rappresenta un tratto o una caratteristica comune a tali variabili. Tuttavia, l’interpretazione diventa più complessa quando le variabili presentano saturazioni significative con più di un fattore, poiché indica la presenza di sovrapposizioni nelle influenze fattoriali.</p>
+</section>
+</section>
+<section id="rotazione-nello-spazio-geometrico" class="level2" data-number="30.3">
+<h2 data-number="30.3" class="anchored" data-anchor-id="rotazione-nello-spazio-geometrico"><span class="header-section-number">30.3</span> Rotazione nello Spazio Geometrico</h2>
+<section id="rotazione-ortogonale" class="level3" data-number="30.3.1">
+<h3 data-number="30.3.1" class="anchored" data-anchor-id="rotazione-ortogonale"><span class="header-section-number">30.3.1</span> Rotazione Ortogonale</h3>
+<p>Come precedentemente osservato, la matrice delle saturazioni fattoriali non è unica, implicando l’esistenza di multiple soluzioni equivalenti per determinare i pesi fattoriali. La rotazione ortogonale è un tipo di trasformazione lineare applicata ai pesi fattoriali per produrre una nuova matrice di saturazioni fattoriali che rispetti criteri specifici di struttura semplice. Questo processo ha lo scopo di rendere i dati più facilmente interpretabili.</p>
+<p>Geometricamente parlando, la rotazione ortogonale è simile a una rotazione rigida degli assi in uno spazio cartesiano che rappresenta i pesi fattoriali. Tale rotazione conserva le distanze tra i punti (che rappresentano le saturazioni fattoriali) ma modifica la loro posizione relativa rispetto ai fattori. Di conseguenza, si ottiene una configurazione dei pesi fattoriali che è più semplice da interpretare.</p>
+<p>Le tecniche di rotazione ortogonale sono tipicamente implementate attraverso metodi come la massima verosimiglianza o l’analisi dei componenti principali, con l’obiettivo di massimizzare il numero di saturazioni nulle o quasi nulle nella matrice delle saturazioni risultante. Questo processo aiuta a chiarire quale variabile è influenzata maggiormente da quali fattori, facilitando l’interpretazione dei risultati dell’analisi fattoriale.</p>
+</section>
+<section id="vincoli-alla-rotazione-dei-fattori" class="level3" data-number="30.3.2">
+<h3 data-number="30.3.2" class="anchored" data-anchor-id="vincoli-alla-rotazione-dei-fattori"><span class="header-section-number">30.3.2</span> Vincoli alla Rotazione dei Fattori</h3>
+<p>Il problema della non identificabilità della matrice dei pesi fattoriali, denotata come <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span>, indica l’esistenza di molteplici matrici equivalenti che possono produrre identiche correlazioni tra le variabili di un modello. Per affrontare questa questione, è essenziale imporre vincoli sulla rotazione dei fattori. Uno dei criteri fondamentali nella scelta del tipo di rotazione è l’ottenimento di una matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> semplificata, i cui elementi si avvicinano il più possibile ai valori 0 e 1. Questo facilita l’interpretazione dei fattori come combinazioni lineari delle variabili.</p>
+<p>Le rotazioni ortogonali, utili in presenza di fattori non correlati, mantengono inalterate le comunalità, poiché conservano le distanze geometriche tra i punti rappresentati dai pesi fattoriali. In questo caso, le comunalità sono calcolate come la somma dei quadrati dei pesi fattoriali. Al contrario, le rotazioni non ortogonali modificano la quota di varianza spiegata da ciascun fattore, calcolata dalla somma dei quadrati dei pesi fattoriali divisa per la traccia della matrice di correlazione.</p>
+<p>Esistono vari algoritmi per eseguire la rotazione ortogonale dei fattori, tra cui il metodo grafico, il metodo Quartimax e il metodo Varimax. Ciascuno di questi metodi ha specifiche applicazioni e impatti sulla struttura della matrice risultante, facilitando così l’interpretazione dei dati analizzati.</p>
+</section>
+<section id="metodo-grafico-per-la-rotazione-dei-fattori" class="level3" data-number="30.3.3">
+<h3 data-number="30.3.3" class="anchored" data-anchor-id="metodo-grafico-per-la-rotazione-dei-fattori"><span class="header-section-number">30.3.3</span> Metodo Grafico per la Rotazione dei Fattori</h3>
+<p>Quando si dispone di soli $ m=2 $ fattori, il sistema di coordinate bidimensionale è utilizzato per rappresentare geometricamente i fattori. La visualizzazione grafica delle saturazioni fattoriali permette di determinare visivamente la rotazione più appropriata. Ogni riga della matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> rappresenta un paio di pesi fattoriali, <span class="math inline">\(\hat{\lambda}_{i1}, \hat{\lambda}_{i2}\)</span>, con <span class="math inline">\(i=1, \dots, p\)</span>, che corrispondono alle coordinate di <span class="math inline">\(p\)</span> punti (equivalenti al numero di variabili manifeste). Per ottimizzare la rappresentazione, gli assi vengono ruotati di un angolo <span class="math inline">\(\phi\)</span> per avvicinarli il più possibile alla disposizione dei punti sul grafico. Le nuove coordinate <span class="math inline">\((\hat{\lambda}_{i1}^*, \hat{\lambda}_{i2}^*)\)</span> sono calcolate mediante la trasformazione <span class="math inline">\(\hat{\boldsymbol{\Lambda}}^* = \hat{\boldsymbol{\Lambda}} \textbf{T}\)</span>, dove</p>
+<p><span class="math display">\[
+\textbf{T} =
+\begin{bmatrix}
+\cos{\phi} &amp; -\sin{\phi}\\
+\sin{\phi} &amp; \cos{\phi}
+\end{bmatrix}
+\]</span></p>
+<p>è una matrice ortogonale <span class="math inline">\(2 \times 2\)</span>.</p>
+<p><strong>Esempio:</strong> Consideriamo un caso studiato da Brown, Williams e Barlow (1984), analizzato in {cite:t}<code>rencher10methods</code>. A una ragazza di dodici anni è stato chiesto di valutare sette suoi conoscenti su cinque attributi: <em>gentilezza</em>, <em>intelligenza</em>, <em>felicità</em>, <em>simpatia</em> e <em>giustizia</em>. Per queste variabili, la matrice di correlazione <span class="math inline">\(R\)</span> è stata analizzata per estrarre due fattori mediante il metodo delle componenti principali, senza rotazione iniziale:</p>
+<div id="7214cc07" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>, .<span class="dv">296</span>, .<span class="dv">881</span>, .<span class="dv">995</span>, .<span class="dv">545</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">296</span>, <span class="fl">1.000</span>, <span class="sc">-</span>.<span class="dv">022</span>, .<span class="dv">326</span>, .<span class="dv">837</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">881</span>, <span class="sc">-</span>.<span class="dv">022</span>, <span class="fl">1.000</span>, .<span class="dv">867</span>, .<span class="dv">130</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">995</span>, .<span class="dv">326</span>, .<span class="dv">867</span>, <span class="fl">1.000</span>, .<span class="dv">544</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">545</span>, .<span class="dv">837</span>, .<span class="dv">130</span>, .<span class="dv">544</span>, <span class="fl">1.00</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>), <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(R)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      K      I      H     L     J
+K 1.000  0.296  0.881 0.995 0.545
+I 0.296  1.000 -0.022 0.326 0.837
+H 0.881 -0.022  1.000 0.867 0.130
+L 0.995  0.326  0.867 1.000 0.544
+J 0.545  0.837  0.130 0.544 1.000</code></pre>
+</div>
+</div>
+<p>Dalla matrice <span class="math inline">\(R\)</span>, estraiamo due fattori. Si osserva che i fattori risultano difficili da interpretare: il primo fattore mostra alte saturazioni positive su tutte le variabili manifeste, mentre il secondo fattore si caratterizza per alte saturazioni positive su una variabile e negative sulle altre.</p>
+<div id="6b317c96" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>f.pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>f.pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Specified rotation not found, rotate='none' used
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>Principal Components Analysis
+Call: principal(r = R, nfactors = 2, rotate = FALSE)
+Standardized loadings (pattern matrix) based upon correlation matrix
+   PC1   PC2   h2     u2 com
+K 0.97 -0.23 0.99 0.0067 1.1
+I 0.52  0.81 0.92 0.0792 1.7
+H 0.78 -0.59 0.96 0.0391 1.9
+L 0.97 -0.21 0.99 0.0135 1.1
+J 0.70  0.67 0.94 0.0597 2.0
+
+                       PC1  PC2
+SS loadings           3.26 1.54
+Proportion Var        0.65 0.31
+Cumulative Var        0.65 0.96
+Proportion Explained  0.68 0.32
+Cumulative Proportion 0.68 1.00
+
+Mean item complexity =  1.6
+Test of the hypothesis that 2 components are sufficient.
+
+The root mean square of the residuals (RMSR) is  0.03 
+
+Fit based upon off diagonal values = 1</code></pre>
+</div>
+</div>
+<p>In un grafico delle saturazioni fattoriali, i punti rappresentano le cinque coppie di saturazioni (una per ciascun fattore):</p>
+<div id="78e144bb" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_rotazione_files/figure-html/cell-12-output-1.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><span class="citation" data-cites="rencher10methods">Rencher (<a href="../../99-references.html#ref-rencher10methods" role="doc-biblioref">2002</a>)</span> suggerisce che una rotazione ortogonale di <span class="math inline">\(-35^\circ\)</span> avvicinerebbe efficacemente gli assi ai punti nel diagramma di dispersione. Per verificarlo, si può disegnare i nuovi assi nel grafico dopo una rotazione di <span class="math inline">\(-35^\circ\)</span>.</p>
+<div id="d85c292e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>ar <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">1</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">0</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="dv">35</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ar <span class="sc">%*%</span> T, <span class="dv">3</span>)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.574</span>, <span class="fl">0.819</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.819</span>, <span class="sc">-</span><span class="fl">0.574</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 2 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.000</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td>0.574</td>
+<td>0.819</td>
+</tr>
+<tr class="odd">
+<td>0.000</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td>0.819</td>
+<td>-0.574</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04_rotazione_files/figure-html/cell-13-output-2.png" width="480" height="296" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nella figura, le due frecce rappresentano gli assi ruotati. La rotazione di <span class="math inline">\(-35^{\circ}\)</span> ha effettivamente avvicinato gli assi ai punti del diagramma. Se usiamo dunque il valore <span class="math inline">\(\phi = -35^{\circ}\)</span> nella matrice di rotazione, possiamo calcolare le saturazioni fattoriali della soluzione ruotata <span class="math inline">\(\hat{\boldsymbol{\Lambda}}^* = \hat{\boldsymbol{\Lambda}} \textbf{T}\)</span>.</p>
+<p>Le saturazioni fattoriali ruotate corrispondono alla proiezione ortogonale dei punti sugli assi ruotati:</p>
+<div id="e585adb0" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">35</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(f.pc<span class="sc">$</span>load <span class="sc">%*%</span> T, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 5 x 2 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">K</td>
+<td>0.927</td>
+<td>0.367</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">I</td>
+<td>-0.037</td>
+<td>0.959</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">H</td>
+<td>0.980</td>
+<td>-0.031</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">L</td>
+<td>0.916</td>
+<td>0.385</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">J</td>
+<td>0.194</td>
+<td>0.950</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La soluzione ottenuta in questo modo riproduce quanto riportato da {cite:t}<code>rencher10methods</code>.</p>
+</section>
+<section id="medodi-di-rotazione-ortogonale" class="level3" data-number="30.3.4">
+<h3 data-number="30.3.4" class="anchored" data-anchor-id="medodi-di-rotazione-ortogonale"><span class="header-section-number">30.3.4</span> Medodi di rotazione ortogonale</h3>
+<p>Un tipo di rotazione ortogonale spesso utilizzata è la rotazione Varimax (Kaiser, 1958). La matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> è semplificata in modo tale che le varianze dei quadrati degli elementi <span class="math inline">\(\lambda_{ij}\)</span> appartenenti a colonne diverse di <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> siano massime. Se le saturazioni fattoriali in una colonna di <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> sono simili tra loro, la varianza sarà prossima a zero. Tale varianza è tanto più grande quanto più i quadrati degli elementi <span class="math inline">\(\lambda_{ij}\)</span> assumono valori prossimi a <span class="math inline">\(0\)</span> e <span class="math inline">\(1\)</span>. Amplificando le correlazioni più alte e riducendo quelle più basse, la rotazione Varimax agevola l’interpretazione di ciascun fattore.</p>
+<p>Usando la funzione <code>factanal()</code> del modulo R base, la rotazione Varimax può essere applicata alla soluzione ottenuta mediante il metodo di massima verosimiglianza. Usando le funzioni <code>principal()</code> e <code>factor.pa()</code> disponibili nel pacchetto <code>psych</code>, la rotazione Varimax può essere applicata alle soluzioni ottenute mediante il metodo delle componenti principali e il metodo del fattore principale.</p>
+<p>Ad esempio, usando il metodo delle componenti principali otteniamo:</p>
+<div id="2f154cdc" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>f_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">n.obs =</span> <span class="dv">7</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>f_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Principal Components Analysis
+Call: principal(r = R, nfactors = 2, rotate = "varimax", n.obs = 7)
+Standardized loadings (pattern matrix) based upon correlation matrix
+   RC1   RC2   h2     u2 com
+K 0.95  0.30 0.99 0.0067 1.2
+I 0.03  0.96 0.92 0.0792 1.0
+H 0.97 -0.10 0.96 0.0391 1.0
+L 0.94  0.32 0.99 0.0135 1.2
+J 0.26  0.93 0.94 0.0597 1.2
+
+                       RC1  RC2
+SS loadings           2.81 1.99
+Proportion Var        0.56 0.40
+Cumulative Var        0.56 0.96
+Proportion Explained  0.58 0.42
+Cumulative Proportion 0.58 1.00
+
+Mean item complexity =  1.1
+Test of the hypothesis that 2 components are sufficient.
+
+The root mean square of the residuals (RMSR) is  0.03 
+ with the empirical chi square  0.12  with prob &lt;  0.73 
+
+Fit based upon off diagonal values = 1</code></pre>
+</div>
+</div>
+<p>Un altro metodo di rotazione ortogonale è il metodo Quartimax (Neuhaus e Wringley, 1954), il quale opera una semplificazione della matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> massimizzando le covarianze tra i quadrati degli elementi <span class="math inline">\(\lambda_{ij}\)</span> appartenenti a righe diverse, subordinatamente alla condizione che la varianza delle righe rimanga inalterata.</p>
+</section>
+<section id="metodi-di-rotazione-obliqua" class="level3" data-number="30.3.5">
+<h3 data-number="30.3.5" class="anchored" data-anchor-id="metodi-di-rotazione-obliqua"><span class="header-section-number">30.3.5</span> Metodi di Rotazione Obliqua</h3>
+<p>Il termine “rotazione obliqua” può sembrare inappropriato, in quanto la rotazione implica generalmente una trasformazione ortogonale che preserva le distanze. Tuttavia, come evidenziato da {cite:t}<code>rencher10methods</code>, un’espressione più corretta potrebbe essere “trasformazione obliqua”. Nonostante ciò, l’uso comune ha consolidato il termine “rotazione obliqua”.</p>
+<p>Nel contesto della rotazione obliqua, gli assi della soluzione ruotata non sono costretti a rimanere ortogonali tra loro, permettendo così un allineamento più diretto agli agglomerati di punti nello spazio delle saturazioni fattoriali. Questo tipo di trasformazione facilita l’interpretazione dei fattori in presenza di correlazioni tra di essi.</p>
+<p>Esistono diversi approcci analitici per realizzare una rotazione obliqua. Ad esempio, il metodo Direct Oblimin, sviluppato da Jennrich e Sampson nel 1966, utilizza il seguente criterio:</p>
+<p><span class="math display">\[
+\sum_{ij} \left(\sum_v \lambda_i^2 \lambda_j^2 - w \frac{1}{p} \sum_v \lambda_i^2 \sum_v \lambda_j^2\right)
+\]</span></p>
+<p>Qui, <span class="math inline">\(\sum_{ij}\)</span> rappresenta la somma su tutte le coppie di fattori <span class="math inline">\(ij\)</span>. Il processo prevede una minimizzazione, al contrario della massimizzazione tipica delle rotazioni ortogonali, riflettendo la ricerca di una soluzione che minimizzi la correlazione ridondante tra i fattori, mantenendo al contempo chiarezza interpretativa.</p>
+</section>
+</section>
+<section id="matrice-dei-pesi-fattoriali-e-matrice-di-struttura" class="level2" data-number="30.4">
+<h2 data-number="30.4" class="anchored" data-anchor-id="matrice-dei-pesi-fattoriali-e-matrice-di-struttura"><span class="header-section-number">30.4</span> Matrice dei Pesi Fattoriali e Matrice di Struttura</h2>
+<section id="rotazione-ortogonale-1" class="level3" data-number="30.4.1">
+<h3 data-number="30.4.1" class="anchored" data-anchor-id="rotazione-ortogonale-1"><span class="header-section-number">30.4.1</span> Rotazione Ortogonale</h3>
+<p>Nel contesto della rotazione ortogonale, i fattori rimangono incorrelati tra loro. Consideriamo il caso di due fattori latenti non correlati (<span class="math inline">\(\xi_1\)</span> e <span class="math inline">\(\xi_2\)</span>) e quattro variabili manifeste (<span class="math inline">\(y_1, y_2, y_3, y_4\)</span>). I coefficienti <span class="math inline">\(\lambda_{11}, \lambda_{12}, \lambda_{13}, \lambda_{14}\)</span> rappresentano le saturazioni fattoriali delle variabili nel primo fattore, mentre <span class="math inline">\(\lambda_{21}, \lambda_{22}, \lambda_{23}, \lambda_{24}\)</span> sono quelle nel secondo fattore. In un modello di percorso, la correlazione tra due variabili è calcolata come la somma di tutti i percorsi validi che le collegano. Se i fattori comuni sono incorrelati, esiste un solo percorso valido che collega ciascuna variabile manifesta a ciascun fattore comune secondo le regole di Wright. Pertanto, le correlazioni tra variabili manifeste e fattori comuni sono direttamente uguali alle saturazioni fattoriali. Queste saturazioni possono essere interpretate come i pesi beta di un modello di regressione multipla, indicando il contributo specifico di ciascun fattore comune nella varianza spiegata degli item (Tabachnick &amp; Fidell, 2001).</p>
+<div id="fig-rot_4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rot_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/rot_4.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rot_4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;30.1: Rotazione ortogonale.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="rotazione-obliqua" class="level3" data-number="30.4.2">
+<h3 data-number="30.4.2" class="anchored" data-anchor-id="rotazione-obliqua"><span class="header-section-number">30.4.2</span> Rotazione Obliqua</h3>
+<p>Nel caso della rotazione obliqua, i fattori comuni risultano correlati tra loro, rendendo la soluzione fattoriale più complessa. Pertanto, la matrice delle saturazioni fattoriali non riflette più direttamente le correlazioni tra variabili e fattori. Un modello di percorso in questa configurazione include almeno due percorsi validi che collegano ciascuna variabile manifesta a ciascun fattore comune. È necessario distinguere tra tre matrici diverse:</p>
+<ul>
+<li><strong>Matrice Pattern (<span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span>)</strong>: Conosciuta anche come matrice dei modelli, questa matrice rappresenta i coefficienti di regressione parziali delle variabili sulle dimensioni fattoriali, escludendo l’influenza degli altri fattori.</li>
+<li><strong>Matrice di Struttura</strong>: Rappresenta le correlazioni complessive tra le variabili manifeste e i fattori, considerando sia gli effetti diretti che quelli indiretti dei fattori correlati.</li>
+<li><strong>Matrice di Intercorrelazione Fattoriale (<span class="math inline">\(\hat{\boldsymbol{\Phi}}\)</span>)</strong>: Indica le correlazioni tra i fattori stessi.</li>
+</ul>
+<p>In un modello di percorso con rotazione obliqua, gli assi che rappresentano i fattori non sono ortogonali, il che significa che i fattori sono correlati. Le variabili manifeste sono quindi collegate ai fattori attraverso percorsi che includono effetti diretti e indiretti. Ad esempio, per la variabile <span class="math inline">\(y_1\)</span> e il fattore <span class="math inline">\(\xi_1\)</span>, i percorsi includono una freccia causale <span class="math inline">\(\lambda_{11}\)</span> per l’effetto diretto e un percorso indiretto rappresentato dal prodotto <span class="math inline">\(\lambda_{21}\phi_{12}\)</span>. L’analisi dei percorsi dimostra che la correlazione tra <span class="math inline">\(\xi_1\)</span> e <span class="math inline">\(y_1\)</span> è la somma dei valori numerici di questi percorsi validi, ovvero <span class="math inline">\(\lambda_{11} + \lambda_{21} \phi_{12}\)</span>.</p>
+<div id="fig-rot_5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rot_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../figures/rot_5.png" class="img-fluid figure-img" style="width:50.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rot_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;30.2: Rotazione obliqua.
+</figcaption>
+</figure>
+</div>
+<p>Per illustrare la rotazione obliqua, utilizziamo i dati discussi da {cite:t}<code>rencher10methods</code>. Si consideri la matrice di correlazione presentata qui sotto.</p>
+<div id="3a4d2c34" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>,  <span class="fl">0.735</span>, <span class="fl">0.711</span>, <span class="fl">0.704</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.735</span>, <span class="fl">1.00</span>,  <span class="fl">0.693</span>, <span class="fl">0.709</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.711</span>, <span class="fl">0.693</span>, <span class="fl">1.00</span>,  <span class="fl">0.839</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.704</span>, <span class="fl">0.709</span>, <span class="fl">0.839</span>, <span class="fl">1.00</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>R</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 4 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>1.000</td>
+<td>0.735</td>
+<td>0.711</td>
+<td>0.704</td>
+</tr>
+<tr class="even">
+<td>0.735</td>
+<td>1.000</td>
+<td>0.693</td>
+<td>0.709</td>
+</tr>
+<tr class="odd">
+<td>0.711</td>
+<td>0.693</td>
+<td>1.000</td>
+<td>0.839</td>
+</tr>
+<tr class="even">
+<td>0.704</td>
+<td>0.709</td>
+<td>0.839</td>
+<td>1.000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Iniziamo calcolando la soluzione a due fattori mediante il metodo delle componenti principali e una rotazione Varimax (ovvero, ortogonale). Otteniamo le seguenti saturazioni fattoriali.</p>
+<div id="6c6c327c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>f1_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>) </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>f1_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>Principal Components Analysis
+Call: principal(r = R, nfactors = 2, rotate = "varimax")
+Standardized loadings (pattern matrix) based upon correlation matrix
+   RC1  RC2   h2    u2 com
+1 0.50 0.78 0.86 0.140 1.7
+2 0.47 0.81 0.88 0.124 1.6
+3 0.90 0.33 0.92 0.078 1.3
+4 0.89 0.35 0.92 0.083 1.3
+
+                       RC1  RC2
+SS loadings           2.08 1.50
+Proportion Var        0.52 0.37
+Cumulative Var        0.52 0.89
+Proportion Explained  0.58 0.42
+Cumulative Proportion 0.58 1.00
+
+Mean item complexity =  1.5
+Test of the hypothesis that 2 components are sufficient.
+
+The root mean square of the residuals (RMSR) is  0.06 
+
+Fit based upon off diagonal values = 0.99</code></pre>
+</div>
+</div>
+<p>Si noti che i due fattori non sono molto distinti. Consideriamo dunque la soluzione prodotta da una rotazione obliqua. Usiamo qui l’algoritmo Oblimin.</p>
+<div id="1a6653c9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Caricamento dei namespace richiesti: GPArotation
+</code></pre>
+</div>
+</div>
+<p>La matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> delle saturazioni fattoriali si ricava come indicato di seguito.</p>
+<div id="0eafd0fa" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(pr_oblimin<span class="sc">$</span>load[, <span class="dv">1</span>], pr_oblimin<span class="sc">$</span>load[, <span class="dv">2</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 2 of type dbl</caption>
+<tbody>
+<tr class="odd">
+<td>0.03206780</td>
+<td>0.90186261</td>
+</tr>
+<tr class="even">
+<td>-0.02543116</td>
+<td>0.95556536</td>
+</tr>
+<tr class="odd">
+<td>0.96858605</td>
+<td>-0.01096737</td>
+</tr>
+<tr class="even">
+<td>0.94726778</td>
+<td>0.01327683</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La matrice <span class="math inline">\(\hat{\boldsymbol{\Phi}}\)</span> di inter-correlazione fattoriale è la seguente.</p>
+<div id="b7c77120" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>Phi</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 2 x 2 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">TC1</th>
+<th data-quarto-table-cell-role="th" scope="col">TC2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">TC1</td>
+<td>1.0000000</td>
+<td>0.7869776</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">TC2</td>
+<td>0.7869776</td>
+<td>1.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La matrice di struttura, che riporta le correlazioni tra indicatori e fattori comuni, si ottiene pre-moltiplicando la matrice <span class="math inline">\(\boldsymbol{\Lambda}\)</span> delle saturazioni fattoriali alla matrice <span class="math inline">\(\boldsymbol{\Phi}\)</span> di inter-correlazione fattoriale.</p>
+<p><span class="math display">\[
+\text{matrice di struttura} = \boldsymbol{\Lambda}\boldsymbol{\Phi}.
+\]</span></p>
+<p>Per esempio, la correlazione tra la prima variabile manifesta e il primo fattore si ottiene nel modo seguente.</p>
+<div id="9f82b2dd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">+</span> pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">*</span> pr_oblimin<span class="sc">$</span>Phi[<span class="dv">2</span>, <span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<strong>TC1:</strong> 0.741813471502872
+</div>
+</div>
+<p>L’intera matrice di struttura si può trovare eseguendo la moltiplicazione <span class="math inline">\(\boldsymbol{\Lambda}\boldsymbol{\Phi}\)</span>.</p>
+<div id="a8b899a8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load <span class="sc">%*%</span> pr_oblimin<span class="sc">$</span>Phi <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A matrix: 4 x 2 of type dbl</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col">TC1</th>
+<th data-quarto-table-cell-role="th" scope="col">TC2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.742</td>
+<td>0.927</td>
+</tr>
+<tr class="even">
+<td>0.727</td>
+<td>0.936</td>
+</tr>
+<tr class="odd">
+<td>0.960</td>
+<td>0.751</td>
+</tr>
+<tr class="even">
+<td>0.958</td>
+<td>0.759</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="esempio-con-semtools" class="level2" data-number="30.5">
+<h2 data-number="30.5" class="anchored" data-anchor-id="esempio-con-semtools"><span class="header-section-number">30.5</span> Esempio con <code>semTools</code></h2>
+<p>Presento qui un esempio di uso di vari metodi di estrazione fattoriale. Tra tali metodi, la rotazione obliqua Geomin è molto popolare ed è il default di M-Plus.</p>
+<p>Iniziamo a caricare il pacchetto <code>semTools</code>.</p>
+<div id="afc5c573" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(<span class="st">"semTools"</span>)) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Eseguiamo l’analisi fattoriale esplorativa del classico set di dati di Holzinger e Swineford (1939) il quale è costituito dai punteggi dei test di abilità mentale di bambini di seconda e terza media di due scuole diverse (Pasteur e Grant-White). Nel set di dati originale (disponibile nel pacchetto <code>MBESS</code>), sono forniti i punteggi di 26 test. Tuttavia, un sottoinsieme più piccolo con 9 variabili è più ampiamente utilizzato in letteratura. Questi sono i dati qui usati.</p>
+<p>Nel presente esempio, verrà eseguita l’analisi fattoriale esplorativa con l’estrazione di tre fattori. Il metodo di estrazione è <code>mlr</code>:</p>
+<blockquote class="blockquote">
+<p>maximum likelihood estimation with robust (Huber-White) standard errors and a scaled test statistic that is (asymptotically) equal to the Yuan-Bentler test statistic. For both complete and incomplete data.</p>
+</blockquote>
+<p>La soluzione iniziale non è ruotata.</p>
+<div id="9bce9e3a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>unrotated <span class="ot">&lt;-</span> <span class="fu">efaUnrotate</span>(HolzingerSwineford1939, <span class="at">nf =</span> <span class="dv">3</span>, <span class="at">varList =</span> <span class="fu">paste0</span>(<span class="st">"x"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>), <span class="at">estimator =</span> <span class="st">"mlr"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(unrotated)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.6-18 ended normally after 217 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        36
+
+  Number of observations                           301
+
+Model Test User Model:
+                                              Standard      Scaled
+  Test Statistic                                22.897      23.864
+  Degrees of freedom                                12          12
+  P-value (Chi-square)                           0.029       0.021
+  Scaling correction factor                                  0.959
+    Yuan-Bentler correction (Mplus variant)                       
+
+Parameter Estimates:
+
+  Standard errors                             Sandwich
+  Information bread                           Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  factor1 =~                                          
+    x1      (l1_1)    0.653    0.083    7.909    0.000
+    x2      (l2_1)    0.353    0.079    4.481    0.000
+    x3      (l3_1)    0.415    0.086    4.832    0.000
+    x4      (l4_1)    0.926    0.067   13.762    0.000
+    x5      (l5_1)    1.014    0.067   15.176    0.000
+    x6      (l6_1)    0.868    0.062   13.887    0.000
+    x7      (l7_1)    0.283    0.091    3.113    0.002
+    x8      (l8_1)    0.340    0.083    4.095    0.000
+    x9      (l9_1)    0.460    0.078    5.881    0.000
+  factor2 =~                                          
+    x1      (l1_2)    0.349    0.124    2.815    0.005
+    x2      (l2_2)    0.242    0.159    1.523    0.128
+    x3      (l3_2)    0.497    0.132    3.767    0.000
+    x4      (l4_2)   -0.337    0.067   -5.058    0.000
+    x5      (l5_2)   -0.461    0.077   -6.009    0.000
+    x6      (l6_2)   -0.280    0.057   -4.908    0.000
+    x7      (l7_2)    0.372    0.188    1.976    0.048
+    x8      (l8_2)    0.510    0.133    3.831    0.000
+    x9      (l9_2)    0.489    0.066    7.416    0.000
+  factor3 =~                                          
+    x1      (l1_3)   -0.338    0.103   -3.275    0.001
+    x2      (l2_3)   -0.405    0.092   -4.401    0.000
+    x3      (l3_3)   -0.404    0.120   -3.355    0.001
+    x4      (l4_3)    0.049    0.098    0.503    0.615
+    x5      (l5_3)    0.122    0.105    1.154    0.248
+    x6      (l6_3)   -0.000    0.076   -0.003    0.998
+    x7      (l7_3)    0.609    0.125    4.863    0.000
+    x8      (l8_3)    0.409    0.143    2.853    0.004
+    x9      (l9_3)    0.112    0.123    0.915    0.360
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+  factor1 ~~                                          
+    factor2           0.000                           
+    factor3           0.000                           
+  factor2 ~~                                          
+    factor3           0.000                           
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)
+    factor1           1.000                           
+    factor2           1.000                           
+    factor3           1.000                           
+   .x1                0.696    0.113    6.184    0.000
+   .x2                1.035    0.106    9.803    0.000
+   .x3                0.692    0.097    7.132    0.000
+   .x4                0.377    0.053    7.170    0.000
+   .x5                0.403    0.064    6.303    0.000
+   .x6                0.365    0.046    7.984    0.000
+   .x7                0.594    0.148    4.014    0.000
+   .x8                0.479    0.099    4.842    0.000
+   .x9                0.551    0.065    8.518    0.000
+
+Constraints:
+                                               |Slack|
+    0-(1_2*1_1+2_2*2_1+3_2*3_1+4_2*4_1+5_2*5_    0.000
+    0-(1_3*1_1+2_3*2_1+3_3*3_1+4_3*4_1+5_3*5_    0.000
+    0-(1_3*1_2+2_3*2_2+3_3*3_2+4_3*4_2+5_3*5_    0.000
+</code></pre>
+</div>
+</div>
+<p>Si noti che, in assenza di rotazione, è impossibile assegnare un significato ai fattori comuni.</p>
+<section id="orthogonal-varimax" class="level3" data-number="30.5.1">
+<h3 data-number="30.5.1" class="anchored" data-anchor-id="orthogonal-varimax"><span class="header-section-number">30.5.1</span> Orthogonal varimax</h3>
+<p>Utilizziamo ora la rotazione ortogonale Varimax.</p>
+<div id="f2621067" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>out_varimax <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(unrotated, <span class="at">method =</span> <span class="st">"varimax"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_varimax, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   factor1 factor2 factor3
+x1  0.320*  0.607*        
+x2          0.481*        
+x3          0.662*        
+x4  0.838*                
+x5  0.867*                
+x6  0.815*                
+x7                  0.695*
+x8                  0.704*
+x9          0.409*  0.511*
+
+Factor Correlation
+        factor1 factor2 factor3
+factor1       1       0       0
+factor2       0       1       0
+factor3       0       0       1
+
+Method of rotation: varimax 
+
+Test Statistics for Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.320 0.055  5.799 0.000    0.212    0.428
+2  factor1 =~  x2       0.135 0.063  2.151 0.031    0.012    0.259
+3  factor1 =~  x3       0.080 0.049  1.622 0.105   -0.017    0.176
+4  factor1 =~  x4       0.838 0.028 30.193 0.000    0.784    0.892
+5  factor1 =~  x5       0.867 0.024 36.189 0.000    0.820    0.914
+6  factor1 =~  x6       0.815 0.024 33.939 0.000    0.768    0.862
+7  factor1 =~  x7       0.102 0.049  2.058 0.040    0.005    0.199
+8  factor1 =~  x8       0.078 0.048  1.617 0.106   -0.016    0.172
+9  factor1 =~  x9       0.170 0.053  3.222 0.001    0.067    0.273
+10 factor2 =~  x1       0.607 0.075  8.138 0.000    0.461    0.753
+11 factor2 =~  x2       0.481 0.067  7.184 0.000    0.350    0.612
+12 factor2 =~  x3       0.662 0.058 11.499 0.000    0.549    0.775
+13 factor2 =~  x4       0.113 0.043  2.615 0.009    0.028    0.198
+14 factor2 =~  x5       0.032 0.040  0.802 0.422   -0.047    0.111
+15 factor2 =~  x6       0.162 0.042  3.855 0.000    0.079    0.244
+16 factor2 =~  x7      -0.062 0.047 -1.341 0.180   -0.154    0.029
+17 factor2 =~  x8       0.174 0.082  2.117 0.034    0.013    0.336
+18 factor2 =~  x9       0.409 0.079  5.173 0.000    0.254    0.564
+19 factor3 =~  x1       0.130 0.066  1.978 0.048    0.001    0.259
+20 factor3 =~  x2      -0.041 0.071 -0.578 0.563   -0.179    0.098
+21 factor3 =~  x3       0.113 0.049  2.324 0.020    0.018    0.209
+22 factor3 =~  x4       0.077 0.040  1.916 0.055   -0.002    0.155
+23 factor3 =~  x5       0.070 0.042  1.669 0.095   -0.012    0.153
+24 factor3 =~  x6       0.066 0.038  1.715 0.086   -0.009    0.141
+25 factor3 =~  x7       0.695 0.092  7.591 0.000    0.516    0.875
+26 factor3 =~  x8       0.704 0.083  8.520 0.000    0.542    0.865
+27 factor3 =~  x9       0.511 0.065  7.885 0.000    0.384    0.638
+       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.320 0.055  5.799 0.000    0.212    0.428
+2  factor1 =~  x2       0.135 0.063  2.151 0.031    0.012    0.259
+3  factor1 =~  x3       0.080 0.049  1.622 0.105   -0.017    0.176
+4  factor1 =~  x4       0.838 0.028 30.193 0.000    0.784    0.892
+5  factor1 =~  x5       0.867 0.024 36.189 0.000    0.820    0.914
+6  factor1 =~  x6       0.815 0.024 33.939 0.000    0.768    0.862
+7  factor1 =~  x7       0.102 0.049  2.058 0.040    0.005    0.199
+8  factor1 =~  x8       0.078 0.048  1.617 0.106   -0.016    0.172
+9  factor1 =~  x9       0.170 0.053  3.222 0.001    0.067    0.273
+10 factor2 =~  x1       0.607 0.075  8.138 0.000    0.461    0.753
+11 factor2 =~  x2       0.481 0.067  7.184 0.000    0.350    0.612
+12 factor2 =~  x3       0.662 0.058 11.499 0.000    0.549    0.775
+13 factor2 =~  x4       0.113 0.043  2.615 0.009    0.028    0.198
+14 factor2 =~  x5       0.032 0.040  0.802 0.422   -0.047    0.111
+15 factor2 =~  x6       0.162 0.042  3.855 0.000    0.079    0.244
+16 factor2 =~  x7      -0.062 0.047 -1.341 0.180   -0.154    0.029
+17 factor2 =~  x8       0.174 0.082  2.117 0.034    0.013    0.336
+18 factor2 =~  x9       0.409 0.079  5.173 0.000    0.254    0.564
+19 factor3 =~  x1       0.130 0.066  1.978 0.048    0.001    0.259
+20 factor3 =~  x2      -0.041 0.071 -0.578 0.563   -0.179    0.098
+21 factor3 =~  x3       0.113 0.049  2.324 0.020    0.018    0.209
+22 factor3 =~  x4       0.077 0.040  1.916 0.055   -0.002    0.155
+23 factor3 =~  x5       0.070 0.042  1.669 0.095   -0.012    0.153
+24 factor3 =~  x6       0.066 0.038  1.715 0.086   -0.009    0.141
+25 factor3 =~  x7       0.695 0.092  7.591 0.000    0.516    0.875
+26 factor3 =~  x8       0.704 0.083  8.520 0.000    0.542    0.865
+27 factor3 =~  x9       0.511 0.065  7.885 0.000    0.384    0.638</code></pre>
+</div>
+</div>
+</section>
+<section id="orthogonal-quartimin" class="level3" data-number="30.5.2">
+<h3 data-number="30.5.2" class="anchored" data-anchor-id="orthogonal-quartimin"><span class="header-section-number">30.5.2</span> Orthogonal Quartimin</h3>
+<p>Un metodo alternativo per la rotazione ortogonale è Quartimin.</p>
+<div id="396b048b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>out_quartimin <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(unrotated, <span class="at">method =</span> <span class="st">"quartimin"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_quartimin, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   factor1 factor2 factor3
+x1  0.353*  0.590*        
+x2          0.474*        
+x3          0.657*        
+x4  0.844*                
+x5  0.869*                
+x6  0.823*                
+x7                  0.692*
+x8                  0.702*
+x9          0.397*  0.508*
+
+Factor Correlation
+        factor1 factor2 factor3
+factor1       1       0       0
+factor2       0       1       0
+factor3       0       0       1
+
+Method of rotation: Quartimin 
+
+Test Statistics for Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.353 0.062  5.720 0.000    0.232    0.473
+2  factor1 =~  x2       0.158 0.066  2.375 0.018    0.028    0.288
+3  factor1 =~  x3       0.115 0.057  2.015 0.044    0.003    0.226
+4  factor1 =~  x4       0.844 0.027 30.814 0.000    0.790    0.898
+5  factor1 =~  x5       0.869 0.023 37.224 0.000    0.823    0.914
+6  factor1 =~  x6       0.823 0.024 35.026 0.000    0.777    0.869
+7  factor1 =~  x7       0.116 0.054  2.161 0.031    0.011    0.222
+8  factor1 =~  x8       0.104 0.054  1.914 0.056   -0.003    0.210
+9  factor1 =~  x9       0.202 0.059  3.403 0.001    0.086    0.319
+10 factor2 =~  x1       0.590 0.078  7.523 0.000    0.436    0.743
+11 factor2 =~  x2       0.474 0.068  6.935 0.000    0.340    0.608
+12 factor2 =~  x3       0.657 0.059 11.204 0.000    0.542    0.771
+13 factor2 =~  x4       0.072 0.041  1.748 0.080   -0.009    0.152
+14 factor2 =~  x5      -0.010 0.039 -0.263 0.793   -0.087    0.066
+15 factor2 =~  x6       0.122 0.040  3.008 0.003    0.042    0.201
+16 factor2 =~  x7      -0.071 0.048 -1.465 0.143   -0.166    0.024
+17 factor2 =~  x8       0.167 0.090  1.849 0.064   -0.010    0.343
+18 factor2 =~  x9       0.397 0.087  4.581 0.000    0.227    0.567
+19 factor3 =~  x1       0.124 0.071  1.740 0.082   -0.016    0.264
+20 factor3 =~  x2      -0.042 0.074 -0.574 0.566   -0.187    0.102
+21 factor3 =~  x3       0.114 0.054  2.093 0.036    0.007    0.221
+22 factor3 =~  x4       0.056 0.037  1.503 0.133   -0.017    0.128
+23 factor3 =~  x5       0.048 0.038  1.263 0.207   -0.027    0.123
+24 factor3 =~  x6       0.046 0.034  1.347 0.178   -0.021    0.112
+25 factor3 =~  x7       0.692 0.093  7.477 0.000    0.511    0.874
+26 factor3 =~  x8       0.702 0.084  8.331 0.000    0.537    0.867
+27 factor3 =~  x9       0.508 0.070  7.298 0.000    0.371    0.644
+       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.353 0.062  5.720 0.000    0.232    0.473
+2  factor1 =~  x2       0.158 0.066  2.375 0.018    0.028    0.288
+3  factor1 =~  x3       0.115 0.057  2.015 0.044    0.003    0.226
+4  factor1 =~  x4       0.844 0.027 30.814 0.000    0.790    0.898
+5  factor1 =~  x5       0.869 0.023 37.224 0.000    0.823    0.914
+6  factor1 =~  x6       0.823 0.024 35.026 0.000    0.777    0.869
+7  factor1 =~  x7       0.116 0.054  2.161 0.031    0.011    0.222
+8  factor1 =~  x8       0.104 0.054  1.914 0.056   -0.003    0.210
+9  factor1 =~  x9       0.202 0.059  3.403 0.001    0.086    0.319
+10 factor2 =~  x1       0.590 0.078  7.523 0.000    0.436    0.743
+11 factor2 =~  x2       0.474 0.068  6.935 0.000    0.340    0.608
+12 factor2 =~  x3       0.657 0.059 11.204 0.000    0.542    0.771
+13 factor2 =~  x4       0.072 0.041  1.748 0.080   -0.009    0.152
+14 factor2 =~  x5      -0.010 0.039 -0.263 0.793   -0.087    0.066
+15 factor2 =~  x6       0.122 0.040  3.008 0.003    0.042    0.201
+16 factor2 =~  x7      -0.071 0.048 -1.465 0.143   -0.166    0.024
+17 factor2 =~  x8       0.167 0.090  1.849 0.064   -0.010    0.343
+18 factor2 =~  x9       0.397 0.087  4.581 0.000    0.227    0.567
+19 factor3 =~  x1       0.124 0.071  1.740 0.082   -0.016    0.264
+20 factor3 =~  x2      -0.042 0.074 -0.574 0.566   -0.187    0.102
+21 factor3 =~  x3       0.114 0.054  2.093 0.036    0.007    0.221
+22 factor3 =~  x4       0.056 0.037  1.503 0.133   -0.017    0.128
+23 factor3 =~  x5       0.048 0.038  1.263 0.207   -0.027    0.123
+24 factor3 =~  x6       0.046 0.034  1.347 0.178   -0.021    0.112
+25 factor3 =~  x7       0.692 0.093  7.477 0.000    0.511    0.874
+26 factor3 =~  x8       0.702 0.084  8.331 0.000    0.537    0.867
+27 factor3 =~  x9       0.508 0.070  7.298 0.000    0.371    0.644</code></pre>
+</div>
+</div>
+</section>
+<section id="oblique-quartimin" class="level3" data-number="30.5.3">
+<h3 data-number="30.5.3" class="anchored" data-anchor-id="oblique-quartimin"><span class="header-section-number">30.5.3</span> Oblique Quartimin</h3>
+<p>L’algoritmo Quartimin può anche essere usato per una soluzione obliqua.</p>
+<div id="b7fbbd83" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>out_oblq <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(unrotated, <span class="at">method =</span> <span class="st">"quartimin"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_oblq, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   factor1 factor2 factor3
+x1          0.602*        
+x2          0.505*        
+x3          0.689*        
+x4  0.840*                
+x5  0.888*                
+x6  0.808*                
+x7                  0.723*
+x8                  0.702*
+x9          0.366*  0.463*
+
+Factor Correlation
+          factor1   factor2   factor3
+factor1 1.0000000 0.3257795 0.2164265
+factor2 0.3257795 1.0000000 0.2704806
+factor3 0.2164265 0.2704806 1.0000000
+
+Method of rotation: Quartimin 
+
+Test Statistics for Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.191 0.064  2.965 0.003    0.065    0.317
+2  factor1 =~  x2       0.044 0.066  0.665 0.506   -0.085    0.172
+3  factor1 =~  x3      -0.070 0.034 -2.031 0.042   -0.137   -0.002
+4  factor1 =~  x4       0.840 0.033 25.622 0.000    0.776    0.905
+5  factor1 =~  x5       0.888 0.027 32.583 0.000    0.835    0.942
+6  factor1 =~  x6       0.808 0.028 28.441 0.000    0.752    0.863
+7  factor1 =~  x7       0.044 0.037  1.179 0.238   -0.029    0.116
+8  factor1 =~  x8      -0.033 0.036 -0.916 0.360   -0.103    0.037
+9  factor1 =~  x9       0.035 0.048  0.728 0.467   -0.059    0.129
+10 factor2 =~  x1       0.602 0.086  7.003 0.000    0.434    0.771
+11 factor2 =~  x2       0.505 0.071  7.163 0.000    0.367    0.644
+12 factor2 =~  x3       0.689 0.056 12.344 0.000    0.580    0.799
+13 factor2 =~  x4       0.022 0.045  0.483 0.629   -0.067    0.110
+14 factor2 =~  x5      -0.067 0.036 -1.890 0.059   -0.137    0.002
+15 factor2 =~  x6       0.078 0.041  1.887 0.059   -0.003    0.158
+16 factor2 =~  x7      -0.152 0.037 -4.059 0.000   -0.225   -0.078
+17 factor2 =~  x8       0.104 0.109  0.960 0.337   -0.109    0.317
+18 factor2 =~  x9       0.366 0.097  3.780 0.000    0.176    0.556
+19 factor3 =~  x1       0.031 0.062  0.500 0.617   -0.090    0.152
+20 factor3 =~  x2      -0.117 0.066 -1.776 0.076   -0.245    0.012
+21 factor3 =~  x3       0.023 0.039  0.587 0.557   -0.054    0.100
+22 factor3 =~  x4       0.005 0.042  0.128 0.898   -0.076    0.087
+23 factor3 =~  x5       0.008 0.035  0.216 0.829   -0.061    0.076
+24 factor3 =~  x6      -0.011 0.030 -0.362 0.717   -0.070    0.048
+25 factor3 =~  x7       0.723 0.087  8.328 0.000    0.553    0.893
+26 factor3 =~  x8       0.702 0.098  7.137 0.000    0.509    0.894
+27 factor3 =~  x9       0.463 0.075  6.211 0.000    0.317    0.609
+       lhs op rhs std.loading    se      z     p ci.lower ci.upper
+1  factor1 =~  x1       0.191 0.064  2.965 0.003    0.065    0.317
+2  factor1 =~  x2       0.044 0.066  0.665 0.506   -0.085    0.172
+3  factor1 =~  x3      -0.070 0.034 -2.031 0.042   -0.137   -0.002
+4  factor1 =~  x4       0.840 0.033 25.622 0.000    0.776    0.905
+5  factor1 =~  x5       0.888 0.027 32.583 0.000    0.835    0.942
+6  factor1 =~  x6       0.808 0.028 28.441 0.000    0.752    0.863
+7  factor1 =~  x7       0.044 0.037  1.179 0.238   -0.029    0.116
+8  factor1 =~  x8      -0.033 0.036 -0.916 0.360   -0.103    0.037
+9  factor1 =~  x9       0.035 0.048  0.728 0.467   -0.059    0.129
+10 factor2 =~  x1       0.602 0.086  7.003 0.000    0.434    0.771
+11 factor2 =~  x2       0.505 0.071  7.163 0.000    0.367    0.644
+12 factor2 =~  x3       0.689 0.056 12.344 0.000    0.580    0.799
+13 factor2 =~  x4       0.022 0.045  0.483 0.629   -0.067    0.110
+14 factor2 =~  x5      -0.067 0.036 -1.890 0.059   -0.137    0.002
+15 factor2 =~  x6       0.078 0.041  1.887 0.059   -0.003    0.158
+16 factor2 =~  x7      -0.152 0.037 -4.059 0.000   -0.225   -0.078
+17 factor2 =~  x8       0.104 0.109  0.960 0.337   -0.109    0.317
+18 factor2 =~  x9       0.366 0.097  3.780 0.000    0.176    0.556
+19 factor3 =~  x1       0.031 0.062  0.500 0.617   -0.090    0.152
+20 factor3 =~  x2      -0.117 0.066 -1.776 0.076   -0.245    0.012
+21 factor3 =~  x3       0.023 0.039  0.587 0.557   -0.054    0.100
+22 factor3 =~  x4       0.005 0.042  0.128 0.898   -0.076    0.087
+23 factor3 =~  x5       0.008 0.035  0.216 0.829   -0.061    0.076
+24 factor3 =~  x6      -0.011 0.030 -0.362 0.717   -0.070    0.048
+25 factor3 =~  x7       0.723 0.087  8.328 0.000    0.553    0.893
+26 factor3 =~  x8       0.702 0.098  7.137 0.000    0.509    0.894
+27 factor3 =~  x9       0.463 0.075  6.211 0.000    0.317    0.609</code></pre>
+</div>
+</div>
+</section>
+<section id="orthogonal-geomin" class="level3" data-number="30.5.4">
+<h3 data-number="30.5.4" class="anchored" data-anchor-id="orthogonal-geomin"><span class="header-section-number">30.5.4</span> Orthogonal Geomin</h3>
+<p>Consideriamo ora la rotazione Geomin. L’algoritmo Geomin fornisce un metodo di rotazione che riduce al minimo la media geometrica delle saturazioni fattoriali innalzate al quadrato. Qui è usato per ottenere una soluzione ortogonale.</p>
+<div id="ea68201e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>out_geomin_orh <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(unrotated, <span class="at">method =</span> <span class="st">"geomin"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_orh, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   factor1 factor2 factor3
+x1  0.315*         -0.621*
+x2                 -0.474*
+x3                 -0.671*
+x4  0.838*                
+x5  0.867*                
+x6  0.814*                
+x7          0.696*        
+x8          0.677*        
+x9          0.456* -0.468*
+
+Factor Correlation
+        factor1 factor2 factor3
+factor1       1       0       0
+factor2       0       1       0
+factor3       0       0       1
+
+Method of rotation: Geomin 
+
+Test Statistics for Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op rhs std.loading    se       z     p ci.lower ci.upper
+1  factor1 =~  x1       0.315 0.134   2.352 0.019    0.053    0.578
+2  factor1 =~  x2       0.130 0.118   1.102 0.271   -0.101    0.360
+3  factor1 =~  x3       0.074 0.123   0.599 0.549   -0.168    0.316
+4  factor1 =~  x4       0.838 0.036  23.402 0.000    0.767    0.908
+5  factor1 =~  x5       0.867 0.025  35.190 0.000    0.819    0.915
+6  factor1 =~  x6       0.814 0.040  20.427 0.000    0.736    0.892
+7  factor1 =~  x7       0.112 0.068   1.645 0.100   -0.021    0.245
+8  factor1 =~  x8       0.085 0.063   1.341 0.180   -0.039    0.209
+9  factor1 =~  x9       0.172 0.095   1.803 0.071   -0.015    0.359
+10 factor2 =~  x1       0.053 0.061   0.868 0.386   -0.067    0.173
+11 factor2 =~  x2      -0.099 0.070  -1.409 0.159   -0.237    0.039
+12 factor2 =~  x3       0.033 0.048   0.698 0.485   -0.060    0.127
+13 factor2 =~  x4       0.051 0.046   1.115 0.265   -0.039    0.140
+14 factor2 =~  x5       0.054 0.061   0.878 0.380   -0.066    0.173
+15 factor2 =~  x6       0.035 0.037   0.924 0.355   -0.039    0.108
+16 factor2 =~  x7       0.696 0.090   7.702 0.000    0.519    0.874
+17 factor2 =~  x8       0.677 0.088   7.660 0.000    0.504    0.850
+18 factor2 =~  x9       0.456 0.073   6.261 0.000    0.314    0.599
+19 factor3 =~  x1      -0.621 0.101  -6.148 0.000   -0.818   -0.423
+20 factor3 =~  x2      -0.474 0.074  -6.414 0.000   -0.619   -0.329
+21 factor3 =~  x3      -0.671 0.058 -11.658 0.000   -0.784   -0.558
+22 factor3 =~  x4      -0.129 0.161  -0.800 0.424   -0.445    0.187
+23 factor3 =~  x5      -0.048 0.174  -0.277 0.782   -0.389    0.293
+24 factor3 =~  x6      -0.176 0.164  -1.071 0.284   -0.497    0.146
+25 factor3 =~  x7      -0.021 0.059  -0.354 0.724   -0.137    0.095
+26 factor3 =~  x8      -0.257 0.094  -2.720 0.007   -0.442   -0.072
+27 factor3 =~  x9      -0.468 0.105  -4.472 0.000   -0.673   -0.263
+       lhs op rhs std.loading    se       z     p ci.lower ci.upper
+1  factor1 =~  x1       0.315 0.134   2.352 0.019    0.053    0.578
+2  factor1 =~  x2       0.130 0.118   1.102 0.271   -0.101    0.360
+3  factor1 =~  x3       0.074 0.123   0.599 0.549   -0.168    0.316
+4  factor1 =~  x4       0.838 0.036  23.402 0.000    0.767    0.908
+5  factor1 =~  x5       0.867 0.025  35.190 0.000    0.819    0.915
+6  factor1 =~  x6       0.814 0.040  20.427 0.000    0.736    0.892
+7  factor1 =~  x7       0.112 0.068   1.645 0.100   -0.021    0.245
+8  factor1 =~  x8       0.085 0.063   1.341 0.180   -0.039    0.209
+9  factor1 =~  x9       0.172 0.095   1.803 0.071   -0.015    0.359
+10 factor2 =~  x1       0.053 0.061   0.868 0.386   -0.067    0.173
+11 factor2 =~  x2      -0.099 0.070  -1.409 0.159   -0.237    0.039
+12 factor2 =~  x3       0.033 0.048   0.698 0.485   -0.060    0.127
+13 factor2 =~  x4       0.051 0.046   1.115 0.265   -0.039    0.140
+14 factor2 =~  x5       0.054 0.061   0.878 0.380   -0.066    0.173
+15 factor2 =~  x6       0.035 0.037   0.924 0.355   -0.039    0.108
+16 factor2 =~  x7       0.696 0.090   7.702 0.000    0.519    0.874
+17 factor2 =~  x8       0.677 0.088   7.660 0.000    0.504    0.850
+18 factor2 =~  x9       0.456 0.073   6.261 0.000    0.314    0.599
+19 factor3 =~  x1      -0.621 0.101  -6.148 0.000   -0.818   -0.423
+20 factor3 =~  x2      -0.474 0.074  -6.414 0.000   -0.619   -0.329
+21 factor3 =~  x3      -0.671 0.058 -11.658 0.000   -0.784   -0.558
+22 factor3 =~  x4      -0.129 0.161  -0.800 0.424   -0.445    0.187
+23 factor3 =~  x5      -0.048 0.174  -0.277 0.782   -0.389    0.293
+24 factor3 =~  x6      -0.176 0.164  -1.071 0.284   -0.497    0.146
+25 factor3 =~  x7      -0.021 0.059  -0.354 0.724   -0.137    0.095
+26 factor3 =~  x8      -0.257 0.094  -2.720 0.007   -0.442   -0.072
+27 factor3 =~  x9      -0.468 0.105  -4.472 0.000   -0.673   -0.263</code></pre>
+</div>
+</div>
+</section>
+<section id="oblique-geomin" class="level3" data-number="30.5.5">
+<h3 data-number="30.5.5" class="anchored" data-anchor-id="oblique-geomin"><span class="header-section-number">30.5.5</span> Oblique Geomin</h3>
+<p>La rotazione Geomin può anche essere usata per ottenere una soluzione obliqua.</p>
+<div id="ab34852c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>out_geomin_obl <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(unrotated, <span class="at">method =</span> <span class="st">"geomin"</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_obl, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   factor1 factor2 factor3
+x1                 -0.604*
+x2                 -0.507*
+x3                 -0.691*
+x4  0.839*                
+x5  0.887*                
+x6  0.806*                
+x7          0.726*        
+x8          0.703*        
+x9          0.463* -0.368*
+
+Factor Correlation
+           factor1    factor2    factor3
+factor1  1.0000000  0.2296081 -0.3271571
+factor2  0.2296081  1.0000000 -0.2776987
+factor3 -0.3271571 -0.2776987  1.0000000
+
+Method of rotation: Geomin 
+
+Test Statistics for Standardized Rotated Factor Loadings</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning message in testLoadings(object):
+"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       lhs op rhs std.loading    se       z     p ci.lower ci.upper
+1  factor1 =~  x1       0.188 0.070   2.670 0.008    0.050    0.326
+2  factor1 =~  x2       0.044 0.054   0.806 0.420   -0.063    0.150
+3  factor1 =~  x3      -0.073 0.049  -1.467 0.142   -0.170    0.024
+4  factor1 =~  x4       0.839 0.032  26.467 0.000    0.777    0.901
+5  factor1 =~  x5       0.887 0.029  30.077 0.000    0.829    0.945
+6  factor1 =~  x6       0.806 0.030  26.717 0.000    0.747    0.865
+7  factor1 =~  x7       0.031 0.034   0.915 0.360   -0.036    0.099
+8  factor1 =~  x8      -0.045 0.048  -0.948 0.343   -0.139    0.048
+9  factor1 =~  x9       0.025 0.034   0.747 0.455   -0.041    0.091
+10 factor2 =~  x1       0.029 0.051   0.567 0.571   -0.071    0.129
+11 factor2 =~  x2      -0.119 0.072  -1.664 0.096   -0.260    0.021
+12 factor2 =~  x3       0.020 0.037   0.538 0.591   -0.053    0.092
+13 factor2 =~  x4       0.007 0.043   0.174 0.862   -0.076    0.091
+14 factor2 =~  x5       0.010 0.036   0.285 0.775   -0.060    0.080
+15 factor2 =~  x6      -0.009 0.030  -0.309 0.758   -0.068    0.049
+16 factor2 =~  x7       0.726 0.072  10.065 0.000    0.585    0.868
+17 factor2 =~  x8       0.703 0.118   5.963 0.000    0.472    0.934
+18 factor2 =~  x9       0.463 0.080   5.810 0.000    0.307    0.619
+19 factor3 =~  x1      -0.604 0.081  -7.438 0.000   -0.763   -0.445
+20 factor3 =~  x2      -0.507 0.073  -6.983 0.000   -0.649   -0.364
+21 factor3 =~  x3      -0.691 0.061 -11.373 0.000   -0.810   -0.572
+22 factor3 =~  x4      -0.024 0.034  -0.702 0.482   -0.091    0.043
+23 factor3 =~  x5       0.065 0.045   1.459 0.144   -0.022    0.153
+24 factor3 =~  x6      -0.080 0.048  -1.679 0.093   -0.173    0.013
+25 factor3 =~  x7       0.150 0.107   1.403 0.161   -0.060    0.360
+26 factor3 =~  x8      -0.106 0.164  -0.645 0.519   -0.428    0.216
+27 factor3 =~  x9      -0.368 0.133  -2.770 0.006   -0.629   -0.108
+       lhs op rhs std.loading    se       z     p ci.lower ci.upper
+1  factor1 =~  x1       0.188 0.070   2.670 0.008    0.050    0.326
+2  factor1 =~  x2       0.044 0.054   0.806 0.420   -0.063    0.150
+3  factor1 =~  x3      -0.073 0.049  -1.467 0.142   -0.170    0.024
+4  factor1 =~  x4       0.839 0.032  26.467 0.000    0.777    0.901
+5  factor1 =~  x5       0.887 0.029  30.077 0.000    0.829    0.945
+6  factor1 =~  x6       0.806 0.030  26.717 0.000    0.747    0.865
+7  factor1 =~  x7       0.031 0.034   0.915 0.360   -0.036    0.099
+8  factor1 =~  x8      -0.045 0.048  -0.948 0.343   -0.139    0.048
+9  factor1 =~  x9       0.025 0.034   0.747 0.455   -0.041    0.091
+10 factor2 =~  x1       0.029 0.051   0.567 0.571   -0.071    0.129
+11 factor2 =~  x2      -0.119 0.072  -1.664 0.096   -0.260    0.021
+12 factor2 =~  x3       0.020 0.037   0.538 0.591   -0.053    0.092
+13 factor2 =~  x4       0.007 0.043   0.174 0.862   -0.076    0.091
+14 factor2 =~  x5       0.010 0.036   0.285 0.775   -0.060    0.080
+15 factor2 =~  x6      -0.009 0.030  -0.309 0.758   -0.068    0.049
+16 factor2 =~  x7       0.726 0.072  10.065 0.000    0.585    0.868
+17 factor2 =~  x8       0.703 0.118   5.963 0.000    0.472    0.934
+18 factor2 =~  x9       0.463 0.080   5.810 0.000    0.307    0.619
+19 factor3 =~  x1      -0.604 0.081  -7.438 0.000   -0.763   -0.445
+20 factor3 =~  x2      -0.507 0.073  -6.983 0.000   -0.649   -0.364
+21 factor3 =~  x3      -0.691 0.061 -11.373 0.000   -0.810   -0.572
+22 factor3 =~  x4      -0.024 0.034  -0.702 0.482   -0.091    0.043
+23 factor3 =~  x5       0.065 0.045   1.459 0.144   -0.022    0.153
+24 factor3 =~  x6      -0.080 0.048  -1.679 0.093   -0.173    0.013
+25 factor3 =~  x7       0.150 0.107   1.403 0.161   -0.060    0.360
+26 factor3 =~  x8      -0.106 0.164  -0.645 0.519   -0.428    0.216
+27 factor3 =~  x9      -0.368 0.133  -2.770 0.006   -0.629   -0.108</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="interpretazione" class="level2" data-number="30.6">
+<h2 data-number="30.6" class="anchored" data-anchor-id="interpretazione"><span class="header-section-number">30.6</span> Interpretazione</h2>
+<p>Per interpretare i fattori comuni latenti, dobbiamo decidere se usare la matrice pattern o la matrice struttura. Un fattore individuato dall’analisi fattoriale è una caratteristica latente univariata che rappresenta l’essenza di un fenomeno psicologico. Dovrebbe essere interpretato come il significato semplice che si trova dietro l’intersezione dei significati delle variabili che saturano nel fattore.</p>
+<p>Nella rotazione obliqua, i fattori sono correlati ma vogliamo comunque interpretarli come dimensioni psicologiche distinte. L’etichetta che diamo al fattore <span class="math inline">\(F_1\)</span> dovrebbe aiutare a separare teoricamente il fenomeno psicologico corrispondente a <span class="math inline">\(F_1\)</span> dal fenomeno denotato dall’etichetta del fattore <span class="math inline">\(F_2\)</span>, anche se sono correlati.</p>
+<p>Se questa è la strategia interpretativa, allora lo strumento principale per l’interpretazione è la matrice pattern. I coefficienti della matrice pattern mostrano l’influenza causale del fattore comune sulle variabili manifeste. La matrice struttura descrive le correlazioni tra variabili e fattori e dipende sia dai percorsi diretti che indiretti. Quindi, non descrive gli effetti diretti dei fattori comuni latenti sulle variabili manifeste ma solo la covariazione tra di loro.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-rencher10methods" class="csl-entry" role="listitem">
+Rencher, AC. 2002. <em>Methods of multivariate analysis. 2002</em>. Wiley Publications.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/extraction/03_numero_fattori.html" class="pagination-link" aria-label="Il numero dei fattori">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/extraction/05_val_soluzione.html" class="pagination-link" aria-label="Valutare e rifinire la soluzione fattoriale">
+        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Testing Psicologico è stato scritto da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/ccaudek/testing_psicologico/blob/main/chapters/extraction/04_rotazione.ipynb" class="toc-action"><i class="bi bi-github"></i>Modifica questa pagina</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Questo libro è stato realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
