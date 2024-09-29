@@ -2,16 +2,16 @@
 suppressPackageStartupMessages({
   library("here")
   library("tidyverse")
-  library("knitr")
+  library("knitr") # rende disponibile l'ambiente LaTeX
   library("markdown")
   library("scales")
   library("psych")
   library("lavaan")
   library("semPlot")
   library("semTools")
+  library("bayesplot")
   library("patchwork")
   library("gridExtra")
-  library("bayesplot")
   library("ggExtra")
   library("ggpubr")
   library("viridis")
