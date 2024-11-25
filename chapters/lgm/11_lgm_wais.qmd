@@ -1,0 +1,241 @@
+---
+title: "Lo Sviluppo dell'Intelligenza"
+format: html
+editor: source
+---
+
+**Prerequisiti**
+
+**Concetti e Competenze Chiave**
+
+**Preparazione del Notebook**
+
+
+```{r class.source = "fold-show", getpackages, message=FALSE,warning=FALSE, echo=TRUE}
+# Carica il file _common.R per impostazioni di pacchetti e opzioni
+here::here("code", "_common.R") |> source()
+
+if(!require("pacman")){install.packages("pacman",repos = "http://cran.us.r-project.org")}
+
+pacman::p_load(lavaan, tidyverse, here, reshape2)
+```
+
+## Introduzione
+
+Questa discussione riproduce il tutorial presentato nel [Workshop on Latent Growth Modeling in Lavaan](https://github.com/njudd/LGC_Workshop/tree/main) tenuto al Donders Institute nel novembre 2024. Questo tutorial riprende in un unico studio i concetti che avevamo esaminato nei capitoli precedenti. Verranno utilizzati dei dati longitudinali relativi al WISC-V forniti dagli autori a 6, 7, 9 e 11 anni.
+
+## Dati
+
+Il WISC-V Test (Wechsler Intelligence Scale for Children) è un test del QI somministrato a bambini di età compresa tra 6 e 16 anni. Fornisce cinque punteggi indici principali, ovvero Indice di Comprensione Verbale, Indice Visuo-Spaziale, Indice di Ragionamento Fluido, Indice di Memoria di Lavoro e Indice di Velocità di Elaborazione. Nel workshop gli autori discutono su un sottoinsieme contenente: Indice di Comprensione Verbale, Indice di Velocità di Elaborazione e il totale.
+
+```{r class.source = "fold-show", loaddata, message=FALSE,warning=FALSE,include=TRUE, echo = TRUE}
+wisc <- rio::import(
+  here::here(
+    "data", "wisc.csv"
+  )
+)[,-1]
+
+head(wisc)         #first 6 rows
+```
+
+```{r}
+dim(wisc)          #number of rows and columns
+```
+
+Gli autori si concentrano sull'analisi dei dati del subtest verbale.
+
+```{r class.source = "fold-show", subsetdata, message=FALSE,warning=FALSE}
+wisc_verbal <- wisc[,c("ID","Verbal_T6","Verbal_T7","Verbal_T9","Verbal_T11")]
+glimpse(wisc_verbal)
+```
+
+I dati vanno trasformati nel formato long.
+
+```{r class.source = "fold-show", reshapedata, message=FALSE,warning=FALSE}
+wisc_verbal_long <- wisc_verbal %>% 
+  pivot_longer(!ID, names_to = "wave", values_to = "verbal")
+
+wisc_verbal_long |> head()
+```
+
+Un grafico dei dati si ottiene nel modo seguente.
+
+```{r class.source = "fold-show", plotdata, message=FALSE,warning=FALSE,include=T}
+wisc_verbal_long$wave = factor(wisc_verbal_long$wave, levels=c("Verbal_T6","Verbal_T7","Verbal_T9","Verbal_T11"))
+
+ggplot(wisc_verbal_long, aes(wave, verbal, group=ID, fill=ID, color=ID)) +
+  geom_point() + 
+  geom_line() +
+  theme_classic(base_size = 15) + # adding a classic theme; https://ggplot2.tidyverse.org/reference/ggtheme.html
+  theme(legend.position = "none") + # getting rid of legend
+  labs(x = "Wave", y = "Score on Verbal Subtest")
+```
+
+## Modello lineare
+
+Il modello più semplice è quello di crescita lineare.
+
+```{r class.source = "fold-show", createmodel, message=FALSE,warning=FALSE}
+# Create LGM
+linear_growth_model <- '
+  i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s =~ 0*Verbal_T6 + 1*Verbal_T7 + 2*Verbal_T9 + 3*Verbal_T11'
+
+```
+
+Adattiamo il modello ai dati ed esaminiamo i risultati.
+
+```{r class.source = "fold-show", outputres, message=FALSE,warning=FALSE,include=TRUE}
+# Fit LGM
+fit_linear_growth_model <- growth(linear_growth_model, data=wisc_verbal,missing='fiml')
+# Output results
+summary(fit_linear_growth_model, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+Il modello non si adatta bene ai dati.
+
+## Crescita non lineare
+
+Nell'analisi precedente, abbiamo modellato un modello di crescita lineare. Tuttavia, è anche possibile modellare una crescita non lineare in lavaan come una traiettoria quadratica. Per fare ciò, è necessario aggiungere un terzo parametro chiamato termine quadratico che avrà gli stessi loadings del coefficiente angolare, ma al quadrato.
+
+Per fare questo, è necessario specificare un'altra variabile latente nel modello chiamata termine quadratico. Al termine quadratico vengono assegnati loadings che sono i quadrati dei loadings del coefficiente angolare.
+
+```{r class.source = "fold-show", quadmodel, message=FALSE,warning=FALSE,include=TRUE}
+
+# Create quadratic growth model
+quad_growth_model <- 'i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+                      s =~ 0*Verbal_T6 + 1*Verbal_T7 + 2*Verbal_T9 + 3*Verbal_T11
+                      q =~ 0*Verbal_T6 + 1*Verbal_T7 + 4*Verbal_T9 + 9*Verbal_T11'
+# Fit model
+fit_quad_growth_model <- growth(quad_growth_model, data=wisc_verbal,missing='fiml')
+# Output results
+summary(fit_quad_growth_model, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+È anche possibile modellare una crescita non lineare in lavaan senza alcuna ipotesi sulla forma. Per farlo, si fissano i loadings della prima e dell'ultima misurazione, ma si stimano liberamente quelli intermedi.
+
+```{r class.source = "fold-show", basisoutput, message=FALSE,warning=FALSE,include=TRUE}
+# Create non-linear growth model
+basis_growth_model <- 'i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+                       s =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11'
+# Fit model
+fit_basis_growth_model <- growth(basis_growth_model, data=wisc_verbal,missing='fiml')
+# Output results
+summary(fit_basis_growth_model, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+```{r class.source = "fold-show", comparefit2, message=FALSE,warning=FALSE,include=TRUE}
+# Compare model fit
+anova(fit_linear_growth_model, fit_quad_growth_model)
+```
+
+Il modello non lineare in lavaan senza alcuna ipotesi sulla forma e il modello quadratico non sono annidati. Pertanto un test del rapporto di verosimiglianza non è possibile. Tuttavia, gli indici di bontà di adattamento del modello senza ipotesi sulla forma sono migliori del modello quadratico, per cui sarà quello il modello prescelto.
+
+## Predizioni
+
+Si potrebbe essere interessati a ciò che predice i punteggi di base e/o il cambiamento. Per valutare questo, si possono aggiungere predittori nel modello di crescita. Un'ipotesi potrebbe essere che il livello di istruzione della madre predica lo sviluppo della comprensione verbale.
+
+
+```{r class.source = "fold-show", addcov, message=FALSE,warning=FALSE,include=TRUE}
+# Specify model
+basis_growth_model_cov <- ' 
+  i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11 
+  s~mo_edu
+  i~mo_edu
+  '
+```
+
+```{r class.source = "fold-show", fitcov, message=FALSE,warning=FALSE,include=TRUE}
+# Fit model
+fit_basis_growth_model_cov <- growth(basis_growth_model_cov, data=wisc,missing='fiml')
+# Output results
+summary(fit_basis_growth_model_cov, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+I risultati indicano come il livello di educazione della madre influenza sia il valore di base delle abilità verbali del bambino, sia il tasso di crescita. 
+
+Aggiungiamo ora la velocità di elaborazione a 11 anni come esito dei cambiamenti nella comprensione verbale. In altre parole, verifichiamo se le pendenze del cambiamento verbale predicono il livello di velocità di elaborazione a 11.
+
+
+```{r class.source = "fold-show", addout, message=FALSE,warning=FALSE,include=TRUE}
+# Specify model
+basis_growth_model_covO <- ' 
+  i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11 
+  Pspeed_T11~s
+  Pspeed_T11~1
+'
+
+# Fit model
+fit_basis_growth_model_covO <- growth(basis_growth_model_covO, data=wisc,missing='fiml')
+# Output results
+summary(fit_basis_growth_model_covO, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+I dati mostrano come le pendenze del cambiamento verbale effettivamente predicono il livello di velocità di elaborazione a 11 anni.
+
+
+I predittori tempo-invarianti sono predittori delle differenze individuali nelle intercette e nelle pendenze. Sono spesso misurati al basale (ad esempio, reddito familiare) o sono caratteristiche specifiche della persona il cui valore è costante nel tempo (ad esempio, sesso biologico, paese di origine). Ad esempio, nelle analisi precedenti, il livello di istruzione della madre e la velocità di elaborazione a 6 anni sono predittori tempo-invarianti.
+
+I predittori tempo-varianti sono predittori dell'esito in ogni punto temporale. Nel nostro esempio, ad esempio, avremmo bisogno di misurazioni a T6, T7, T9 e T11.
+
+In questo ultimo modello useremo la velocità di elaborazione come predittore tempo-variante della misurazione verbale in ogni punto temporale. Ci chiediamo le seguenti domande. Come sono l'intercetta e la pendenza delle misure verbali? La velocità di elaborazione predice le misure verbali allo stesso modo in tutti i punti temporali?
+
+
+```{r class.source = "fold-show", timevar, message=FALSE,warning=FALSE,include=TRUE}
+# Specify model
+basis_growth_model_tvp <- ' 
+  i =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11 
+  Verbal_T6~Pspeed_T6
+  Verbal_T7~Pspeed_T7
+  Verbal_T9~Pspeed_T9
+  Verbal_T11~Pspeed_T11
+  '
+# Fit LGM
+fit_basis_growth_model_tvp <- growth(basis_growth_model_tvp, data=wisc,missing='fiml')
+# Output results
+summary(fit_basis_growth_model_tvp, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+## Interazione tra pendenza e intercetta
+
+Ora che sappiamo come stimare la traiettoria di una variabile, siamo in grado di stimare la traiettoria di due variabili e vedere come interagiscono.
+
+Nell'analisi successiva, creiamo due modelli di crescita non lineari, uno per la comprensione verbale e uno per la velocità di elaborazione. Correliamo i cambiamenti delle due metriche e ci chiediamo se loro pendenze sono correlate.
+
+```{r class.source = "fold-show", twotraj, message=FALSE,warning=FALSE,include=TRUE}
+# Specify model
+basis_growth_model_cor_ver_pro <- ' 
+  i_verbal =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s_verbal =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11 
+  i_processpeed =~ 1*Pspeed_T6 + 1*Pspeed_T7 + 1*Pspeed_T9 + 1*Pspeed_T11
+  s_processpeed =~ 0*Pspeed_T6 + Pspeed_T7 + Pspeed_T9 + 1*Pspeed_T11 
+  s_verbal ~~ s_processpeed
+'
+
+# Fit LGM
+fit_basis_growth_model_cor_ver_pro <- growth(basis_growth_model_cor_ver_pro, data=wisc,missing='fiml')
+# Output results
+summary(fit_basis_growth_model_cor_ver_pro, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+```{r class.source = "fold-show", twotraj2, message=FALSE,warning=FALSE,include=TRUE}
+# Specify model
+basis_growth_model_pred_ver_pro <- ' 
+  i_verbal =~ 1*Verbal_T6 + 1*Verbal_T7 + 1*Verbal_T9 + 1*Verbal_T11
+  s_verbal =~ 0*Verbal_T6 + Verbal_T7 + Verbal_T9 + 1*Verbal_T11 
+  i_processpeed =~ 1*Pspeed_T6 + 1*Pspeed_T7 + 1*Pspeed_T9 + 1*Pspeed_T11
+  s_processpeed =~ 0*Pspeed_T6 + Pspeed_T7 + Pspeed_T9 + 1*Pspeed_T11 
+  s_verbal ~ i_processpeed
+  s_processpeed ~ i_verbal'
+
+# Fit LGM
+fit_basis_growth_model_pred_ver_pro <- growth(basis_growth_model_pred_ver_pro, data=wisc,missing='fiml')
+# Output results
+summary(fit_basis_growth_model_pred_ver_pro, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
+```
+
+
+
