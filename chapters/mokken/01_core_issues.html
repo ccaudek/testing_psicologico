@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Corrado Caudek">
 
-<title>59&nbsp; Analisi della Scala di Mokken – Testing Psicologico</title>
+<title>61&nbsp; Analisi della Scala di Mokken – Testing Psicologico</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,7 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -31,16 +84,18 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../chapters/mokken/02_applications.html" rel="next">
-<link href="../../chapters/sem/E_01.html" rel="prev">
+<link href="../../chapters/sem/15_prior_pred_mod_check.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,7 +123,17 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Ricerca"
   }
 }</script>
-<style>html{ scroll-behavior: smooth; }</style>
+<script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "clean"
+}
+</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -111,7 +176,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
@@ -129,6 +194,7 @@ window.Quarto = {
       <a href="../../">Testing Psicologico</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
 </div>
     </div>
       </div>
@@ -528,6 +594,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_02_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -542,91 +614,97 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/13_esem.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Exploratory structural equation modelling</span></span></a>
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Exploratory structural equation modelling</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/14_sem_power.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Dimensione Campionaria e Analisi della Potenza</span></span></a>
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Dimensione Campionaria e Analisi della Potenza</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/15_prior_pred_mod_check.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Prior Predictive Model Checking</span></span></a>
   </div>
 </li>
       </ul>
@@ -643,13 +721,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mokken/01_core_issues.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/mokken/02_applications.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
   </div>
 </li>
       </ul>
@@ -666,43 +744,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Modelli 1PL, 2PL e 3PL</span></span></a>
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Modelli 1PL, 2PL e 3PL</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
   </div>
 </li>
       </ul>
@@ -719,55 +797,61 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/01_lgm_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/02_lgm_prelims.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Considerazioni Preliminari</span></span></a>
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Considerazioni Preliminari</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/06_lgm_mixed.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">LGM e modelli misti</span></span></a>
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">LGM e modelli misti</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/03_time_effects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Dati longitudinali</span></span></a>
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Dati longitudinali</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/05_intro_panel.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Specificare e Interpretare un Modello Longitudinale</span></span></a>
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Specificare e Interpretare un Modello Longitudinale</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/07_growth_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/08_growth_cont.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Il tempo su una metrica continua</span></span></a>
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Il tempo su una metrica continua</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/09_time_inv_cov.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Covariate indipendenti dal tempo</span></span></a>
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Covariate indipendenti dal tempo</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/lgm/10_growth_groups.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Modelli di crescita latenti a gruppi multipli</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Modelli di crescita latenti a gruppi multipli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/11_lgm_wais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Lo Sviluppo dell’Intelligenza</span></span></a>
   </div>
 </li>
       </ul>
@@ -784,7 +868,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/prediction/01_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
   </div>
 </li>
       </ul>
@@ -801,7 +885,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/networks/01_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -874,51 +958,34 @@ window.Quarto = {
     <h2 id="toc-title">Indice</h2>
    
   <ul>
-  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">59.1</span> Introduzione</a></li>
-  <li><a href="#scaling-di-guttman" id="toc-scaling-di-guttman" class="nav-link" data-scroll-target="#scaling-di-guttman"><span class="header-section-number">59.2</span> Scaling di Guttman</a></li>
-  <li><a href="#analisi-della-scala-di-mokken" id="toc-analisi-della-scala-di-mokken" class="nav-link" data-scroll-target="#analisi-della-scala-di-mokken"><span class="header-section-number">59.3</span> Analisi della Scala di Mokken</a></li>
-  <li><a href="#assunzioni-dellanalisi-delle-scale-di-mokken-msa" id="toc-assunzioni-dellanalisi-delle-scale-di-mokken-msa" class="nav-link" data-scroll-target="#assunzioni-dellanalisi-delle-scale-di-mokken-msa"><span class="header-section-number">59.4</span> Assunzioni dell’Analisi delle Scale di Mokken (MSA)</a>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">61.1</span> Introduzione</a></li>
+  <li><a href="#analisi-delle-scale-di-mokken-msa" id="toc-analisi-delle-scale-di-mokken-msa" class="nav-link" data-scroll-target="#analisi-delle-scale-di-mokken-msa"><span class="header-section-number">61.2</span> Analisi delle Scale di Mokken (MSA)</a></li>
+  <li><a href="#assunzioni-dellanalisi-delle-scale-di-mokken" id="toc-assunzioni-dellanalisi-delle-scale-di-mokken" class="nav-link" data-scroll-target="#assunzioni-dellanalisi-delle-scale-di-mokken"><span class="header-section-number">61.3</span> Assunzioni dell’Analisi delle Scale di Mokken</a></li>
+  <li><a href="#assunzione-di-unidimensionalità" id="toc-assunzione-di-unidimensionalità" class="nav-link" data-scroll-target="#assunzione-di-unidimensionalità"><span class="header-section-number">61.4</span> Assunzione di Unidimensionalità</a></li>
+  <li><a href="#assunzione-di-indipendenza-locale" id="toc-assunzione-di-indipendenza-locale" class="nav-link" data-scroll-target="#assunzione-di-indipendenza-locale"><span class="header-section-number">61.5</span> Assunzione di Indipendenza Locale</a></li>
+  <li><a href="#assunzione-di-monotonicità-latente" id="toc-assunzione-di-monotonicità-latente" class="nav-link" data-scroll-target="#assunzione-di-monotonicità-latente"><span class="header-section-number">61.6</span> Assunzione di Monotonicità Latente</a>
   <ul>
-  <li><a href="#unidimensionalità" id="toc-unidimensionalità" class="nav-link" data-scroll-target="#unidimensionalità"><span class="header-section-number">59.4.1</span> 1. Unidimensionalità</a></li>
-  <li><a href="#indipendenza-locale" id="toc-indipendenza-locale" class="nav-link" data-scroll-target="#indipendenza-locale"><span class="header-section-number">59.4.2</span> 2. Indipendenza Locale</a></li>
-  <li><a href="#monotonicità-latente" id="toc-monotonicità-latente" class="nav-link" data-scroll-target="#monotonicità-latente"><span class="header-section-number">59.4.3</span> 3. Monotonicità Latente</a>
-  <ul>
-  <li><a href="#metodi-per-verificare-la-monotonicità" id="toc-metodi-per-verificare-la-monotonicità" class="nav-link" data-scroll-target="#metodi-per-verificare-la-monotonicità"><span class="header-section-number">59.4.3.1</span> Metodi per Verificare la Monotonicità</a></li>
-  <li><a href="#monotonicità-e-coefficienti-di-scalabilità" id="toc-monotonicità-e-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#monotonicità-e-coefficienti-di-scalabilità"><span class="header-section-number">59.4.3.2</span> Monotonicità e Coefficienti di Scalabilità</a></li>
+  <li><a href="#verifica-della-monotonicità" id="toc-verifica-della-monotonicità" class="nav-link" data-scroll-target="#verifica-della-monotonicità"><span class="header-section-number">61.6.1</span> Verifica della Monotonicità</a></li>
+  <li><a href="#monotonicità-e-funzioni-di-risposta-agli-item-irf" id="toc-monotonicità-e-funzioni-di-risposta-agli-item-irf" class="nav-link" data-scroll-target="#monotonicità-e-funzioni-di-risposta-agli-item-irf"><span class="header-section-number">61.6.2</span> Monotonicità e Funzioni di Risposta agli Item (IRF)</a></li>
+  <li><a href="#aggregazione-dei-restscores" id="toc-aggregazione-dei-restscores" class="nav-link" data-scroll-target="#aggregazione-dei-restscores"><span class="header-section-number">61.6.3</span> Aggregazione dei Restscores</a></li>
+  <li><a href="#monotonicità-e-coefficienti-di-scalabilità" id="toc-monotonicità-e-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#monotonicità-e-coefficienti-di-scalabilità"><span class="header-section-number">61.6.4</span> Monotonicità e Coefficienti di Scalabilità</a></li>
   </ul></li>
-  <li><a href="#non-intersezione-delle-funzioni-di-risposta" id="toc-non-intersezione-delle-funzioni-di-risposta" class="nav-link" data-scroll-target="#non-intersezione-delle-funzioni-di-risposta"><span class="header-section-number">59.4.4</span> 4. Non-Intersezione delle Funzioni di Risposta</a></li>
-  </ul></li>
-  <li><a href="#modelli-della-mokken-scale-analysis" id="toc-modelli-della-mokken-scale-analysis" class="nav-link" data-scroll-target="#modelli-della-mokken-scale-analysis"><span class="header-section-number">59.5</span> Modelli della Mokken Scale Analysis</a></li>
-  <li><a href="#coefficienti-di-scalabilità" id="toc-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#coefficienti-di-scalabilità"><span class="header-section-number">59.6</span> Coefficienti di Scalabilità</a></li>
-  <li><a href="#errori-standard" id="toc-errori-standard" class="nav-link" data-scroll-target="#errori-standard"><span class="header-section-number">59.7</span> Errori Standard</a></li>
-  <li><a href="#estensione-dellanalisi-delle-scale-di-mokken-agli-item-politomici" id="toc-estensione-dellanalisi-delle-scale-di-mokken-agli-item-politomici" class="nav-link" data-scroll-target="#estensione-dellanalisi-delle-scale-di-mokken-agli-item-politomici"><span class="header-section-number">59.8</span> Estensione dell’Analisi delle Scale di Mokken agli Item Politomici</a></li>
-  <li><a href="#laffidabilità-nei-test" id="toc-laffidabilità-nei-test" class="nav-link" data-scroll-target="#laffidabilità-nei-test"><span class="header-section-number">59.9</span> L’Affidabilità nei Test</a></li>
-  <li><a href="#procedura-di-selezione-automatica-degli-item-aisp" id="toc-procedura-di-selezione-automatica-degli-item-aisp" class="nav-link" data-scroll-target="#procedura-di-selezione-automatica-degli-item-aisp"><span class="header-section-number">59.10</span> Procedura di Selezione Automatica degli Item (AISP)</a>
-  <ul>
-  <li><a href="#criteri-di-selezione" id="toc-criteri-di-selezione" class="nav-link" data-scroll-target="#criteri-di-selezione"><span class="header-section-number">59.10.1</span> Criteri di Selezione</a></li>
-  <li><a href="#funzionalità-dellaisp" id="toc-funzionalità-dellaisp" class="nav-link" data-scroll-target="#funzionalità-dellaisp"><span class="header-section-number">59.10.2</span> Funzionalità dell’AISP</a></li>
-  <li><a href="#implicazioni-della-soglia-c" id="toc-implicazioni-della-soglia-c" class="nav-link" data-scroll-target="#implicazioni-della-soglia-c"><span class="header-section-number">59.10.3</span> Implicazioni della Soglia (<span class="math inline">\(c\)</span>)</a></li>
-  <li><a href="#limiti-e-considerazioni" id="toc-limiti-e-considerazioni" class="nav-link" data-scroll-target="#limiti-e-considerazioni"><span class="header-section-number">59.10.4</span> Limiti e Considerazioni</a></li>
-  <li><a href="#conclusioni" id="toc-conclusioni" class="nav-link" data-scroll-target="#conclusioni"><span class="header-section-number">59.10.5</span> Conclusioni</a></li>
-  </ul></li>
-  <li><a href="#ordinamento-invariante-degli-item" id="toc-ordinamento-invariante-degli-item" class="nav-link" data-scroll-target="#ordinamento-invariante-degli-item"><span class="header-section-number">59.11</span> Ordinamento Invariante degli Item</a></li>
-  <li><a href="#dimensione-del-campione" id="toc-dimensione-del-campione" class="nav-link" data-scroll-target="#dimensione-del-campione"><span class="header-section-number">59.12</span> Dimensione del Campione</a>
-  <ul>
-  <li><a href="#studi-chiave-sulla-dimensione-del-campione" id="toc-studi-chiave-sulla-dimensione-del-campione" class="nav-link" data-scroll-target="#studi-chiave-sulla-dimensione-del-campione"><span class="header-section-number">59.12.1</span> Studi Chiave sulla Dimensione del Campione</a></li>
-  </ul></li>
-  <li><a href="#confronto-tra-il-modello-di-rasch-e-lmsa" id="toc-confronto-tra-il-modello-di-rasch-e-lmsa" class="nav-link" data-scroll-target="#confronto-tra-il-modello-di-rasch-e-lmsa"><span class="header-section-number">59.13</span> Confronto tra il Modello di Rasch e l’MSA</a></li>
-  <li><a href="#confronto-tra-la-teoria-classica-dei-test-e-lmsa" id="toc-confronto-tra-la-teoria-classica-dei-test-e-lmsa" class="nav-link" data-scroll-target="#confronto-tra-la-teoria-classica-dei-test-e-lmsa"><span class="header-section-number">59.14</span> Confronto tra la Teoria Classica dei Test e l’MSA</a></li>
-  <li><a href="#critiche-alla-msa" id="toc-critiche-alla-msa" class="nav-link" data-scroll-target="#critiche-alla-msa"><span class="header-section-number">59.15</span> Critiche alla MSA</a></li>
-  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">59.16</span> Considerazioni Conclusive</a></li>
+  <li><a href="#assunzione-di-non-intersezione-delle-funzioni-di-risposta" id="toc-assunzione-di-non-intersezione-delle-funzioni-di-risposta" class="nav-link" data-scroll-target="#assunzione-di-non-intersezione-delle-funzioni-di-risposta"><span class="header-section-number">61.7</span> Assunzione di Non-Intersezione delle Funzioni di Risposta</a></li>
+  <li><a href="#modelli-della-mokken-scale-analysis" id="toc-modelli-della-mokken-scale-analysis" class="nav-link" data-scroll-target="#modelli-della-mokken-scale-analysis"><span class="header-section-number">61.8</span> Modelli della Mokken Scale Analysis</a></li>
+  <li><a href="#coefficienti-di-scalabilità" id="toc-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#coefficienti-di-scalabilità"><span class="header-section-number">61.9</span> Coefficienti di Scalabilità</a></li>
+  <li><a href="#coefficiente-per-singolo-item-h_j" id="toc-coefficiente-per-singolo-item-h_j" class="nav-link" data-scroll-target="#coefficiente-per-singolo-item-h_j"><span class="header-section-number">61.10</span> Coefficiente per Singolo Item (<span class="math inline">\(H_j\)</span>)</a></li>
+  <li><a href="#coefficiente-per-coppie-di-item-h_ij" id="toc-coefficiente-per-coppie-di-item-h_ij" class="nav-link" data-scroll-target="#coefficiente-per-coppie-di-item-h_ij"><span class="header-section-number">61.11</span> Coefficiente per Coppie di Item (<span class="math inline">\(H_{ij}\)</span>)</a></li>
+  <li><a href="#coefficiente-complessivo-della-scala-h" id="toc-coefficiente-complessivo-della-scala-h" class="nav-link" data-scroll-target="#coefficiente-complessivo-della-scala-h"><span class="header-section-number">61.12</span> Coefficiente Complessivo della Scala (<span class="math inline">\(H\)</span>)</a></li>
+  <li><a href="#errori-standard-nei-coefficienti-di-scalabilità" id="toc-errori-standard-nei-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#errori-standard-nei-coefficienti-di-scalabilità"><span class="header-section-number">61.13</span> Errori Standard nei Coefficienti di Scalabilità</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/01_core_issues.html"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-mokken" class="quarto-section-identifier"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></h1>
+<h1 class="title"><span id="sec-mokken" class="quarto-section-identifier"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></h1>
 </div>
 
 
@@ -936,332 +1003,874 @@ window.Quarto = {
 
 
 <p><strong>Prerequisiti</strong></p>
+<ul>
+<li>Consultare l’articolo <em>An instructional module on Mokken scale analysis</em> <span class="citation" data-cites="wind2017instructional">(<a href="../../99-references.html#ref-wind2017instructional" role="doc-biblioref">Wind, 2017</a>)</span>.</li>
+</ul>
 <p><strong>Concetti e Competenze Chiave</strong></p>
-<section id="introduzione" class="level2" data-number="59.1">
-<h2 data-number="59.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">59.1</span> Introduzione</h2>
+<ul>
+<li>Comprendere la necessità di verificare empiricamente se i punteggi grezzi rappresentano dati ordinali.<br>
+</li>
+<li>Interpretare e utilizzare i coefficienti di scalabilità (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_i\)</span>, <span class="math inline">\(H_{ij}\)</span>) per valutare l’omogeneità monotona degli item.<br>
+</li>
+<li>Comprendere e sapere calcolare l’Ordinamento Invariante degli Item (IIO).<br>
+</li>
+<li>Comprendere la MSA come un approccio meno restrittivo rispetto allo scaling di Guttman e più flessibile rispetto ai modelli parametrici.</li>
+</ul>
+<p><strong>Preparazione del Notebook</strong></p>
+<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Carica il file _common.R per impostazioni di pacchetti e opzioni</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"code"</span>, <span class="st">"_common.R"</span>) <span class="sc">|&gt;</span> <span class="fu">source</span>()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Carica pacchetti aggiuntivi</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mirt, mokken)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduzione" class="level2" data-number="61.1">
+<h2 data-number="61.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">61.1</span> Introduzione</h2>
 <p>L’Analisi delle Scale Mokken (MSA), così chiamata in onore del matematico e scienziato politico olandese Robert J. Mokken, è un insieme di metodi basati sulla Teoria Non Parametrica della Risposta agli Item (NIRT) che consente di valutare l’adeguatezza dei dati rispetto ai modelli non parametrici. Nella Teoria della Risposta agli Item (IRT), i costrutti psicologici sono considerati latenti, cioè non direttamente osservabili, ma si manifestano attraverso le risposte ai test. Le risposte degli individui agli item di un test riflettono la loro posizione su un continuum latente e indicano il grado in cui possiedono il costrutto oggetto di misurazione.</p>
 <p>Tuttavia, la relazione tra gli item di un test e le risposte dei partecipanti non sempre rappresenta fedelmente il costrutto in questione. I modelli della IRT offrono strumenti per esaminare la congruenza e la rilevanza degli item rispetto alla variabile latente sottostante. I modelli della MSA, in particolare, sono modelli probabilistici non parametrici basati su tratti latenti e giocano un ruolo fondamentale nella validazione degli strumenti psicometrici, ordinando sia i rispondenti che gli item lungo una scala ordinale. Applicabili sia a item dicotomici che politomici, i modelli MSA sono meno restrittivi rispetto ai modelli IRT parametrici, in quanto non assumono una forma specifica per la funzione di risposta agli item. Questa flessibilità rende i modelli MSA strumenti preziosi, pur comportando alcune limitazioni interpretative.</p>
 </section>
-<section id="scaling-di-guttman" class="level2" data-number="59.2">
-<h2 data-number="59.2" class="anchored" data-anchor-id="scaling-di-guttman"><span class="header-section-number">59.2</span> Scaling di Guttman</h2>
-<p>La MSA trova le sue radici nello scaling di Guttman, sviluppato nel 1950 da Louis Guttman. Questo metodo, originariamente concepito per item dicotomici, mira a estrarre una singola dimensione dai dati, posizionando sia le persone che gli item su questa dimensione tramite valori numerici. Ad esempio, consideriamo cinque item di un test psicologico e cinque rispondenti ipotetici, A, B, C, D ed E, che rispondono a questi item. Le risposte vengono rappresentate in una tabella dove 1 indica una risposta corretta e 0 una errata.</p>
+<section id="analisi-delle-scale-di-mokken-msa" class="level2" data-number="61.2">
+<h2 data-number="61.2" class="anchored" data-anchor-id="analisi-delle-scale-di-mokken-msa"><span class="header-section-number">61.2</span> Analisi delle Scale di Mokken (MSA)</h2>
+<p>L’<strong>Analisi delle Scale di Mokken</strong> (MSA) trova le sue radici nel modello di <strong>Guttman</strong>, ampliandone la portata grazie a un approccio probabilistico che supera le rigidità del modello deterministico originale. Il modello di Guttman si basa sul principio di <strong>perfetta cumulatività</strong>, secondo cui un rispondente che risponde correttamente a un item più difficile dovrebbe necessariamente rispondere correttamente anche a tutti gli item più semplici. Sebbene questa proprietà consenta di costruire scale gerarchiche, la sua applicazione pratica risulta spesso eccessivamente rigida, poiché non tiene conto delle naturali deviazioni che emergono nei dati empirici.</p>
+<p>La <strong>MSA</strong>, grazie al suo approccio probabilistico, supera le rigidità del modello deterministico di Guttman, permettendo di gestire eventuali violazioni della cumulatività senza compromettere la rappresentazione delle relazioni tra item e tratti latenti. Questo rende la MSA più aderente alla complessità delle risposte umane, che spesso risentono di variabili esterne o di fattori imprevedibili.</p>
+<p>Simile per filosofia al <strong>modello di Rasch</strong>, la MSA è meno vincolante nelle sue assunzioni, risultando più flessibile nell’adattarsi ai dati reali. Questa caratteristica la rende particolarmente utile per misurare costrutti psicologici complessi e multidimensionali. Inoltre, la sua capacità di individuare strutture sottostanti robuste ne fa uno strumento fondamentale per lo sviluppo e la validazione di scale psicometriche, garantendo al contempo una base solida per l’interpretazione e l’utilizzo dei risultati in contesti di ricerca e applicazione.</p>
+</section>
+<section id="assunzioni-dellanalisi-delle-scale-di-mokken" class="level2" data-number="61.3">
+<h2 data-number="61.3" class="anchored" data-anchor-id="assunzioni-dellanalisi-delle-scale-di-mokken"><span class="header-section-number">61.3</span> Assunzioni dell’Analisi delle Scale di Mokken</h2>
+<p>La <strong>MSA</strong>, pur essendo un approccio non parametrico, condivide alcune assunzioni fondamentali con i modelli parametrici della <strong>Teoria della Risposta agli Item</strong> (IRT). Tuttavia, queste assunzioni vengono applicate in modo più flessibile, rendendole più adatte a situazioni in cui i dati non soddisfano i rigorosi requisiti dei modelli parametrici. Le principali assunzioni della MSA sono descritte di seguito.</p>
+</section>
+<section id="assunzione-di-unidimensionalità" class="level2" data-number="61.4">
+<h2 data-number="61.4" class="anchored" data-anchor-id="assunzione-di-unidimensionalità"><span class="header-section-number">61.4</span> Assunzione di Unidimensionalità</h2>
+<p>L’assunzione di <strong>unidimensionalità</strong> richiede che le risposte agli item siano governate da un unico tratto latente, ovvero che tutti gli item della scala misurino lo stesso costrutto psicologico. Questo tratto rappresenta una variabile sottostante non osservabile che determina le risposte ai singoli item. Nella pratica, progettare scale che misurano un unico tratto latente facilita l’interpretazione dei punteggi, riduce la complessità analitica e aumenta la validità delle conclusioni.</p>
+</section>
+<section id="assunzione-di-indipendenza-locale" class="level2" data-number="61.5">
+<h2 data-number="61.5" class="anchored" data-anchor-id="assunzione-di-indipendenza-locale"><span class="header-section-number">61.5</span> Assunzione di Indipendenza Locale</h2>
+<p>L’<strong>indipendenza locale</strong> è una delle assunzioni fondamentali nell’<strong>Analisi delle Scale di Mokken</strong> e più in generale nella <strong>Teoria della Risposta agli Item</strong> (IRT). Questa proprietà stabilisce che, una volta fissato il tratto latente <span class="math inline">\(\theta\)</span> (il livello della variabile latente che governa le risposte), le risposte agli item siano <strong>condizionalmente indipendenti</strong>. In altre parole, dato <span class="math inline">\(\theta\)</span>, il comportamento di un rispondente su un item non influenza le sue risposte sugli altri item.</p>
+<p>L’indipendenza locale può essere espressa formalmente come:</p>
+<p><span class="math display">\[
+P(X = x \mid \theta) = \prod_{i=1}^k P(X_i = x_i \mid \theta),
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(X\)</span> rappresenta il vettore delle risposte agli <span class="math inline">\(k\)</span> item (<span class="math inline">\(X = (X_1, X_2, \dots, X_k)\)</span>),</li>
+<li><span class="math inline">\(x\)</span> è un’istanza di risposte (<span class="math inline">\(x = (x_1, x_2, \dots, x_k)\)</span>),</li>
+<li><span class="math inline">\(P(X_i = x_i \mid \theta)\)</span> è la probabilità di rispondere <span class="math inline">\(x_i\)</span> all’item <span class="math inline">\(i\)</span>, dato il livello del tratto latente <span class="math inline">\(\theta\)</span>.</li>
+</ul>
+<p>L’assunzione implica che ogni probabilità condizionata dipende esclusivamente da <span class="math inline">\(\theta\)</span> e non dalle risposte agli altri item.</p>
+<p>L’indipendenza locale ha due conseguenze fondamentali:</p>
+<ol type="1">
+<li><strong>Covarianza nulla tra item (dato <span class="math inline">\(\theta\)</span>):</strong> La correlazione osservata tra le risposte agli item è attribuibile esclusivamente alla variabilità di <span class="math inline">\(\theta\)</span>. Se il tratto latente è fissato, la covarianza tra due item qualsiasi sarà pari a zero.</li>
+<li><strong>Rappresentazione pura del tratto latente:</strong> Le risposte riflettono il tratto latente senza essere influenzate da altre relazioni o interazioni tra gli item (ad esempio, sovrapposizione di contenuto o sequenze logiche negli item).</li>
+</ol>
+<p>Quando l’indipendenza locale non è rispettata, le risposte agli item possono essere influenzate da fattori esterni (come stanchezza, contesto, o similarità degli item) o da interazioni tra gli item stessi (ad esempio, se rispondere a un item fornisce un indizio per rispondere a un altro).</p>
+<p>Un esempio di violazione è un <strong>bias di contenuto</strong>: se due item condividono un contenuto simile (ad esempio, entrambi riguardano competenze matematiche legate alle frazioni), le risposte possono essere correlate anche oltre ciò che il tratto latente <span class="math inline">\(\theta\)</span> può spiegare.</p>
+<p>In conclusione, l’indipendenza locale garantisce che le risposte ai test riflettano esclusivamente il tratto latente, senza essere influenzate da fattori esterni o interazioni tra item. Sebbene fondamentale, questa assunzione può essere violata in situazioni pratiche, e la sua verifica è essenziale per valutare la validità di un modello di misura come l’MSA o l’IRT.</p>
+</section>
+<section id="assunzione-di-monotonicità-latente" class="level2" data-number="61.6">
+<h2 data-number="61.6" class="anchored" data-anchor-id="assunzione-di-monotonicità-latente"><span class="header-section-number">61.6</span> Assunzione di Monotonicità Latente</h2>
+<p>L’assunzione di <strong>monotonicità latente</strong> stabilisce che, all’aumentare del tratto latente (<span class="math inline">\(\theta\)</span>), la <strong>probabilità</strong> di rispondere correttamente a un item (nel caso dicotomico) o di scegliere una categoria di risposta più alta (nel caso politomico) debba aumentare o rimanere costante. Matematicamente:</p>
+<p><span class="math display">\[
+P_i(\theta_a) \leq P_i(\theta_b) \quad \text{per} \quad \theta_a \leq \theta_b,
+\]</span></p>
+<p>dove <span class="math inline">\(P_i(\theta)\)</span> rappresenta la probabilità di rispondere correttamente o di selezionare una risposta superiore all’item <span class="math inline">\(i\)</span>.</p>
+<p>In pratica, questo significa che i rispondenti con livelli più elevati del tratto latente hanno una maggiore probabilità di ottenere punteggi più alti, garantendo una relazione coerente e interpretabile tra tratto latente e prestazione. Questa proprietà è particolarmente importante per costruire scale che riflettano una struttura ordinale robusta.</p>
+<section id="verifica-della-monotonicità" class="level3" data-number="61.6.1">
+<h3 data-number="61.6.1" class="anchored" data-anchor-id="verifica-della-monotonicità"><span class="header-section-number">61.6.1</span> Verifica della Monotonicità</h3>
+<p>La <strong>monotonicità</strong> richiede che la probabilità di rispondere correttamente a un item aumenti (o almeno non diminuisca) con l’aumento del livello del tratto latente sottostante (<span class="math inline">\(\theta\)</span>) o del <strong>restscore</strong> (punteggio residuo).</p>
+<p>Il <strong>restscore</strong> è il punteggio totale di un soggetto sugli item di un test, <strong>escluso</strong> l’item che si sta analizzando. Esso rappresenta una stima indiretta del livello del tratto latente di un soggetto, basata sulle sue risposte agli altri item.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.1</strong></span> Supponiamo di avere un test con 10 item e un soggetto che ha risposto nel modo seguente:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Items</th>
-<th>Esaminati</th>
+<th>Item</th>
 <th>1</th>
 <th>2</th>
 <th>3</th>
 <th>4</th>
 <th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td>A</td>
+<td>Risposta</td>
 <td>1</td>
 <td>1</td>
+<td>0</td>
 <td>1</td>
-<td>1</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>B</td>
-<td>1</td>
+<td>0</td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>C</td>
 <td>1</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>D</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td>E</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
 </tr>
 </tbody>
 </table>
-<p>In questa tabella, che rappresenta una scala di Guttman, gli item sono ordinati dal più facile al più difficile, e i rispondenti dall’abilità maggiore a quella minore. Si presume che un rispondente che ha risposto correttamente ad un item di difficoltà superiore abbia risposto correttamente anche a tutti gli item di difficoltà inferiore. Le deviazioni da questo modello sono considerate “errori di Guttman”.</p>
-<p>La scala di Guttman, basandosi su un principio deterministico, non riesce sempre a catturare pienamente la complessità dei dati reali. Tuttavia, offre una rappresentazione chiara della relazione cumulativa o gerarchica tra gli item di un test e le abilità dei rispondenti. Questo modello suggerisce che, se una persona dimostra una competenza specifica, si presume che possieda anche tutte le competenze di base correlate.</p>
-<p>Tuttavia, quando emergono eccezioni a questa regola, ossia risposte corrette a item difficili ma errate a quelli più semplici, si potrebbe dedurre che il test richieda competenze multiple e non unicamente riconducibili a una dimensione unica. Questo fenomeno mette in luce la complessità e la multidimensionalità delle competenze umane.</p>
-<p>In conclusione, la MSA si adatta particolarmente a contesti dove i processi di risposta non sono completamente chiari (come quando la prestazione dipende da una struttura multidimensionale di abilità), consentendo di verificare se le risposte dei partecipanti rispettino i requisiti del modello e di ordinare persone e item su una scala ordinale, basandosi sui punteggi totali grezzi.</p>
-</section>
-<section id="analisi-della-scala-di-mokken" class="level2" data-number="59.3">
-<h2 data-number="59.3" class="anchored" data-anchor-id="analisi-della-scala-di-mokken"><span class="header-section-number">59.3</span> Analisi della Scala di Mokken</h2>
-<p>L’Analisi delle Scale di Mokken (MSA) si basa sul modello di Guttman, ma introduce una prospettiva probabilistica che supera le limitazioni del modello deterministico originale. Il modello di Guttman si fonda sul principio di perfetta cumulatività, secondo cui un rispondente che risponde correttamente a un item più difficile dovrebbe rispondere correttamente anche a tutti gli item più semplici. Questo approccio si è dimostrato spesso troppo rigido per rappresentare fedelmente i dati empirici, che riflettono la complessità delle abilità umane e l’influenza di variabili esterne.</p>
-<p>La MSA consente una maggiore flessibilità nella gestione delle risposte ai test, permettendo alcune violazioni delle regole di cumulatività del modello di Guttman. In questo modo, la MSA risulta essere più adattabile ai dati reali, poiché accoglie la possibilità che i soggetti, pur mostrando un certo livello di abilità, possano occasionalmente rispondere in modo imprevisto agli item più semplici. L’approccio probabilistico della MSA, condiviso con il modello di Rasch, è meno restrittivo e più aderente ai dati empirici, rendendolo particolarmente utile per l’analisi di scale unidimensionali e la misurazione di variabili latenti con un numero limitato di item.</p>
-</section>
-<section id="assunzioni-dellanalisi-delle-scale-di-mokken-msa" class="level2" data-number="59.4">
-<h2 data-number="59.4" class="anchored" data-anchor-id="assunzioni-dellanalisi-delle-scale-di-mokken-msa"><span class="header-section-number">59.4</span> Assunzioni dell’Analisi delle Scale di Mokken (MSA)</h2>
-<p>L’MSA, pur essendo non parametrica, condivide alcune assunzioni fondamentali con la Teoria Parametrica della Risposta agli Item (IRT). Tuttavia, l’MSA applica queste assunzioni in modo meno restrittivo, adattandole a un contesto non parametrico. Di seguito, vengono descritte le principali assunzioni della MSA.</p>
-<section id="unidimensionalità" class="level3" data-number="59.4.1">
-<h3 data-number="59.4.1" class="anchored" data-anchor-id="unidimensionalità"><span class="header-section-number">59.4.1</span> 1. Unidimensionalità</h3>
-<p>L’assunzione di unidimensionalità richiede che le risposte agli item possano essere spiegate da un singolo tratto latente (unidimensionale). Ciò implica che tutti gli item di una scala misurino lo stesso costrutto psicologico. Questo fattore latente rappresenta la variabile sottostante non osservabile che governa le risposte. Nella pratica, è preferibile costruire strumenti che misurano un tratto alla volta, poiché ciò semplifica l’interpretazione dei punteggi e riduce la complessità delle analisi statistiche.</p>
-</section>
-<section id="indipendenza-locale" class="level3" data-number="59.4.2">
-<h3 data-number="59.4.2" class="anchored" data-anchor-id="indipendenza-locale"><span class="header-section-number">59.4.2</span> 2. Indipendenza Locale</h3>
-<p>L’indipendenza locale presuppone che, dato un livello fisso del tratto latente, le risposte agli item siano condizionalmente indipendenti. In altre parole, una volta considerato il tratto latente, la risposta a un determinato item non dovrebbe influenzare le risposte agli altri item. La probabilità che un individuo risponda correttamente a un item, dato il tratto latente , può essere formalizzata come segue:</p>
+<p>Se stiamo analizzando il comportamento dell’<strong>item 10</strong>, il <strong>restscore</strong> sarà calcolato come la somma delle risposte agli altri 9 item:</p>
 <p><span class="math display">\[
-P(X = x | \theta) = \prod_{i=1}^k P(X_i = x_i \mid \theta).
+\text{Restscore} = 1 + 1 + 0 + 1 + 0 + 1 + 1 + 1 + 0 = 6.
 \]</span></p>
-<p>Questa assunzione implica che, una volta fissato <span class="math inline">\(\theta\)</span>, la covarianza tra due item qualsiasi dovrebbe essere pari a zero. Tuttavia, se il tratto latente varia, gli item saranno correlati poiché riflettono lo stesso fattore sottostante, generando una covarianza positiva.</p>
+<p>Il restscore fornisce un’indicazione del livello complessivo di abilità del soggetto, escludendo il contributo dell’item 10.</p>
+</div>
+<hr>
 </section>
-<section id="monotonicità-latente" class="level3" data-number="59.4.3">
-<h3 data-number="59.4.3" class="anchored" data-anchor-id="monotonicità-latente"><span class="header-section-number">59.4.3</span> 3. Monotonicità Latente</h3>
-<p>La monotonicità latente richiede che, all’aumentare del tratto latente , la probabilità di rispondere correttamente a un item aumenti. Questa assunzione è valida sia per item dicotomici (giusto/sbagliato) sia per item politomici (ad esempio, scale Likert), in cui si esamina la probabilità di selezionare una categoria di risposta più alta man mano che il livello del tratto latente cresce:</p>
-<p><span class="math display">\[
-P_i(\theta_a) \leq P_i(\theta_b) \quad \text{per} \quad \theta_a \leq \theta_b.
-\]</span></p>
-<p>In pratica, ciò implica che, con l’aumento del tratto latente, la probabilità di rispondere correttamente o di scegliere una risposta più elevata su una scala ordinale aumenta o rimane costante.</p>
-<section id="metodi-per-verificare-la-monotonicità" class="level4" data-number="59.4.3.1">
-<h4 data-number="59.4.3.1" class="anchored" data-anchor-id="metodi-per-verificare-la-monotonicità"><span class="header-section-number">59.4.3.1</span> Metodi per Verificare la Monotonicità</h4>
-<p>La monotonicità può essere verificata mediante l’analisi dei restscore, che rappresenta il punteggio totale di un soggetto su tutti gli item, escluso quello in esame. Ad esempio, se il test ha 10 item e si analizza il comportamento dell’item 10, il restscore sarà calcolato sulla base dei primi 9 item. Questo punteggio è confrontato con la probabilità di rispondere correttamente a ciascun item. In un modello monotono, la probabilità di risposta corretta dovrebbe aumentare all’aumentare del restscore.</p>
-<p>Se i gruppi di restscore sono troppo piccoli per fornire stime affidabili, essi possono essere aggregati in gruppi più ampi per migliorare la precisione. L’analisi grafica delle Funzioni di Risposta agli Item (IRF) può essere utilizzata per rappresentare visivamente come varia la probabilità di rispondere correttamente in funzione del livello del tratto latente.</p>
+<section id="monotonicità-e-funzioni-di-risposta-agli-item-irf" class="level3" data-number="61.6.2">
+<h3 data-number="61.6.2" class="anchored" data-anchor-id="monotonicità-e-funzioni-di-risposta-agli-item-irf"><span class="header-section-number">61.6.2</span> Monotonicità e Funzioni di Risposta agli Item (IRF)</h3>
+<p>Per verificare la monotonicità, si analizza la relazione tra i restscore e la probabilità di rispondere correttamente a un dato item. In un modello monotono, questa relazione deve essere <strong>non decrescente</strong>: all’aumentare del restscore, la probabilità di una risposta corretta deve crescere o rimanere costante.</p>
+<p>La monotonicità può essere verificata tracciando le <strong>Funzioni di Risposta agli Item (IRF)</strong>, che rappresentano graficamente come varia la probabilità di rispondere correttamente a un item in funzione del restscore.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.2</strong></span> Consideriamo un test con 5 item e i seguenti dati aggregati (restscore e frequenze di risposte corrette all’item 5):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 24%">
+<col style="width: 25%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Restscore</th>
+<th>Frequenza Totale</th>
+<th>Risposte Corrette</th>
+<th>Probabilità Correttezza</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>5</td>
+<td>1</td>
+<td><span class="math inline">\(1/5 = 0.20\)</span></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>10</td>
+<td>3</td>
+<td><span class="math inline">\(3/10 = 0.30\)</span></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>15</td>
+<td>6</td>
+<td><span class="math inline">\(6/15 = 0.40\)</span></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>10</td>
+<td>5</td>
+<td><span class="math inline">\(5/10 = 0.50\)</span></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>5</td>
+<td>4</td>
+<td><span class="math inline">\(4/5 = 0.80\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Verifica della Monotonicità.</p>
+<ol type="1">
+<li><p>La probabilità di rispondere correttamente aumenta con il restscore (0.20, 0.30, 0.40, 0.50, 0.80). Questo comportamento conferma la monotonicità.</p></li>
+<li><p>Per rappresentare visivamente questa relazione, si può tracciare un grafico:</p></li>
+</ol>
+<div id="cell-5" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>restscore <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>prob_correct <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.20</span>, <span class="fl">0.30</span>, <span class="fl">0.40</span>, <span class="fl">0.50</span>, <span class="fl">0.80</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(restscore, prob_correct,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"blue"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Restscore"</span>, <span class="at">ylab =</span> <span class="st">"Probabilita' di Risposta Corretta"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">"Funzione di Risposta all'Item (IRF)"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_core_issues_files/figure-html/cell-3-output-1.png" width="600" height="370" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il grafico dovrebbe mostrare una curva <strong>non decrescente</strong>, confermando la monotonicità.</p>
+</div>
+<hr>
 </section>
-<section id="monotonicità-e-coefficienti-di-scalabilità" class="level4" data-number="59.4.3.2">
-<h4 data-number="59.4.3.2" class="anchored" data-anchor-id="monotonicità-e-coefficienti-di-scalabilità"><span class="header-section-number">59.4.3.2</span> Monotonicità e Coefficienti di Scalabilità</h4>
-<p>Nell’MSA, la monotonicità è valutata anche attraverso i <em>coefficienti di scalabilità</em> (<span class="math inline">\(H_i\)</span> per singoli item e <span class="math inline">\(H_{ij}\)</span> per coppie di item). Per garantire la validità del Modello di Omogeneità Monotona (MHM), le covarianze tra tutte le coppie di item (<span class="math inline">\(H_{ij}\)</span>) devono essere non negative. Tuttavia, la non negatività dei coefficienti di scalabilità non garantisce necessariamente che le IRF siano monotone. In pratica, item con valori di <span class="math inline">\(H_i\)</span> superiori a 0.30 sono considerati accettabili.</p>
+<section id="aggregazione-dei-restscores" class="level3" data-number="61.6.3">
+<h3 data-number="61.6.3" class="anchored" data-anchor-id="aggregazione-dei-restscores"><span class="header-section-number">61.6.3</span> Aggregazione dei Restscores</h3>
+<p>Quando i restscore sono calcolati su un piccolo numero di rispondenti, le stime delle probabilità possono essere instabili. Per migliorare l’affidabilità, i restscore possono essere <strong>aggregati in gruppi</strong>.</p>
+<hr>
+<div id="exr-" class="theorem exercise">
+<p><span class="theorem-title"><strong>Esercizio 61.1</strong></span> Se il numero di rispondenti con restscore pari a <span class="math inline">\(0, 1\)</span> o <span class="math inline">\(2\)</span> è troppo basso per stimare con precisione la probabilità di risposta corretta, si possono combinare i gruppi <span class="math inline">\(0-2\)</span>. In tal caso:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 21%">
+<col style="width: 23%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Gruppo Restscore</th>
+<th>Frequenza Totale</th>
+<th>Risposte Corrette</th>
+<th>Probabilità Correttezza</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0-2</td>
+<td>30</td>
+<td>10</td>
+<td><span class="math inline">\(10/30 = 0.33\)</span></td>
+</tr>
+<tr class="even">
+<td>3-4</td>
+<td>15</td>
+<td>9</td>
+<td><span class="math inline">\(9/15 = 0.60\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Questa aggregazione riduce la variabilità statistica mantenendo il focus sulla relazione tra restscore e probabilità di risposta corretta.</p>
+</div>
+<hr>
+<p>In conclusione, la verifica della monotonicità è cruciale per garantire che gli item di una scala rispettino l’assunzione fondamentale di relazione crescente tra il tratto latente (o il restscore) e la probabilità di risposta corretta. L’analisi grafica delle IRF e l’aggregazione dei restscore rappresentano strumenti pratici ed efficaci per individuare eventuali violazioni di questa proprietà.</p>
+</section>
+<section id="monotonicità-e-coefficienti-di-scalabilità" class="level3" data-number="61.6.4">
+<h3 data-number="61.6.4" class="anchored" data-anchor-id="monotonicità-e-coefficienti-di-scalabilità"><span class="header-section-number">61.6.4</span> Monotonicità e Coefficienti di Scalabilità</h3>
+<p>Nell’MSA, la monotonicità è valutata anche attraverso i <strong>coefficienti di scalabilità</strong> (<span class="math inline">\(H_i\)</span> per singoli item e <span class="math inline">\(H_{ij}\)</span> per coppie di item). Per garantire la validità del Modello di Omogeneità Monotona (MHM), le covarianze tra tutte le coppie di item (<span class="math inline">\(H_{ij}\)</span>) devono essere non negative. Tuttavia, la non negatività dei coefficienti di scalabilità non garantisce necessariamente che le IRF siano monotone. In pratica, item con valori di <span class="math inline">\(H_i\)</span> superiori a 0.30 sono considerati accettabili.</p>
 </section>
 </section>
-<section id="non-intersezione-delle-funzioni-di-risposta" class="level3" data-number="59.4.4">
-<h3 data-number="59.4.4" class="anchored" data-anchor-id="non-intersezione-delle-funzioni-di-risposta"><span class="header-section-number">59.4.4</span> 4. Non-Intersezione delle Funzioni di Risposta</h3>
+<section id="assunzione-di-non-intersezione-delle-funzioni-di-risposta" class="level2" data-number="61.7">
+<h2 data-number="61.7" class="anchored" data-anchor-id="assunzione-di-non-intersezione-delle-funzioni-di-risposta"><span class="header-section-number">61.7</span> Assunzione di Non-Intersezione delle Funzioni di Risposta</h2>
 <p>L’assunzione di non-intersezione delle funzioni di risposta (IRF) prevede che le probabilità di successo su item più difficili non superino mai quelle relative a item più facili, per ogni livello del tratto latente. In altre parole, le IRF devono essere ordinate in modo che la probabilità di rispondere correttamente a un item più difficile sia sempre inferiore o uguale rispetto a un item meno difficile. Formalmente, questa proprietà può essere espressa come:</p>
 <p><span class="math display">\[
 P_1(\theta) \leq P_2(\theta) \leq ... \leq P_k(\theta) \quad \text{per ogni} \ \theta
 \]</span></p>
 <p>L’intersezione delle IRF comporterebbe una violazione dell’ordinamento degli item, il che renderebbe difficile interpretare i risultati della scala.</p>
-<hr>
 <p>In sintesi, l’Analisi delle Scale di Mokken si basa su assunzioni chiave simili a quelle dell’IRT, ma le implementa in un contesto non parametrico. La verifica di queste assunzioni garantisce la validità delle scale costruite e la corretta interpretazione dei risultati, rendendo l’MSA uno strumento potente per la costruzione di scale psicometriche robuste.</p>
 </section>
-</section>
-<section id="modelli-della-mokken-scale-analysis" class="level2" data-number="59.5">
-<h2 data-number="59.5" class="anchored" data-anchor-id="modelli-della-mokken-scale-analysis"><span class="header-section-number">59.5</span> Modelli della Mokken Scale Analysis</h2>
+<section id="modelli-della-mokken-scale-analysis" class="level2" data-number="61.8">
+<h2 data-number="61.8" class="anchored" data-anchor-id="modelli-della-mokken-scale-analysis"><span class="header-section-number">61.8</span> Modelli della Mokken Scale Analysis</h2>
 <p>Dalle suddette assunzioni derivano due modelli della Mokken Scale Analysis:</p>
 <ol type="1">
 <li><p><strong>Modello di Monotonicità Omogenea</strong> (Mokken, 1971): rispetta le prime tre assunzioni (unidimensionalità, indipendenza locale e monotonicità latente). Questo modello permette di ordinare i rispondenti in base al tratto latente.</p></li>
 <li><p><strong>Modello di Doppia Monotonicità</strong>: rispetta tutte e quattro le assunzioni (unidimensionalità, indipendenza locale, monotonicità latente e non-intersezione). Consente di ordinare non solo i rispondenti, ma anche gli item in termini di difficoltà.</p></li>
 </ol>
-<p>In conclusione, la MSA rappresenta un’evoluzione metodologica significativa rispetto allo scaling di Guttman, offrendo un approccio meno restrittivo e più adatto all’analisi dei dati empirici. Fornisce un quadro analitico efficace per l’indagine dettagliata delle risposte agli item e delle abilità dei rispondenti in contesti psicologici.</p>
 </section>
-<section id="coefficienti-di-scalabilità" class="level2" data-number="59.6">
-<h2 data-number="59.6" class="anchored" data-anchor-id="coefficienti-di-scalabilità"><span class="header-section-number">59.6</span> Coefficienti di Scalabilità</h2>
-<p>Per verificare le assunzioni dei modelli di monotonicità omogenea e di doppia monotonicità, il principale indice utilizzato è il coefficiente di scalabilità di Loevinger <em>H</em> (Loevinger, 1948). Esistono tre indici principali per misurare la scalabilità:</p>
-<ul>
-<li><p><strong>Coefficiente per singolo item (<span class="math inline">\(H_j\)</span>)</strong>: misura la capacità di discriminazione di un singolo item. <span class="math display">\[
-H_j = \frac{COV(X_j, R_{-j})}{COV(X_j, R_{-j})^{max}}
-\]</span> dove <span class="math inline">\(X_j\)</span> è il punteggio dell’item e <span class="math inline">\(R_{-j}\)</span> è il <em>rest score</em> (la somma dei punteggi di tutti gli item, escluso l’item <span class="math inline">\(j\)</span>). Un valore elevato di <span class="math inline">\(H_j\)</span> indica che l’item discrimina bene tra i rispondenti e contribuisce efficacemente all’ordinamento lungo il continuum latente. In generale, valori superiori a 0.30 sono considerati accettabili per un item.</p></li>
-<li><p><strong>Coefficiente per coppie di item (<span class="math inline">\(H_{ij}\)</span>)</strong>: valuta la coerenza tra due item. <span class="math display">\[
-H_{ij} = \frac{COV(X_i , X_j)}{COV(X_i , X_j)^{max}}
-\]</span> dove <span class="math inline">\(X_i\)</span> e <span class="math inline">\(X_j\)</span> sono i punteggi sommati degli item e il superscript <span class="math inline">\(max\)</span> indica la covarianza massima che i due item potrebbero avere in assenza di errori di Guttman. Valori positivi indicano che la coppia di item è coerente con il modello di omogeneità monotona, mentre valori negativi potrebbero indicare problemi di multidimensionalità o non monotonicità tra gli item.</p></li>
-<li><p><strong>Coefficiente complessivo per il test (<span class="math inline">\(H\)</span>)</strong>: ornisce una misura della qualità complessiva della scala. <span class="math display">\[
-H = \frac{\sum^J_{j=1} COV(X_j,R_{-j})}{\sum^J_{j=1} COV(X_j,R_{-j})^{max}}
-\]</span> Questo indice valutando in che misura la struttura dei dati segue un modello di Guttman. Valori di <span class="math inline">\(H\)</span> tra 0.30 e 0.40 indicano una scala debole, tra 0.40 e 0.50 una scala di qualità media, e superiori a 0.50 una scala forte.</p>
-<p>L’indice <span class="math inline">\(H\)</span> varia tra -1 e 1, e i valori negativi indicano che gli item non sono adatti alla scala. Le assunzioni di unidimensionalità, indipendenza locale e monotonicità latente implicano che <span class="math inline">\(0 ≤ H_{ij} ≤ 1\)</span> per tutte le coppie di item <span class="math inline">\(i ≠ j\)</span>, e che anche <span class="math inline">\(H_j\)</span> e <span class="math inline">\(H\)</span> dovrebbero essere superiori o uguali a zero. Quando l’indice <span class="math inline">\(H\)</span> è vicino a 1, ciò implica una perfetta conformità al modello di Guttman.</p></li>
-</ul>
-<p>In sintesi, i coefficienti di scalabilità nelle Scale Mokken (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_j\)</span> e <span class="math inline">\(H_{ij}\)</span>) sono fondamentali per valutare la qualità degli item e del test complessivo. Essi misurano in che misura gli item e i punteggi dei rispondenti seguono un ordinamento coerente lungo il continuum latente, fornendo indicazioni su quanto bene gli item discriminano tra i rispondenti.</p>
-<p>Questi coefficienti vengono calcolati confrontando la covarianza osservata tra gli item con la covarianza massima teorica possibile in assenza di errori di Guttman. Un coefficiente <span class="math inline">\(H\)</span> vicino a 1 suggerisce che gli item si conformano al modello ideale, mentre valori vicini a zero indicano una presenza significativa di errori di Guttman, compromettendo la qualità della scala.</p>
-<p>Oltre a testare l’adattamento dei dati al modello di omogeneità monotona, la MSA fornisce anche informazioni importanti sulla validità di costrutto della scala. Ad esempio, sebbene valori elevati di <span class="math inline">\(H_j\)</span> e <span class="math inline">\(H\)</span> indichino una buona discriminazione, ciò non garantisce necessariamente che la scala copra in modo completo l’intero costrutto latente. Allo stesso modo, valori elevati di <span class="math inline">\(H_{ij}\)</span> tra coppie di item possono suggerire che uno degli item sia ridondante.</p>
-<p>In conclusione, i coefficienti di scalabilità sono strumenti cruciali per analizzare la precisione e la validità di una scala nel contesto dell’Analisi delle Scale Mokken. Oltre a valutare la qualità della misurazione e l’adeguatezza degli item, essi contribuiscono a migliorare la comprensione della struttura latente del test, fornendo informazioni essenziali per la selezione degli item nei contesti psicometrici, educativi e di ricerca.</p>
+<section id="coefficienti-di-scalabilità" class="level2" data-number="61.9">
+<h2 data-number="61.9" class="anchored" data-anchor-id="coefficienti-di-scalabilità"><span class="header-section-number">61.9</span> Coefficienti di Scalabilità</h2>
+<p>I <strong>coefficienti di scalabilità</strong> sono strumenti essenziali nell’<strong>Analisi delle Scale di Mokken</strong> (MSA) per valutare la qualità degli item e della scala complessiva. Questi coefficienti permettono di verificare quanto le risposte ai test seguano un ordinamento coerente lungo un continuum latente. Si basano sulla covarianza tra i punteggi degli item e i restscore (o tra coppie di item) e forniscono indicazioni chiave sulla qualità degli item e sulla capacità della scala di misurare un costrutto unidimensionale.</p>
 </section>
-<section id="errori-standard" class="level2" data-number="59.7">
-<h2 data-number="59.7" class="anchored" data-anchor-id="errori-standard"><span class="header-section-number">59.7</span> Errori Standard</h2>
-<p>Gli errori standard (SE) rivestono un ruolo cruciale nella corretta interpretazione dei coefficienti di scalabilità nelle Scale Mokken, poiché forniscono una misura dell’incertezza associata alle stime. Un errore standard elevato rispetto al coefficiente di scalabilità (<span class="math inline">\(H_i\)</span>), ad esempio un SE di 0.08 per un <span class="math inline">\(H_i\)</span> di 0.30, suggerisce che il vero valore del coefficiente nella popolazione potrebbe essere sensibilmente inferiore a 0.30, mettendo in dubbio la scalabilità degli item. Questo implica che una stima elevata di <span class="math inline">\(H_i\)</span> potrebbe non riflettere accuratamente la realtà, segnalando potenziali problemi di validità della scala.</p>
-<p>La grandezza dell’errore standard è influenzata da due fattori principali: la dimensione del campione e la distribuzione dei punteggi degli item. In generale, campioni più grandi portano a errori standard più ridotti, aumentando così la precisione della stima del coefficiente di scalabilità. Tuttavia, distribuzioni asimmetriche dei punteggi degli item possono far aumentare l’errore standard, indipendentemente dalla dimensione del campione. Va sottolineato che, sebbene una dimensione campionaria ampia tenda a ridurre l’errore standard, non garantisce necessariamente stime precise dei coefficienti di scalabilità, in quanto altri fattori, come l’eterogeneità degli item, possono intervenire.</p>
-<p>Per quantificare la precisione delle stime dei coefficienti di scalabilità, è possibile calcolare gli intervalli di confidenza al 95% (CI) utilizzando la formula:</p>
+<section id="coefficiente-per-singolo-item-h_j" class="level2" data-number="61.10">
+<h2 data-number="61.10" class="anchored" data-anchor-id="coefficiente-per-singolo-item-h_j"><span class="header-section-number">61.10</span> Coefficiente per Singolo Item (<span class="math inline">\(H_j\)</span>)</h2>
+<p>Il coefficiente <span class="math inline">\(H_j\)</span> misura la capacità di un singolo item di discriminare tra i rispondenti lungo il continuum latente. La formula è:</p>
 <p><span class="math display">\[
-\text{95\% CI} = H_i \pm (1.96 \times \text{SE})
+H_j = \frac{\text{COV}(X_j, R_{-j})}{\text{COV}(X_j, R_{-j})^{\text{max}}},
 \]</span></p>
-<p>Ad esempio, se <span class="math inline">\(H_i = 0.30\)</span> con un SE di 0.10, l’intervallo di confidenza sarà compreso tra 0.10 e 0.50. Un intervallo così ampio indica che il valore reale di <span class="math inline">\(H_i\)</span> potrebbe variare significativamente, rendendo il coefficiente meno affidabile. In un altro esempio, se <span class="math inline">\(H_i = 0.15\)</span> con un SE di 0.10, l’intervallo di confidenza sarà compreso tra -0.05 e 0.35. Questo suggerisce che il vero coefficiente potrebbe essere negativo o prossimo allo zero, segnalando che l’item in questione potrebbe non contribuire positivamente alla scala e, di conseguenza, potrebbe essere considerato per l’eliminazione.</p>
-<p>Mokken (1971) ha evidenziato che la monotonicità delle funzioni di risposta agli item (IRF) per tutti gli item che contribuiscono al punteggio totale <span class="math inline">\(X^+\)</span> è una condizione sufficiente per garantire l’utilità degli item nella classificazione dei rispondenti. Pertanto, item con coefficienti di scalabilità bassi vengono generalmente considerati inadatti e rimossi dalla scala, in quanto non forniscono un contributo significativo alla costruzione della gerarchia latente.</p>
-<p>Tuttavia, Crișan et al.&nbsp;(2020) hanno suggerito di evitare la rimozione automatica di item sulla base esclusiva di criteri psicometrici, a meno che non vi siano altre giustificazioni teoriche o di contenuto. Sebbene l’eliminazione di item possa migliorare l’affidabilità della scala e la capacità di discriminare i rispondenti, tali benefici potrebbero essere compensati da una riduzione nella copertura del costrutto o della validità predittiva. Di conseguenza, la decisione di mantenere o eliminare un item dovrebbe basarsi su una considerazione complessiva che includa sia aspetti teorici che psicometrici, piuttosto che affidarsi esclusivamente a regole empiriche o soglie prestabilite.</p>
-<p>In conclusione, l’analisi degli errori standard nei coefficienti di scalabilità delle Scale Mokken offre informazioni essenziali sull’affidabilità e sulla validità degli item all’interno della scala. Tuttavia, le decisioni riguardanti la rimozione o il mantenimento di specifici item dovrebbero essere guidate non solo da criteri psicometrici, ma anche dal contesto teorico e dai contenuti della scala, per garantire che il costrutto latente sia rappresentato in maniera adeguata. Un’interpretazione equilibrata dei coefficienti di scalabilità, accompagnata da considerazioni teoriche, permette di sviluppare strumenti di misurazione robusti e validi.</p>
-</section>
-<section id="estensione-dellanalisi-delle-scale-di-mokken-agli-item-politomici" class="level2" data-number="59.8">
-<h2 data-number="59.8" class="anchored" data-anchor-id="estensione-dellanalisi-delle-scale-di-mokken-agli-item-politomici"><span class="header-section-number">59.8</span> Estensione dell’Analisi delle Scale di Mokken agli Item Politomici</h2>
-<p>L’Analisi delle Scale di Mokken (MSA), inizialmente sviluppata per item dicotomici, è stata estesa da Molenaar (1982a, 1997) per includere anche item politomici, come quelli comunemente utilizzati nelle scale Likert. Questa estensione preserva i principi fondamentali della MSA per gli item dicotomici, adattandoli però alle specificità degli item con più categorie di risposta.</p>
-<p>Nel contesto degli item politomici, l’analisi non si limita a esaminare le assunzioni del modello MSA sull’intero item, ma considera anche i singoli “passaggi” tra categorie di risposta consecutive. Prendendo ad esempio un item su scala Likert a cinque punti (da “fortemente in disaccordo” a “fortemente d’accordo”), ci sono quattro passaggi distinti tra le categorie. Ogni passaggio rappresenta una transizione tra due categorie adiacenti, e la probabilità di compiere ciascuna transizione dipende dal tratto latente (<span class="math inline">\(\theta\)</span>).</p>
-<p>Per ogni passaggio di un item politomico, si definisce una Funzione di Risposta del Passaggio dell’Item (ISRF, <em>Item Step Response Function</em>), che descrive la probabilità che un individuo scelga una specifica categoria o una categoria superiore in relazione al proprio livello del tratto latente <span class="math inline">\(\theta\)</span>. Le ISRF sono fondamentali per comprendere il funzionamento di ciascuna categoria di risposta e come queste si relazionino al tratto latente che l’item intende misurare.</p>
-<p>Affinché il modello di omogeneità monotona rimanga valido anche per item politomici, è necessario che le probabilità di selezionare una categoria di risposta k o superiore aumentino in modo monotono all’aumentare di <span class="math inline">\(\theta\)</span>. Questo implica che le categorie di risposta siano ordinate in modo significativo, riflettendo livelli progressivamente più alti del tratto latente. In altre parole, man mano che il tratto latente aumenta, la probabilità di scegliere una risposta superiore (es. “d’accordo” anziché “neutrale”) deve crescere.</p>
-<p>Un elemento cruciale nell’analisi degli item politomici nella MSA è l’assunzione di <strong>monotonicità</strong>. Tale assunzione richiede che le ISRF siano funzioni crescenti rispetto a <span class="math inline">\(\theta\)</span>: man mano che il tratto latente cresce, deve crescere anche la probabilità di scegliere categorie di risposta più elevate. In questo modo, ogni transizione tra categorie rappresenta un avanzamento significativo lungo il continuum latente.</p>
-<p>In sintesi, l’estensione della MSA agli item politomici fornisce un approccio robusto per analizzare item con più categorie di risposta, consentendo una misurazione più dettagliata e sfumata del tratto latente. Questo rende la MSA particolarmente adatta in contesti in cui si utilizzano scale a più livelli di risposta, come nei questionari di valutazione del benessere psicologico, nei sondaggi di opinione o nelle valutazioni educative. Attraverso l’analisi dei singoli passaggi degli item, la MSA applicata agli item politomici permette di approfondire la comprensione delle modalità con cui gli individui interagiscono con le diverse opzioni di risposta, e di come queste scelte riflettano i loro livelli sul tratto latente.</p>
-</section>
-<section id="laffidabilità-nei-test" class="level2" data-number="59.9">
-<h2 data-number="59.9" class="anchored" data-anchor-id="laffidabilità-nei-test"><span class="header-section-number">59.9</span> L’Affidabilità nei Test</h2>
-<p>L’affidabilità di un test psicometrico si riferisce alla sua capacità di produrre risultati coerenti nel tempo o attraverso somministrazioni ripetute. L’alfa di Cronbach è l’indicatore di affidabilità più comune, ma può presentare limitazioni, specialmente quando gli item non sono omogenei. Il coefficiente ρ di Mokken è una valida alternativa per valutare l’affidabilità in presenza di scale ordinarie e si basa su assunzioni meno restrittive rispetto all’alfa di Cronbach.</p>
-</section>
-<section id="procedura-di-selezione-automatica-degli-item-aisp" class="level2" data-number="59.10">
-<h2 data-number="59.10" class="anchored" data-anchor-id="procedura-di-selezione-automatica-degli-item-aisp"><span class="header-section-number">59.10</span> Procedura di Selezione Automatica degli Item (AISP)</h2>
-<p>La Procedura di Selezione Automatica degli Item (AISP) è una metodologia impiegata nell’Analisi delle Scale di Mokken (MSA) per selezionare item che aderiscano alle assunzioni del Modello di Mokken (MHM). A differenza di tecniche più comuni come l’analisi fattoriale o l’analisi parallela, l’AISP non cerca di determinare la dimensionalità dei dati in modo esplicito, ma utilizza un approccio basato sui coefficienti di scalabilità per identificare insiemi di item che misurano lo stesso costrutto latente. Questo processo permette di individuare sottoinsiemi di item scalabili che formano una o più scale.</p>
-<p>L’AISP segue un processo iterativo che inizia con la selezione dell’item più rappresentativo di una dimensione, utilizzando il coefficiente di scalabilità degli item (<span class="math inline">\(H_i\)</span>). Successivamente, viene impiegato il coefficiente di scalabilità delle coppie di item (<span class="math inline">\(H_{ij}\)</span>) per identificare il più ampio insieme di item che misurano lo stesso costrutto. Il criterio principale per l’inclusione di un item è che il suo coefficiente di scalabilità superi una soglia (<span class="math inline">\(c\)</span>), solitamente impostata a 0.30, e che la covarianza tra ogni coppia di item inclusi nella scala (<span class="math inline">\(H_{ij}\)</span>) sia positiva e superiore a questo valore.</p>
-<section id="criteri-di-selezione" class="level3" data-number="59.10.1">
-<h3 data-number="59.10.1" class="anchored" data-anchor-id="criteri-di-selezione"><span class="header-section-number">59.10.1</span> Criteri di Selezione</h3>
-<p>La procedura inizia selezionando due item con il più alto valore di <span class="math inline">\(H_{ij}\)</span> e continua aggiungendo nuovi item che rispettano i due criteri: (1) il coefficiente di scalabilità individuale dell’item (<span class="math inline">\(H_i\)</span>) deve essere maggiore di <span class="math inline">\(c\)</span>, e (2) la covarianza tra ogni coppia di item (<span class="math inline">\(H_{ij}\)</span>) deve essere positiva e superiore al valore soglia scelto. Se un item non soddisfa questi requisiti, l’AISP tenterà di includerlo in una seconda scala. Questo processo si ripete finché non è più possibile assegnare altri item a nuove scale. Gli item che non soddisfano i criteri vengono identificati come non scalabili e, pertanto, esclusi.</p>
-</section>
-<section id="funzionalità-dellaisp" class="level3" data-number="59.10.2">
-<h3 data-number="59.10.2" class="anchored" data-anchor-id="funzionalità-dellaisp"><span class="header-section-number">59.10.2</span> Funzionalità dell’AISP</h3>
-<p>Le scale risultanti dall’AISP sono progettate per misurare un tratto latente comune, e gli item inclusi devono essere in grado di ordinare in modo affidabile i rispondenti lungo tale continuum. Tuttavia, talvolta può capitare che un item con un valore di <span class="math inline">\(H_i\)</span> inferiore alla soglia <span class="math inline">\(c\)</span> venga incluso nella scala, il che potrebbe indicare che quell’item non contribuisce adeguatamente alla misurazione del tratto. In questi casi, è necessario rivedere attentamente la selezione degli item e, se necessario, escludere gli item inadatti.</p>
-<p>Un aspetto importante dell’AISP è che esso non è influenzato dalla difficoltà degli item, rendendolo adatto sia per item dicotomici che politomici. Inoltre, a differenza dell’analisi fattoriale, l’AISP non cerca di imporre una soluzione a prescindere dai dati: se nessuna coppia di item raggiunge il valore minimo di <span class="math inline">\(H_{ij}\)</span>, la procedura non genera alcuna scala. Questo può essere un vantaggio in contesti in cui l’analisi fattoriale forzerebbe una soluzione, anche se non significativa o coerente con i dati.</p>
-</section>
-<section id="implicazioni-della-soglia-c" class="level3" data-number="59.10.3">
-<h3 data-number="59.10.3" class="anchored" data-anchor-id="implicazioni-della-soglia-c"><span class="header-section-number">59.10.3</span> Implicazioni della Soglia (<span class="math inline">\(c\)</span>)</h3>
-<p>La scelta del valore soglia (<span class="math inline">\(c\)</span>) è un fattore determinante nel processo di selezione. Se il valore di <span class="math inline">\(c\)</span> è troppo alto, molti item potrebbero essere esclusi, portando alla formazione di scale con pochi item e riducendo la capacità di coprire adeguatamente il costrutto latente. Al contrario, se il valore di <span class="math inline">\(c\)</span> è troppo basso, è possibile che vengano inclusi troppi item, nascondendo la vera dimensionalità dei dati. Per questo motivo, il valore di <span class="math inline">\(c\)</span> deve essere scelto con attenzione, in base agli obiettivi specifici dello studio e alle caratteristiche dei dati.</p>
-</section>
-<section id="limiti-e-considerazioni" class="level3" data-number="59.10.4">
-<h3 data-number="59.10.4" class="anchored" data-anchor-id="limiti-e-considerazioni"><span class="header-section-number">59.10.4</span> Limiti e Considerazioni</h3>
-<p>Sebbene l’AISP rappresenti una valida alternativa all’analisi fattoriale esplorativa, ha anche delle limitazioni. Studi di simulazione hanno dimostrato che l’AISP può essere meno efficace nel rilevare la vera dimensionalità dei dati quando le dimensioni sono correlate o quando gli item saturano su più dimensioni. Inoltre, l’AISP non tiene conto delle relazioni teoriche tra gli item, affidandosi unicamente a criteri statistici. Pertanto, la decisione di mantenere o rimuovere un item dalla scala non dovrebbe basarsi esclusivamente sui risultati dell’AISP, ma deve essere integrata da una valutazione teorica solida e da una riflessione sui contenuti.</p>
-</section>
-<section id="conclusioni" class="level3" data-number="59.10.5">
-<h3 data-number="59.10.5" class="anchored" data-anchor-id="conclusioni"><span class="header-section-number">59.10.5</span> Conclusioni</h3>
-<p>L’AISP è uno strumento utile per la costruzione di scale di Mokken, in quanto consente di identificare insiemi di item scalabili senza imporre assunzioni troppo restrittive sui dati. Tuttavia, la scelta del valore soglia <span class="math inline">\(c\)</span> e l’interpretazione delle scale richiedono attenzione. In definitiva, l’AISP dovrebbe essere utilizzato come parte di un approccio più ampio alla validazione di strumenti di misura, tenendo conto sia delle evidenze statistiche sia delle considerazioni teoriche e pratiche che sottostanno alla costruzione della scala.</p>
-</section>
-</section>
-<section id="ordinamento-invariante-degli-item" class="level2" data-number="59.11">
-<h2 data-number="59.11" class="anchored" data-anchor-id="ordinamento-invariante-degli-item"><span class="header-section-number">59.11</span> Ordinamento Invariante degli Item</h2>
-<p>L’Ordinamento Invariante degli Item (IIO) è un concetto fondamentale nelle scale Mokken. L’IIO richiede che l’ordine di difficoltà degli item rimanga costante tra diversi sottogruppi di persone all’interno della popolazione target.</p>
-<p>Perché è importante?</p>
-<ol type="1">
-<li><strong>Validità dei confronti</strong>: Garantisce che le differenze nei punteggi totali tra gruppi siano significative e non dovute a variazioni nella percezione della difficoltà degli item.</li>
-<li><strong>Interpretazione coerente</strong>: Permette un’interpretazione uniforme dei punteggi del test per tutti i partecipanti.</li>
-<li><strong>Rilevazione di bias</strong>: Aiuta a identificare possibili bias o funzioni differenziali degli item (DIF) che potrebbero compromettere la validità della scala.</li>
-</ol>
-<p>Nei test psicologici (es. questionari sulla depressione o ansia) e nelle valutazioni educative, l’IIO implica che:</p>
+<p>dove:</p>
 <ul>
-<li>Un individuo con un punteggio totale più alto dovrebbe manifestare tutti i sintomi o le competenze di una persona con un punteggio inferiore, più eventuali sintomi o competenze aggiuntive.</li>
-<li>La progressione degli item da facili a difficili dovrebbe essere valida per tutti gli esaminandi.</li>
+<li><span class="math inline">\(X_j\)</span>: è il punteggio del singolo item <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(R_{-j}\)</span>: è il <strong>restscore</strong>, cioè la somma dei punteggi di tutti gli altri item escluso <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(\text{COV}(X_j, R_{-j})^{\text{max}}\)</span>: è la covarianza massima teorica tra <span class="math inline">\(X_j\)</span> e <span class="math inline">\(R_{-j}\)</span>, calcolata in assenza di errori di Guttman.</li>
 </ul>
-<p>L’IIO è cruciale quando si ordinano gli item di un test in base alla loro difficoltà. Questo ordinamento dovrebbe essere coerente per tutti i partecipanti, indipendentemente dal loro livello di abilità o dalle caratteristiche del gruppo di appartenenza.</p>
-<p>Per verificare la presenza dell’IIO, si utilizzano diverse tecniche:</p>
-<ol type="1">
-<li><strong>Metodo dei gruppi di restscore</strong>: Confronta l’ordine degli item tra gruppi formati in base ai punteggi totali, escludendo l’item in esame.</li>
-<li><strong>Metodo di divisione degli item</strong>: Divide gli item in gruppi e confronta l’ordine di difficoltà tra questi gruppi.</li>
-<li><strong>Matrici delle proporzioni P(++)/P(–)</strong>: Analizza le proporzioni di risposte positive e negative per coppie di item.</li>
-<li><strong>Metodo di divisione dei restscore</strong>: Esamina la coerenza dell’ordine degli item attraverso diversi livelli di punteggio totale.</li>
-</ol>
-<p>Se l’IIO non è rispettato, si possono verificare diverse conseguenze:</p>
+<p>Interpretazione:</p>
 <ul>
-<li>Possibile presenza di DIF o bias negli item.</li>
-<li>Difficoltà nell’interpretare e confrontare i punteggi totali tra gruppi diversi.</li>
-<li>Messa in discussione della validità costruttuale della scala.</li>
+<li><span class="math inline">\(H_j &gt; 0.30\)</span>: L’item contribuisce efficacemente alla scala.</li>
+<li><span class="math inline">\(H_j &lt; 0.30\)</span>: L’item discrimina poco e potrebbe non essere adatto.</li>
 </ul>
-<p>In conclusione, l’IIO è un presupposto fondamentale per l’uso e l’interpretazione delle scale Mokken e, più in generale, degli strumenti di misurazione psicometrica. Nonostante la sua importanza, spesso non viene verificato empiricamente. La sua conferma è particolarmente cruciale in contesti di ricerca sui processi cognitivi evolutivi o nella pratica clinica.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.3</strong></span> Consideriamo un test con 4 item e i seguenti punteggi per 5 rispondenti:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Rispondente</th>
+<th><span class="math inline">\(X_1\)</span></th>
+<th><span class="math inline">\(X_2\)</span></th>
+<th><span class="math inline">\(X_3\)</span></th>
+<th><span class="math inline">\(X_4\)</span></th>
+<th>Restscore (<span class="math inline">\(R_{-1}\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td><span class="math inline">\(1 + 1 + 0 = 2\)</span></td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td><span class="math inline">\(1 + 0 + 1 = 2\)</span></td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td><span class="math inline">\(1 + 0 + 0 = 1\)</span></td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td><span class="math inline">\(1 + 1 + 1 = 3\)</span></td>
+</tr>
+<tr class="odd">
+<td>E</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td><span class="math inline">\(0 + 0 + 0 = 0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Calcoliamo:</p>
+<ul>
+<li><span class="math inline">\(\text{COV}(X_1, R_{-1})\)</span>: Covarianza tra <span class="math inline">\(X_1\)</span> e <span class="math inline">\(R_{-1}\)</span>.</li>
+<li><span class="math inline">\(\text{COV}(X_1, R_{-1})^{\text{max}}\)</span>: Covarianza teorica massima in assenza di errori di Guttman.</li>
+</ul>
+<p>Supponiamo che:</p>
+<p><span class="math display">\[
+\text{COV}(X_1, R_{-1}) = 0.8 \quad \text{e} \quad \text{COV}(X_1, R_{-1})^{\text{max}} = 1.
+\]</span></p>
+<p>Il coefficiente <span class="math inline">\(H_1\)</span> è:</p>
+<p><span class="math display">\[
+H_1 = \frac{\text{COV}(X_1, R_{-1})}{\text{COV}(X_1, R_{-1})^{\text{max}}} = \frac{0.8}{1} = 0.8.
+\]</span></p>
+<p>Questo valore indica che <span class="math inline">\(X_1\)</span> contribuisce in modo rilevante alla scala.</p>
+</div>
+<hr>
 </section>
-<section id="dimensione-del-campione" class="level2" data-number="59.12">
-<h2 data-number="59.12" class="anchored" data-anchor-id="dimensione-del-campione"><span class="header-section-number">59.12</span> Dimensione del Campione</h2>
-<p>La determinazione della dimensione del campione è un aspetto cruciale nella ricerca psicometrica. Mentre questo campo è ben sviluppato per molti test statistici, rimane un’area relativamente inesplorata nell’Analisi delle Scale Mokken (MSA). Questa lacuna nella ricerca pone sfide significative per i ricercatori, in particolare quando si tratta di bilanciare la precisione dei risultati con le limitazioni di risorse e tempo.</p>
-<p>Un rischio nell’uso di campioni troppo piccoli è la “capitalizzazione sul caso”. Questo fenomeno si verifica quando:</p>
-<ol type="1">
-<li>Una scala di Mokken viene erroneamente identificata in un campione piccolo, quando in realtà non esiste nella popolazione.</li>
-<li>Una scala esistente non viene rilevata a causa della limitata dimensione del campione.</li>
-</ol>
-<p>Entrambi questi scenari possono portare a conclusioni errate e compromettere la validità della ricerca.</p>
-<section id="studi-chiave-sulla-dimensione-del-campione" class="level3" data-number="59.12.1">
-<h3 data-number="59.12.1" class="anchored" data-anchor-id="studi-chiave-sulla-dimensione-del-campione"><span class="header-section-number">59.12.1</span> Studi Chiave sulla Dimensione del Campione</h3>
-<p>Lo studio di Straat et al.&nbsp;(2014) ha esaminato le dimensioni minime del campione necessarie per due procedure cruciali nelle Scale Mokken: l’Automated Item Selection Procedure (AISP) e l’Algoritmo Genetico (GA). Sono stati considerati i seguenti fattori: la lunghezza del test, i valori approssimativi dei coefficienti di scalabilità (Hi) degli item e la correlazione tra le dimensioni nella scala.</p>
-<p>I risultati principali sono stati:</p>
-<ol type="1">
-<li>Il valore di Hi è risultato essere il fattore più influente sulla dimensione del campione necessaria.</li>
-<li>Con l’aumento di Hi, erano sufficienti campioni più piccoli per classificare correttamente gli item.</li>
-<li>La lunghezza del test ha avuto un impatto minore sulla precisione della classificazione.</li>
-<li>Le correlazioni tra le dimensioni hanno mostrato effetti in combinazione con vari livelli di Hi.</li>
-</ol>
-<p>Sulla base di questi risultati, Straat et al.&nbsp;(2014) forniscono le seguenti linee guida per la Dimensione del Campione:</p>
+<section id="coefficiente-per-coppie-di-item-h_ij" class="level2" data-number="61.11">
+<h2 data-number="61.11" class="anchored" data-anchor-id="coefficiente-per-coppie-di-item-h_ij"><span class="header-section-number">61.11</span> Coefficiente per Coppie di Item (<span class="math inline">\(H_{ij}\)</span>)</h2>
+<p>Il coefficiente <span class="math inline">\(H_{ij}\)</span> misura la <strong>coerenza tra due item</strong> (<span class="math inline">\(X_i\)</span> e <span class="math inline">\(X_j\)</span>) rispetto al continuum latente. Valuta quanto la relazione osservata tra i due item sia conforme al modello di omogeneità monotona, che presuppone che entrambi gli item misurino lo stesso tratto latente in modo coerente.</p>
+<p>Si calcola come:</p>
+<p><span class="math display">\[
+H_{ij} = \frac{\text{COV}(X_i, X_j)}{\text{COV}(X_i, X_j)^{\text{max}}},
+\]</span></p>
+<p>dove:</p>
 <ul>
-<li>Per Hi ≈ 0.22:
+<li><span class="math inline">\(\text{COV}(X_i, X_j)\)</span>: è la covarianza osservata tra i punteggi degli item <span class="math inline">\(X_i\)</span> e <span class="math inline">\(X_j\)</span>,</li>
+<li><span class="math inline">\(\text{COV}(X_i, X_j)^{\text{max}}\)</span>: è la <strong>covarianza massima teorica</strong>, calcolata assumendo <strong>assenza di errori di Guttman</strong> e pieno rispetto del modello di Guttman.</li>
+</ul>
+<p>Interpretazione:</p>
 <ul>
-<li>Precisione mediocre/adeguata: 750-1000 persone</li>
-<li>Precisione buona/eccellente: 1250-2500 persone</li>
+<li><strong><span class="math inline">\(H_{ij} &gt; 0\)</span>:</strong>
+<ul>
+<li>Gli item sono coerenti con il modello di omogeneità monotona.</li>
+<li>Valori positivi indicano che le risposte ai due item sono ordinate in modo simile rispetto al continuum latente.</li>
 </ul></li>
-<li>Per Hi ≈ 0.42:
+<li><strong><span class="math inline">\(H_{ij} &lt; 0\)</span>:</strong>
 <ul>
-<li>Precisione mediocre/adeguata: 50 persone</li>
-<li>Precisione buona/eccellente: almeno 250 persone</li>
+<li>Potrebbero esserci problemi di:
+<ul>
+<li><strong>Multidimensionalità</strong>: Gli item potrebbero misurare tratti latenti differenti.</li>
+<li><strong>Violazioni della monotonicità</strong>: La relazione tra i punteggi degli item potrebbe non seguire un andamento coerente con l’aumento del tratto latente.</li>
+</ul></li>
+</ul></li>
+<li><strong><span class="math inline">\(H_{ij} \approx 0\)</span>:</strong>
+<ul>
+<li>Indica una relazione molto debole tra gli item, suggerendo che la loro associazione con il continuum latente è minima o casuale.</li>
 </ul></li>
 </ul>
-<p>Lo studio di Watson et al.&nbsp;(2018) ha analizzato l’impatto della dimensione del campione sui coefficienti di scalabilità utilizzando dati reali. Il campione originale era costituito da 7510 persone. Il questionario includeva 14 item con scala Likert a 5 punti. Le dimensioni dei campioni estratti sono state: 50, 250, 500, 600, 750, 1000 partecipanti. È stata utilizzata la tecnica del bootstrapping con 1000 campioni per ogni dimensione.</p>
-<p>I risultati chiave sono stati i seguenti:</p>
+<p>Nota: valori di <span class="math inline">\(H_{ij}\)</span> vicini a 1 indicano un’elevata coerenza tra gli item rispetto al modello ideale. Tuttavia, anche in presenza di <span class="math inline">\(H_{ij} &gt; 0\)</span>, valori relativamente bassi possono suggerire che gli item necessitano di una revisione o che contribuiscono in modo limitato alla scala complessiva.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.4</strong></span> Supponiamo che:</p>
+<ul>
+<li><span class="math inline">\(\text{COV}(X_1, X_2) = 0.6\)</span>,</li>
+<li><span class="math inline">\(\text{COV}(X_1, X_2)^{\text{max}} = 1\)</span>.</li>
+</ul>
+<p>Il coefficiente è:</p>
+<p><span class="math display">\[
+H_{12} = \frac{0.6}{1} = 0.6.
+\]</span></p>
+<p>Un valore positivo e relativamente alto indica coerenza tra gli item <span class="math inline">\(X_1\)</span> e <span class="math inline">\(X_2\)</span>.</p>
+</div>
+<hr>
+</section>
+<section id="coefficiente-complessivo-della-scala-h" class="level2" data-number="61.12">
+<h2 data-number="61.12" class="anchored" data-anchor-id="coefficiente-complessivo-della-scala-h"><span class="header-section-number">61.12</span> Coefficiente Complessivo della Scala (<span class="math inline">\(H\)</span>)</h2>
+<p>Il coefficiente complessivo <span class="math inline">\(H\)</span> rappresenta una misura sintetica della qualità della scala nel suo insieme, combinando il contributo di tutti gli item. Valuta quanto bene le risposte degli item seguano un ordinamento coerente lungo il continuum latente, tenendo conto della covarianza osservata tra gli item e i loro restscore.</p>
+<p>Si calcola come:</p>
+<p><span class="math display">\[
+H = \frac{\sum_{j=1}^J \text{COV}(X_j, R_{-j})}{\sum_{j=1}^J \text{COV}(X_j, R_{-j})^{\text{max}}},
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(J\)</span>: è il numero totale di item,</li>
+<li><span class="math inline">\(\text{COV}(X_j, R_{-j})\)</span>: è la covarianza osservata tra il punteggio di un item <span class="math inline">\(X_j\)</span> e il suo restscore <span class="math inline">\(R_{-j}\)</span>,</li>
+<li><span class="math inline">\(\text{COV}(X_j, R_{-j})^{\text{max}}\)</span>: è la covarianza massima teorica tra <span class="math inline">\(X_j\)</span> e <span class="math inline">\(R_{-j}\)</span>, calcolata assumendo assenza di errori di Guttman.</li>
+</ul>
+<p>Interpretazione dei Valori di <span class="math inline">\(H\)</span>:</p>
+<ul>
+<li><span class="math inline">\(H &lt; 0.30\)</span>: Scala debole.
+<ul>
+<li>Gli item non contribuiscono significativamente alla creazione di un ordinamento coerente.</li>
+<li>La scala potrebbe essere inadeguata per misurare il costrutto latente.</li>
+</ul></li>
+<li><span class="math inline">\(0.30 \leq H &lt; 0.40\)</span>: Scala accettabile.
+<ul>
+<li>La scala è utilizzabile, ma con limitazioni. Potrebbe richiedere una revisione o l’eliminazione di alcuni item deboli.</li>
+</ul></li>
+<li><span class="math inline">\(0.40 \leq H &lt; 0.50\)</span>: Scala di qualità media.
+<ul>
+<li>La scala mostra una struttura adeguata e un buon livello di coerenza tra gli item.</li>
+</ul></li>
+<li><span class="math inline">\(H \geq 0.50\)</span>: Scala forte.
+<ul>
+<li>Gli item formano una scala ben costruita, con un’elevata coerenza e capacità discriminativa.</li>
+</ul></li>
+</ul>
+<p>Considerazioni pratiche:</p>
+<ul>
+<li><strong>Valori elevati di <span class="math inline">\(H\)</span>:</strong>
+<ul>
+<li>Indicano che la scala è efficace nel distinguere i rispondenti lungo il continuum latente.</li>
+<li>Riflettono una bassa presenza di errori di Guttman.</li>
+</ul></li>
+<li><strong>Valori bassi di <span class="math inline">\(H\)</span>:</strong>
+<ul>
+<li>Possono indicare che gli item non sono sufficientemente coerenti tra loro.</li>
+<li>Suggeriscono la necessità di rivedere gli item o il costrutto sottostante.</li>
+</ul></li>
+</ul>
+<p>In conclusione, il coefficiente complessivo <span class="math inline">\(H\)</span> valuta la qualità globale di una scala. Esso integra i contributi degli item individuali in una misura unica, permettendo di identificare eventuali debolezze nella struttura della scala e fornendo una base per migliorare la coerenza e la validità degli strumenti di misura.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.5</strong></span> Supponiamo di avere una scala con 5 item (<span class="math inline">\(J = 5\)</span>) e i seguenti valori:</p>
+<ul>
+<li><span class="math inline">\(\sum_{j=1}^J \text{COV}(X_j, R_{-j}) = 3.2\)</span>,</li>
+<li><span class="math inline">\(\sum_{j=1}^J \text{COV}(X_j, R_{-j})^{\text{max}} = 5.0\)</span>.</li>
+</ul>
+<p>Il coefficiente complessivo della scala è:</p>
+<p><span class="math display">\[
+H = \frac{\sum_{j=1}^J \text{COV}(X_j, R_{-j})}{\sum_{j=1}^J \text{COV}(X_j, R_{-j})^{\text{max}}} = \frac{3.2}{5.0} = 0.64.
+\]</span></p>
+<p>Interpretazione:</p>
+<ul>
+<li>Con <span class="math inline">\(H = 0.64\)</span>, la scala può essere considerata <strong>forte</strong>, con un’ottima capacità di misurare il costrutto latente e distinguere tra i rispondenti.</li>
+</ul>
+</div>
+<hr>
+</section>
+<section id="errori-standard-nei-coefficienti-di-scalabilità" class="level2" data-number="61.13">
+<h2 data-number="61.13" class="anchored" data-anchor-id="errori-standard-nei-coefficienti-di-scalabilità"><span class="header-section-number">61.13</span> Errori Standard nei Coefficienti di Scalabilità</h2>
+<p>Gli <strong>errori standard (SE)</strong> svolgono un ruolo fondamentale nell’interpretazione dei coefficienti di scalabilità (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_j\)</span>, <span class="math inline">\(H_{ij}\)</span>) nella MSA. Forniscono una misura dell’incertezza associata alle stime e aiutano a valutare quanto il coefficiente stimato rappresenti accuratamente il valore reale nella popolazione.</p>
+<p>Un <strong>errore standard elevato</strong> rispetto al coefficiente stimato indica una maggiore incertezza. Ad esempio, se <span class="math inline">\(H_j = 0.30\)</span> e <span class="math inline">\(SE = 0.08\)</span>, il coefficiente potrebbe essere inferiore alla soglia accettabile di 0.30 nella popolazione, sollevando dubbi sulla scalabilità dell’item.</p>
+<p>L’errore standard permette di costruire intervalli di confidenza per quantificare la precisione della stima. La formula per il 95% CI è:</p>
+<p><span class="math display">\[
+\text{95\% CI} = H_j \pm (1.96 \times SE).
+\]</span></p>
+<p>L’intervallo di confidenza <strong>non descrive dove si trova il vero valore del coefficiente nella popolazione nel 95% dei campioni</strong>. Piuttosto:</p>
+<ul>
+<li><strong>In un gran numero di campioni</strong> prelevati dalla stessa popolazione, il 95% degli intervalli di confidenza calcolati includerà il vero valore del coefficiente nella popolazione.</li>
+<li>L’intervallo di confidenza riflette l’incertezza della stima in un campione specifico, ma non garantisce che il vero valore del coefficiente sia contenuto nell’intervallo per quel campione particolare.</li>
+</ul>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.7</strong></span> Se un coefficiente di scalabilità ha <span class="math inline">\(H_j = 0.30\)</span> e un errore standard di <span class="math inline">\(SE = 0.10\)</span>, il 95% CI sarà:</p>
+<p><span class="math display">\[
+\text{95\% CI} = 0.30 \pm (1.96 \times 0.10) = [0.10, 0.50].
+\]</span></p>
+<p>Questo intervallo indica che, in una procedura ripetuta su molti campioni, il vero valore di <span class="math inline">\(H_j\)</span> sarà compreso tra 0.10 e 0.50 nel 95% dei casi.</p>
+<hr>
+<p>In conclusione, la costruzione degli intervalli di confidenza tramite l’errore standard è uno strumento utile per quantificare l’incertezza associata a una stima, ma è importante ricordare che l’interpretazione corretta si basa sulla frequenza degli intervalli che includono il vero valore in campioni ripetuti, piuttosto che su una probabilità legata al valore specifico in un singolo campione.</p>
+<section id="fattori-che-influenzano-lerrore-standard" class="level3" data-number="61.13.1">
+<h3 data-number="61.13.1" class="anchored" data-anchor-id="fattori-che-influenzano-lerrore-standard"><span class="header-section-number">61.13.1</span> Fattori che Influenzano l’Errore Standard</h3>
+<p>L’errore standard è influenzato da diversi fattori, tra cui:</p>
 <ol type="1">
-<li>I valori medi di H e Hi non variavano significativamente tra le diverse dimensioni del campione.</li>
-<li>Gli intervalli di confidenza al 95% erano più ampi per campioni più piccoli.</li>
-<li>Per N=50, in 592 casi su 1000, il limite inferiore dell’intervallo di confidenza per Hi era inferiore a 0.30.</li>
-<li>Per N=1000, nessun caso presentava un limite inferiore dell’intervallo di confidenza per Hi inferiore a 0.30.</li>
+<li><strong>Dimensione del campione:</strong>
+<ul>
+<li>Campioni più grandi riducono l’errore standard, migliorando la precisione della stima.</li>
+<li>Tuttavia, anche in campioni ampi, altri fattori possono influenzare la precisione.</li>
+</ul></li>
+<li><strong>Distribuzione dei punteggi degli item:</strong>
+<ul>
+<li>Distribuzioni asimmetriche o altamente polarizzate (molti punteggi estremi, ad esempio tutto 0 o tutto 1) aumentano l’errore standard.</li>
+</ul></li>
+<li><strong>Eterogeneità degli item:</strong>
+<ul>
+<li>Se gli item misurano costrutti diversi o non sono ben rappresentati dal modello di omogeneità monotona, i coefficienti di scalabilità diventano meno affidabili, con un conseguente aumento dell’errore standard.</li>
+</ul></li>
 </ol>
-<p>Implicazioni per la Ricerca:</p>
+</section>
+<section id="utilizzo-pratico-degli-errori-standard" class="level3" data-number="61.13.2">
+<h3 data-number="61.13.2" class="anchored" data-anchor-id="utilizzo-pratico-degli-errori-standard"><span class="header-section-number">61.13.2</span> Utilizzo Pratico degli Errori Standard</h3>
+<p>Gli <strong>errori standard</strong> (<span class="math inline">\(SE\)</span>) offrono una misura dell’incertezza associata alla stima dei coefficienti di scalabilità (<span class="math inline">\(H_j\)</span>) e forniscono informazioni cruciali per valutare l’idoneità degli item in una scala psicometrica. Quando il coefficiente <span class="math inline">\(H_j\)</span> è basso o il suo intervallo di confidenza include valori inferiori alla soglia accettabile di 0.30, l’item potrebbe non essere adeguato a contribuire alla scala.</p>
+<p>Come discusso da Mokken (1971), item con bassi coefficienti di scalabilità (<span class="math inline">\(H_j\)</span>) sono spesso associati a errori di Guttman, che segnalano deviazioni dalla struttura ideale del modello di Guttman. In presenza di questi errori, le risposte degli item non seguono un ordinamento coerente rispetto al continuum latente, riducendo la capacità dell’item di classificare correttamente i rispondenti.</p>
+<p>Crișan et al.&nbsp;(2020) avvertono che eliminare automaticamente gli item con bassi coefficienti di scalabilità può avere conseguenze negative:</p>
+<ul>
+<li><strong>Pro:</strong> La rimozione di item con basso <span class="math inline">\(H_j\)</span> può migliorare l’affidabilità psicometrica della scala e aumentare la coerenza dei risultati.</li>
+<li><strong>Contro:</strong> L’eliminazione indiscriminata può ridurre la <strong>copertura del costrutto</strong> e compromettere la validità teorica della scala, specialmente se l’item misura un aspetto unico o rilevante del costrutto latente.</li>
+</ul>
+<p>Pertanto, la decisione di mantenere o rimuovere un item dovrebbe considerare sia aspetti psicometrici sia teorici.</p>
+</section>
+<section id="criteri-per-valutare-gli-item" class="level3" data-number="61.13.3">
+<h3 data-number="61.13.3" class="anchored" data-anchor-id="criteri-per-valutare-gli-item"><span class="header-section-number">61.13.3</span> Criteri per Valutare gli Item</h3>
 <ol type="1">
-<li><p><strong>Stime Puntuali vs Intervalli di Confidenza</strong>: Mentre le stime puntuali dei coefficienti di scalabilità possono rimanere stabili, la dimensione del campione influenza significativamente gli intervalli di confidenza.</p></li>
-<li><p><strong>Decisioni sulla Qualità degli Item</strong>: Campioni più piccoli possono portare a decisioni errate sull’inclusione o esclusione degli item basate sugli errori standard.</p></li>
-<li><p><strong>Bilanciamento Risorse e Precisione</strong>: È cruciale trovare un equilibrio tra la necessità di precisione e le limitazioni di risorse e tempo.</p></li>
-<li><p><strong>Considerazioni Pratiche</strong>: In situazioni con risorse limitate, una scelta accurata della dimensione del campione può ottimizzare l’efficienza della ricerca.</p></li>
+<li><p>Validità Teorica:</p>
+<ul>
+<li>L’item misura un aspetto centrale del costrutto latente?</li>
+<li>Se l’item è fondamentale per rappresentare un sottodominio importante del costrutto, potrebbe essere mantenuto anche con un basso <span class="math inline">\(H_j\)</span>.</li>
+</ul></li>
+<li><p>Validità Psicometrica:</p>
+<ul>
+<li>L’item contribuisce alla coerenza e alla precisione della scala?</li>
+<li>Un <span class="math inline">\(H_j &lt; 0.30\)</span> o un intervallo di confidenza che comprende valori negativi o prossimi allo zero indicano che l’item ha un contributo limitato o negativo.</li>
+</ul></li>
 </ol>
-<p>In conclusione, la determinazione della dimensione del campione nelle Scale Mokken richiede una considerazione attenta di molteplici fattori. Mentre campioni più grandi generalmente offrono maggiore precisione, non sempre sono necessari o pratici. La chiave sta nel bilanciare la necessità di risultati affidabili con le realtà pratiche della ricerca. Futuri studi in questo campo potrebbero fornire linee guida più dettagliate per aiutare i ricercatori a prendere decisioni informate sulla dimensione del campione ottimale per le loro specifiche applicazioni delle Scale Mokken.</p>
+<p>In conclusione, l’analisi degli errori standard è essenziale per interpretare la precisione dei coefficienti di scalabilità e valutare l’idoneità degli item. Sebbene item con bassi <span class="math inline">\(H_j\)</span> siano spesso candidati per la rimozione, è importante considerare il loro ruolo teorico e la loro validità psicometrica nel contesto della scala complessiva. La combinazione di analisi quantitative e valutazioni teoriche garantisce una scala robusta e ben rappresentativa del costrutto latente.</p>
+<hr>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 61.6</strong></span> Item con basso <span class="math inline">\(H_j\)</span>: se <span class="math inline">\(H_j = 0.20\)</span> e il 95% CI è <span class="math inline">\([0.05, 0.35]\)</span>, il coefficiente è inferiore alla soglia accettabile di 0.30. Tuttavia, prima di eliminare l’item, si dovrebbe verificare se:</p>
+<ul>
+<li>l’item copre un aspetto importante del costrutto;</li>
+<li>la sua rimozione influisce sull’affidabilità della scala.</li>
+</ul>
+</div>
+<hr>
 </section>
-</section>
-<section id="confronto-tra-il-modello-di-rasch-e-lmsa" class="level2" data-number="59.13">
-<h2 data-number="59.13" class="anchored" data-anchor-id="confronto-tra-il-modello-di-rasch-e-lmsa"><span class="header-section-number">59.13</span> Confronto tra il Modello di Rasch e l’MSA</h2>
-<p>Il Modello di Rasch (RM) assume che la probabilità di risposta corretta a un item sia determinata dall’abilità della persona (θ) e dalla difficoltà dell’item (δ). La relazione tra la probabilità di una risposta corretta e θ è descritta da una funzione logistica, con IRFs parallele e dalla stessa pendenza. Questo modello è definito parametrico poiché utilizza una funzione parametrica specifica, la funzione logistica, per stabilire tale relazione.</p>
-<p>Il Modello di Rasch prevede che i punteggi grezzi totali siano sufficienti per stimare i parametri delle persone e degli item. È considerato il modello più restrittivo rispetto al Modello di Monotonicità Omogenea (MHM) e al Modello di Monotonicità Doppia (DMM) per le sue assunzioni aggiuntive.</p>
-<p>D’altra parte, l’Analisi della Scala di Mokken (MSA) appartiene alla categoria dei modelli non parametrici della IRT (NIRT), che non prevedono una funzione specifica per le IRFs. In questi modelli, il punteggio grezzo totale fornisce un ordine basato sulla variabile latente θ, poiché θ non è direttamente stimato. Questo approccio è meno restrittivo rispetto ai modelli parametrici e consente una maggiore flessibilità nell’analisi dei dati.</p>
-<p>Il MHM, il modello meno restrittivo tra i tre, si basa su tre assunzioni fondamentali: unidimensionalità, monotonicità e indipendenza locale. Questo modello permette di ordinare gli individui su una scala unidimensionale ordinale, mantenendo costante questo ordinamento attraverso tutti gli item. Il DMM, invece, aggiunge l’assunzione di IRF non intersecanti al MHM, producendo scale ordinali separate per persone e item.</p>
-<p>Un punto critico è che, mentre il Modello di Rasch crea una scala metrica comune per persone e item, consentendo misurazioni indipendenti da persone e item, il DMM genera scale ordinali distinte. Inoltre, i modelli NIRT, come la MSA, non richiedono la conformità degli item a una funzione logistica specifica, evitando così la necessità di scartare gli item che non seguono tale funzione, una limitazione dei modelli PIRT (Parametric Item Response Theory).</p>
-<p>In sintesi, mentre il Modello di Rasch offre un approccio più restrittivo ma preciso, basato su assunzioni specifiche e una scala metrica comune, la MSA offre una maggiore flessibilità e applicabilità a un’ampia gamma di dati, pur producendo scale ordinali distinte per persone e item. Questa differenza chiave tra i due approcci sottolinea l’importanza di scegliere il modello più adatto in base agli obiettivi specifici e alla natura dei dati in esame.</p>
-</section>
-<section id="confronto-tra-la-teoria-classica-dei-test-e-lmsa" class="level2" data-number="59.14">
-<h2 data-number="59.14" class="anchored" data-anchor-id="confronto-tra-la-teoria-classica-dei-test-e-lmsa"><span class="header-section-number">59.14</span> Confronto tra la Teoria Classica dei Test e l’MSA</h2>
-<p>Esaminiamo ora le somiglianze e le differenze tra la Teoria Classica dei Test (CTT) e l’Analisi della Scala di Mokken (MSA).</p>
-<p>La CTT si basa su diverse assunzioni fondamentali:</p>
+<section id="estensione-della-msa-agli-item-politomici" class="level2" data-number="61.14">
+<h2 data-number="61.14" class="anchored" data-anchor-id="estensione-della-msa-agli-item-politomici"><span class="header-section-number">61.14</span> Estensione della MSA agli Item Politomici</h2>
+<p>La MSA, inizialmente concepita per item dicotomici, è stata ampliata da Molenaar (1982a, 1997) per includere item <strong>politomici</strong>, come quelli tipici delle scale Likert. Questa estensione conserva i principi fondamentali della MSA per gli item dicotomici, adattandoli per affrontare le specificità degli item con più categorie di risposta.</p>
+<p>Nel caso degli item politomici, la MSA non si limita a valutare il comportamento dell’intero item rispetto al tratto latente, ma esamina anche i singoli <strong>“passaggi”</strong> tra categorie di risposta consecutive. Ad esempio, in un item Likert a cinque punti (da “fortemente in disaccordo” a “fortemente d’accordo”), ci sono quattro passaggi distinti tra le categorie. Ogni passaggio rappresenta una transizione tra due categorie adiacenti, e la probabilità di effettuare questa transizione dipende dal livello del tratto latente (<span class="math inline">\(\theta\)</span>).</p>
+<p>Per ogni passaggio, viene definita una <strong>Funzione di Risposta del Passaggio dell’Item</strong> (<em>Item Step Response Function</em>, ISRF), che descrive la probabilità che un individuo con un certo livello di <span class="math inline">\(\theta\)</span> scelga una categoria specifica o una categoria superiore.</p>
+<p>Le ISRF giocano un ruolo chiave nell’analisi degli item politomici. Esse:</p>
+<ul>
+<li><strong>Descrivono la probabilità di transizione:</strong> Collegano la probabilità di scegliere una determinata categoria o una categoria superiore al livello del tratto latente.</li>
+<li><strong>Rappresentano il contributo di ogni passaggio:</strong> Consentono di analizzare come ciascun passaggio tra categorie rifletta un avanzamento lungo il continuum latente.</li>
+</ul>
+<p>Per un item a cinque punti, per esempio, le ISRF rappresentano le probabilità delle seguenti transizioni:</p>
+<ul>
+<li>Passaggio 1: Da “fortemente in disaccordo” a “in disaccordo o superiore.”</li>
+<li>Passaggio 2: Da “in disaccordo” a “neutrale o superiore.”</li>
+<li>Passaggio 3: Da “neutrale” a “d’accordo o superiore.”</li>
+<li>Passaggio 4: Da “d’accordo” a “fortemente d’accordo.”</li>
+</ul>
+<p>Queste probabilità devono essere <strong>monotone crescenti</strong>, ossia aumentare con il livello di <span class="math inline">\(\theta\)</span>.</p>
+<section id="assunzioni-fondamentali" class="level3" data-number="61.14.1">
+<h3 data-number="61.14.1" class="anchored" data-anchor-id="assunzioni-fondamentali"><span class="header-section-number">61.14.1</span> Assunzioni Fondamentali</h3>
+<p>L’estensione della MSA agli item politomici conserva le assunzioni centrali del modello per gli item dicotomici, ma le applica ai singoli passaggi tra categorie:</p>
 <ol type="1">
-<li>I punteggi osservati sono la somma dei punteggi veri e dei punteggi di errore, con l’aspettativa che i punteggi di errore abbiano una media di zero su prove ripetute.</li>
-<li>Non c’è correlazione tra i punteggi di errore e i punteggi veri.</li>
-<li>I punteggi veri in un test non sono correlati ai punteggi di errore in un altro test.</li>
-<li>I punteggi di errore in due test somministrati agli stessi soggetti sono non correlati.</li>
+<li><strong>Monotonicità delle ISRF:</strong>
+<ul>
+<li>La probabilità di scegliere una categoria <span class="math inline">\(k\)</span> o superiore deve aumentare monotonicamente con il tratto latente <span class="math inline">\(\theta\)</span>.</li>
+<li>Ciò garantisce che le categorie siano ordinate in modo significativo e rappresentino livelli crescenti del tratto latente.</li>
+</ul></li>
+<li><strong>Ordinamento delle categorie:</strong>
+<ul>
+<li>Ogni categoria di risposta deve riflettere un livello progressivamente più alto del tratto latente.</li>
+<li>Ad esempio, un passaggio da “neutrale” a “d’accordo” dovrebbe rappresentare un incremento significativo lungo il continuum di <span class="math inline">\(\theta\)</span>.</li>
+</ul></li>
+<li><strong>Validità del modello di omogeneità monotona:</strong>
+<ul>
+<li>Anche per gli item politomici, il modello presuppone che gli item misurino lo stesso tratto latente in modo coerente e monotono.</li>
+</ul></li>
 </ol>
-<p>Nella CTT, i punteggi grezzi totali sono considerati indicatori delle posizioni delle persone sul continuum del tratto latente. La proporzione di item corretti (valore p) indica la facilità degli item, mentre la correlazione corretta tra item e punteggio totale misura la discriminazione degli item. La CTT enfatizza anche l’importanza dell’affidabilità, definita come la correlazione tra i punteggi osservati su due forme parallele del test.</p>
-<p>Confrontando la CTT con la MSA, troviamo alcune somiglianze nelle metodologie di calcolo degli indici di abilità delle persone e di difficoltà degli item. Nella MSA, il coefficiente di scalabilità dell’item Hi è analogo alle correlazioni corrette tra item e punteggio totale nella CTT. Analogamente, il coefficiente di scalabilità tra coppie di item Hij nella MSA corrisponde alle correlazioni tra coppie di item nella CTT, e il coefficiente di scalabilità complessivo H nella MSA è paragonabile agli indici di discriminazione media degli item nella CTT.</p>
-<p>Tuttavia, una differenza fondamentale tra la MSA e la CTT risiede nella testabilità dei modelli. I modelli MSA permettono di verificare empiricamente le loro assunzioni, come l’indipendenza locale, l’unidimensionalità e la monotonicità. Ad esempio, un coefficiente di scalabilità negativo nella MSA smentirebbe gli assiomi del Modello di Omogeneità Monotona (MHM). Questa capacità di testare empiricamente le sue assunzioni rende la MSA un modello particolarmente robusto e trasparente.</p>
-<p>In conclusione, mentre la CTT fornisce un quadro teorico solido per la comprensione e l’interpretazione dei punteggi dei test, la MSA offre un approccio più flessibile e testabile, particolarmente utile nell’analizzare la struttura dei dati dei test e nella valutazione della validità delle scale di misurazione. Queste caratteristiche rendono la MSA un complemento prezioso alla CTT nella pratica della misurazione psicologica ed educativa.</p>
+<p>L’analisi degli item politomici con la MSA offre numerosi vantaggi:</p>
+<ul>
+<li><strong>Misurazione più sfumata:</strong> Permette di cogliere differenze più sottili tra i rispondenti grazie alla maggiore varietà di opzioni di risposta.</li>
+<li><strong>Approfondimento delle relazioni tra categorie:</strong> Analizzando i singoli passaggi, si può comprendere meglio come le diverse categorie di risposta riflettano i livelli del tratto latente.</li>
+<li><strong>Adattabilità a scale Likert e simili:</strong> La MSA estesa è particolarmente utile in contesti come l’assessment psicologico, dove le risposte politomiche sono comuni.</li>
+</ul>
+<p>In conclusione, l’estensione della MSA agli item politomici amplia l’applicabilità di questo modello, rendendolo particolarmente adatto per scale con più livelli di risposta. Attraverso l’analisi dei singoli passaggi, è possibile verificare se le categorie sono coerenti con il tratto latente e se ogni passaggio rappresenta un avanzamento significativo lungo il continuum.</p>
 </section>
-<section id="critiche-alla-msa" class="level2" data-number="59.15">
-<h2 data-number="59.15" class="anchored" data-anchor-id="critiche-alla-msa"><span class="header-section-number">59.15</span> Critiche alla MSA</h2>
-<p>Negli anni ’80, l’Analisi delle Scale Mokken (MSA) è stata criticata per la limitata applicabilità del coefficiente di scalabilità H, ritenuto dipendente dalle caratteristiche del campione e degli item, e non adeguato come misura di adattamento del modello. Ulteriori critiche hanno riguardato il coefficiente di scalabilità degli item Hi, accusato di selezionare solo item con IRF ripide e distanti, escludendo item validi e riducendo la varianza e l’affidabilità del test. I critici hanno anche messo in dubbio l’adeguatezza della MSA per l’ordinamento libero degli item secondo il rango latente, suggerendo una possibile necessità del modello di Rasch.</p>
-<p>In risposta, i difensori della MSA hanno sottolineato che le critiche si basano su una lettura selettiva e una mancata comprensione dei modelli non parametrici. Hanno ribadito che H e Hi sono intesi come misure dell’omogeneità monotona, e non come indici di doppia monotonia, e che la dipendenza di H dalla varianza della popolazione è in linea con le assunzioni del modello. Questo dibattito evidenzia l’importanza di valutare attentamente i metodi statistici come la MSA nel loro contesto di applicazione.</p>
 </section>
-<section id="considerazioni-conclusive" class="level2" data-number="59.16">
-<h2 data-number="59.16" class="anchored" data-anchor-id="considerazioni-conclusive"><span class="header-section-number">59.16</span> Considerazioni Conclusive</h2>
-<p>Il tema centrale di questo capitolo è la messa in discussione dell’assunzione che i punteggi grezzi siano necessariamente dati ordinali. Questa supposizione, spesso data per scontata nella teoria classica dei test, richiede una verifica empirica. L’Analisi delle Scale Mokken (MSA) offre gli strumenti per effettuare tale verifica.</p>
+<section id="mokken-reliability-coefficient" class="level2" data-number="61.15">
+<h2 data-number="61.15" class="anchored" data-anchor-id="mokken-reliability-coefficient"><span class="header-section-number">61.15</span> Mokken Reliability Coefficient</h2>
+<p>L’affidabilità di un test psicometrico si riferisce alla sua capacità di fornire risultati coerenti nel tempo o attraverso somministrazioni ripetute. Sebbene l’alfa di Cronbach sia l’indicatore di affidabilità più diffuso, presenta alcune limitazioni, soprattutto quando gli item non sono omogenei o quando si lavora con scale ordinali. In questi casi, il coefficiente <span class="math inline">\(\rho\)</span> di Mokken (<em>Mokken reliability coefficient</em> o <span class="math inline">\(\rho_M\)</span>) rappresenta un’alternativa valida, basandosi su assunzioni meno restrittive e adattandosi meglio ai dati ordinali.</p>
+<p>Il coefficiente <span class="math inline">\(\rho\)</span> di Mokken è una misura di consistenza interna che deriva dalla teoria della scala non parametrica di Mokken, utilizzata principalmente per dati ordinali. A differenza dell’alfa di Cronbach, <span class="math inline">\(\rho\)</span> non richiede che gli item soddisfino rigorosi criteri di omogeneità o equivalenza essenziale, rendendolo particolarmente utile in contesti in cui i dati non rispettano pienamente i presupposti della teoria classica dei test (CTT).</p>
+<p>Il coefficiente <span class="math inline">\(\rho\)</span> di Mokken si fonda su due principi principali:</p>
+<ul>
+<li><strong>Monotonicità:</strong> la probabilità di rispondere in modo favorevole a un item aumenta con il livello della variabile latente.</li>
+<li><strong>Indipendenza locale:</strong> le risposte agli item sono condizionalmente indipendenti dato il livello della variabile latente.</li>
+</ul>
+<p>Queste assunzioni permettono una maggiore flessibilità rispetto ai modelli parametrici, come il modello di Rasch, e lo rendono idoneo per scale ordinali, come quelle Likert.</p>
+<p>Il coefficiente <span class="math inline">\(\rho\)</span> di Mokken misura il rapporto tra la varianza spiegata dal punteggio totale (<span class="math inline">\(S^2_T\)</span>) e la varianza totale osservata. La formula è la seguente:</p>
+<p><span class="math display">\[
+\rho = 1 - \frac{\sum_{i=1}^k S^2_i}{S^2_T},
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li><span class="math inline">\(k\)</span>: numero di item del test,</li>
+<li><span class="math inline">\(S^2_i\)</span>: varianza di ciascun item,</li>
+<li><span class="math inline">\(S^2_T\)</span>: varianza totale del punteggio del test (somma dei punteggi degli item).</li>
+</ul>
+<p><strong>Interpretazione di <span class="math inline">\(\rho\)</span>:</strong></p>
+<ul>
+<li><span class="math inline">\(\rho\)</span> varia tra 0 e 1.<br>
+</li>
+<li>valori vicini a 1 indicano maggiore affidabilità.
+<ul>
+<li><strong><span class="math inline">\(\rho &gt; 0.70\)</span>:</strong> accettabile per la ricerca esplorativa.<br>
+</li>
+<li><strong><span class="math inline">\(\rho &gt; 0.80\)</span>:</strong> preferibile per applicazioni pratiche.</li>
+</ul></li>
+</ul>
+<p><strong>Vantaggi di <span class="math inline">\(\rho\)</span> di Mokken:</strong></p>
 <ol type="1">
-<li><p><strong>Evidenza di Unidimensionalità</strong>: I coefficienti di scalabilità (H, Hi, Hij) forniscono una solida prova che il test misura effettivamente il costrutto unidimensionale previsto.</p></li>
-<li><p><strong>Precisione della Misurazione</strong>: L’Ordinamento Invariante degli Item (IIO) assicura che il test misuri il costrutto con alta precisione per tutti i livelli di abilità.</p></li>
-<li><p><strong>Equità del Test</strong>: Riduce il rischio di bias, garantendo che il test sia equamente rappresentativo per tutti i partecipanti.</p></li>
-<li><p><strong>Interpretabilità dei Punteggi</strong>: La conformità all’IIO migliora la chiarezza e la trasparenza nell’interpretazione dei risultati del test.</p></li>
-<li><p><strong>Relazione Causale</strong>: Fornisce una base solida per affermare che le variazioni nei punteggi del test sono causate da variazioni nel costrutto misurato.</p></li>
-<li><p><strong>Flessibilità</strong>: L’MSA può essere applicata a una vasta gamma di tipi di dati e scale di risposta.</p></li>
+<li>a differenza dell’alfa di Cronbach, che assume una scala intervallare, <span class="math inline">\(\rho\)</span> può essere utilizzato con dati ordinali come le scale Likert.</li>
+<li>non richiede che tutti gli item abbiano correlazioni simili (omogeneità), né che riflettano lo stesso grado di relazione con la variabile latente.</li>
+<li>può essere applicato a test che non rispettano i presupposti della teoria classica dei test o di modelli parametrici più rigidi.</li>
 </ol>
-<p>In conclusione, l’Analisi delle Scale Mokken si rivela uno strumento estremamente utile e potente per la validazione di test in ambiti psicologici ed educativi. La sua capacità di confermare il modello di omogeneità monotona e di valutare l’ordinamento invariante degli item offre ai ricercatori e ai professionisti un metodo robusto per garantire la qualità e l’affidabilità dei loro strumenti di misurazione.</p>
+<p><strong>Limitazioni di <span class="math inline">\(\rho\)</span> di Mokken:</strong></p>
+<ol type="1">
+<li>se gli item non rispettano l’assunzione di monotonicità, l’interpretazione del coefficiente può risultare ambigua.</li>
+<li>il coefficiente è appropriato per scale unidimensionali; in presenza di più dimensioni, è necessario analizzare ogni sottoscala separatamente.</li>
+</ol>
+<p>In conclusione, il coefficiente <span class="math inline">\(\rho\)</span> di Mokken è uno strumento efficace per valutare l’affidabilità di scale ordinali, offrendo un’alternativa all’alfa di Cronbach quando le assunzioni della teoria classica dei test non sono soddisfatte. Grazie alla sua flessibilità e semplicità, <span class="math inline">\(\rho\)</span> è particolarmente indicato per scale psicometriche utilizzate in contesti esplorativi o applicativi. Tuttavia, è essenziale verificare la monotonicità degli item e considerare la dimensionalità della scala per un’interpretazione accurata.</p>
+<section id="procedura-di-selezione-automatica-degli-item" class="level3" data-number="61.15.1">
+<h3 data-number="61.15.1" class="anchored" data-anchor-id="procedura-di-selezione-automatica-degli-item"><span class="header-section-number">61.15.1</span> Procedura di Selezione Automatica degli Item</h3>
+<p>La <strong>Procedura di Selezione Automatica degli Item</strong> (AISP) è una metodologia impiegata nella MSA per selezionare insiemi di item che rispettino le assunzioni del Modello di Mokken (MHM). A differenza di tecniche più comuni come l’analisi fattoriale o l’analisi parallela, l’AISP non determina esplicitamente la dimensionalità dei dati. Piuttosto, si basa sui coefficienti di scalabilità per identificare gruppi di item che misurano lo stesso costrutto latente, formando così una o più scale.</p>
+<section id="come-funziona-laisp" class="level4" data-number="61.15.1.1">
+<h4 data-number="61.15.1.1" class="anchored" data-anchor-id="come-funziona-laisp"><span class="header-section-number">61.15.1.1</span> Come Funziona l’AISP</h4>
+<p>L’AISP segue un approccio iterativo che:</p>
+<ol type="1">
+<li>Seleziona l’item iniziale, valutato come più rappresentativo di una dimensione, utilizzando il <strong>coefficiente di scalabilità individuale</strong> (<span class="math inline">\(H_i\)</span>).</li>
+<li>Successivamente, analizza le <strong>coppie di item</strong> (<span class="math inline">\(H_{ij}\)</span>) per identificare un insieme scalabile di item che misurano lo stesso costrutto.</li>
+</ol>
+<p>Un item viene incluso in una scala se:</p>
+<ul>
+<li>Il suo coefficiente di scalabilità individuale (<span class="math inline">\(H_i\)</span>) supera una soglia predefinita (<span class="math inline">\(c\)</span>, solitamente pari a 0.30);</li>
+<li>La covarianza tra ogni coppia di item (<span class="math inline">\(H_{ij}\)</span>) è positiva e superiore alla stessa soglia.</li>
+</ul>
+<p>Se un item non soddisfa questi criteri, la procedura tenta di assegnarlo a una nuova scala. Questo processo iterativo continua finché tutti gli item non sono stati assegnati a una scala o esclusi come non scalabili.</p>
+</section>
+<section id="criteri-di-selezione" class="level4" data-number="61.15.1.2">
+<h4 data-number="61.15.1.2" class="anchored" data-anchor-id="criteri-di-selezione"><span class="header-section-number">61.15.1.2</span> Criteri di Selezione</h4>
+<ol type="1">
+<li><strong>Coefficiente di scalabilità individuale (<span class="math inline">\(H_i\)</span>)</strong>: Ogni item deve mostrare una buona capacità di discriminazione lungo la dimensione latente, con un valore di <span class="math inline">\(H_i &gt; c\)</span>.<br>
+</li>
+<li><strong>Coefficiente di scalabilità di coppia (<span class="math inline">\(H_{ij}\)</span>)</strong>: Gli item di una scala devono essere correlati positivamente e mostrare coerenza con il costrutto misurato.</li>
+</ol>
+<p>La procedura inizia selezionando la coppia di item con il valore più alto di <span class="math inline">\(H_{ij}\)</span>. Successivamente, vengono aggiunti nuovi item che rispettano i criteri sopra descritti. Gli item esclusi per una scala possono essere testati per formarne altre, ma se non soddisfano i criteri per alcuna scala, vengono classificati come non scalabili.</p>
+</section>
+<section id="caratteristiche-dellaisp" class="level4" data-number="61.15.1.3">
+<h4 data-number="61.15.1.3" class="anchored" data-anchor-id="caratteristiche-dellaisp"><span class="header-section-number">61.15.1.3</span> Caratteristiche dell’AISP</h4>
+<ul>
+<li><strong>Scalabilità</strong>: Gli item selezionati formano scale che misurano un tratto latente comune e sono in grado di ordinare i rispondenti lungo il continuum del costrutto.</li>
+<li><strong>Neutralità rispetto alla difficoltà degli item</strong>: L’AISP non è influenzata dalla distribuzione delle risposte o dalla difficoltà degli item, rendendola adatta sia per item dicotomici sia politomici.</li>
+<li><strong>Rigorosità statistica</strong>: La procedura non forza soluzioni. Se nessuna coppia di item soddisfa i criteri di scalabilità (<span class="math inline">\(H_{ij} &gt; c\)</span>), non viene generata alcuna scala, a differenza dell’analisi fattoriale, che potrebbe imporre soluzioni anche in presenza di dati incoerenti.</li>
+</ul>
+</section>
+<section id="soglia-c-e-implicazioni" class="level4" data-number="61.15.1.4">
+<h4 data-number="61.15.1.4" class="anchored" data-anchor-id="soglia-c-e-implicazioni"><span class="header-section-number">61.15.1.4</span> Soglia (<span class="math inline">\(c\)</span>) e Implicazioni</h4>
+<p>La scelta della soglia <span class="math inline">\(c\)</span> è cruciale:</p>
+<ul>
+<li><strong>Valore alto di <span class="math inline">\(c\)</span></strong>: Maggiore precisione nella selezione degli item, ma rischio di escluderne troppi, riducendo la lunghezza della scala e la copertura del costrutto.</li>
+<li><strong>Valore basso di <span class="math inline">\(c\)</span></strong>: Aumenta il numero di item inclusi, ma rischia di compromettere la coerenza e la validità della scala.</li>
+</ul>
+<p>Un valore comunemente utilizzato è <span class="math inline">\(c = 0.30\)</span>, che rappresenta un buon equilibrio tra inclusività e rigore. Tuttavia, il valore ottimale dipende dagli obiettivi dello studio e dalla natura dei dati.</p>
+</section>
+<section id="limitazioni-dellaisp" class="level4" data-number="61.15.1.5">
+<h4 data-number="61.15.1.5" class="anchored" data-anchor-id="limitazioni-dellaisp"><span class="header-section-number">61.15.1.5</span> Limitazioni dell’AISP</h4>
+<ol type="1">
+<li><strong>Relazioni tra dimensioni</strong>: L’AISP può risultare meno efficace in presenza di dimensioni fortemente correlate o di item che saturano su più dimensioni, poiché non distingue esplicitamente tali situazioni.</li>
+<li><strong>Dipendenza dai dati statistici</strong>: L’AISP si basa esclusivamente sui coefficienti di scalabilità e non considera le relazioni teoriche tra gli item. Questo può portare all’inclusione di item con scarso valore teorico o alla loro esclusione inappropriata.</li>
+<li><strong>Unidimensionalità richiesta</strong>: Gli item selezionati da una scala devono riflettere un unico costrutto. In caso di multidimensionalità, occorre considerare scale separate.</li>
+</ol>
+<p>In conclusione, l’AISP offre un’alternativa flessibile all’analisi fattoriale per la costruzione di scale psicometriche, particolarmente utile quando si lavora con dati ordinali. Sebbene non forzi soluzioni e tenga conto della scalabilità degli item, è fondamentale integrarla con considerazioni teoriche per garantire che le scale siano valide e utili nel contesto di applicazione.</p>
+</section>
+</section>
+</section>
+<section id="ordinamento-invariante-degli-item-iio" class="level2" data-number="61.16">
+<h2 data-number="61.16" class="anchored" data-anchor-id="ordinamento-invariante-degli-item-iio"><span class="header-section-number">61.16</span> Ordinamento Invariante degli Item (IIO)</h2>
+<p>L’<strong>Ordinamento Invariante degli Item</strong> (<em>Invariant Item Ordering</em>, IIO) è un concetto chiave nell’ambito delle scale di Mokken, che garantisce che l’ordine di difficoltà degli item rimanga costante attraverso diversi sottogruppi di persone nella popolazione target. Questo principio assicura che le differenze nei punteggi totali riflettano differenze effettive nel costrutto latente misurato, e non siano influenzate da variazioni nell’interpretazione o nella difficoltà percepita degli item.</p>
+<section id="cosè-liio" class="level3" data-number="61.16.1">
+<h3 data-number="61.16.1" class="anchored" data-anchor-id="cosè-liio"><span class="header-section-number">61.16.1</span> Cos’è l’IIO?</h3>
+<p>L’IIO richiede che gli item di una scala possano essere ordinati in base alla loro difficoltà in modo stabile e uniforme per tutti i partecipanti, indipendentemente dalle loro caratteristiche personali (ad esempio, abilità, età, genere o livello del tratto misurato). In pratica, questo significa che:</p>
+<ul>
+<li>Un partecipante con un punteggio totale più alto deve avere una probabilità maggiore di rispondere correttamente (o positivamente) a ogni item rispetto a un partecipante con un punteggio totale più basso.</li>
+<li>Gli item più difficili devono rimanere tali per tutti i partecipanti, e lo stesso vale per quelli più facili.</li>
+</ul>
+</section>
+<section id="perché-liio-è-importante" class="level3" data-number="61.16.2">
+<h3 data-number="61.16.2" class="anchored" data-anchor-id="perché-liio-è-importante"><span class="header-section-number">61.16.2</span> Perché l’IIO è importante?</h3>
+<ol type="1">
+<li><p><strong>Validità dei confronti</strong><br>
+L’IIO garantisce che i punteggi totali siano interpretabili in modo uniforme tra gruppi diversi. Se l’ordine degli item varia tra sottogruppi, i punteggi totali potrebbero non riflettere effettivamente il costrutto latente, compromettendo la validità dei confronti tra gruppi.</p></li>
+<li><p><strong>Interpretazione coerente</strong><br>
+Permette di interpretare i punteggi del test in modo uniforme per tutti i partecipanti, indipendentemente dalle loro caratteristiche. Ad esempio, in una scala sulla depressione, un punteggio più alto indica costantemente una maggiore gravità, e la progressione degli item da più semplici (es. stanchezza) a più complessi (es. ideazione suicidaria) è coerente.</p></li>
+<li><p><strong>Identificazione di bias e DIF</strong><br>
+L’IIO consente di rilevare la <strong>Funzione Differenziale degli Item</strong> (<em>Differential Item Functioning</em>, DIF) e bias che potrebbero indicare che un item è percepito in modo diverso da sottogruppi specifici. Ad esempio, un item potrebbe essere interpretato diversamente in base al genere o al contesto culturale.</p></li>
+</ol>
+</section>
+<section id="iio-nei-test-psicologici" class="level3" data-number="61.16.3">
+<h3 data-number="61.16.3" class="anchored" data-anchor-id="iio-nei-test-psicologici"><span class="header-section-number">61.16.3</span> IIO nei Test Psicologici</h3>
+<p>Nell’ambito dei test psicologici (come scale per ansia o depressione) l’IIO implica che:</p>
+<ul>
+<li>Un individuo con un punteggio totale più alto debba manifestare tutti i sintomi o le competenze presenti in un individuo con un punteggio inferiore, più eventuali sintomi o competenze aggiuntive.<br>
+Ad esempio, una persona con una gravità depressiva maggiore (punteggio più alto) dovrebbe rispondere positivamente a item più gravi oltre che a quelli più lievi.</li>
+<li>La difficoltà degli item deve essere ordinata in modo invariato per tutti i partecipanti.<br>
+Ad esempio, un problema matematico considerato più difficile deve esserlo per tutti gli studenti, indipendentemente dal livello generale di abilità.</li>
+</ul>
+</section>
+<section id="come-verificare-liio" class="level3" data-number="61.16.4">
+<h3 data-number="61.16.4" class="anchored" data-anchor-id="come-verificare-liio"><span class="header-section-number">61.16.4</span> Come Verificare l’IIO?</h3>
+<p>La verifica dell’IIO può essere effettuata attraverso diverse tecniche statistiche:</p>
+<ol type="1">
+<li><p><strong>Metodo dei gruppi di restscore</strong><br>
+Gli item vengono confrontati tra gruppi di partecipanti suddivisi in base ai punteggi totali, escluso l’item in esame. Questo approccio consente di analizzare se l’ordine degli item rimane costante nei diversi livelli del costrutto.</p></li>
+<li><p><strong>Proporzioni <span class="math inline">\(P(++)\)</span> e <span class="math inline">\(P(--)\)</span></strong><br>
+Si analizzano le proporzioni di risposte positive (<span class="math inline">\(P(++)\)</span>) o negative (<span class="math inline">\(P(--)\)</span>) per coppie di item. Per rispettare l’IIO, le proporzioni devono essere coerenti con l’ordine di difficoltà teorico.</p></li>
+<li><p><strong>Test di monotonicità</strong><br>
+Utilizzato per verificare che la probabilità di una risposta positiva a un item aumenti con il livello del punteggio totale. Questo è un presupposto fondamentale per l’IIO.</p></li>
+<li><p><strong>Analisi di divisione del restscore</strong><br>
+I restscore vengono divisi in intervalli e si valuta se l’ordine degli item rimane invariato in base a questi sottogruppi.</p></li>
+</ol>
+</section>
+<section id="cosa-succede-se-liio-non-è-rispettato" class="level3" data-number="61.16.5">
+<h3 data-number="61.16.5" class="anchored" data-anchor-id="cosa-succede-se-liio-non-è-rispettato"><span class="header-section-number">61.16.5</span> Cosa Succede se l’IIO Non È Rispettato?</h3>
+<p>Se l’IIO viene violato, si possono verificare le seguenti problematiche:</p>
+<ul>
+<li><strong>Presenza di DIF o bias</strong><br>
+Gli item possono riflettere caratteristiche diverse da quelle del costrutto latente, rendendo i confronti tra sottogruppi non validi.</li>
+<li><strong>Punteggi totali non interpretabili</strong><br>
+Le differenze nei punteggi totali potrebbero non riflettere differenze reali nel costrutto latente, invalidando il test.</li>
+<li><strong>Compromissione della validità costruttuale</strong><br>
+La violazione dell’IIO può mettere in dubbio la capacità della scala di misurare un costrutto latente comune.</li>
+</ul>
+</section>
+<section id="vantaggi-e-limiti-delliio" class="level3" data-number="61.16.6">
+<h3 data-number="61.16.6" class="anchored" data-anchor-id="vantaggi-e-limiti-delliio"><span class="header-section-number">61.16.6</span> Vantaggi e Limiti dell’IIO</h3>
+<p>L’IIO offre vantaggi importanti:</p>
+<ul>
+<li>Permette una valutazione uniforme e interpretabile dei punteggi totali.</li>
+<li>Aiuta a identificare potenziali bias negli item.</li>
+<li>Si applica sia a dati dicotomici che politomici, rendendolo versatile.</li>
+</ul>
+<p>Tuttavia, presenta anche alcune limitazioni:</p>
+<ul>
+<li><strong>Difficoltà di verifica</strong>: La verifica empirica dell’IIO richiede analisi specifiche che non sempre vengono incluse negli studi psicometrici.</li>
+<li><strong>Sensibilità alla dimensionalità</strong>: L’IIO è rilevante solo per scale unidimensionali. In caso di scale multidimensionali, è necessario verificare l’IIO separatamente per ciascuna dimensione.</li>
+<li><strong>Rigidità</strong>: Un eccessivo focus sull’IIO potrebbe portare all’esclusione di item potenzialmente utili ma che non rispettano perfettamente i criteri.</li>
+</ul>
+<p>In conclusione, l’Ordinamento Invariante degli Item è un requisito fondamentale per garantire la validità e l’affidabilità delle scale di Mokken e di altri strumenti psicometrici. La sua verifica permette di assicurare che i punteggi totali siano interpretabili in modo coerente e che gli item riflettano realmente il costrutto latente. Tuttavia, per una valutazione completa, l’IIO dovrebbe essere integrato con altre analisi psicometriche e una riflessione teorica sui contenuti della scala, specialmente in contesti clinici o educativi dove accuratezza e validità sono essenziali.</p>
+</section>
+</section>
+<section id="dimensione-del-campione" class="level2" data-number="61.17">
+<h2 data-number="61.17" class="anchored" data-anchor-id="dimensione-del-campione"><span class="header-section-number">61.17</span> Dimensione del Campione</h2>
+<p>La determinazione della dimensione del campione è un aspetto cruciale nella ricerca psicometrica. Sebbene esistano linee guida consolidate per molti test statistici, l’MSA rappresenta un’area in cui la ricerca sulla dimensione del campione è ancora limitata. Questa lacuna pone sfide per i ricercatori, che devono bilanciare l’accuratezza dei risultati con le risorse disponibili.</p>
+<p>Campioni troppo piccoli possono portare a due rischi principali:</p>
+<ol type="1">
+<li><strong>Falsi positivi</strong>: una scala viene erroneamente identificata come valida in un campione ridotto, quando in realtà non esiste nella popolazione.<br>
+</li>
+<li><strong>Falsi negativi</strong>: una scala realmente esistente non viene rilevata a causa della scarsa potenza statistica del campione.</li>
+</ol>
+<p>Diversi studi hanno esplorato le dimensioni minime del campione necessarie per applicare correttamente l’MSA, con particolare attenzione a procedure come l’Automated Item Selection Procedure (AISP) e l’Algoritmo Genetico (GA).</p>
+<p><strong>Studio di Straat et al.&nbsp;(2014).</strong> Straat e colleghi hanno investigato come diversi fattori influenzino la dimensione del campione necessaria, tra cui la lunghezza del test, i valori dei coefficienti di scalabilità (<span class="math inline">\(H_i\)</span>) e la correlazione tra dimensioni sottostanti nella scala.</p>
+<p>Risultati principali:</p>
+<ul>
+<li><strong>Il valore di <span class="math inline">\(H_i\)</span></strong> è stato identificato come il fattore più influente:
+<ul>
+<li>Per valori bassi di <span class="math inline">\(H_i\)</span> (es. <span class="math inline">\(H_i \approx 0.22\)</span>), erano necessari campioni molto grandi (750-2500 partecipanti) per ottenere una classificazione accurata.<br>
+</li>
+<li>Per valori moderati o alti di <span class="math inline">\(H_i\)</span> (es. <span class="math inline">\(H_i \approx 0.42\)</span>), campioni più piccoli (50-250 partecipanti) erano sufficienti.<br>
+</li>
+</ul></li>
+<li><strong>La lunghezza del test</strong> ha avuto un impatto minore sulla precisione. Test più lunghi non hanno necessariamente richiesto campioni più grandi.<br>
+</li>
+<li><strong>La correlazione tra dimensioni</strong> ha interagito con <span class="math inline">\(H_i\)</span>, influenzando la necessità di campioni più grandi per scale multidimensionali.</li>
+</ul>
+<p>Linee guida suggerite da Straat et al.:</p>
+<ul>
+<li>Per <span class="math inline">\(H_i \approx 0.22\)</span>:
+<ul>
+<li>Precisione moderata: 750-1000 partecipanti.<br>
+</li>
+<li>Precisione alta: almeno 1250-2500 partecipanti.<br>
+</li>
+</ul></li>
+<li>Per <span class="math inline">\(H_i \approx 0.42\)</span>:
+<ul>
+<li>Precisione moderata: 50 partecipanti.<br>
+</li>
+<li>Precisione alta: almeno 250 partecipanti.</li>
+</ul></li>
+</ul>
+<p><strong>Studio di Watson et al.&nbsp;(2018).</strong> Watson e colleghi hanno utilizzato dati reali per analizzare l’effetto della dimensione del campione sui coefficienti di scalabilità (<span class="math inline">\(H\)</span> e <span class="math inline">\(H_i\)</span>). Lo studio includeva 7510 partecipanti e un questionario di 14 item con scala Likert a 5 punti. Sono stati generati campioni di diverse dimensioni (da 50 a 1000 partecipanti) utilizzando tecniche di bootstrapping.</p>
+<p>Risultati principali:</p>
+<ol type="1">
+<li><strong>Valori medi di <span class="math inline">\(H\)</span> e <span class="math inline">\(H_i\)</span></strong>: Non variavano significativamente tra campioni di dimensioni diverse, suggerendo una certa stabilità delle stime puntuali anche per campioni più piccoli.<br>
+</li>
+<li><strong>Intervalli di confidenza (CI)</strong>:
+<ul>
+<li>Campioni piccoli (<span class="math inline">\(N = 50\)</span>) producevano intervalli di confidenza molto ampi. In oltre il 50% dei casi, il limite inferiore del CI per <span class="math inline">\(H_i\)</span> era inferiore alla soglia critica di 0.30.<br>
+</li>
+<li>Campioni grandi (<span class="math inline">\(N = 1000\)</span>) producevano intervalli più stretti, con valori di <span class="math inline">\(H_i\)</span> sempre superiori a 0.30.<br>
+</li>
+</ul></li>
+<li><strong>Errori standard</strong>: Campioni piccoli aumentavano la probabilità di errori nella classificazione degli item, portando a decisioni sbagliate sull’inclusione/esclusione.</li>
+</ol>
+<section id="implicazioni-per-la-ricerca" class="level3" data-number="61.17.1">
+<h3 data-number="61.17.1" class="anchored" data-anchor-id="implicazioni-per-la-ricerca"><span class="header-section-number">61.17.1</span> Implicazioni per la Ricerca</h3>
+<p><strong>Precisione delle stime.</strong> Mentre i valori medi di <span class="math inline">\(H\)</span> e <span class="math inline">\(H_i\)</span> possono rimanere relativamente stabili, la dimensione del campione influenza notevolmente la larghezza degli intervalli di confidenza. Stime puntuali apparentemente affidabili potrebbero nascondere elevata incertezza per campioni piccoli.</p>
+<p><strong>Decisioni sugli item.</strong> Campioni piccoli aumentano il rischio di errori nella selezione degli item, compromettendo la validità della scala. Un’adeguata dimensione del campione è essenziale per garantire la qualità delle decisioni basate sui coefficienti di scalabilità.</p>
+<p><strong>Bilanciamento tra risorse e precisione.</strong> Non sempre è pratico utilizzare campioni molto grandi. Tuttavia, quando le risorse sono limitate, è cruciale pianificare attentamente la dimensione del campione per ottimizzare l’efficienza senza sacrificare la precisione.</p>
+<p>In conclusione, la determinazione della dimensione del campione nell’MSA dipende da variabili chiave come il coefficiente di scalabilità <span class="math inline">\(H_i\)</span>, la lunghezza della scala e la struttura multidimensionale dei dati. Sebbene campioni più grandi siano generalmente preferibili per ottenere risultati più precisi e intervalli di confidenza più stretti, non sempre sono necessari.</p>
+<p>Futuri studi potrebbero fornire indicazioni più dettagliate, sviluppando simulazioni e linee guida empiriche che aiutino i ricercatori a determinare la dimensione ottimale del campione per specifici scenari applicativi. L’obiettivo finale rimane quello di bilanciare precisione e praticità, garantendo risultati validi senza spreco di risorse.</p>
+</section>
+</section>
+<section id="confronto-tra-il-modello-di-rasch-e-la-msa" class="level2" data-number="61.18">
+<h2 data-number="61.18" class="anchored" data-anchor-id="confronto-tra-il-modello-di-rasch-e-la-msa"><span class="header-section-number">61.18</span> Confronto tra il Modello di Rasch e la MSA</h2>
+<p>Il Modello di Rasch (RM) e la MSA rappresentano due approcci distinti alla teoria della risposta all’item (IRT), ciascuno con caratteristiche e assunzioni specifiche che influenzano la loro applicabilità. Mentre il RM è un modello parametrico altamente restrittivo, l’MSA appartiene alla categoria dei modelli non parametrici, offrendo maggiore flessibilità nell’analisi dei dati.</p>
+<p>Il Modello di Rasch si basa su una relazione parametrica tra l’abilità del rispondente (<span class="math inline">\(\theta\)</span>) e la difficoltà dell’item (<span class="math inline">\(\delta\)</span>), descritta da una funzione logistica. Questo implica che la probabilità di risposta corretta a un item dipende esclusivamente da <span class="math inline">\(\theta\)</span> e <span class="math inline">\(\delta\)</span> e che le curve caratteristiche degli item (IRFs) sono parallele e hanno la stessa pendenza. Una delle caratteristiche distintive del RM è che i punteggi grezzi totali sono sufficienti per stimare i parametri delle persone e degli item, rendendo possibile una scala metrica comune che consente confronti diretti e indipendenti da campione e item. Tuttavia, questa precisione deriva da assunzioni stringenti, come la necessità di unidimensionalità, monotonicità e indipendenza locale delle risposte.</p>
+<p>L’MSA, invece, appartiene ai modelli non parametrici della IRT (NIRT), che non vincolano le IRFs a una forma specifica. Questo approccio si concentra sull’ordinamento delle persone lungo una scala latente, senza stimare direttamente <span class="math inline">\(\theta\)</span>, ma utilizzando i punteggi grezzi per determinare un ordine relativo. La maggiore flessibilità dell’MSA consente di analizzare dati che non soddisfano le rigide assunzioni parametriche del RM, rendendolo particolarmente utile per scale ordinali o situazioni in cui le IRFs non seguono una forma logistica.</p>
+<p>Il <strong>Modello di Monotonicità Omogenea</strong> (MHM), il più semplice tra i modelli di Mokken, si basa su tre assunzioni: unidimensionalità, monotonicità e indipendenza locale. Questo modello consente di ordinare le persone su una scala unidimensionale ordinale, garantendo che l’ordine sia coerente per tutti gli item. Una variante più restrittiva, il <strong>Modello di Monotonicità Doppia</strong> (DMM), aggiunge il requisito che le IRFs non si intersechino, permettendo così di produrre scale ordinali distinte sia per persone che per item. In entrambi i casi, il punteggio grezzo totale fornisce informazioni utili senza dover stimare direttamente parametri come <span class="math inline">\(\theta\)</span>.</p>
+<p>Una differenza cruciale tra il Modello di Rasch e l’MSA riguarda il tipo di scala che producono. Il RM genera una scala metrica comune per persone e item, consentendo misurazioni precise e confronti generalizzabili. L’MSA, invece, si limita a scale ordinali, dove l’ordine relativo è garantito ma non vi è una misura metrica assoluta. Questa differenza riflette il maggiore rigore del RM rispetto alla flessibilità dell’MSA. Inoltre, mentre il RM richiede che gli item seguano una funzione logistica, l’MSA permette l’inclusione di item che non rispettano questa forma, evitando così di scartare dati potenzialmente utili.</p>
+<p>Dal punto di vista applicativo, il RM è particolarmente indicato in contesti in cui la precisione e la generalizzabilità sono fondamentali, come nei test standardizzati. Tuttavia, la sua rigidità può limitarne l’uso con dati complessi o non conformi alle sue assunzioni. L’MSA, al contrario, offre un’opzione più flessibile per l’analisi esplorativa e per dati ordinali o non lineari, risultando utile in ambiti come la psicologia e le scienze sociali. La scelta tra i due dipende dagli obiettivi dello studio e dalle caratteristiche specifiche dei dati.</p>
+</section>
+<section id="confronto-tra-la-ctt-e-la-msa" class="level2" data-number="61.19">
+<h2 data-number="61.19" class="anchored" data-anchor-id="confronto-tra-la-ctt-e-la-msa"><span class="header-section-number">61.19</span> Confronto tra la CTT e la MSA</h2>
+<p>La CTT e la MSA rappresentano due approcci distinti alla misurazione psicometrica, ciascuno con i propri punti di forza e limiti. Sebbene condividano alcune somiglianze concettuali, si differenziano in modo significativo per quanto riguarda le assunzioni, la flessibilità e la capacità di testare empiricamente i modelli.</p>
+<p>La CTT si basa su un insieme di assunzioni fondamentali che guidano l’interpretazione dei punteggi dei test. In questo framework, il punteggio osservato è la somma di un punteggio vero e di un errore di misura. Si assume che l’errore abbia una media di zero su prove ripetute, che sia non correlato con i punteggi veri, e che i punteggi di errore di due test somministrati agli stessi individui siano non correlati. I punteggi grezzi totali vengono considerati un’indicazione diretta delle posizioni dei soggetti sul continuum del tratto latente, mentre la proporzione di risposte corrette misura la facilità degli item, e la correlazione corretta tra un item e il punteggio totale del test ne determina la capacità discriminativa. L’affidabilità, intesa come correlazione tra punteggi osservati su due forme parallele dello stesso test, costituisce un aspetto cruciale della CTT.</p>
+<p>Dal punto di vista metodologico, la CTT e la MSA condividono alcune somiglianze. Ad esempio, il <strong>coefficiente di scalabilità dell’item</strong> (<span class="math inline">\(H_i\)</span>) nella MSA è concettualmente simile alla correlazione corretta tra un item e il punteggio totale del test nella CTT. Inoltre, il <strong>coefficiente di scalabilità tra coppie di item</strong> (<span class="math inline">\(H_{ij}\)</span>) nella MSA può essere paragonato alle correlazioni tra coppie di item nella CTT. Infine, il <strong>coefficiente di scalabilità complessivo</strong> (<span class="math inline">\(H\)</span>) nella MSA è analogo agli indici di discriminazione media degli item nella CTT. Questi paralleli rendono i due approcci confrontabili nella loro capacità di descrivere i dati dei test.</p>
+<p>Tuttavia, esistono differenze sostanziali tra i due approcci. La CTT si basa su modelli teorici che non possono essere testati direttamente con i dati, poiché si assume implicitamente che le sue condizioni siano soddisfatte. Al contrario, la MSA permette di verificare empiricamente le assunzioni che ne stanno alla base, come l’indipendenza locale, l’unidimensionalità e la monotonicità. Ad esempio, un coefficiente di scalabilità negativo in un modello di Mokken smentirebbe gli assiomi del Modello di Monotonicità Omogenea (MHM), evidenziando che i dati non sono coerenti con il modello. Questa capacità di testare empiricamente le assunzioni rende la MSA più robusta e trasparente rispetto alla CTT.</p>
+<p>La CTT offre un quadro teorico consolidato e intuitivo per interpretare i punteggi dei test, ma presenta limitazioni nei contesti in cui le assunzioni non possono essere verificate o quando i dati violano condizioni fondamentali, come l’unidimensionalità. La MSA, d’altra parte, si distingue per la sua maggiore flessibilità, consentendo l’analisi di dati ordinali e la valutazione della struttura sottostante dei dati in modo più rigoroso. Questa flessibilità la rende particolarmente utile per l’analisi esplorativa di scale e per la validazione di strumenti psicometrici.</p>
+<p>In sintesi, la CTT e la MSA non sono necessariamente in opposizione, ma piuttosto complementari. La CTT fornisce una base teorica utile per la misurazione, mentre la MSA aggiunge strumenti pratici per testare empiricamente la validità delle scale e la struttura dei dati. L’integrazione di entrambi gli approcci può fornire una comprensione più approfondita e completa dei dati psicologici.</p>
+</section>
+<section id="riflessioni-conclusive" class="level2" data-number="61.20">
+<h2 data-number="61.20" class="anchored" data-anchor-id="riflessioni-conclusive"><span class="header-section-number">61.20</span> Riflessioni Conclusive</h2>
+<p>Il tema centrale di questo capitolo ha riguardato la necessità di mettere in discussione l’assunzione, spesso implicita nella CTT, che i punteggi grezzi rappresentino dati ordinali. Tale presupposto, lungi dall’essere scontato, richiede una verifica empirica per evitare interpretazioni fuorvianti. In questo contesto, la MSA offre strumenti potenti per validare empiricamente questa ipotesi. I coefficienti di scalabilità (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_i\)</span>, <span class="math inline">\(H_{ij}\)</span>) permettono di dimostrare che un test misura effettivamente un costrutto unidimensionale, mentre il principio dell’Ordinamento Invariante degli Item (IIO) garantisce che tale misurazione sia precisa e coerente attraverso tutti i livelli di abilità dei rispondenti.</p>
+<p>L’MSA rappresenta un’importante evoluzione metodologica rispetto allo scaling di Guttman, offrendo un approccio meno restrittivo e più flessibile nell’analisi dei dati empirici. La sua applicazione consente di esaminare in dettaglio la struttura delle risposte agli item e di valutare la relazione tra i punteggi dei rispondenti e il costrutto latente. In definitiva, la MSA fornisce un utile quadro analitico per validare la qualità degli strumenti di misurazione psicologica.</p>
 
 
+</section>
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-wind2017instructional" class="csl-entry" role="listitem">
+Wind, S. A. (2017). An instructional module on Mokken scale analysis. <em>Educational Measurement: Issues and Practice</em>, <em>36</em>(2), 50–66.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1285,6 +1894,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -1687,13 +2440,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../chapters/sem/E_01.html" class="pagination-link" aria-label="✏️ Esercizi">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span>
+      <a href="../../chapters/sem/15_prior_pred_mod_check.html" class="pagination-link" aria-label="Prior Predictive Model Checking">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Prior Predictive Model Checking</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../chapters/mokken/02_applications.html" class="pagination-link" aria-label="Applicazione Pratica">
-        <span class="nav-page-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -1715,5 +2468,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Corrado Caudek">
 
 <title>34&nbsp; La rotazione fattoriale – Testing Psicologico</title>
 <style>
@@ -91,10 +90,12 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -122,7 +123,17 @@ div.csl-indent {
     "search-label": "Ricerca"
   }
 }</script>
-<style>html{ scroll-behavior: smooth; }</style>
+<script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "clean"
+}
+</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -186,6 +197,7 @@ window.Quarto = {
       <a href="../../">Testing Psicologico</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
 </div>
     </div>
       </div>
@@ -827,6 +839,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Modelli di crescita latenti a gruppi multipli</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/11_lgm_wais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Lo Sviluppo dell’Intelligenza</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -841,7 +859,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/prediction/01_prediction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
   </div>
 </li>
       </ul>
@@ -858,7 +876,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../chapters/networks/01_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
   </div>
 </li>
       </ul>
@@ -958,6 +976,7 @@ window.Quarto = {
   <li><a href="#oblique-geomin" id="toc-oblique-geomin" class="nav-link" data-scroll-target="#oblique-geomin"><span class="header-section-number">34.5.5</span> Oblique Geomin</a></li>
   </ul></li>
   <li><a href="#interpretazione-dei-fattori-latenti-nellanalisi-fattoriale" id="toc-interpretazione-dei-fattori-latenti-nellanalisi-fattoriale" class="nav-link" data-scroll-target="#interpretazione-dei-fattori-latenti-nellanalisi-fattoriale"><span class="header-section-number">34.6</span> Interpretazione dei fattori latenti nell’analisi fattoriale</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">34.7</span> Session Info</a></li>
   </ul>
 </nav>
     </div>
@@ -993,47 +1012,43 @@ window.Quarto = {
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(lavaan, psych)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Caricamento dei namespace richiesti: pacman
-</code></pre>
 </div>
-</div>
-<p>Nel capitolo {ref}<code>extraction-notebook</code> abbiamo determinato il numero ottimale di fattori comuni. Tuttavia, la soluzione iniziale, non ruotata, può risultare difficile da interpretare. Per ottenere una struttura fattoriale più semplice e intuitiva, si procede alla rotazione degli assi fattoriali. L’obiettivo della rotazione è quello di identificare gruppi omogenei di variabili che saturano fortemente su un singolo fattore e con saturazioni trascurabili sugli altri.</p>
+<p>Nel <a href="03_numero_fattori.html" class="quarto-xref"><span>Capitolo 33</span></a> abbiamo determinato il numero ottimale di fattori comuni. Tuttavia, la soluzione iniziale, non ruotata, può risultare difficile da interpretare. Per ottenere una struttura fattoriale più semplice e intuitiva, si procede alla rotazione degli assi fattoriali. L’obiettivo della rotazione è quello di identificare gruppi omogenei di variabili che saturano fortemente su un singolo fattore e con saturazioni trascurabili sugli altri.</p>
 <section id="indeterminatezza-della-soluzione-fattoriale" class="level2" data-number="34.1">
 <h2 data-number="34.1" class="anchored" data-anchor-id="indeterminatezza-della-soluzione-fattoriale"><span class="header-section-number">34.1</span> Indeterminatezza della soluzione fattoriale</h2>
 <p>La necessità di effettuare la rotazione deriva dal fatto che la matrice delle saturazioni non ha un’unica soluzione. Attraverso trasformazioni matematiche, è possibile ottenere infinite matrici dello stesso ordine. Questo fenomeno è noto come indeterminatezza della soluzione fattoriale.</p>
 <p>La matrice delle saturazioni fattoriali <span class="math inline">\(\boldsymbol{\Lambda}\)</span> non è univocamente definita poiché non esiste una soluzione unica per determinare le saturazioni fattoriali. Una matrice di correlazioni <span class="math inline">\(\boldsymbol{R}\)</span> può produrre diverse soluzioni fattoriali, ovvero matrici con lo stesso numero di fattori comuni ma con diverse configurazioni di saturazioni fattoriali, o matrici di saturazioni fattoriali corrispondenti a un diverso numero di fattori comuni.</p>
 <p><strong>Esempio.</strong> Siano <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> e <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> due matrici aventi lo stesso numero di righe e colonne, ma contenenti saturazioni fattoriali diverse. <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> è definita dai valori seguenti</p>
 <div id="4ec4ac23" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.766</span>,  <span class="sc">-</span><span class="fl">0.232</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.670</span>,  <span class="sc">-</span><span class="fl">0.203</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.574</span>,  <span class="sc">-</span><span class="fl">0.174</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.454</span>,   <span class="fl">0.533</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.389</span>,   <span class="fl">0.457</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.324</span>,   <span class="fl">0.381</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>mentre per <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> abbiamo</p>
+<div id="87db0193" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.766</span>,  <span class="sc">-</span><span class="fl">0.232</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.670</span>,  <span class="sc">-</span><span class="fl">0.203</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.574</span>,  <span class="sc">-</span><span class="fl">0.174</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.454</span>,   <span class="fl">0.533</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.389</span>,   <span class="fl">0.457</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.324</span>,   <span class="fl">0.381</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.783</span>,  <span class="fl">0.163</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.685</span>,  <span class="fl">0.143</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.587</span>,  <span class="fl">0.123</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.143</span>,  <span class="fl">0.685</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.123</span>,  <span class="fl">0.587</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.102</span>,  <span class="fl">0.489</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>mentre per <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> abbiamo</p>
-<div id="87db0193" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.783</span>,  <span class="fl">0.163</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.685</span>,  <span class="fl">0.143</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.587</span>,  <span class="fl">0.123</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.143</span>,  <span class="fl">0.685</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.123</span>,  <span class="fl">0.587</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.102</span>,  <span class="fl">0.489</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>Esaminiamo la matrice delle correlazioni riprodotte dalle due matrici di pesi fattoriali (con le comunalità sulla diagonale di <span class="math inline">\(\boldsymbol{R}\)</span>):</p>
 <div id="911cb8dd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 6 x 6 of type dbl</caption>
@@ -1091,7 +1106,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="6ab3ba92" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 6 x 6 of type dbl</caption>
@@ -1151,29 +1166,29 @@ window.Quarto = {
 <p>Come si vede, viene ottenuto lo stesso risultato utilizzando matrici <span class="math inline">\(\boldsymbol{\Lambda}\)</span> con lo stesso numero <span class="math inline">\(m\)</span> di colonne ma saturazioni fattoriali diverse.</p>
 <p>Si consideri ora il caso di matrici <span class="math inline">\(\boldsymbol{\Lambda}\)</span> corrispondenti a soluzioni fattoriali con un diverso numero di fattori comuni. Siano <span class="math inline">\(\boldsymbol{\Lambda}_1\)</span> e <span class="math inline">\(\boldsymbol{\Lambda}_2\)</span> due matrici aventi lo stesso numero di righe ma un numero diverso di colonne:</p>
 <div id="a72e4a5e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.9</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.7</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.5</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">1</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.78</span>, <span class="fl">0.45</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.61</span>, <span class="fl">0.35</span>,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.43</span>, <span class="fl">0.25</span>,</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.25</span>, <span class="fl">0.15</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.9</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.7</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.5</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">1</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>l2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.78</span>, <span class="fl">0.45</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.61</span>, <span class="fl">0.35</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.43</span>, <span class="fl">0.25</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.25</span>, <span class="fl">0.15</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si noti che la stessa matrice di correlazioni riprodotte (con le comunalità sulla diagonale principale) viene generata dalle saturazioni fattoriali corrispondenti ad un numero diverso di fattori comuni:</p>
 <div id="fd547347" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>l1 <span class="sc">%*%</span> <span class="fu">t</span>(l1) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 4 of type dbl</caption>
@@ -1207,7 +1222,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="06f83478" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>l2 <span class="sc">%*%</span> <span class="fu">t</span>(l2) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 4 of type dbl</caption>
@@ -1250,7 +1265,11 @@ window.Quarto = {
 <section id="il-criterio-della-struttura-semplice-nellanalisi-fattoriale" class="level3" data-number="34.2.1">
 <h3 data-number="34.2.1" class="anchored" data-anchor-id="il-criterio-della-struttura-semplice-nellanalisi-fattoriale"><span class="header-section-number">34.2.1</span> Il Criterio della Struttura Semplice nell’Analisi Fattoriale</h3>
 <p>L’analisi fattoriale impiega la rotazione degli assi fattoriali per ottenere una “struttura semplice” nella matrice delle saturazioni fattoriali. Questo criterio, proposto originariamente da Thurstone nel 1947, mira a realizzare una matrice caratterizzata da un numero limitato di saturazioni (o carichi fattoriali) significative e diverse da zero, minimizzando al contempo la presenza di variabili influenzate da più di un fattore.</p>
-<p>Per raggiungere una struttura semplice, Thurstone ha delineato specifiche condizioni che la matrice fattoriale ruotata deve soddisfare: 1. Ogni variabile deve presentare saturazioni nulle con la maggior parte dei fattori, escludendo uno o pochi con cui mostra saturazioni significative. 2. Per ciascun fattore, devono esistere almeno <span class="math inline">\(m\)</span> saturazioni nulle, dove <span class="math inline">\(m\)</span> è il numero totale di fattori comuni.</p>
+<p>Per raggiungere una struttura semplice, Thurstone ha delineato specifiche condizioni che la matrice fattoriale ruotata deve soddisfare:</p>
+<ol type="1">
+<li>Ogni variabile deve presentare saturazioni nulle con la maggior parte dei fattori, escludendo uno o pochi con cui mostra saturazioni significative.</li>
+<li>Per ciascun fattore, devono esistere almeno <span class="math inline">\(m\)</span> saturazioni nulle, dove <span class="math inline">\(m\)</span> è il numero totale di fattori comuni.</li>
+</ol>
 <p>L’obiettivo della rotazione è quindi massimizzare il numero di saturazioni nulle o quasi nulle, facilitando l’interpretazione dei fattori. Analizzando la matrice ruotata, è possibile identificare le variabili che sono fortemente associate a specifici fattori e valutare l’intensità di tali associazioni.</p>
 <p>Un fattore si interpreta efficacemente quando i suoi carichi sono elevati e positivi su un gruppo ristretto di variabili; ciò suggerisce che il fattore rappresenta un tratto o una caratteristica comune a tali variabili. Tuttavia, l’interpretazione diventa più complessa quando le variabili presentano saturazioni significative con più di un fattore, poiché indica la presenza di sovrapposizioni nelle influenze fattoriali.</p>
 </section>
@@ -1280,22 +1299,22 @@ window.Quarto = {
 \end{bmatrix}
 \]</span></p>
 <p>è una matrice ortogonale <span class="math inline">\(2 \times 2\)</span>.</p>
-<p><strong>Esempio:</strong> Consideriamo un caso studiato da Brown, Williams e Barlow (1984), analizzato in {cite:t}<code>rencher10methods</code>. A una ragazza di dodici anni è stato chiesto di valutare sette suoi conoscenti su cinque attributi: <em>gentilezza</em>, <em>intelligenza</em>, <em>felicità</em>, <em>simpatia</em> e <em>giustizia</em>. Per queste variabili, la matrice di correlazione <span class="math inline">\(R\)</span> è stata analizzata per estrarre due fattori mediante il metodo delle componenti principali, senza rotazione iniziale:</p>
-<div id="7214cc07" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>, .<span class="dv">296</span>, .<span class="dv">881</span>, .<span class="dv">995</span>, .<span class="dv">545</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">296</span>, <span class="fl">1.000</span>, <span class="sc">-</span>.<span class="dv">022</span>, .<span class="dv">326</span>, .<span class="dv">837</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">881</span>, <span class="sc">-</span>.<span class="dv">022</span>, <span class="fl">1.000</span>, .<span class="dv">867</span>, .<span class="dv">130</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">995</span>, .<span class="dv">326</span>, .<span class="dv">867</span>, <span class="fl">1.000</span>, .<span class="dv">544</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">545</span>, .<span class="dv">837</span>, .<span class="dv">130</span>, .<span class="dv">544</span>, <span class="fl">1.00</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>), <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(R)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Esempio:</strong> Consideriamo un caso studiato da Brown, Williams e Barlow (1984), analizzato in <span class="citation" data-cites="rencher10methods">Rencher (<a href="../../99-references.html#ref-rencher10methods" role="doc-biblioref">2002</a>)</span>. Ad una ragazza di dodici anni è stato chiesto di valutare sette suoi conoscenti su cinque attributi: <em>gentilezza</em>, <em>intelligenza</em>, <em>felicità</em>, <em>simpatia</em> e <em>giustizia</em>. Per queste variabili, la matrice di correlazione <span class="math inline">\(R\)</span> è stata analizzata per estrarre due fattori mediante il metodo delle componenti principali, senza rotazione iniziale:</p>
+<div id="7214cc07" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>, .<span class="dv">296</span>, .<span class="dv">881</span>, .<span class="dv">995</span>, .<span class="dv">545</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">296</span>, <span class="fl">1.000</span>, <span class="sc">-</span>.<span class="dv">022</span>, .<span class="dv">326</span>, .<span class="dv">837</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">881</span>, <span class="sc">-</span>.<span class="dv">022</span>, <span class="fl">1.000</span>, .<span class="dv">867</span>, .<span class="dv">130</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">995</span>, .<span class="dv">326</span>, .<span class="dv">867</span>, <span class="fl">1.000</span>, .<span class="dv">544</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    .<span class="dv">545</span>, .<span class="dv">837</span>, .<span class="dv">130</span>, .<span class="dv">544</span>, <span class="fl">1.00</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>), <span class="fu">c</span>(<span class="st">"K"</span>, <span class="st">"I"</span>, <span class="st">"H"</span>, <span class="st">"L"</span>, <span class="st">"J"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(R)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      K      I      H     L     J
 K 1.000  0.296  0.881 0.995 0.545
@@ -1306,13 +1325,9 @@ J 0.545  0.837  0.130 0.544 1.000</code></pre>
 </div>
 </div>
 <p>Dalla matrice <span class="math inline">\(R\)</span>, estraiamo due fattori. Si osserva che i fattori risultano difficili da interpretare: il primo fattore mostra alte saturazioni positive su tutte le variabili manifeste, mentre il secondo fattore si caratterizza per alte saturazioni positive su una variabile e negative sulle altre.</p>
-<div id="6b317c96" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>f.pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>f.pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Specified rotation not found, rotate='none' used
-</code></pre>
-</div>
+<div id="6b317c96" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>f.pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>f.pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Principal Components Analysis
 Call: principal(r = R, nfactors = 2, rotate = FALSE)
@@ -1340,52 +1355,52 @@ Fit based upon off diagonal values = 1</code></pre>
 </div>
 </div>
 <p>In un grafico delle saturazioni fattoriali, i punti rappresentano le cinque coppie di saturazioni (una per ciascun fattore):</p>
-<div id="78e144bb" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="78e144bb" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04_rotazione_files/figure-html/cell-12-output-1.png" width="480" height="296" class="figure-img"></p>
+<p><img src="04_rotazione_files/figure-html/cell-12-output-1.png" width="600" height="370" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p><span class="citation" data-cites="rencher10methods">Rencher (<a href="../../99-references.html#ref-rencher10methods" role="doc-biblioref">2002</a>)</span> suggerisce che una rotazione ortogonale di <span class="math inline">\(-35^\circ\)</span> avvicinerebbe efficacemente gli assi ai punti nel diagramma di dispersione. Per verificarlo, si può disegnare i nuovi assi nel grafico dopo una rotazione di <span class="math inline">\(-35^\circ\)</span>.</p>
-<div id="d85c292e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>ar <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">1</span>,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">0</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="dv">35</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ar <span class="sc">%*%</span> T, <span class="dv">3</span>)</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.574</span>, <span class="fl">0.819</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.819</span>, <span class="sc">-</span><span class="fl">0.574</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d85c292e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  f.pc<span class="sc">$</span>load[, <span class="dv">1</span>], f.pc<span class="sc">$</span>load[, <span class="dv">2</span>],</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Primo Fattore"</span>, <span class="at">ylab =</span> <span class="st">"Secondo Fattore"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span>.<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">asp =</span> <span class="dv">1</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>ar <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">1</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">0</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="dv">35</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(ar <span class="sc">%*%</span> T, <span class="dv">3</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.574</span>, <span class="fl">0.819</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">arrows</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.819</span>, <span class="sc">-</span><span class="fl">0.574</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 2 of type dbl</caption>
@@ -1412,21 +1427,21 @@ Fit based upon off diagonal values = 1</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04_rotazione_files/figure-html/cell-13-output-2.png" width="480" height="296" class="figure-img"></p>
+<p><img src="04_rotazione_files/figure-html/cell-13-output-2.png" width="600" height="370" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Nella figura, le due frecce rappresentano gli assi ruotati. La rotazione di <span class="math inline">\(-35^{\circ}\)</span> ha effettivamente avvicinato gli assi ai punti del diagramma. Se usiamo dunque il valore <span class="math inline">\(\phi = -35^{\circ}\)</span> nella matrice di rotazione, possiamo calcolare le saturazioni fattoriali della soluzione ruotata <span class="math inline">\(\hat{\boldsymbol{\Lambda}}^* = \hat{\boldsymbol{\Lambda}} \textbf{T}\)</span>.</p>
 <p>Le saturazioni fattoriali ruotate corrispondono alla proiezione ortogonale dei punti sugli assi ruotati:</p>
-<div id="e585adb0" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">35</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(f.pc<span class="sc">$</span>load <span class="sc">%*%</span> T, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e585adb0" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>angle <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">35</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rad <span class="ot">&lt;-</span> angle <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cos</span>(rad), <span class="sc">-</span><span class="fu">sin</span>(rad),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sin</span>(rad),  <span class="fu">cos</span>(rad)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(f.pc<span class="sc">$</span>load <span class="sc">%*%</span> T, <span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 5 x 2 of type dbl</caption>
@@ -1467,9 +1482,9 @@ Fit based upon off diagonal values = 1</code></pre>
 <p>Un tipo di rotazione ortogonale spesso utilizzata è la rotazione Varimax (Kaiser, 1958). La matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> è semplificata in modo tale che le varianze dei quadrati degli elementi <span class="math inline">\(\lambda_{ij}\)</span> appartenenti a colonne diverse di <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> siano massime. Se le saturazioni fattoriali in una colonna di <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> sono simili tra loro, la varianza sarà prossima a zero. Tale varianza è tanto più grande quanto più i quadrati degli elementi <span class="math inline">\(\lambda_{ij}\)</span> assumono valori prossimi a <span class="math inline">\(0\)</span> e <span class="math inline">\(1\)</span>. Amplificando le correlazioni più alte e riducendo quelle più basse, la rotazione Varimax agevola l’interpretazione di ciascun fattore.</p>
 <p>Usando la funzione <code>factanal()</code> del modulo R base, la rotazione Varimax può essere applicata alla soluzione ottenuta mediante il metodo di massima verosimiglianza. Usando le funzioni <code>principal()</code> e <code>factor.pa()</code> disponibili nel pacchetto <code>psych</code>, la rotazione Varimax può essere applicata alle soluzioni ottenute mediante il metodo delle componenti principali e il metodo del fattore principale.</p>
 <p>Ad esempio, usando il metodo delle componenti principali otteniamo:</p>
-<div id="2f154cdc" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>f_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">n.obs =</span> <span class="dv">7</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>f_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2f154cdc" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>f_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">n.obs =</span> <span class="dv">7</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>f_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Principal Components Analysis
 Call: principal(r = R, nfactors = 2, rotate = "varimax", n.obs = 7)
@@ -1546,18 +1561,18 @@ Figura&nbsp;34.2: Rotazione obliqua.
 </figure>
 </div>
 <p>Per illustrare la rotazione obliqua, utilizziamo i dati discussi da {cite:t}<code>rencher10methods</code>. Si consideri la matrice di correlazione presentata qui sotto.</p>
-<div id="3a4d2c34" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>,  <span class="fl">0.735</span>, <span class="fl">0.711</span>, <span class="fl">0.704</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.735</span>, <span class="fl">1.00</span>,  <span class="fl">0.693</span>, <span class="fl">0.709</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.711</span>, <span class="fl">0.693</span>, <span class="fl">1.00</span>,  <span class="fl">0.839</span>,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.704</span>, <span class="fl">0.709</span>, <span class="fl">0.839</span>, <span class="fl">1.00</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>R</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3a4d2c34" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.00</span>,  <span class="fl">0.735</span>, <span class="fl">0.711</span>, <span class="fl">0.704</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.735</span>, <span class="fl">1.00</span>,  <span class="fl">0.693</span>, <span class="fl">0.709</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.711</span>, <span class="fl">0.693</span>, <span class="fl">1.00</span>,  <span class="fl">0.839</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.704</span>, <span class="fl">0.709</span>, <span class="fl">0.839</span>, <span class="fl">1.00</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>R</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 4 of type dbl</caption>
@@ -1591,9 +1606,9 @@ Figura&nbsp;34.2: Rotazione obliqua.
 </div>
 </div>
 <p>Iniziamo calcolando la soluzione a due fattori mediante il metodo delle componenti principali e una rotazione Varimax (ovvero, ortogonale). Otteniamo le seguenti saturazioni fattoriali.</p>
-<div id="6c6c327c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>f1_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>) </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>f1_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6c6c327c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f1_pc <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>) </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>f1_pc</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre><code>Principal Components Analysis
 Call: principal(r = R, nfactors = 2, rotate = "varimax")
@@ -1620,43 +1635,39 @@ Fit based upon off diagonal values = 0.99</code></pre>
 </div>
 </div>
 <p>Si noti che i due fattori non sono molto distinti. Consideriamo dunque la soluzione prodotta da una rotazione obliqua. Usiamo qui l’algoritmo Oblimin.</p>
-<div id="1a6653c9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Caricamento dei namespace richiesti: GPArotation
-</code></pre>
-</div>
+<div id="1a6653c9" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin <span class="ot">&lt;-</span> <span class="fu">principal</span>(R, <span class="dv">2</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La matrice <span class="math inline">\(\hat{\boldsymbol{\Lambda}}\)</span> delle saturazioni fattoriali si ricava come indicato di seguito.</p>
-<div id="0eafd0fa" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(pr_oblimin<span class="sc">$</span>load[, <span class="dv">1</span>], pr_oblimin<span class="sc">$</span>load[, <span class="dv">2</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0eafd0fa" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(pr_oblimin<span class="sc">$</span>load[, <span class="dv">1</span>], pr_oblimin<span class="sc">$</span>load[, <span class="dv">2</span>])</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 2 of type dbl</caption>
 <tbody>
 <tr class="odd">
-<td>0.03206780</td>
-<td>0.90186261</td>
+<td>0.0321</td>
+<td>0.9019</td>
 </tr>
 <tr class="even">
-<td>-0.02543116</td>
-<td>0.95556536</td>
+<td>-0.0254</td>
+<td>0.9556</td>
 </tr>
 <tr class="odd">
-<td>0.96858605</td>
-<td>-0.01096737</td>
+<td>0.9686</td>
+<td>-0.0110</td>
 </tr>
 <tr class="even">
-<td>0.94726778</td>
-<td>0.01327683</td>
+<td>0.9473</td>
+<td>0.0133</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 <p>La matrice <span class="math inline">\(\hat{\boldsymbol{\Phi}}\)</span> di inter-correlazione fattoriale è la seguente.</p>
-<div id="b7c77120" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>Phi</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b7c77120" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>Phi</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 2 x 2 of type dbl</caption>
@@ -1670,13 +1681,13 @@ Fit based upon off diagonal values = 0.99</code></pre>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th" scope="row">TC1</td>
-<td>1.0000000</td>
-<td>0.7869776</td>
+<td>1.000</td>
+<td>0.787</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th" scope="row">TC2</td>
-<td>0.7869776</td>
-<td>1.0000000</td>
+<td>0.787</td>
+<td>1.000</td>
 </tr>
 </tbody>
 </table>
@@ -1687,16 +1698,16 @@ Fit based upon off diagonal values = 0.99</code></pre>
 \text{matrice di struttura} = \boldsymbol{\Lambda}\boldsymbol{\Phi}.
 \]</span></p>
 <p>Per esempio, la correlazione tra la prima variabile manifesta e il primo fattore si ottiene nel modo seguente.</p>
-<div id="9f82b2dd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">+</span> pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">*</span> pr_oblimin<span class="sc">$</span>Phi[<span class="dv">2</span>, <span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f82b2dd" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">+</span> pr_oblimin<span class="sc">$</span>load[<span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">*</span> pr_oblimin<span class="sc">$</span>Phi[<span class="dv">2</span>, <span class="dv">1</span>]</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <strong>TC1:</strong> 0.741813471502872
 </div>
 </div>
 <p>L’intera matrice di struttura si può trovare eseguendo la moltiplicazione <span class="math inline">\(\boldsymbol{\Lambda}\boldsymbol{\Phi}\)</span>.</p>
-<div id="a8b899a8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load <span class="sc">%*%</span> pr_oblimin<span class="sc">$</span>Phi <span class="sc">%&gt;%</span> </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a8b899a8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pr_oblimin<span class="sc">$</span>load <span class="sc">%*%</span> pr_oblimin<span class="sc">$</span>Phi <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>A matrix: 4 x 2 of type dbl</caption>
@@ -1733,8 +1744,8 @@ Fit based upon off diagonal values = 0.99</code></pre>
 <h2 data-number="34.5" class="anchored" data-anchor-id="esempio-con-semtools"><span class="header-section-number">34.5</span> Esempio con <code>semTools</code></h2>
 <p>Presento qui un esempio di uso di vari metodi di estrazione fattoriale. Tra tali metodi, la rotazione obliqua Geomin è molto popolare ed è il default di M-Plus.</p>
 <p>Iniziamo a caricare il pacchetto <code>semTools</code>.</p>
-<div id="afc5c573" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(<span class="st">"semTools"</span>)) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="afc5c573" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(<span class="st">"semTools"</span>)) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Eseguiamo l’analisi fattoriale esplorativa del classico set di dati di Holzinger e Swineford (1939) il quale è costituito dai punteggi dei test di abilità mentale di bambini di seconda e terza media di due scuole diverse (Pasteur e Grant-White). Nel set di dati originale (disponibile nel pacchetto <code>MBESS</code>), sono forniti i punteggi di 26 test. Tuttavia, un sottoinsieme più piccolo con 9 variabili è più ampiamente utilizzato in letteratura. Questi sono i dati qui usati.</p>
 <p>Nel presente esempio, verrà eseguita l’analisi fattoriale esplorativa con l’estrazione di tre fattori. Il metodo di estrazione è <code>mlr</code>:</p>
@@ -1742,17 +1753,17 @@ Fit based upon off diagonal values = 0.99</code></pre>
 <p>maximum likelihood estimation with robust (Huber-White) standard errors and a scaled test statistic that is (asymptotically) equal to the Yuan-Bentler test statistic. For both complete and incomplete data.</p>
 </blockquote>
 <p>La soluzione iniziale non è ruotata.</p>
-<div id="9bce9e3a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>unrotated <span class="ot">&lt;-</span> <span class="fu">efaUnrotate</span>(</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    HolzingerSwineford1939, </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nf =</span> <span class="dv">3</span>, </span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">varList =</span> <span class="fu">paste0</span>(<span class="st">"x"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>), </span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimator =</span> <span class="st">"mlr"</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(unrotated)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9bce9e3a" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>unrotated <span class="ot">&lt;-</span> <span class="fu">efaUnrotate</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    HolzingerSwineford1939, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nf =</span> <span class="dv">3</span>, </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">varList =</span> <span class="fu">paste0</span>(<span class="st">"x"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>), </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">estimator =</span> <span class="st">"mlr"</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(unrotated)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>lavaan 0.6-18 ended normally after 217 iterations
+<pre><code>lavaan 0.6-19 ended normally after 217 iterations
 
   Estimator                                         ML
   Optimization method                           NLMINB
@@ -1842,19 +1853,15 @@ Constraints:
 <section id="orthogonal-varimax" class="level3" data-number="34.5.1">
 <h3 data-number="34.5.1" class="anchored" data-anchor-id="orthogonal-varimax"><span class="header-section-number">34.5.1</span> Orthogonal varimax</h3>
 <p>Utilizziamo ora la rotazione ortogonale Varimax.</p>
-<div id="f2621067" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>out_varimax <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"varimax"</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_varimax, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f2621067" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>out_varimax <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"varimax"</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_varimax, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   factor1 factor2 factor3
@@ -1877,10 +1884,6 @@ factor3       0       0       1
 Method of rotation: varimax 
 
 Test Statistics for Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
@@ -1945,19 +1948,15 @@ Test Statistics for Standardized Rotated Factor Loadings</code></pre>
 <section id="orthogonal-quartimin" class="level3" data-number="34.5.2">
 <h3 data-number="34.5.2" class="anchored" data-anchor-id="orthogonal-quartimin"><span class="header-section-number">34.5.2</span> Orthogonal Quartimin</h3>
 <p>Un metodo alternativo per la rotazione ortogonale è Quartimin.</p>
-<div id="396b048b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>out_quartimin <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"quartimin"</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_quartimin, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="396b048b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>out_quartimin <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"quartimin"</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_quartimin, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   factor1 factor2 factor3
@@ -1980,10 +1979,6 @@ factor3       0       0       1
 Method of rotation: Quartimin 
 
 Test Statistics for Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
@@ -2048,19 +2043,15 @@ Test Statistics for Standardized Rotated Factor Loadings</code></pre>
 <section id="oblique-quartimin" class="level3" data-number="34.5.3">
 <h3 data-number="34.5.3" class="anchored" data-anchor-id="oblique-quartimin"><span class="header-section-number">34.5.3</span> Oblique Quartimin</h3>
 <p>L’algoritmo Quartimin può anche essere usato per una soluzione obliqua.</p>
-<div id="b7fbbd83" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>out_oblq <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"quartimin"</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_oblq, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b7fbbd83" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>out_oblq <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"quartimin"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_oblq, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   factor1 factor2 factor3
@@ -2075,18 +2066,14 @@ x8                  0.702*
 x9          0.366*  0.463*
 
 Factor Correlation
-          factor1   factor2   factor3
-factor1 1.0000000 0.3257795 0.2164265
-factor2 0.3257795 1.0000000 0.2704806
-factor3 0.2164265 0.2704806 1.0000000
+        factor1 factor2 factor3
+factor1   1.000   0.326   0.216
+factor2   0.326   1.000   0.270
+factor3   0.216   0.270   1.000
 
 Method of rotation: Quartimin 
 
 Test Statistics for Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       lhs op rhs std.loading    se      z     p ci.lower ci.upper
@@ -2151,19 +2138,15 @@ Test Statistics for Standardized Rotated Factor Loadings</code></pre>
 <section id="orthogonal-geomin" class="level3" data-number="34.5.4">
 <h3 data-number="34.5.4" class="anchored" data-anchor-id="orthogonal-geomin"><span class="header-section-number">34.5.4</span> Orthogonal Geomin</h3>
 <p>Consideriamo ora la rotazione Geomin. L’algoritmo Geomin fornisce un metodo di rotazione che riduce al minimo la media geometrica delle saturazioni fattoriali innalzate al quadrato. Qui è usato per ottenere una soluzione ortogonale.</p>
-<div id="ea68201e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>out_geomin_orh <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"geomin"</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_orh, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ea68201e" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>out_geomin_orh <span class="ot">&lt;-</span> <span class="fu">orthRotate</span>(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"geomin"</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_orh, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   factor1 factor2 factor3
@@ -2186,10 +2169,6 @@ factor3       0       0       1
 Method of rotation: Geomin 
 
 Test Statistics for Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       lhs op rhs std.loading    se       z     p ci.lower ci.upper
@@ -2254,19 +2233,15 @@ Test Statistics for Standardized Rotated Factor Loadings</code></pre>
 <section id="oblique-geomin" class="level3" data-number="34.5.5">
 <h3 data-number="34.5.5" class="anchored" data-anchor-id="oblique-geomin"><span class="header-section-number">34.5.5</span> Oblique Geomin</h3>
 <p>La rotazione Geomin può anche essere usata per ottenere una soluzione obliqua.</p>
-<div id="ab34852c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>out_geomin_obl <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"geomin"</span></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_obl, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ab34852c" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>out_geomin_obl <span class="ot">&lt;-</span> <span class="fu">oblqRotate</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    unrotated, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"geomin"</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">summary</span>(out_geomin_obl, <span class="at">sort =</span> <span class="cn">FALSE</span>, <span class="at">suppress =</span> <span class="fl">0.3</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(out)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   factor1 factor2 factor3
@@ -2281,18 +2256,14 @@ x8          0.703*
 x9          0.463* -0.368*
 
 Factor Correlation
-           factor1    factor2    factor3
-factor1  1.0000000  0.2296081 -0.3271571
-factor2  0.2296081  1.0000000 -0.2776987
-factor3 -0.3271571 -0.2776987  1.0000000
+        factor1 factor2 factor3
+factor1   1.000   0.230  -0.327
+factor2   0.230   1.000  -0.278
+factor3  -0.327  -0.278   1.000
 
 Method of rotation: Geomin 
 
 Test Statistics for Standardized Rotated Factor Loadings</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning message in testLoadings(object):
-"The standard error is currently invalid because it does not account for the variance of the rotation function. It is simply based on the delta method."</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       lhs op rhs std.loading    se       z     p ci.lower ci.upper
@@ -2378,6 +2349,83 @@ Test Statistics for Standardized Rotated Factor Loadings</code></pre>
 <p>Nel caso di rotazioni oblique, dove i fattori sono correlati, è essenziale interpretare ogni fattore come una dimensione psicologica distinta. Ad esempio, l’etichetta assegnata al fattore <span class="math inline">\(F_1\)</span> deve essere concettualmente separata dal fenomeno rappresentato dal fattore <span class="math inline">\(F_2\)</span>, nonostante la loro correlazione.</p>
 <p>Adottando questa strategia interpretativa, la matrice pattern diventa lo strumento principale per l’interpretazione. I suoi coefficienti riflettono gli effetti diretti dei fattori latenti sulle variabili manifeste, indicando un’influenza “causale” del fattore su tali variabili. La matrice struttura, invece, descrive le correlazioni complessive tra variabili manifeste e fattori, includendo sia relazioni dirette che indirette.</p>
 <p>In conclusione, per un’interpretazione più accurata e teoricamente solida dei fattori latenti, è preferibile basarsi sulla matrice pattern, che fornisce informazioni specifiche sugli effetti diretti tra fattori comuni e variabili manifeste.</p>
+</section>
+<section id="session-info" class="level2" data-number="34.7">
+<h2 data-number="34.7" class="anchored" data-anchor-id="session-info"><span class="header-section-number">34.7</span> Session Info</h2>
+<div id="5b52194b" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>R version 4.4.2 (2024-10-31)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.1.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C
+
+time zone: Europe/Rome
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] GPArotation_2024.3-1 MASS_7.3-61          viridis_0.6.5       
+ [4] viridisLite_0.4.2    ggpubr_0.6.0         ggExtra_0.10.1      
+ [7] gridExtra_2.3        patchwork_1.3.0      bayesplot_1.11.1    
+[10] semTools_0.5-6       semPlot_1.1.6        lavaan_0.6-19       
+[13] psych_2.4.6.26       scales_1.3.0         markdown_1.13       
+[16] knitr_1.49           lubridate_1.9.3      forcats_1.0.0       
+[19] stringr_1.5.1        dplyr_1.1.4          purrr_1.0.2         
+[22] readr_2.1.5          tidyr_1.3.1          tibble_3.2.1        
+[25] ggplot2_3.5.1        tidyverse_2.0.0      here_1.0.1          
+
+loaded via a namespace (and not attached):
+  [1] rstudioapi_0.17.1   jsonlite_1.8.9      magrittr_2.0.3     
+  [4] TH.data_1.1-2       estimability_1.5.1  farver_2.1.2       
+  [7] nloptr_2.1.1        rmarkdown_2.29      vctrs_0.6.5        
+ [10] Cairo_1.6-2         minqa_1.2.8         base64enc_0.1-3    
+ [13] rstatix_0.7.2       htmltools_0.5.8.1   broom_1.0.7        
+ [16] Formula_1.2-5       htmlwidgets_1.6.4   plyr_1.8.9         
+ [19] sandwich_3.1-1      emmeans_1.10.5      zoo_1.8-12         
+ [22] uuid_1.2-1          igraph_2.1.1        mime_0.12          
+ [25] lifecycle_1.0.4     pkgconfig_2.0.3     Matrix_1.7-1       
+ [28] R6_2.5.1            fastmap_1.2.0       shiny_1.9.1        
+ [31] numDeriv_2016.8-1.1 digest_0.6.37       OpenMx_2.21.13     
+ [34] fdrtool_1.2.18      colorspace_2.1-1    rprojroot_2.0.4    
+ [37] Hmisc_5.2-0         fansi_1.0.6         timechange_0.3.0   
+ [40] abind_1.4-8         compiler_4.4.2      withr_3.0.2        
+ [43] glasso_1.11         htmlTable_2.4.3     backports_1.5.0    
+ [46] carData_3.0-5       ggsignif_0.6.4      corpcor_1.6.10     
+ [49] gtools_3.9.5        tools_4.4.2         pbivnorm_0.6.0     
+ [52] foreign_0.8-87      zip_2.3.1           httpuv_1.6.15      
+ [55] nnet_7.3-19         glue_1.8.0          quadprog_1.5-8     
+ [58] promises_1.3.0      nlme_3.1-166        lisrelToR_0.3      
+ [61] grid_4.4.2          pbdZMQ_0.3-13       checkmate_2.3.2    
+ [64] cluster_2.1.6       reshape2_1.4.4      generics_0.1.3     
+ [67] gtable_0.3.6        tzdb_0.4.0          data.table_1.16.2  
+ [70] hms_1.1.3           car_3.1-3           utf8_1.2.4         
+ [73] sem_3.1-16          pillar_1.9.0        IRdisplay_1.1      
+ [76] rockchalk_1.8.157   later_1.3.2         splines_4.4.2      
+ [79] cherryblossom_0.1.0 lattice_0.22-6      survival_3.7-0     
+ [82] kutils_1.73         tidyselect_1.2.1    miniUI_0.1.1.1     
+ [85] pbapply_1.7-2       airports_0.1.0      stats4_4.4.2       
+ [88] xfun_0.49           qgraph_1.9.8        arm_1.14-4         
+ [91] stringi_1.8.4       pacman_0.5.1        boot_1.3-31        
+ [94] evaluate_1.0.1      codetools_0.2-20    mi_1.1             
+ [97] cli_3.6.3           RcppParallel_5.1.9  IRkernel_1.3.2     
+[100] rpart_4.1.23        xtable_1.8-4        repr_1.1.7         
+[103] munsell_0.5.1       Rcpp_1.0.13-1       coda_0.19-4.1      
+[106] png_0.1-8           XML_3.99-0.17       parallel_4.4.2     
+[109] usdata_0.3.1        jpeg_0.1-10         lme4_1.1-35.5      
+[112] mvtnorm_1.3-2       openxlsx_4.2.7.1    crayon_1.5.3       
+[115] openintro_2.5.0     rlang_1.1.4         multcomp_1.4-26    
+[118] mnormt_2.1.1       </code></pre>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
@@ -2408,6 +2456,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
@@ -2838,5 +3030,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>
