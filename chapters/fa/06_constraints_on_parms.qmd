@@ -1,0 +1,546 @@
+# Attendibilità e modello fattoriale {#sec-fa-reliability}
+
+**Prerequisiti**
+
+- Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+
+**Concetti e Competenze Chiave**
+
+**Preparazione del Notebook**
+
+```{r}
+#| vscode: {languageId: r}
+# Carica il file _common.R per impostazioni di pacchetti e opzioni
+here::here("code", "_common.R") |> source()
+
+# Carica pacchetti aggiuntivi
+pacman::p_load(lavaan, modelsummary)
+```
+
+In questo capitolo esamineremo il problema relativo alla valutazione dell'affidabilità di uno strumento mediante l'impiego della tecnica dell'analisi fattoriale. Saranno differenziati tre distinti modelli che delineano le connessioni tra gli indicatori e il sottostante fattore latente comune (modelli congenerico, tau-equivalente, parallelo). Saranno presentati altresì tre diversi indici volti a caratterizzare l'affidabilità, intesa come coerenza interna, in accordo con il modello adottato. Tali indici includono l'indice omega di McDonald, l'indice alpha di Cronbach e l'indice rho, derivato dalla formula "profetica" di Spearman-Brown.
+
+Sarà evidente che l'utilizzo dell'indice alpha di Cronbach è giustificato soltanto se particolari condizioni specifiche vengono soddisfatte, circostanza che si verifica piuttosto raramente nei dati empirici. A causa di tale ragione, in linea generale, risulta più opportuno adottare l'indice omega di McDonald quale misura di coerenza interna.
+
+## Teoria classica dei test e analisi fattoriale
+
+@mcdonald2013test illustra come la teoria classica dei test possa essere correlata al modello dell'analisi fattoriale. La figura rappresenta, attraverso i termini del modello fattoriale, la relazione che sussiste tra i punteggi $Y$, derivanti dalla somministrazione di un test composto da cinque item, e i punteggi veri.
+
+::: {#fig-like}
+![](../../figures/factmod1.png){width="55%"}
+
+Diagramma di percorso del modello monofattoriale.
+:::
+
+Esistono diverse strategie per stimare l'attendibilità in situazioni in cui viene somministrato un unico test. In questo contesto, analizzeremo tre metodologie che possono essere implementate attraverso l'analisi fattoriale: l'$\alpha$ di Cronbach, l'$\omega$ di McDonald e il metodo di Spearman-Brown.
+
+Il coefficiente $\alpha$ rappresenta il principale indice utilizzato per quantificare l'attendibilità come misura di coerenza interna o omogeneità. Approfondiremo come questo indice rappresenti il limite inferiore dell'attendibilità di un test, a condizione che siano soddisfatte alcune ipotesi. Tuttavia, se queste assunzioni non vengono rispettate, l'$\alpha$ si rivela un stimatore distorto dell'attendibilità.
+
+Prima di esaminare le diverse metodologie per stimare l'attendibilità in termini di coerenza interna, è essenziale distinguere tra le tre diverse forme che il modello unifattoriale può assumere. Queste tre forme corrispondono al modello con indicatori congenerici, al modello $\tau$-equivalente e al modello parallelo.
+
+## Modello fattoriale e CTT
+
+Considerando un insieme di item osservati $X_1, X_2, \dots, X_p$, con $p>2$, i punteggi ottenuti da questi item sono composti da due elementi distinti: una componente di punteggio vero e una componente di errore.
+
+$$
+\begin{equation}
+\begin{aligned}
+X_1 &=T_1+E_1,\notag\\ 
+X_2 &=T_2+E_2,\notag\\ 
+&\dots\notag\\ 
+X_p &=T_p+E_p.\notag
+\end{aligned}
+\end{equation}
+$$
+
+In linea con l'approccio delineato da @mcdonald2013test, questa decomposizione tra la componente vera e quella di errore può essere formalizzata mediante l'utilizzo dei parametri del modello fattoriale. L'equazione $X_i = T_i + E_i$ può quindi essere riformulata come segue:
+
+$$
+X_i = \lambda_i \xi + \delta_i, \quad{i=1, \dots, p},
+$$ 
+
+In questa equazione, $X_i$ rappresenta il punteggio osservato per l'item $i$-esimo (espresso in termini di scarti dalla media), $\lambda_i$ è il carico fattoriale associato all'item $i$-esimo, $\xi$ costituisce il fattore comune e $\delta_i$ è la componente residuale del punteggio osservato per l'item $i$-esimo. Tale formulazione si basa sulle assunzioni del modello monofattoriale. Nello specifico, si ipotizza che $\xi$ e $\delta_i$ siano incorrelati per ogni item $i$, e che $\delta_i$ e $\delta_k$ siano incorrelati per ogni coppia $i \neq k$.
+
+## Classi di modelli
+
+Nell'ambito dei modelli monofattoriali, possiamo distinguere tre scenari principali:
+
+1. **Modello con indicatori congenerici:** Questo modello rappresenta il caso più generale, in cui non vi sono restrizioni imposte sulla struttura degli indicatori. Gli indicatori sono correlati in quanto riflettono un fattore comune, ma possono avere carichi fattoriali diversi e specificità uniche.
+
+2. **Modello con indicatori $\tau$-equivalenti:** In questo scenario, tutti gli indicatori hanno lo stesso carico fattoriale, il che implica che misurano il fattore comune con la stessa forza. Tuttavia, possono differire per quanto riguarda la loro varianza e specificità.
+
+3. **Modello con indicatori paralleli:** Qui, gli indicatori non solo condividono lo stesso carico fattoriale, ma presentano anche identica varianza degli errori. Questo indica una completa equivalenza tra gli indicatori, mostrando una struttura molto più rigida rispetto al modello $\tau$-equivalente.
+
+Il modello con indicatori congenerici funge da base più flessibile, mentre i modelli con indicatori $\tau$-equivalenti e paralleli introducono vincoli crescenti che specificano relazioni sempre più strette tra gli indicatori.
+
+### Indicatori congenerici
+
+Gli indicatori *congenerici* rappresentano misure di uno stesso costrutto, ma non è necessario che riflettano tale costrutto con la medesima intensità. Nel contesto degli indicatori congenerici all'interno del modello monofattoriale, non vengono introdotte limitazioni né sulle saturazioni fattoriali né sulle specificità:
+
+$$
+\lambda_1\neq \lambda_2 \neq \dots\neq \lambda_p,
+$$
+
+$$
+\psi_{11}\neq \psi_{22} \neq \dots\neq \psi_{pp}.
+$$ 
+
+Il modello mono-fattoriale con indicatori congenerici è dunque
+
+$$
+\begin{equation}
+X_i = \lambda_i \xi + \delta_i.
+\end{equation}
+$$ {#eq-mod-tau-eq}
+
+Dalle assunzioni precedenti possiamo derivare la matrice $\boldsymbol{\Sigma}$ riprodotta in base al modello congenerico la quale risulta essere uguale a
+
+$$
+\boldsymbol{\Sigma}=\left[
+      \begin{array}{ c c c c }
+        \sigma_{11} & \sigma_{12} & \dots & \sigma_{1p}, \\
+        \sigma_{21} & \sigma_{22} & \dots & \sigma_{2p}. \\
+        \vdots & \vdots & & \vdots\\
+        \sigma_{p1} & \sigma_{p2} & \dots & \sigma_{pp} 
+      \end{array} 
+    \right].
+$$ 
+    
+Si noti come tutte le varianze e tutte le covarianze siano tra loro diverse.
+
+### Indicatori tau-equivalenti
+
+Nel caso di indicatori $\tau$-equivalenti, si ha che
+
+$$
+\lambda_1=\lambda_2=\dots=\lambda_p=\lambda,
+$$
+
+$$
+\psi_{11}\neq \psi_{22} \neq \dots\neq \psi_{pp}.
+$$ 
+
+Il modello monofattoriale con indicatori $\tau$-equivalenti diventa dunque
+
+$$
+\begin{equation}
+X_i = \lambda \xi + \delta_i, 
+\end{equation}
+$$ {#eq-mod-tau-eq}
+
+ovvero 
+
+$$
+\begin{equation}
+X_i = \tau + \delta_i,
+\end{equation}
+$$ {#eq-mod-tau-eq}
+
+dove $\tau=\lambda \xi$ è l'attributo comune scalato nell'unità di misura dell'indicatore. Secondo il modello dell'@eq-mod-tau-eq, tutte le $p(p-1)$ covarianze tra gli item
+del test devono essere uguali, ovvero
+
+$$
+\begin{equation}
+\sigma_{ik} = \lambda^2=\sigma^2_T,
+\end{equation}
+$$ {#eq-cov-tau-eq}
+
+per $i\neq k$. Gli elementi sulla diagonale principale della matrice di varianze e covarianze saranno invece
+
+$$
+\begin{equation}
+\sigma_{ii} = \lambda^2 + \psi_{ii} =\sigma^2_T + \psi_{ii}.
+\end{equation}
+$$ {#eq-var-tau}
+
+La matrice $\boldsymbol{\Sigma}$ riprodotta in base al modello $\tau$-equivalente è dunque uguale a
+
+$$
+\begin{equation}
+\boldsymbol{\Sigma}=\left[
+      \begin{array}{ c c c c }
+        \sigma_{T}^2 + \psi_{11} & \sigma_{T}^2 & \dots & \sigma_{T}^2 \\
+        \sigma_{T}^2 & \sigma_{T}^2 + \psi_{22} & \dots & \sigma_{T}^2 \\
+        \vdots & \vdots & & \vdots\\
+        \sigma_{T}^2 & \sigma_{T}^2 & \dots & \sigma_{T}^2 + \psi_{pp} 
+      \end{array} 
+    \right].
+\end{equation}
+$$ {#eq-sigma-tau-eq}
+    
+Tutte le covarianze sono uguali, mentre le varianze sono tra loro diverse.
+
+### Indicatori paralleli
+
+Nel caso di indicatori paralleli si ha che
+
+$$
+\lambda_1=\lambda_2=\dots=\lambda_p=\lambda,
+$$
+
+$$
+\psi_{11}=\psi_{22}=\dots=\psi_{pp}=\psi.
+$$ 
+
+Il modello costituito da indicatori paralleli impone dunque un'ulteriore restrizione che riguarda le varianze degli item, ovvero:
+
+$$
+\sigma_{ii} = \lambda^2 + \psi =\sigma^2_T + \sigma^2.
+$$ 
+
+La struttura di varianze e covarianze imposta dal modello per indicatori paralleli è
+dunque tale da richiedere l'uguaglianza tra tutte le covarianze tra gli
+item e l'uguaglianza tra tutte le varianze degli item. La matrice
+$\boldsymbol{\Sigma}$ riprodotta in base al modello con indicatori
+paralleli è dunque uguale a 
+
+$$
+\boldsymbol{\Sigma}=\left[
+      \begin{array}{ c c c c }
+        \sigma_{T}^2 + \sigma^2 & \sigma_{T}^2 & \dots & \sigma_{T}^2 \\
+        \sigma_{T}^2 & \sigma_{T}^2 + \sigma^2 & \dots & \sigma_{T}^2 \\
+        \vdots & \vdots & & \vdots\\
+        \sigma_{T}^2 & \sigma_{T}^2 & \dots & \sigma_{T}^2 +\sigma^2 \notag
+      \end{array} 
+    \right].
+$$
+
+
+## Metodo dei minimi quadrati non pesati
+
+Nel contesto del modello unifattoriale, la varianza di ciascun indicatore è decomposta in due componenti: la componente $\sigma^2_T$, attribuibile all'effetto del fattore latente comune, e la componente $\psi$, riferita all'influenza del fattore specifico. @mcdonald2013test dimostra come sia possibile ottenere stime di tali componenti dai dati osservati. Queste stime vengono successivamente impiegate per calcolare l'affidabilità interna del test mediante le formule degli indici $\alpha$ di Cronbach e $\omega$ di McDonald.
+
+In precedenza, abbiamo esaminato come la varianza del punteggio vero possa essere equivalente alla covarianza tra due forme parallele dello stesso test: $\sigma^2_T = \sigma_{XX^\prime}$. Nel caso di indicatori $\tau$-equivalenti, la matrice $\boldsymbol{\Sigma}$ prevista dal modello risulta essere:
+
+$$
+\boldsymbol{\Sigma}=\left[
+      \begin{array}{ c c c c }
+        \sigma_{T}^2 + \psi_{11} & \sigma_{T}^2 & \dots & \sigma_{T}^2 \\
+        \sigma_{T}^2 & \sigma_{T}^2 + \psi_{22} & \dots & \sigma_{T}^2 \\
+        \vdots & \vdots & & \vdots\\
+        \sigma_{T}^2 & \sigma_{T}^2 & \dots & \sigma_{T}^2 + \psi_{pp} \notag
+      \end{array}
+    \right],
+$$
+
+ossia, tutte le covarianze sono equivalenti tra loro. Nel caso degli indicatori $\tau$-equivalenti, dunque, una stima $\hat{\sigma}^2_T$ di $\sigma^2_T$ si ottiene calcolando la media delle covarianze della matrice **S**:
+
+$$
+\begin{equation}
+\hat{\sigma}_T^2 = \frac{1}{p(p-1)} {\sum \sum}_{i \neq k} s_{ik}.
+\end{equation}
+$$ {#eq-sigma-t}
+
+Questo metodo di stima di $\sigma^2_T$ è noto come "metodo dei minimi quadrati non pesati" @mcdonald2013test.
+
+Inoltre, nel caso di indicatori $\tau$-equivalenti, la stima di $\psi_{ii}$ nell'@eq-var-tau è calcolata come:
+
+$$
+\hat{\psi}_{ii }= s_{ii} - \hat{\sigma}_T^2,
+$$
+
+per ogni item $i$.
+
+Per quanto riguarda gli *indicatori paralleli*, la stima di $\sigma^2_T$ è ancora basata sull'@eq-sigma-t, ovvero sulla media delle covarianze della matrice $\boldsymbol{\Sigma}$. Tuttavia, la stima del valore costante $\psi$ è ottenuta tramite l'equazione:
+
+$$
+\begin{equation}
+\hat{\psi} = \frac{1}{p} \sum_i (s_{ii} - \hat{\sigma}_T^2)
+\end{equation}
+$$ {#eq-psi-par-st}
+
+## Varianza del punteggio totale di un test
+
+Consideriamo un test omogeneo costituito da $p$ item, il cui punteggio totale $Y$ è dato dalla somma dei punteggi individuali degli item, espressi come $Y = \sum_{i=1}^p X_i$. Analizziamo la varianza di $Y$ utilizzando un modello unifattoriale.
+
+In un modello congenerico con un singolo fattore comune, il punteggio di ciascun item $i$, $X_i$, può essere rappresentato dalla seguente equazione:
+
+$$
+X_i = \lambda_i \xi + \delta_i,
+$$
+
+dove $\lambda_i$ rappresenta la carica fattoriale dell'item $i$ sul fattore comune $\xi$, e $\delta_i$ è l'errore specifico associato all'item. Questa formulazione è analoga all'equazione $X_i = T_i + E_i$ della teoria classica dei test, dove $T_i$ è il vero punteggio e $E_i$ l'errore di misurazione.
+
+Il punteggio totale, essendo la somma di tutti gli item, si esprime come $\sum_i (\lambda_i \xi + \delta_i)$. La varianza del punteggio totale può quindi essere calcolata come segue:
+
+$$
+\begin{equation}
+\begin{aligned}
+  \mathbb{V}(Y) &= \mathbb{V}\left[ \sum_i  (\lambda_i \xi + \delta_i)  \right] \\
+  &= \mathbb{V}\left[ \left( \sum_i \lambda_i\right) \xi + \sum_i \delta_i\right] \\
+  &=  \left(\sum_i \lambda_i\right)^2 \mathbb{V}(\xi) +  \sum_i  \mathbb{V}(\delta_i) \\
+  &= \left(\sum_i \lambda_i\right)^2 + \sum_i \psi_{ii},
+\end{aligned}
+\end{equation}
+$$ {#eq-var-y}
+
+dove $\mathbb{V}(\xi) = 1$ per ipotesi. La varianza di $Y$ si decompone in due parti principali: la prima parte, $(\sum_i \lambda_i)^2$, rappresenta la varianza attribuibile al fattore comune, riflettendo la variazione legata all'attributo misurato dagli item; la seconda parte, $\sum_i \psi_{ii}$, corrisponde alla somma delle varianze degli errori specifici di ciascun item, rappresentando la variazione dovuta agli errori di misurazione.
+
+## Stima dell'attendibilità
+
+### Coefficiente Omega
+
+Dopo aver analizzato la varianza del punteggio totale di un test come indicato nella precedente equazione:
+
+$$
+\mathbb{V}(Y) = \left( \sum_i \lambda_i\right)^2 + \sum_i \psi_{ii},
+$$
+
+si introduce il coefficiente di affidabilità $\omega$. @mcdonald2013test definisce $\omega$ come il rapporto tra la varianza attribuibile al fattore comune e la varianza totale del punteggio. Basandosi sui parametri del modello monofattoriale, il coefficiente $\omega$ può essere formulato come segue:
+
+$$
+\begin{equation}
+\begin{aligned}
+\omega &= \frac{\left( \sum_{i=1}^p \lambda_i \right)^2}{\mathbb{V}(Y)} \\
+&= \frac{\left( \sum_{i=1}^p \lambda_i \right)^2}{\left( \sum_{i=1}^p \lambda_i \right)^2  + \sum_{i=1}^p \psi_{ii}}
+\end{aligned}
+\end{equation}
+$$ {#eq-omega}
+
+Questo coefficiente $\omega$ offre una stima quantitativa dell'affidabilità di un test, basata sui parametri del modello congenerico e utilizzando i dati raccolti da una singola somministrazione del test. La sua utilità risiede nel quantificare quanto della varianza osservata nel punteggio totale è effettivamente spiegata dal fattore comune misurato dal test.
+
+#### Un esempio concreto
+
+Consideriamo nuovamente la scala *Openness* del dataframe `bfi` discussi nel capitolo @ctt-3-notebook. Leggiamo i dati in R.
+
+```{r}
+#| vscode: {languageId: r}
+data(bfi, package = "psych")
+```
+
+È necessario ricodificare due item.
+
+```{r}
+#| vscode: {languageId: r}
+bfi$O2r <- 7 - bfi$O2
+bfi$O5r <- 7 - bfi$O5
+```
+
+```{r}
+#| vscode: {languageId: r}
+cor(
+    bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+    use = "pairwise.complete.obs"
+) |>
+    round(2)
+```
+
+Eseguiamo l'analisi fattoriale confermativa con `lavaan`.
+
+```{r}
+#| vscode: {languageId: r}
+mod <- "
+    f =~ NA*O1 + O2r + O3 + O4 + O5r
+    f ~~ 1*f
+"
+
+fit <- cfa(mod, data = bfi, std.ov = TRUE, std.lv = TRUE)
+```
+
+Estraiamo le saturazioni fattoriali e le specificità dall'oggetto `fit`.
+
+```{r}
+#| vscode: {languageId: r}
+lambda <- inspect(fit, what = "std")$lambda
+psy <- diag(inspect(fit, what = "est")$theta)
+```
+
+Calcoliamo il coefficiente $\omega$
+
+$$
+\omega = \frac{\left( \sum_{i=1}^p \lambda_i \right)^2}{\left( \sum_{i=1}^p \lambda_i \right)^2  + \sum_{i=1}^p \psi_{ii}}
+$$
+
+usando i parametri del modello fattoriale.
+
+```{r}
+#| vscode: {languageId: r}
+sum(lambda)^2 / (sum(lambda)^2 + sum(psy)) 
+```
+
+Ripetiamo i calcoli usando la funzione `compRelSEM` del pacchetto `semTools`.
+
+```{r}
+#| vscode: {languageId: r}
+semTools::compRelSEM(fit, tau.eq = FALSE)
+```
+
+Il coefficiente $\omega=0.62$ può essere interpretato dicendo che il 62% della varianza del punteggio totale $Y$ della sottoscala Openness viene spiegato dal fattore comune latente.
+
+#### Coefficiente $\omega$ e assunzioni della teoria classica dei test
+
+Il calcolo del coefficiente $\omega$ si appoggia su un'assunzione fondamentale della teoria classica dei test: che non esistano covarianze tra gli errori specifici degli item, ossia $\psi_{ik}=0$ per ogni $i \neq k$. Tuttavia, questa ipotesi potrebbe non reggere in contesti di dati empirici. Bollen (1980) sottolinea che, qualora le covarianze tra errori specifici non siano trascurabili, l'equazione per $\omega$ dovrebbe essere modificata come segue:
+
+$$
+\begin{equation}
+\omega = \frac{\left( \sum_{i=1}^p \lambda_i \right)^2}{\left( \sum_{i=1}^p \lambda_i \right)^2  + \sum_{i=1}^p \psi_{ii} + \sum_{i, k, i\neq k}^p \psi_{ik}}.
+\end{equation}
+$$
+
+Per verificare la validità dell'assunzione di indipendenza tra gli errori specifici, si può ricorrere a un'analisi fattoriale confermativa. Se l'analisi rivela correlazioni significative tra molti errori specifici, potrebbe essere necessario incorporare ulteriori fattori nel modello per accomodare queste covarianze. Questo può suggerire una struttura non più unidimensionale, indicando la presenza di diverse sottoscale all'interno del test. Tuttavia, anche con l'identificazione di tali sottoscale, le covarianze tra i fattori specifici possono rimanere inesplicate. In tali casi, l'uso dell'equazione modificata per $\omega$ diventa indispensabile.
+
+#### Interpretazione del Coefficiente $\omega$
+
+@mcdonald2013test propone diverse interpretazioni del coefficiente $\omega$ che aiutano a comprenderne il significato nel contesto della teoria dei test:
+- $\omega$ può essere visto come il quadrato della correlazione tra il punteggio totale $Y$ e il fattore comune $\xi$, che rappresenta anche la correlazione tra $Y$ e il punteggio vero. Questo si allinea alla definizione classica di affidabilità, espressa come $\rho_{XT}^2 = \sigma^2_{\tau}/\sigma^2_X$, dove $\sigma^2_{\tau}$ è la varianza del punteggio vero e $\sigma^2_X$ quella del punteggio osservato.
+- $\omega$ descrive anche la correlazione tra due applicazioni ipotetiche del test, $Y$ e $Y'$, che condividono le stesse somme (o medie) delle cariche fattoriali e delle varianze specifiche nel contesto di un modello a singolo fattore.
+- $\omega$ rappresenta il quadrato della correlazione tra il punteggio totale di $p$ item e il punteggio medio di un insieme infinito di item all'interno di un dominio omogeneo, dove i $p$ item analizzati sono un sottoinsieme rappresentativo.
+
+In sintesi, il coefficiente $\omega$ fornisce una misura di quanto il punteggio totale di un test sia rappresentativo del fattore latente che il test intende misurare. Attraverso la correlazione, l'omogeneità e la consistenza osservata tra diverse somministrazioni o versioni di un test, $\omega$ aiuta a interpretare la qualità e l'affidabilità del test stesso.
+
+### Coefficienti $\alpha$ e $\omega$ nel modello $\tau$-equivalente
+
+Nel contesto dei modelli monofattoriali, i coefficienti $\omega$ e $\alpha$ offrono stime dell'attendibilità, ma in contesti distinti. Il coefficiente $\omega$ è utile per i modelli con indicatori congenerici, mentre il coefficiente $\alpha$ è specifico per i modelli con indicatori $\tau$-equivalenti.
+
+In un modello $\tau$-equivalente, dove ciascun item ha la stessa carica fattoriale $\lambda$, la varianza di ogni item si scompone in una parte dovuta al punteggio vero e una parte d'errore, espressa come $\sigma_{ii} = \lambda^2 + \psi_{ii} = \sigma^2_T + \sigma^2_i$. In questo scenario, la formula per il coefficiente $\omega$ si semplifica nel seguente modo:
+
+$$
+\omega = \frac{\left( \sum_i \lambda_i \right)^2}{\left( \sum_i \lambda_i \right)^2  + \sum_i \psi_{ii}} = \frac{p^2 \lambda^2}{\sigma^2_Y} = \frac{p^2 \sigma_T^2}{\sigma_Y^2},
+$$
+
+dove $Y$ rappresenta il punteggio totale del test.
+
+Applicando il metodo dei minimi quadrati non pesati, possiamo derivare la stima seguente per $\omega$:
+
+$$
+\hat{\omega} = \frac{p^2 \hat{\sigma}_T^2}{s_Y^2},
+$$
+
+dove $\hat{\sigma}_T^2$ è stimato come:
+
+$$
+\hat{\sigma}_T^2 = \frac{1}{p(p-1)} \sum \sum_{i \neq k} s_{ik}.
+$$
+
+Integrando questa stima nella formula precedente, otteniamo:
+
+$$
+\hat{\omega} = \frac{p}{p-1}\frac{\sum \sum_{i \neq k} s_{ik}}{s_Y^2}.
+$$
+
+Per gli indicatori $\tau$-equivalenti, quindi, $\omega$ può essere stimato da:
+
+$$
+\hat{\omega} = \frac{p}{p-1}\left(1-\frac{\sum_i s_{ii}}{s_Y^2}\right).
+$$ (eq-alpha-camp)
+
+Questa stima di $\omega$ ha un parallelo nei valori di popolazione definiti da $\alpha$, che si esprime come:
+
+$$
+\alpha = \frac{p}{p-1}\left(1-\frac{\sum_{i=1}^p \sigma_{ii}}{\sigma_Y^2}\right) = \frac{p}{p-1}\frac{\sum_{i \neq k}^p \text{Cov}(X_i, X_k)}{\mathbb{V}(Y)}.
+$$ {#eq-alpha-pop}
+
+In condizioni ideali del modello $\tau$-equivalente, i valori di $\alpha$ e $\omega$ convergono. Tuttavia, $\alpha$ tende a sottostimare $\omega$, posizionandosi come un limite inferiore per $\omega$. Data questa natura conservativa di $\alpha$, alcuni ricercatori lo preferiscono a $\omega$, sebbene questa proprietà valga solamente quando le assunzioni del modello $\tau$-equivalente sono rigorosamente rispettate.
+
+#### Un esempio concreto
+
+Consideriamo la matrice di varianze e covarianze della sottoscala Openness. 
+
+```{r}
+#| vscode: {languageId: r}
+C <- cov(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+C |> 
+    round(2)
+```
+
+Calcoliamo il coefficiente $\alpha$ usando l'eq. {eq}`eq-alpha-camp`:
+
+```{r}
+#| vscode: {languageId: r}
+p <- 5
+alpha <- (p / (p - 1)) * (1 - tr(C) / sum(C))
+alpha
+```
+
+### La formula "profetica" di Spearman-Brown
+
+La formula profetica di Spearman-Brown è impiegata per calcolare l'affidabilità nei modelli di misurazione che utilizzano indicatori paralleli. Supponiamo di avere un test composto da $p$ item paralleli, in cui ogni item ha la stessa carica fattoriale $\lambda$ e la stessa varianza dell'errore specifico $\psi$, ovvero $\lambda_1=\lambda_2=\dots=\lambda_p=\lambda$ e $\psi_{11}=\psi_{22}=\dots=\psi_{pp}=\psi$.
+
+La proporzione di varianza nel punteggio totale del test spiegata dalla variabile latente è quindi:
+
+$$
+\left(\sum_i \lambda_i \right)^2 = (p \lambda)^2 = p^2 \lambda^2.
+$$
+
+Definendo l'affidabilità di un singolo item, $\rho_1$, come
+
+$$
+\rho_1 = \frac{\lambda^2}{\lambda^2 + \psi},
+$$
+
+per $p$ item paralleli, l'affidabilità del test, $\rho_p$, diventa:
+
+$$
+\begin{equation}
+\begin{aligned}
+  \rho_p &= \frac{p^2 \lambda^2}{p^2 \lambda^2 + p \psi} \\
+         &= \frac{p \lambda^2}{ p \lambda^2 + \psi} \\
+         &= \frac{p \lambda^2}{(p-1) \lambda^2 + (\lambda^2 + \psi)}.
+\end{aligned}
+\end{equation}
+$$
+
+Sfruttando l'affidabilità di un singolo item $\rho_1$, possiamo riformulare $\rho_p$ come:
+
+$$
+\begin{equation}
+\begin{aligned}
+  \rho_p &= \frac{p \rho_1}{(p-1)\rho_1 + 1}.
+\end{aligned}
+\end{equation}
+$$ (eq-spearman-brown-der)
+
+Questa espressione, derivata qui sopra, mostra come l'affidabilità $\rho_p$ di un test composto da $p$ item paralleli possa essere calcolata a partire dall'affidabilità di un singolo item. Tale formula è nota come "formula di predizione" di Spearman-Brown (*Spearman-Brown prophecy formula*). 
+
+In contesti con item paralleli, è importante notare che le misure di affidabilità $\omega$, $\alpha$, e $\rho_p$ risultano equivalenti.
+
+#### Un esempio concreto
+
+Poniamoci il problema di calcolare l'attendibilità della sottoscala Openness utilizzando la formula di Spearman-Brown. Ipotizziamo dunque che gli item della scala Openness siano paralleli. La matrice di correlazione è:
+
+```{r}
+#| vscode: {languageId: r}
+R <- cor(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+round(R, 3)
+```
+
+Seguendo @mcdonald2013test, supponiamo di calcolare l'attendibilità di un singolo item ($\rho_1$) come la correlazione media tra gli item:
+
+```{r}
+#| vscode: {languageId: r}
+rr <- NULL
+p <- 5
+k <- 1
+for (i in 1:p) {
+  for (j in 1:p) {
+    if (j != i) {
+      rr[k] <- R[i, j]
+    }
+    k <- k + 1
+  }
+}
+ro_1 <- mean(rr, na.rm = TRUE)
+print(ro_1)
+```
+
+Applicando la formula di Spearman-Brown, la stima dell'attendibilità del
+test diventa pari a
+
+```{r}
+#| vscode: {languageId: r}
+(p * ro_1) / ((p - 1) * ro_1 + 1) |>
+    round(3)
+```
+
+## Commenti e considerazioni conclusive
+
+Il coefficiente $\alpha$ di Cronbach è uno degli indici di affidabilità più diffusi in psicometria. Tuttavia, la sua efficacia dipende strettamente dalla $\tau$-equivalenza degli item, che presuppongono un tratto latente unidimensionale. Nella pratica, questa condizione è spesso violata: molti test misurano più di un fattore, e le comunalità degli item non sono uniformi, mettendo in discussione la validità dell'ipotesi di $\tau$-equivalenza. Se gli errori sono incorrelati, il coefficiente $\alpha$ può sottostimare l'affidabilità; se invece gli errori sono correlati, può sovrastimarla.
+
+Data questa limitazione, l'utilizzo del coefficiente $\omega$ di McDonald è generalmente più consigliabile. Il coefficiente $\omega$ fornisce una stima più robusta dell'affidabilità in vari contesti, inclusi quelli con assunzioni meno restrittive rispetto alla $\tau$-equivalenza. Altri indici come il $glb$ (*Greatest Lower Bound*), discusso da Ten Berge e Sočan (2004), e l'indice $\beta$ di Revelle (1979), rappresentano alternative valide al coefficiente $\alpha$, offrendo diversi vantaggi metodologici a seconda delle specifiche esigenze di misurazione e delle caratteristiche dei dati analizzati.
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

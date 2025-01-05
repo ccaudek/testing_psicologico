@@ -19,75 +19,65 @@ pacman::p_load(
   ggExtra, # Funzionalità extra per ggplot2 (grafici marginali)
   ggpubr, # Funzionalità di pubblicazione per grafici ggplot
   viridis, # Palette di colori per ggplot (ideale per scale percettivamente uniformi)
-  MASS # Pacchetto per metodi statistici aggiuntivi
+  MASS, # Pacchetto per metodi statistici aggiuntivi
+  see, # Provides palette_okabeito
+  tidyr, # Funzionalità per creare tidy data
+  ggokabeito # Qualitative Okabe-Ito Scales for ggplot2 
 )
 
 # Knitr Chunk Options ----------------------------------------------------------
 
 knitr::opts_chunk$set(
-  comment = "#>", # Commento per output
-  collapse = TRUE, # Raggruppa input e output in blocchi
-  message = FALSE, # Nasconde i messaggi
-  warning = FALSE, # Nasconde i warning
-  error = FALSE, # Nasconde gli errori
-  tidy = "styler", # Formattazione automatica del codice con {styler}
-  width.cutoff = 76, # Limita larghezza dell'output
-  fig.retina = 2, # Migliora la risoluzione delle immagini
-  fig.width = 10, # Larghezza di default delle figure
-  fig.asp = 2 / 3, # Altezza delle figure in proporzione alla larghezza
-  fig.show = "hold", # Mantiene insieme le figure multiple
-  out.width = if (knitr::is_html_output()) "75%" else NULL # Figure width at 75% for HTML
+  comment = "#>",
+  collapse = TRUE,
+  width = 72,
+  tidy.opts = list(width.cutoff = 72, tidy = TRUE),
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.height = 3.708, # width * 1 / phi (phi = golden ratio)
+  fig.show = "hold",
+  R.options = list(
+    digits = 3,
+    width = 76
+  ),
+  formatR.indent = 2,
+  dplyr.summarise.inform = FALSE,
+  dplyr.print_min = 5,
+  dplyr.print_max = 5,
+  ggrepel.max.overlaps = 100
 )
 
 # General Options --------------------------------------------------------------
 
+options(tidyverse.quiet = TRUE)
+
 options(
-  repr.plot.width = 10, # Larghezza di default delle figure
-  repr.plot.height = 10 / 1.618033988749895, # Altezza in rapporto aureo
-  # dplyr.print_min = 6, # Numero minimo di righe da visualizzare con dplyr
-  # dplyr.print_max = 6, # Numero massimo di righe da visualizzare con dplyr
-  # pillar.max_footer_lines = 2, # Massimo righe footer per pillar
-  pillar.min_chars = 15, # Larghezza minima delle colonne con pillar
-  # stringr.view_n = 6, # Numero di valori da visualizzare per stringr
-  # cli.num_colors = 0, # Disattiva colori per output CLI
-  # cli.hyperlink = FALSE, # Disattiva hyperlink per CLI
-  pillar.bold = TRUE, # Usa grassetto nei titoli delle colonne
-  width = 76, # Larghezza massima per output (aggiustata per commenti #>)
-  digits = 3
+  show.signif.stars = FALSE,
+  dplyr.print_min = 6,
+  dplyr.print_max = 6,
+  pillar.max_footer_lines = 2,
+  pillar.min_chars = 15,
+  stringr.view_n = 6,
+  # Disattiva temporaneamente l'output CLI per Quarto
+  # cli.num_colors = 0,
+  # cli.hyperlink = FALSE,
+  pillar.bold = TRUE,
+  width = 77 # 80 - 3 per il commento #>
 )
-
-# ggplot2 theme and colors -----------------------------------------------------
-
-if (knitr::is_html_output()) {
-  ggplot2::theme_set(ggplot2::theme_minimal(base_size = 13))
-} else if (knitr::is_latex_output()) {
-  ggplot2::theme_set(ggplot2::theme_minimal(base_size = 12))
-}
-
-ggplot2::update_geom_defaults("point", list(
-  color = openintro::IMSCOL["blue", "full"],
-  fill = openintro::IMSCOL["blue", "full"]
-))
-ggplot2::update_geom_defaults("bar", list(
-  fill = openintro::IMSCOL["blue", "full"],
-  color = "#FFFFFF"
-))
-ggplot2::update_geom_defaults("col", list(
-  fill = openintro::IMSCOL["blue", "full"],
-  color = "#FFFFFF"
-))
-ggplot2::update_geom_defaults("boxplot", list(color = openintro::IMSCOL["blue", "full"]))
-ggplot2::update_geom_defaults("density", list(color = openintro::IMSCOL["blue", "full"]))
-ggplot2::update_geom_defaults("line", list(color = openintro::IMSCOL["gray", "full"]))
-ggplot2::update_geom_defaults("smooth", list(color = openintro::IMSCOL["gray", "full"]))
-ggplot2::update_geom_defaults("dotplot", list(
-  color = openintro::IMSCOL["blue", "full"],
-  fill = openintro::IMSCOL["blue", "full"]
-))
 
 # Theme Settings ---------------------------------------------------------------
 
-theme_set(bayesplot::theme_default(base_size = 18, base_family = "sans"))
+# ggplot2::theme_set(ggplot2::theme_gray(12))
+theme_set(bayesplot::theme_default(base_size = 13, base_family = "sans"))
+
+color_scheme_set("brightblue") # bayesplot
+
+# From https://osf.io/k824z
+# Have to add a colour to the palette to be able to use 10 items
+palette_okabe_enhanced <- 
+  c(ggokabeito::palette_okabe_ito(order = c(5,1,3,4,2,6,7,8,9)), "#882E72")
+
 
 # Seed -------------------------------------------------------------------------
 

@@ -1,0 +1,388 @@
+---
+execute:
+  freeze: auto
+---
+
+# La struttura delle medie {#sec-cfa-meanstructure}
+
+::: callout-important
+## In questo capitolo imparerai a:
+
+- utilizzare l'informazione delle medie nei modelli CFA.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Factor Analysis and Principal Component Analysis* [@petersen2024principles].
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> source()
+
+# Carica pacchetti aggiuntivi
+pacman::p_load(lavaan, psych, semPlot)
+```
+:::
+
+## Introduzione
+
+L'Analisi Fattoriale Confermativa (CFA) condivide con l'analisi fattoriale tradizionale l'obiettivo di esaminare le relazioni di covarianza tra le variabili. Tuttavia, una caratteristica distintiva della CFA è la possibilità di includere nel modello anche le medie, sia delle variabili osservate che di quelle latenti. Questo approccio si rivela particolarmente utile in contesti come l'analisi fattoriale confermativa longitudinale, dove le ipotesi non si limitano alle covarianze, ma riguardano anche i cambiamenti nelle medie dei costrutti analizzati nel tempo.
+
+
+## Interpretazione delle Intercette nei Modelli CFA
+
+Nei modelli CFA o nei Modelli di Equazioni Strutturali (SEM), l'intercetta di una variabile indicatore, denotata con $\tau$, rappresenta la media stimata dell'indicatore quando il fattore latente a cui è associato assume il valore zero. Questo consente di integrare nel modello informazioni sia sulle relazioni tra variabili (covarianze) sia sulle loro medie.
+
+La relazione generale per un indicatore $y$ in un modello CFS (o SEM) è espressa dalla seguente equazione:
+
+$$ 
+y = \tau + \lambda \cdot \text{fattore latente} + \varepsilon,
+$$
+
+dove:
+
+- **$y$**: è il punteggio osservato dell'indicatore.
+- **$\tau$**: è l'intercetta, che rappresenta la media stimata dell'indicatore quando il fattore latente è zero.
+- **$\lambda$**: è il carico fattoriale, che misura la relazione tra il fattore latente e l'indicatore, ovvero quanto l'indicatore è influenzato dal fattore latente.
+- **$\varepsilon$**: è l'errore di misura, che cattura la varianza dell'indicatore non spiegata dal fattore latente.
+
+### Struttura delle Medie nel Modello CFA
+
+La struttura delle medie in un modello CFA può essere espressa attraverso la seguente formula:
+
+$$ 
+\text{media(variabile osservata)} = \Lambda \mu_{\text{lat}} + \tau,
+$$
+
+dove:
+
+- **$\Lambda$**: è la matrice dei carichi fattoriali, che collega i fattori latenti agli indicatori.
+- **$\mu_{\text{lat}}$**: è il vettore delle medie dei fattori latenti.
+- **$\tau$**: è il vettore delle intercette degli indicatori, che rappresenta le medie degli indicatori indipendentemente dai fattori latenti.
+
+### Interpretazione 
+
+- **Cosa rappresenta $\tau$ concretamente?**  
+  L'intercetta $\tau$ rappresenta il valore atteso di un indicatore quando il fattore latente associato ha un valore pari a zero. Per esempio, immagina un indicatore che misura la performance in un test. Se il fattore latente (ad esempio, "abilità generale") è zero, $\tau$ indica la media attesa della performance in quella condizione specifica.
+
+- **Perché $\tau$ è importante?**  
+  $\tau$ è fondamentale per interpretare il livello base dell'indicatore, consentendo di separare la varianza spiegata dai fattori latenti da quella attribuibile ad altre cause, come il livello medio dell'indicatore stesso. Questo è particolarmente utile per comprendere i punti di partenza dei partecipanti o i livelli medi degli indicatori in un contesto specifico.
+
+#### Esempio Intuitivo
+
+Supponiamo di analizzare i risultati di un test di matematica. Se il fattore latente rappresenta "abilità matematica" e il carico fattoriale $\lambda$ è elevato, ciò significa che i punteggi del test sono fortemente influenzati dall'abilità matematica. Tuttavia, $\tau$ fornisce un'informazione aggiuntiva: indica il punteggio medio nel test per chi ha un'abilità matematica pari a zero. 
+
+Se i dati sono stati centrati, l'intercetta $\tau$ rappresenta la performance media prevista per i partecipanti con un'abilità matematica media rispetto al gruppo di riferimento.
+
+#### Importanza di $\tau$ nei Modelli SEM
+
+L'intercetta $\tau$ assume particolare rilievo nei modelli SEM applicati a:
+
+- **Studi longitudinali**: Le variazioni di $\tau$ nel tempo possono indicare cambiamenti nei livelli medi degli indicatori, come miglioramenti o peggioramenti in una competenza specifica.
+- **Confronti tra gruppi**: Differenze significative nelle intercette tra gruppi possono evidenziare disuguaglianze nei livelli medi di un indicatore, fornendo informazioni utili per analisi comparative.
+
+In sintesi, l'intercetta $\tau$ è uno strumento chiave per comprendere e interpretare il comportamento degli indicatori nei modelli SEM, offrendo una visione chiara delle loro relazioni con i fattori latenti e delle differenze a livello di gruppo o temporale.
+
+### Utilizzo delle Medie nel Software `lavaan`
+
+Nel software `lavaan`, utilizzato per l'analisi SEM, è possibile stimare le intercette inserendo l'opzione `meanstructure = TRUE` nella sintassi del modello. Questo comando permette di includere automaticamente una costante "1" in tutte le equazioni del modello, facilitando così il calcolo delle intercette per le variabili endogene. È necessario fornire i dati originali o una matrice di covarianza, insieme alle medie di tutte le variabili interessate.
+
+## Un Esempio Pratico
+
+Utilizziamo il dataset `HolzingerSwineford1939` per costruire un modello di misurazione basato su tre costrutti latenti:
+
+- **Visual (visual)**: rappresenta abilità visive, misurate dagli indicatori `x1`, `x2` e `x3`.
+- **Textual (textual)**: rappresenta abilità testuali, misurate dagli indicatori `x4`, `x5` e `x6`.
+- **Speed (speed)**: rappresenta velocità di elaborazione, misurata dagli indicatori `x7`, `x8` e `x9`.
+
+Visualizziamo una panoramica del dataset:
+
+```{r}
+data(HolzingerSwineford1939)
+glimpse(HolzingerSwineford1939)
+```
+
+### Specifica del Modello
+
+Ogni costrutto è definito in relazione ai propri indicatori. Le varianze dei costrutti latenti sono fissate a 1 per garantirne la scalatura, mentre le loro medie sono fissate a 0.
+
+Ecco il modello specificato:
+
+```{r}
+hs_model <- "
+    visual =~ NA*x1 + x2 + x3
+    textual =~ NA*x4 + x5 + x6
+    speed =~ NA*x7 + x8 + x9
+
+    visual ~~ 1*visual
+    textual ~~ 1*textual
+    speed ~~ 1*speed
+"
+```
+
+### Stima del Modello
+
+Richiediamo la stima delle intercette degli indicatori impostando `meanstructure = TRUE`. Le intercette ($\tau$) rappresentano il valore medio atteso per ciascun indicatore quando il rispettivo fattore latente è pari a zero. Adattiamo il modello ai dati:
+
+```{r}
+fit <- cfa(hs_model,
+    data = HolzingerSwineford1939,
+    meanstructure = TRUE
+)
+```
+
+Esaminiamo un riepilogo dei risultati, inclusi i carichi fattoriali standardizzati:
+
+```{r}
+summary(fit, standardized = TRUE)
+```
+
+### Interpretazione dei Risultati
+
+**Carichi Fattoriali ($\lambda$)**
+
+I carichi fattoriali indicano quanto fortemente un indicatore è associato al costrutto latente. Ad esempio, per `visual`, il carico fattoriale di `x1` è 0.90, indicando una forte relazione tra il costrutto "Visual" e l'indicatore `x1`.
+
+**Intercette ($\tau$)**
+
+Le intercette rappresentano la media predetta degli indicatori quando il fattore latente associato è zero. Nel nostro modello, le medie dei costrutti latenti sono fissate a zero, quindi le intercette corrispondono alle medie predette degli indicatori.
+
+### Calcolo delle Medie Osservate e Predette
+
+Per comprendere meglio il ruolo delle intercette, calcoliamo le medie osservate e predette per gli indicatori `x1`, `x2` e `x3`.
+
+Estraiamo le intercette stimate dal modello:
+
+```{r}
+params <- parameterEstimates(fit)
+intercepts <- params$est[params$op == "~1"]
+intercepts
+```
+
+### Calcolo della Media Predetta
+
+La media predetta di ciascun indicatore in un modello CFA è fornita direttamente dalle intercette stimate ($\tau$). Per gli indicatori `x1`, `x2`, `x3`, estraiamo le intercette dal modello:
+
+```{r}
+mean_predicted_scores <- mean(intercepts[1:3])  # Intercette predette per x1, x2, x3
+mean_predicted_scores
+```
+
+### Calcolo della Media Osservata
+
+La media osservata per gli stessi indicatori si ottiene calcolando la media aritmetica dei loro punteggi effettivi, come segue:
+
+```{r}
+mean_observed_scores <- mean(
+  (HolzingerSwineford1939$x1 + HolzingerSwineford1939$x2 + HolzingerSwineford1939$x3) / 3
+)
+mean_observed_scores
+```
+
+Se il modello si adatta bene ai dati, le due medie dovrebbero essere molto vicine. Questo riflette l'adeguatezza del modello nel rappresentare i dati. In questo caso, i due valori coincidono o differiscono solo leggermente, confermando che il modello rappresenta fedelmente i dati osservati.
+
+In sommario, questo esempio illustra come i carichi fattoriali e le intercette nel modello CFA siano utilizzati per stimare le medie predette degli indicatori. L'allineamento tra medie osservate e predette riflette l'adeguatezza del modello nella rappresentazione dei dati.
+
+
+## Medie di Costrutti Latenti Non Zero
+
+Quando le medie dei costrutti latenti ($\mu_{\text{latente}}$) non sono fissate a zero, la media **predetta** di ciascun indicatore dipende sia dalle intercette ($\tau$) che dai carichi fattoriali ($\lambda$). In questo caso, l'equazione per la media predetta di un indicatore, ad esempio `x1`, è:
+
+$$ 
+\text{media predetta}(x1) = \mu_{\text{latente}} \cdot \lambda_{x1} + \tau_{x1},
+$$
+
+dove:
+
+- $\mu_{\text{latente}}$: è la media stimata del costrutto latente associato.
+- $\lambda_{x1}$: è il carico fattoriale dell'indicatore `x1`, che misura quanto fortemente il costrutto latente influenza l'indicatore.
+- $\tau_{x1}$: è l'intercetta stimata dell'indicatore `x1`.
+
+Questa relazione evidenzia che, quando $\mu_{\text{latente}} \neq 0$, la media degli indicatori riflette non solo la loro intercetta, ma anche il contributo del costrutto latente, modulato dai carichi fattoriali.
+
+
+## Modello con Medie dei Costrutti Latenti Non Zero
+
+Per esplorare questa configurazione, costruiamo un modello SEM in cui le medie dei costrutti latenti sono stimate liberamente. Per garantire l'identificabilità del modello, introduciamo due vincoli fondamentali:
+
+1. **Intercette degli indicatori marker fissate a zero**: Le variabili osservate `x1`, `x4` e `x7`, che sono gli indicatori marker per ciascun fattore, avranno intercette impostate a zero.
+2. **Una media latente fissata a zero**: La media del costrutto latente `visual` è fissata a zero come riferimento, mentre le medie di `textual` e `speed` sono stimate liberamente.
+
+### Specificazione del Modello
+
+Il modello viene specificatocome segue:
+
+```{r}
+hs_model <- "
+    # Definizione dei fattori latenti
+    visual =~ NA*x1 + x2 + x3
+    textual =~ NA*x4 + x5 + x6
+    speed =~ NA*x7 + x8 + x9
+
+    # Standardizzazione delle varianze latenti
+    visual ~~ 1*visual
+    textual ~~ 1*textual
+    speed ~~ 1*speed
+
+    # Vincoli sulle intercette degli indicatori marker
+    x1 ~ 0*1  # Intercetta di x1 fissata a zero
+    x4 ~ 0*1  # Intercetta di x4 fissata a zero
+    x7 ~ 0*1  # Intercetta di x7 fissata a zero
+
+    # Vincoli sulle medie latenti
+    visual ~ 0*1  # Media di visual fissata a zero
+    textual ~ 1   # Media di textual stimata liberamente
+    speed ~ 1     # Media di speed stimata liberamente
+"
+```
+
+### Interpretazione delle Medie Predette
+
+La caratteristica chiave di questo modello è che le medie predette degli indicatori sono una funzione di tre componenti:
+
+1. La media del costrutto latente ($\mu_{\text{latente}}$)
+2. Il carico fattoriale dell'indicatore ($\lambda$)
+3. L'intercetta dell'indicatore ($\tau$)
+
+Questa relazione è espressa dalla formula:
+
+$$
+\text{media predetta(indicatore)} = \mu_{\text{latente}} \cdot \lambda + \tau
+$$
+
+Per esempio:
+
+1. Per l'indicatore marker `x1` (fattore visual):
+   $$
+   \text{media predetta}(x1) = \mu_{\text{visual}} \cdot \lambda_{x1} + \tau_{x1} = 0 \cdot \lambda_{x1} + 0 = 0
+   $$
+
+2. Per l'indicatore marker `x4` (fattore textual):
+   $$
+   \text{media predetta}(x4) = \mu_{\text{textual}} \cdot \lambda_{x4} + \tau_{x4}
+   $$
+   dove $\mu_{\text{textual}}$ è stimato liberamente e $\tau_{x4} = 0$
+
+3. Per gli altri indicatori (es. x2, x3, x5, x6, x8, x9):
+   - Le intercette sono stimate liberamente
+   - Le medie predette includono sia il contributo della media latente che dell'intercetta
+
+Questa struttura delle medie ci permette di:
+
+- confrontare le medie dei costrutti latenti tra gruppi diversi;
+- valutare i cambiamenti longitudinali nei costrutti latenti;
+- interpretare le differenze nelle medie degli indicatori in termini dei loro componenti strutturali.
+
+### Adattamento del Modello
+
+Applichiamo il modello ai dati e esaminiamo i risultati:
+
+```{r}
+fit <- cfa(hs_model, data = HolzingerSwineford1939, meanstructure = TRUE)
+params <- parameterEstimates(fit)
+params
+```
+
+### Interpretazione dei Risultati
+
+1. **Medie Latenti ($\mu_{\text{latente}}$)**  
+   Le medie stimate per i costrutti `textual` e `speed` riflettono il loro contributo alle medie predette degli indicatori associati. Per `visual`, la media latente è fissata a zero per identificare il modello.
+
+2. **Media Predetta degli Indicatori**  
+   Per ciascun indicatore, la media predetta include sia l'intercetta (fissata a zero in questo esempio) sia il contributo del costrutto latente moltiplicato per il carico fattoriale.
+
+Ad esempio, per `x1`:
+
+$$
+\text{media predetta}(x1) = \mu_{\text{visual}} \cdot \lambda_{x1} + \tau_{x1} = 0 \cdot \lambda_{x1} + 0 = 0
+$$
+
+Mentre per un indicatore di `textual` (ad esempio `x4`), la media predetta sarà:
+
+$$
+\text{media predetta}(x4) = \mu_{\text{textual}} \cdot \lambda_{x4} + \tau_{x4}.
+$$
+
+### Calcolo delle Medie Predette
+
+Per calcolare le medie predette:
+
+```{r}
+# Funzione per calcolare le medie predette
+calc_predicted_means <- function(params) {
+  # Estrai i carichi fattoriali (lambda)
+  lambdas <- params[params$op == "=~", c("lhs", "rhs", "est")]
+  
+  # Estrai le medie latenti (mu)
+  means <- params[params$op == "~1" & params$lhs %in% c("visual", "textual", "speed"), 
+                 c("lhs", "est")]
+  
+  # Estrai le intercette (tau)
+  intercepts <- params[params$op == "~1" & params$lhs %in% paste0("x", 1:9), 
+                      c("lhs", "est")]
+  
+  # Calcola le medie predette
+  predicted_means <- data.frame(
+    indicator = character(),
+    predicted_mean = numeric(),
+    formula = character(),
+    stringsAsFactors = FALSE
+  )
+  
+  # Per ogni indicatore
+  for(i in 1:9) {
+    indicator <- paste0("x", i)
+    # Trova il fattore latente associato
+    factor <- lambdas$lhs[lambdas$rhs == indicator]
+    lambda <- lambdas$est[lambdas$rhs == indicator]
+    mu <- means$est[means$lhs == factor]
+    tau <- intercepts$est[intercepts$lhs == indicator]
+    
+    # Se l'intercetta non è presente nei risultati, assume 0
+    if(length(tau) == 0) tau <- 0
+    
+    # Calcola la media predetta
+    pred_mean <- mu * lambda + tau
+    
+    # Crea la formula come stringa
+    formula <- sprintf("%.3f * %.3f + %.3f = %.3f", 
+                      mu, lambda, tau, pred_mean)
+    
+    # Aggiungi alla tabella dei risultati
+    predicted_means <- rbind(predicted_means,
+                           data.frame(
+                             indicator = indicator,
+                             predicted_mean = pred_mean,
+                             formula = formula,
+                             stringsAsFactors = FALSE
+                           ))
+  }
+  
+  return(predicted_means)
+}
+```
+
+```{r}
+# Calcola e mostra le medie predette
+results <- calc_predicted_means(params)
+print(results)
+```
+
+Le medie latenti riflettono il contributo di ciascun costrutto alla media predetta dei rispettivi indicatori. La formula $\hat{Y} = \mu \cdot \lambda + \tau$ ci consente di distinguere i diversi contributi strutturali alle medie osservate.
+
+In sintesi, quando le medie dei costrutti latenti sono diverse da zero, il calcolo delle medie predette degli indicatori diventa più complesso, poiché include il contributo sia delle intercette sia dei carichi fattoriali ponderati dalle medie latenti. Questo approccio è particolarmente utile in contesti in cui è necessario confrontare medie tra gruppi o valutare cambiamenti longitudinali nei costrutti latenti.
+
+## Riflessioni Conclusive
+
+In questo capitolo abbiamo approfondito come l'inclusione delle medie nei modelli CFA consenta di ampliare la comprensione delle relazioni tra variabili, andando oltre le covarianze. Abbiamo evidenziato il ruolo cruciale delle intercette, che rappresentano il valore medio atteso degli indicatori quando i fattori latenti assumono valore zero, e come esse contribuiscano alla struttura delle medie predette degli indicatori. Infine, abbiamo esplorato l'utilità dei modelli con medie dei costrutti latenti non zero, che permettono di analizzare differenze tra gruppi e cambiamenti longitudinali, fornendo un quadro interpretativo più ricco e completo. Questo approccio è particolarmente rilevante per indagini che mirano a comprendere i livelli medi dei costrutti in relazione ai loro indicatori, sia in contesti trasversali che longitudinali.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
