@@ -1,0 +1,605 @@
+# Strategia Integrata per un'Analisi Fattoriale {#sec-cfa-strategy}
+
+::: callout-important
+## In questo capitolo imparerai a
+
+- il flusso di lavoro per eseguire l'analisi fattoriale in R.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Factor Analysis in Education Research Using R* del testo di @saqr2024learning.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, psych, semPlot, semTools, effectsize, devtools)
+```
+:::
+
+
+## Introduzione
+
+Questo capitolo propone un tutorial, ispirato al lavoro di @saqr2024learning, su come condurre un'**Analisi Fattoriale** utilizzando **R**. Secondo @saqr2024learning, la distinzione tra **Analisi Fattoriale Esplorativa (EFA)** e **Analisi Fattoriale Confermativa (CFA)** non è sempre netta. Nella pratica, entrambe le tecniche vengono spesso impiegate all'interno dello stesso studio per ottenere una comprensione più completa dei costrutti latenti.
+
+In questa sezione viene presentata una strategia integrata per combinare EFA e CFA, articolata in tre fasi che i ricercatori possono seguire quando i costrutti latenti giocano un ruolo centrale nello studio. Questo approccio è utile sia quando i costrutti latenti sono il fulcro dello strumento in esame, sia quando vengono utilizzati come **predittori** o **esiti** nell'analisi.
+
+### I tre passaggi principali:
+
+1. **Esplorazione della struttura fattoriale**  
+   Identificare il numero e la natura dei fattori sottostanti attraverso l’EFA, per ottenere un modello iniziale della struttura dei dati.
+
+2. **Costruzione e valutazione del modello fattoriale**  
+   Utilizzare la CFA per confermare il modello individuato nell’EFA, valutando l’adattamento del modello ai dati raccolti.
+
+3. **Valutazione della generalizzabilità**  
+   Verificare se la struttura fattoriale individuata è replicabile e stabile in campioni diversi o in contesti differenti.
+
+Questo capitolo assume che il ricercatore abbia già completato una fase preliminare di sviluppo dello strumento, concentrandosi su un costrutto di interesse. Inoltre, si presuppone che i dati utilizzati provengano da un **campione rappresentativo** della popolazione target.
+
+## Passo 1: Esplorazione della Struttura Fattoriale
+
+Dopo aver selezionato le variabili di interesse e raccolto i relativi dati, il ricercatore dovrebbe avviare il processo con un'**Analisi Fattoriale Esplorativa (EFA)**. Se si utilizza uno strumento già validato o si dispone di ipotesi solide sulla struttura fattoriale sottostante, l’obiettivo iniziale sarà verificare se il numero di fattori e le saturazioni degli indicatori sui fattori corrispondono ai risultati attesi. In questa fase, alcune domande fondamentali da porsi includono:  
+- *Le variabili ipotizzate come influenzate da uno stesso fattore caricano effettivamente su un unico fattore?*  
+- *Se si presuppone l’esistenza di un unico fattore sottostante, le variabili mostrano effettivamente carichi elevati su quel fattore?*
+
+Nel caso di strumenti nuovi, l’EFA serve a valutare se la struttura fattoriale emergente è interpretabile. In questo caso, è utile chiedersi:  
+- *Le variabili che saturano principalmente su un fattore condividono effettivamente un contenuto comune?*  
+- *Le variabili che saturano su fattori diversi riflettono differenze qualitative evidenti?*
+
+Ad esempio, in un test di matematica, potrebbe emergere che compiti di addizione, sottrazione, divisione e moltiplicazione saturano su quattro fattori distinti, interpretabili rispettivamente come abilità specifiche in ciascuna operazione. 
+
+In questa fase, potrebbero rendersi necessari aggiustamenti. Per esempio, variabili che non presentano carichi fattoriali sufficientemente elevati (ad esempio inferiori a 0.3) su alcuna dimensione potrebbero essere rimosse, seguite da una nuova esecuzione dell’EFA. Tuttavia, è fondamentale riflettere attentamente sulle ragioni di eventuali carichi fattoriali bassi, che potrebbero dipendere, ad esempio, da una formulazione poco chiara di un item. La rimozione di variabili dovrebbe essere guidata da una motivazione teorica solida, evitando decisioni arbitrarie.
+
+## Passo 2: Costruzione del Modello Fattoriale e Valutazione dell’Adattamento
+
+Dopo aver individuato un modello preliminare tramite l’EFA, il passo successivo consiste nel raffinare il modello e applicare la **CFA** per valutare quanto bene esso si adatti ai dati. Questo significa verificare se le covarianze previste dalla struttura fattoriale corrispondono alle covarianze osservate nel dataset. Nell’EFA, ogni variabile poteva caricare su tutti i fattori, ma con la CFA è possibile limitare i carichi fattoriali sulla base di considerazioni teoriche o empiriche.
+
+In questa fase, è importante restringere il modello eliminando i carichi trasversali (cross-loadings) che non sono coerenti con la teoria o che risultano vicini allo zero. I carichi molto bassi possono essere rimossi senza introdurre problemi, ma quelli più alti richiedono una valutazione attenta. Anche se inizialmente sembrano privi di significato, la loro presenza potrebbe suggerire informazioni inattese sui dati. Pertanto, prima di rimuoverli, è fondamentale verificarne la coerenza con la teoria o le ipotesi iniziali. Se, dopo un’analisi approfondita, questi carichi possono essere giustificati teoricamente, è preferibile mantenerli. In caso contrario, si possono eliminare, procedendo poi a valutare l’adattamento del modello modificato ai dati.
+
+Una volta definite le relazioni tra variabili e fattori, si costruisce il modello CFA e lo si applica al dataset. Se l’adattamento del modello non risulta soddisfacente, è possibile tornare ai risultati dell’EFA per valutare l’inclusione di ulteriori carichi fattoriali o altre modifiche. Tuttavia, qualsiasi aggiunta o cambiamento deve essere giustificato teoricamente, evitando adattamenti puramente empirici.
+
+## Passo 3: Valutazione della Generalizzabilità
+
+Dopo aver costruito e valutato il modello, l’obiettivo è verificarne la **generalizzabilità**. Questo passaggio è cruciale per garantire che il modello sia valido non solo per i dati attuali, ma anche per futuri studi sulla stessa popolazione. Tale verifica si effettua tramite la **validazione incrociata**, che consiste nel testare il modello su un dataset indipendente.
+
+Idealmente, sarebbe opportuno raccogliere un secondo dataset rappresentativo della stessa popolazione. Tuttavia, nella pratica, questa soluzione è spesso poco realizzabile a causa di limiti di tempo o risorse. Un’alternativa comune è dividere il dataset iniziale in due sottocampioni:  
+
+1. **Campione di sviluppo**: utilizzato per eseguire i Passi 1 (EFA) e 2 (CFA).  
+2. **Campione di validazione**: riservato al Passo 3 per testare la generalizzabilità.  
+
+Se il modello CFA si adatta bene anche al campione di validazione, si ottiene una maggiore certezza sulla sua applicabilità in futuri studi. Se invece emergono problemi di adattamento, occorre analizzarne le cause, verificare eventuali incoerenze tra teoria e dati, e aggiornare di conseguenza il modello e le ipotesi.
+
+### Considerazioni finali
+
+Questa strategia, articolata in tre passaggi, rappresenta un approccio sistematico per l’analisi fattoriale in studi che utilizzano strumenti per misurare costrutti latenti. Anche quando si utilizza uno strumento già validato su una popolazione analoga, seguire questa procedura rimane una scelta prudente per evitare possibili distorsioni nei risultati.
+
+## Analisi Fattoriale in R
+
+@saqr2024learning propone un tutorial dettagliato sui passaggi essenziali per condurre un’**Analisi Fattoriale Esplorativa (EFA)** e un’**Analisi Fattoriale Confermativa (CFA)** utilizzando **R**. Il tutorial affronta i seguenti aspetti chiave:  
+
+- verifica preliminare delle caratteristiche dei dati per valutarne l’idoneità all’EFA/CFA,  
+- scelta del numero di fattori,  
+- valutazione dell’adattamento globale e locale del modello,  
+- verifica della generalizzabilità del modello fattoriale finale.
+
+### Struttura del tutorial
+
+Il tutorial inizia con la preparazione dei dati: importazione, controllo della loro idoneità per l’analisi fattoriale e suddivisione del dataset per riservare un campione per la validazione incrociata. Successivamente, vengono descritti i passaggi per condurre:  
+
+1. un’EFA per definire una struttura fattoriale preliminare (Passo 1),  
+2. una CFA per affinare e validare il modello (Passo 2),  
+3. la verifica della generalizzabilità del modello tramite validazione incrociata (Passo 3).  
+
+### Preparazione
+
+Il dataset utilizzato da @saqr2024learning raccoglie dati di un’indagine sul burnout degli insegnanti in Indonesia, con 876 rispondenti. Le domande sono organizzate in cinque ambiti teorici:  
+
+1. **Concetto di Sé dell’Insegnante (TSC)**: 5 item,  
+2. **Efficacia dell’Insegnante (TE)**: 5 item,  
+3. **Esaurimento Emotivo (EE)**: 5 item,  
+4. **Depersonalizzazione (DP)**: 3 item,  
+5. **Riduzione del Senso di Realizzazione Personale (RPA)**: 7 item.  
+
+In totale, il dataset include **25 variabili**, ciascuna valutata su una scala Likert a 5 punti (da 1 = “mai” a 5 = “sempre”). Questa organizzazione rende il dataset ideale per un’analisi fattoriale, consentendo di esplorare la struttura latente delle dimensioni teoriche ipotizzate.
+
+Prima di procedere con l’EFA e la CFA, è necessario:  
+
+- verificare la **sufficienza del campione** (ad esempio, tramite il test di Kaiser-Meyer-Olkin, KMO),  
+- controllare la **normalità delle distribuzioni** o eventuali deviazioni,  
+- suddividere il dataset in due sottocampioni, uno per lo sviluppo del modello e uno per la validazione.
+
+Questo approccio organizzato fornisce una base solida per esplorare e confermare la struttura fattoriale, testandone infine la replicabilità su un campione indipendente. La chiarezza dei passaggi rende il tutorial applicabile a una vasta gamma di contesti di ricerca.
+
+Carichiamo le funzioni di supporto definite da @saqr2024learning:
+
+```{r}
+# Source 'sleasy' functions
+source(here::here("code", "sleasy.R"))
+```
+
+Importiamo i dati:
+
+```{r}
+dataset <- rio::import("https://github.com/lamethods/data/raw/main/4_teachersBurnout/2.%20Response.xlsx")
+```
+
+
+## I Dati Sono Adatti all'Analisi Fattoriale?
+
+Per condurre un’**Analisi Fattoriale Esplorativa (EFA)** o una **Analisi Fattoriale Confermativa (CFA)**, è fondamentale assicurarsi che i dati soddisfino determinati requisiti. Di seguito vengono descritti i principali aspetti da considerare.
+
+### Variabili continue o categoriche
+
+Idealmente, le variabili dovrebbero essere continue. Sebbene raramente le variabili siano perfettamente continue, è accettabile trattarle come tali se sono misurate su una scala con almeno cinque categorie di risposta e presentano una distribuzione ragionevolmente simmetrica. 
+
+Se le variabili sono categoriche (ad esempio, binarie o ordinali), è comunque possibile condurre un’analisi fattoriale utilizzando metodi di stima specifici per questo tipo di dati. Inoltre, tutte le variabili dovrebbero preferibilmente essere misurate sulla stessa scala. In caso contrario, oppure se le variabili presentano intervalli di punteggio molto diversi (ad esempio, alcune con valori da 1 a 5 e altre da 2 a 4), è opportuno trasformare le variabili per uniformare le scale prima dell’analisi.
+
+L’intervallo di ciascuna variabile può essere verificato con il comando seguente:
+
+```{r}
+describe(dataset)
+```
+
+Nel dataset in esame, le variabili sono misurate su scale Likert a 5 punti con intervalli simili, per cui possono essere trattate come continue senza ulteriori trasformazioni.
+
+### Dimensione del campione
+
+La dimensione del campione è un aspetto cruciale. Esistono diverse regole empiriche:
+- Una regola generale suggerisce un campione minimo di 200 osservazioni.
+- Per modelli semplici (pochi fattori, relazioni forti tra fattori e variabili), campioni più piccoli possono essere sufficienti. Per modelli complessi (molti fattori o relazioni più deboli), è necessario un campione più ampio.
+- Bentler e Chou raccomandano almeno 5 osservazioni per ogni parametro da stimare, mentre Jackson suggerisce almeno 10, preferibilmente 20 osservazioni per parametro.
+
+Nel dataset di esempio, con 25 variabili che si presume misurino 5 costrutti latenti, i parametri da stimare includono:  
+
+- **25 intercetti**,  
+- **25 varianze residue**,  
+- **125 carichi fattoriali** (5 fattori × 25 variabili).  
+
+In totale, si devono stimare 175 parametri. La dimensione del campione è verificabile con:
+
+```{r}
+nrow(dataset)
+```
+
+Con 876 osservazioni, il campione è sufficiente secondo Bentler e Chou (5 × 175 = 875) ma non soddisfa il criterio di Jackson per modelli più robusti. Pertanto, non è consigliabile suddividere il dataset per la validazione incrociata. Tuttavia, a scopo didattico, sarà mostrato come creare un campione di riserva.
+
+### Correlazioni tra variabili
+
+Un presupposto fondamentale per l’analisi fattoriale è che le variabili siano correlate. Questo può essere verificato tramite il **test di Bartlett**, che controlla se la matrice di correlazione è una matrice identità (cioè con elementi fuori diagonale pari a zero). L’ipotesi nulla del test afferma che le variabili non sono correlate. Se l’ipotesi viene rifiutata, è possibile procedere con l’analisi fattoriale. Il comando seguente verifica il p-value del test:
+
+```{r}
+var_names <- colnames(dataset)
+```
+
+```{r}
+(cortest.bartlett(
+    R = cor(dataset[, var_names]), 
+    n = nrow(dataset)
+)$p.value) < 0.05
+```
+
+Nel nostro esempio, il p-value è inferiore a 0,05, indicando che le variabili sono sufficientemente correlate.
+
+### Adeguatezza della varianza comune
+
+Un altro requisito è che le variabili condividano una quantità sufficiente di varianza comune. Questo può essere valutato tramite il **test di Kaiser-Meyer-Olkin (KMO)**, che misura la proporzione di varianza totale attribuibile a varianza comune. Secondo Kaiser, un valore KMO di almeno 0,8 è adeguato, mentre un valore di 0,9 o superiore è eccellente. Per calcolare il valore KMO, si utilizza:
+
+```{r}
+KMO(dataset)
+```
+
+Nel dataset in esame, il valore KMO è pari a 0.94, suggerendo un’eccellente adeguatezza per l’analisi fattoriale.
+
+### Normalità e dati mancanti
+
+Le distribuzioni delle variabili devono essere valutate per verificare la presenza di eventuali deviazioni dalla normalità. Sebbene l’analisi fattoriale possa gestire deviazioni moderate, in caso di non-normalità è necessario utilizzare metodi di stima robusti. La normalità può essere esaminata tramite istogrammi, come nel comando seguente:
+
+```{r}
+dataset |>
+    pivot_longer(2:ncol(dataset),
+        names_to = "Variable", values_to = "Score"
+    ) |>
+    ggplot(aes(x = Score)) +
+    geom_histogram(bins = 6) +
+    scale_x_continuous(
+        limits = c(0, 6), breaks = c(1, 2, 3, 4, 5)
+    ) +
+    facet_wrap("Variable", ncol = 6, scales = "free")
+```
+
+Inoltre, è necessario verificare la presenza di dati mancanti. La quantità di valori mancanti per variabile può essere calcolata con:
+
+```{r}
+colSums(is.na(dataset)) 
+```
+
+Se i dati mancanti sono presenti, è necessario adottare tecniche appropriate per gestirli, come l’imputazione o l’esclusione di osservazioni.
+
+Questi controlli preliminari garantiscono che i dati siano adeguati per l’analisi fattoriale e pongono le basi per ottenere risultati affidabili e interpretabili.
+
+## Separare un Campione di Riserva
+
+Dopo aver verificato che i dati siano adatti all'analisi fattoriale, è possibile considerare la creazione di un campione di riserva per valutare la **generalizzabilità** dei risultati. Tuttavia, questa decisione deve tenere conto della **dimensione del campione**. Come discusso in precedenza, la dimensione minima del campione deve essere almeno **5 volte il numero di parametri da stimare** (preferibilmente 10 o 20 volte per modelli più robusti). È importante non suddividere il dataset se il campione disponibile non è sufficientemente ampio da soddisfare i requisiti per entrambe le parti (campione di costruzione e campione di riserva), poiché ciò potrebbe compromettere la qualità del modello. In questi casi, la validazione del modello dovrebbe essere rimandata a studi futuri.
+
+È utile notare che il numero di parametri da stimare in un modello CFA è generalmente inferiore rispetto a un modello EFA. Pertanto, il campione di riserva può essere leggermente più piccolo rispetto a quello utilizzato per costruire il modello.
+
+### Considerazioni per il dataset di esempio
+
+Nel nostro esempio, il campione totale di **876 osservazioni** non è due volte la dimensione minima richiesta per un modello con **25 variabili** e **5 fattori latenti**. Tuttavia, a scopo illustrativo, procederemo comunque alla creazione di un campione di riserva. Dividiamo il dataset in due parti uguali:  
+- **438 osservazioni** per la costruzione del modello (campione di costruzione).  
+- **438 osservazioni** per la validazione (campione di riserva).  
+
+### Procedura per la suddivisione
+
+La suddivisione avviene in modo casuale attraverso i seguenti passaggi:
+
+1. **Impostazione del seed:**  
+   Il seed viene impostato con `set.seed()` per garantire che la divisione casuale sia replicabile. Questo è fondamentale per assicurare la coerenza dei risultati.
+
+2. **Creazione di un vettore di classificazione:**  
+   Si genera un vettore chiamato `ind`, contenente le etichette “model.building” e “holdout” ripetute 438 volte ciascuna, in ordine casuale. Ogni riga del dataset sarà quindi assegnata a uno dei due gruppi.
+
+3. **Divisione del dataset:**  
+   Utilizzando la funzione `split()`, il dataset viene suddiviso in due sottoinsiemi. Le righe vengono assegnate al campione di costruzione o al campione di riserva in base al valore corrispondente nel vettore `ind`.
+
+4. **Estrazione dei dataset finali:**  
+   I due nuovi dataset vengono estratti dalla lista creata con `split()` e memorizzati in due oggetti: `model.building` e `holdout`.
+
+Ecco il codice per eseguire la suddivisione:
+
+```{r}
+# Imposta il seed per garantire la replicabilità
+set.seed(19)
+
+# Crea il vettore di classificazione
+ind <- sample(
+    c(rep("model.building", 438), rep("holdout", 438))
+)
+
+# Suddividi il dataset in base al vettore di classificazione
+tmp <- split(dataset, ind)
+
+# Estrai i due dataset finali
+model.building <- tmp$model.building
+holdout <- tmp$holdout
+```
+
+### Spiegazione dei passaggi
+
+- **Impostazione del seed:**  
+   La funzione `set.seed(19)` garantisce che la suddivisione casuale produca sempre lo stesso risultato, facilitando il controllo e la replicabilità.
+
+- **Creazione del vettore `ind`:**  
+   Il vettore contiene un totale di 876 valori, con 438 assegnati a “model.building” e 438 a “holdout”, in ordine casuale. 
+
+- **Divisione del dataset:**  
+   La funzione `split()` divide il dataset in base ai valori di `ind`, creando una lista contenente due sottoinsiemi: uno per il modello di costruzione (`model.building`) e uno per il campione di riserva (`holdout`).
+
+- **Estrazione dei dataset finali:**  
+   I due sottoinsiemi vengono estratti dalla lista `tmp` e assegnati agli oggetti finali per l’analisi.
+
+
+## Passo 1: Esplorare la Struttura Fattoriale
+
+Il primo passo per esplorare la struttura fattoriale consiste nel determinare il numero di dimensioni sottostanti al costrutto di interesse. Questo processo può essere condotto utilizzando due approcci complementari: **l’analisi parallela** e il **criterio di informazione bayesiano (BIC)**.  
+
+- L’**analisi parallela** fornisce un intervallo plausibile per il numero di dimensioni.  
+- Il **BIC** aiuta a scegliere il numero specifico di fattori che meglio si adatta ai dati, tenendo conto della parsimonia del modello.
+
+### Analisi Parallela
+
+L’analisi parallela è un metodo basato su simulazioni che confronta la varianza spiegata da un certo numero di fattori nei dati reali con la varianza spiegata dagli stessi fattori in dataset simulati (privi di correlazioni tra le variabili, ma con la stessa dimensione e struttura).  
+
+Un fattore viene considerato rilevante se la varianza spiegata nei dati reali supera quella osservata nei dati simulati, indicando che non si tratta di una struttura casuale. Il numero di fattori selezionato è quello in cui i valori osservati nei dati reali superano quelli simulati, fino a un punto in cui non si osserva più questa differenza.  
+
+Dettagli tecnici sull’analisi parallela e la sua implementazione sono disponibili nella documentazione della funzione `fa.parallel()`.
+
+### Applicazione dell’Analisi Parallela
+
+Per applicare l’analisi parallela:  
+
+1. Specificare i dati di costruzione del modello e le colonne corrispondenti alle variabili di interesse.  
+2. Utilizzare l’argomento `fa = "fa"` per indicare che si desidera determinare il numero di fattori per l’analisi fattoriale (e non per l’analisi dei componenti principali).  
+
+Il risultato include:  
+
+- Un **messaggio** che suggerisce il numero plausibile di fattori sottostanti.
+- Un **grafico** che mostra come la varianza spiegata dai dati reali supera quella dei dati simulati fino a un certo numero di fattori.  
+
+Ad esempio, nel nostro caso, il messaggio indica che sono probabilmente presenti **cinque fattori**. Nel grafico, si osserva che oltre cinque fattori la varianza spiegata nei dati reali è inferiore a quella dei dati simulati.  
+
+L’analisi parallela è un approccio **data-driven**: il numero di fattori suggerito è influenzato dal campione analizzato e deve essere considerato un punto di partenza. L’intervallo plausibile può includere più o meno un fattore rispetto a quello suggerito.
+
+### Criterio di Informazione Bayesiano (BIC)
+
+Dopo aver determinato un intervallo plausibile di fattori con l’analisi parallela, è necessario scegliere il numero finale utilizzando: 
+
+1. **L’interpretabilità teorica**: valutare se le relazioni tra variabili e fattori sono coerenti con il costrutto di interesse.  
+2. **L’adattamento del modello**: confrontare i modelli con diversi numeri di fattori utilizzando il BIC.
+
+Il **BIC** bilancia l’adattamento del modello ai dati con la semplicità del modello, penalizzando la complessità (cioè l’aggiunta di parametri). Un valore BIC più basso indica un migliore equilibrio tra adattamento e parsimonia.  
+
+Ad esempio, se il modello con **cinque fattori** presenta il BIC più basso, ciò fornisce un supporto per questa soluzione. Tuttavia, la decisione finale dovrebbe integrare il valore del BIC con considerazioni teoriche.
+
+### Codice per l’analisi parallela
+
+Di seguito è riportato il comando per eseguire l’analisi parallela:
+
+```{r}
+# Determinare il numero di fattori con l'analisi parallela
+fa.parallel(x = model.building[, var_names], fa = "fa")
+```
+
+Questo comando genera un grafico e un output testuale, fornendo indicazioni sul numero plausibile di fattori.
+
+In sintesi, l’analisi parallela e il BIC sono strumenti potenti e complementari per esplorare la struttura fattoriale. L’analisi parallela suggerisce un intervallo plausibile, mentre il BIC aiuta a identificare la soluzione più parsimoniosa. Integrare questi metodi con considerazioni teoriche è fondamentale per ottenere un modello fattoriale solido e interpretabile.
+
+### Analisi Fattoriale Esplorativa
+
+L’**Analisi Fattoriale Esplorativa (EFA)** può essere eseguita utilizzando il comando seguente:
+
+```{r}
+EFA <- efa(
+    data = model.building[, var_names],
+    nfactors = 4:6,
+    rotation = "geomin", 
+    estimator = "MLR",
+    meanstructure = TRUE
+)
+```
+
+La funzione `efa()` appartiene al pacchetto `lavaan` e consente di esplorare il numero e la struttura dei fattori latenti nei dati. Di seguito vengono spiegati gli argomenti principali della funzione.
+
+### Descrizione degli Argomenti
+
+1. **`data`**  
+   Specifica il dataset su cui eseguire l’EFA. In questo caso, include solo le colonne delle variabili di interesse.
+
+2. **`nfactors`**  
+   Indica l’intervallo di numeri di fattori da considerare. Qui, i modelli sono stimati con 4, 5 e 6 fattori.
+
+3. **`rotation`**  
+   Questo argomento determina il metodo di rotazione utilizzato per identificare il modello.  
+   - La rotazione è necessaria nell’EFA, poiché, in assenza di restrizioni, esistono infinite soluzioni matematiche equivalenti. Ruotare la matrice dei carichi fattoriali consente di semplificare l’interpretazione, orientando gli assi dei fattori latenti.  
+   - In questo esempio, viene utilizzata la rotazione **geomin**, che permette ai fattori di essere correlati, una scelta realistica in contesti educativi e psicologici.
+
+4. **`estimator`**  
+   Specifica il metodo di stima.  
+   - Il valore predefinito è "ML" (massima verosimiglianza), ma qui viene utilizzato "MLR" (massima verosimiglianza robusta), che gestisce meglio eventuali violazioni della normalità nei dati.
+
+5. **Dati mancanti**  
+   - Se i dati contengono valori mancanti, è possibile utilizzare l’argomento `missing = "fiml"`, che applica il metodo **Full Information Maximum Likelihood (FIML)**. Questo approccio sfrutta tutte le informazioni disponibili ed è appropriato quando i dati mancanti sono MAR (*Missing At Random*).  
+
+6. **`meanstructure`**  
+   Quando impostato su `TRUE`, stima anche gli intercetti delle variabili osservate, oltre a varianze e covarianze. Se si utilizza `missing = "fiml"`, l’opzione `meanstructure` è automaticamente attivata.
+
+### Interpretazione dei Risultati
+
+Per identificare il modello migliore, è possibile ordinare i valori del **BIC** (Criterio di Informazione Bayesiano) in ordine crescente con il comando seguente:
+
+```{r}
+sort(fitMeasures(EFA)["bic", ]) 
+```
+
+L’output indica che il modello con **cinque fattori** è quello che ottiene il valore BIC più basso. Questo risultato è in linea sia con l’**analisi parallela** precedente sia con il numero di fattori atteso in base alla teoria (cinque fattori). Di conseguenza, il modello a cinque fattori è il più adatto per continuare l’analisi.
+
+### Estrarre i Carichi Fattoriali
+
+I carichi fattoriali per il modello a cinque fattori possono essere estratti con il comando seguente:
+
+```{r}
+EFA$nf5
+```
+
+L’output fornisce i carichi standardizzati, che possono essere interpretati come correlazioni tra le variabili osservate e i fattori latenti. Vengono mostrati solo i carichi assoluti superiori a 0.3. 
+
+- **Osservazioni sulla struttura fattoriale**  
+   I risultati indicano una struttura semplice, in cui ciascuna variabile carica su un solo fattore, ad eccezione della variabile **DE1**.  
+   - **DE1** presenta un **cross-loading**: un carico positivo sul fattore 4 (insieme alle altre variabili DE) e un carico negativo sul fattore 3 (insieme alle variabili EE).  
+   - A parte questa eccezione, le variabili TSC, TE, EE, DE e RPA caricano rispettivamente su un unico fattore, confermando la coerenza con il modello teorico.
+
+### Passaggi Successivi
+
+Il modello può ora essere affinato nella sezione CFA. Poiché la teoria non prevede il cross-loading di **DE1**, nel modello CFA verrà impostato a zero il carico di questa variabile sul fattore 3. Tuttavia, se il modello CFA non dovesse adattarsi bene, il ripristino di questo cross-loading sarà la prima modifica da considerare.
+
+Questa procedura consente di integrare i risultati dell’EFA con la teoria e di preparare il modello per la successiva conferma tramite l’analisi fattoriale confermativa.
+
+## Passo 2: Costruire il Modello Fattoriale e Valutare l'Adattamento
+
+Il primo passo per costruire il modello fattoriale è definirlo utilizzando la sintassi di `lavaan`. Nel modello seguente, vengono specificati i 5 fattori (**TSC**, **TE**, **EE**, **DE** e **RPA**) in base alle variabili osservate identificate dall’EFA. Si includono inoltre le correlazioni tra fattori, come indicato dalla teoria e dai risultati precedenti. Gli intercetti non sono esplicitamente definiti, ma possono essere stimati impostando l’argomento `meanstructure = TRUE`.
+
+```{r}
+CFA_model <- "
+    # Relazioni tra variabili osservate e fattori
+    TSC =~ TSC1 + TSC2 + TSC3 + TSC5
+    TE =~ TE1 + TE2 + TE3 + TE5
+    EE =~ EE1 + EE2 + EE3 + EE4
+    DE =~ DE1 + DE2 + DE3
+    RPA =~ RPA1 + RPA2 + RPA3 + RPA4
+    # Correlazioni tra fattori
+    TSC ~~ TE + EE + DE + RPA
+    TE ~~ EE + DE + RPA
+    EE ~~ DE + RPA
+    DE ~~ RPA
+"
+```
+
+Il modello viene stimato con il comando seguente:
+
+```{r}
+CFA <- cfa(
+    model = CFA_model, 
+    data = model.building[, var_names],
+    estimator = "MLR", 
+    std.lv = TRUE, 
+    meanstructure = TRUE
+)
+```
+
+- **`estimator = "MLR"`**: utilizza la massima verosimiglianza robusta, che gestisce eventuali deviazioni dalla normalità.
+- **`std.lv = TRUE`**: standardizza i fattori latenti, rendendo i carichi interpretabili come correlazioni.
+- **`meanstructure = TRUE`**: stima anche gli intercetti delle variabili osservate.
+
+L’adattamento del modello si valuta attraverso due livelli: **adattamento globale** e **adattamento locale**.
+
+### Adattamento Globale
+
+L’adattamento globale verifica quanto bene l’intero modello rappresenti i dati. Le principali misure da considerare sono:
+
+1. **Test Chi-quadro**: verifica se il modello riproduce perfettamente le relazioni osservate. È sensibile alla dimensione del campione e tende a rifiutare l’adattamento perfetto con campioni ampi.
+2. **Indice di adattamento comparativo (CFI)**: valuta l’adattamento relativo del modello rispetto a un modello nullo (senza correlazioni tra le variabili).
+3. **Errore quadratico medio di approssimazione (RMSEA)**: quantifica l’adattamento approssimativo, penalizzando la complessità del modello.
+4. **Residuo quadratico medio standardizzato (SRMR)**: rappresenta la discrepanza media tra la matrice di covarianza campionaria e quella del modello.
+
+**Linee guida per l’interpretazione**:  
+
+- **Chi-quadro**: non significativo è preferibile, ma può essere ignorato in campioni ampi.  
+- **CFI**: > 0.90 indica un buon adattamento; > 0.95 è eccellente.  
+- **RMSEA**: < 0.05 è ottimale; < 0.08 è accettabile.  
+- **SRMR**: < 0.08 è raccomandato.  
+
+Puoi calcolare queste misure con il comando:
+
+```{r}
+globalFit(CFA)
+```
+
+- Il test Chi-quadro rifiuta l’adattamento perfetto, ma le altre misure (CFI, RMSEA, SRMR) indicano un buon adattamento approssimativo.  
+- Poiché almeno tre misure supportano il modello, è possibile procedere senza ulteriori modifiche.
+
+### Adattamento Locale
+
+L’adattamento locale verifica se ogni parte del modello si adatta bene ai dati. Ciò si ottiene confrontando le differenze assolute tra la matrice di covarianza campionaria e quella implicata dal modello. Questo consente di identificare problemi specifici, come variabili mal rappresentate.
+
+Il comando seguente calcola queste differenze per ogni coppia di variabili:
+
+```{r}
+localFit(CFA) 
+```
+
+L’output mostra che la differenza massima tra le due matrici è 0,08, un valore trascurabile rispetto alla scala delle variabili. Non emergono problemi locali degni di nota.
+
+### Affinare il Modello
+
+Se fossero emersi problemi di adattamento locale, si potrebbero apportare modifiche mirate, come aggiungere covarianze tra variabili. Tuttavia, ogni modifica dovrebbe avere una solida giustificazione teorica. **Non introdurre parametri aggiuntivi solo per migliorare l’adattamento!**
+
+Nel caso specifico, poiché il modello attuale non presenta problemi di adattamento, si può proseguire con la valutazione dei carichi fattoriali.
+
+### Esaminare i Carichi Fattoriali
+
+I carichi fattoriali standardizzati possono essere visualizzati con il seguente comando:
+
+```{r}
+inspect(object = CFA, what = "std")$lambda
+```
+
+Questi valori indicano la forza delle relazioni tra variabili osservate e fattori latenti. Carichi superiori a 0.3 (in valore assoluto) sono generalmente considerati rilevanti.
+
+In sintesi, in questo passaggio, è stato costruito e valutato un modello CFA basato su teoria e risultati dell’EFA. Il modello presenta un buon adattamento sia globale sia locale, supportando la sua validità per rappresentare i dati. Il prossimo passo sarà interpretare e utilizzare i risultati del modello per ulteriori analisi o decisioni teoriche.
+
+## Passo 3: Valutare la Generalizzabilità
+
+L’ultimo passo consiste nel valutare la **generalizzabilità** del modello CFA definito nel Passo 2, adattandolo al campione di riserva. Questo consente di verificare se il modello è applicabile a dati indipendenti, aumentando la fiducia nella sua capacità di rappresentare in modo affidabile la struttura sottostante del costrutto in studi futuri e in campioni diversi.
+
+### Applicazione del Modello al Campione di Riserva
+
+Il modello viene applicato al campione di riserva utilizzando lo stesso codice del Passo 2, ma specificando il dataset di riserva nell’argomento `data`:
+
+```{r}
+CFA_holdout <- cfa(
+    model = CFA_model, 
+    data = holdout[, var_names],
+    estimator = "MLR", 
+    std.lv = TRUE, 
+    meanstructure = TRUE
+)
+```
+
+Come nel Passo 2, le misure di adattamento globale possono essere calcolate con:
+
+```{r}
+globalFit(CFA_holdout)
+```
+
+Dall’output, emerge che:  
+
+- Il **test Chi-quadro** rifiuta l’adattamento perfetto (un risultato atteso con campioni ampi).  
+- Le misure di adattamento approssimativo, come **CFI** e **SRMR**, confermano un buon adattamento anche nel campione di riserva.  
+- Le stime del **RMSEA** rientrano nei valori accettabili, indicando che il modello si adatta sufficientemente bene ai dati di riserva.
+
+Questi risultati sono comparabili a quelli ottenuti con il campione di costruzione, suggerendo che il modello presenta una generalizzabilità adeguata.
+
+Per verificare l’adattamento locale, utilizziamo il comando seguente, come fatto nel Passo 2:
+
+```{r}
+localFit(CFA_holdout) 
+```
+
+L’analisi mostra che la **differenza massima** tra la matrice di covarianza campionaria e quella del modello è pari a **0,09**, un valore contenuto rispetto alla scala delle variabili osservate. Questo suggerisce che l’adattamento locale è soddisfacente anche per il campione di riserva, in linea con quanto osservato nel campione di costruzione.
+
+### Confronto dei Carichi Fattoriali
+
+I carichi fattoriali del modello adattato al campione di riserva possono essere esaminati con:
+
+```{r}
+inspect(object = CFA_holdout, what = "std")$lambda 
+```
+
+I carichi fattoriali nel campione di riserva sono molto simili a quelli stimati nel campione di costruzione, confermando la stabilità della struttura fattoriale. Le differenze tra i due dataset sono trascurabili, supportando ulteriormente la generalizzabilità del modello.
+
+In conclusione, il modello CFA si adatta bene sia al campione di costruzione sia a quello di riserva, con risultati simili in termini di misure di adattamento globale e locale, oltre che di carichi fattoriali. Questo supporta la conclusione che il modello ha una buona generalizzabilità e rappresenta in modo affidabile la struttura sottostante del costrutto analizzato.
+
+Tuttavia, se il modello non si fosse adattato adeguatamente al campione di riserva (ad esempio, con misure di adattamento insufficienti o carichi fattoriali significativamente diversi), sarebbe stato necessario rivedere la struttura fattoriale. In tal caso:  
+
+1. Si dovrebbero identificare le aree problematiche, come indicato dall’analisi dell’adattamento locale.  
+2. Eventuali modifiche al modello dovrebbero essere teoricamente giustificate.
+3. Una nuova raccolta di dati sarebbe necessaria per ripetere i tre passaggi, suddividendo i dati in un nuovo campione di costruzione e uno di riserva.
+
+### Nota Pratica
+
+Questo esempio dimostra l’importanza di suddividere i dati per testare la generalizzabilità. Tuttavia, nella pratica, raccogliere nuovi dati può essere complesso. Pertanto, è fondamentale progettare lo studio con un campione sufficientemente grande da consentire una suddivisione adeguata fin dall’inizio.
+
+## Riflessioni conclusive
+
+L’**analisi fattoriale** rappresenta uno strumento cruciale per lo studio e la comprensione di costrutti non direttamente osservabili, offrendo una metodologia rigorosa per identificare e validare strutture latenti nei dati. Questo approccio è particolarmente utile in campi come la psicologia, le scienze sociali, e molte altre discipline in cui i fenomeni di interesse non possono essere misurati direttamente, ma devono essere dedotti attraverso indicatori osservabili.
+
+La versatilità dell’analisi fattoriale risiede nella sua capacità di sintetizzare informazioni complesse e di ridurre grandi insiemi di variabili a un numero limitato di fattori interpretabili. Questa caratteristica la rende particolarmente adatta per:
+
+- **Costruzione di strumenti di misura**: Identificare e validare le dimensioni sottostanti a questionari e scale psicometriche.
+- **Validazione teorica**: Verificare l’esistenza di costrutti teorici definiti o esplorarne di nuovi.
+- **Comparazione tra gruppi**: Esaminare se i costrutti latenti si manifestano allo stesso modo in diverse popolazioni o contesti.
+
+L’analisi fattoriale si estende oltre la semplice identificazione di fattori, includendo applicazioni avanzate come l’**analisi fattoriale multigruppo**, che consente di confrontare modelli in sottogruppi della popolazione, verificando l’invarianza di misura. Questo aspetto, fondamentale per garantire la comparabilità delle misurazioni, sarà discusso nel dettaglio nel capitolo successivo.
+
+Nonostante i suoi punti di forza, l’analisi fattoriale presenta alcune sfide che richiedono attenzione:
+
+1. **Scelta del metodo appropriato**: Decidere tra EFA e CFA dipende dal livello di conoscenza teorica del costrutto.
+2. **Adeguatezza dei dati**: La qualità dell’analisi dipende dalla dimensione del campione, dalla normalità dei dati e dalla presenza di correlazioni sufficienti tra le variabili.
+3. **Interpretazione dei fattori**: Sebbene i carichi fattoriali forniscano indicazioni sulla struttura latente, l’interpretazione richiede una solida base teorica e non deve essere puramente data-driven.
+4. **Validazione incrociata**: È essenziale testare la generalizzabilità del modello su campioni indipendenti per evitare di sovradattare il modello ai dati specifici.
+
+Questo capitolo ha introdotto i concetti fondamentali dell’analisi fattoriale con l’obiettivo di stimolare interesse e fornire le basi per un’applicazione autonoma. Tuttavia, per sfruttare appieno il potenziale di questa metodologia, si suggerisce di approfondire:
+
+- **Metodi avanzati di rotazione**: Come la rotazione obliqua o l’approccio procrustes per l’allineamento delle soluzioni.
+- **Analisi fattoriale esplorativa a livello bayesiano**: Un’alternativa moderna che incorpora incertezze nei modelli.
+- **Modelli di equazioni strutturali**: L’analisi fattoriale rappresenta il nucleo di questi modelli più complessi, che permettono di integrare relazioni causali tra fattori.
+
+In conclusione, l’analisi fattoriale non si limita a essere un semplice metodo statistico, ma rappresenta un collegamento fondamentale tra la teoria e i dati, indispensabile per comprendere e validare costrutti complessi. Questo capitolo, pur introducendo solo i concetti di base, offre una solida piattaforma per approfondire le numerose applicazioni e potenzialità del metodo. 
+
+Un tema cruciale, che sarà approfondito in un capitolo successivo, riguarda l’**analisi fattoriale multigruppo**. Questo approccio consente di esaminare l’**invarianza di misura**, un requisito essenziale per garantire che gli strumenti di misura siano equi e validi in contesti e gruppi diversi. Tale analisi sarà trattata in seguito all’interno del più ampio framework dei modelli di equazioni strutturali (SEM).
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+

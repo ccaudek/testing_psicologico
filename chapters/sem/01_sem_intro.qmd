@@ -1,0 +1,875 @@
+# Introduzione ai Modelli SEM {#sec-sem-intro}
+
+::: callout-important
+## In questo capitolo imparerai a
+
+- comprendere le basi dei Modelli di Equazioni Strutturali (SEM) e le loro componenti principali;
+- distinguere tra variabili osservate e latenti e il loro ruolo nei SEM;
+- interpretare la struttura di covarianza e la struttura delle medie nei modelli SEM; 
+- utilizzare il software `lavaan` per specificare, stimare e valutare un modello SEM;
+- confrontare l'approccio SEM con tecniche tradizionali, come la regressione multipla e l'analisi fattoriale.  
+
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Structural Equation Modeling* del testo di @petersen2024principles.
+- Leggere il capitolo *Structural Equation Modeling with R for
+Education Scientists* del testo di @saqr2024learning.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaanExtra, psych, tidyr, mvnormalTest, semPlot, DiagrammeRsvg, rsvg, effectsize)
+```
+:::
+
+
+## Introduzione
+
+La ricerca in psicologia si basa sull'indagine di costrutti teorici che, essendo non direttamente osservabili, possono essere studiati solo in modo indiretto attraverso le risposte dei partecipanti a indicatori osservabili (ad esempio, le risposte a item di un questionario). I capitoli precedenti sull'analisi fattoriale hanno illustrato come valutare la struttura fattoriale di questi costrutti latenti, identificando quali item siano buoni indicatori per misurare tali costrutti. Questo processo è fondamentale per sviluppare strumenti validi e affidabili volti a quantificare i costrutti latenti che caratterizzano la ricerca psicologica. Tuttavia, una buona misurazione non rappresenta quasi mai il fine ultimo: i ricercatori desiderano solitamente esplorare le relazioni tra costrutti, confrontare differenze medie o rispondere a domande del tipo: *“La self-compassion è un fattore protettivo contro il burnout?”*.  
+
+Quando i ricercatori dispongono di sole variabili osservate come predittori e outcome, e desiderano esaminare gli effetti di uno o più predittori su un singolo outcome, possono utilizzare metodi di analisi familiari, come la regressione multipla. Tuttavia, se le domande di ricerca implicano costrutti latenti o richiedono di testare sistemi complessi di relazioni tra variabili, è necessario ricorrere a tecniche di analisi più flessibili in grado di modellare simultaneamente relazioni tra variabili osservate e latenti: questo è il campo dei Modelli di Equazioni Strutturali (SEM, *Structural Equation Modeling*).
+
+Alla base dei SEM si trova una combinazione di analisi fattoriale e analisi dei percorsi (*path analysis*). L'analisi dei percorsi può essere vista come un'estensione della regressione multipla, poiché consente di stimare e testare effetti diretti tra variabili. Tuttavia, a differenza della regressione multipla, che si concentra sugli effetti diretti di uno o più predittori su un unico outcome, l'analisi dei percorsi consente di analizzare sia effetti diretti sia indiretti tra interi insiemi di variabili predittive e di outcome in modo simultaneo. Questo approccio permette a una variabile di fungere contemporaneamente da predittore e da outcome: una variabile può essere prevista da una o più altre variabili, mentre a sua volta funge da predittore per altre variabili. In altre parole, l'analisi dei percorsi offre la possibilità di costruire modelli complessi, purché tutte le variabili siano osservate.
+
+L'inclusione di variabili latenti richiede però di andare oltre l'analisi dei percorsi tradizionale. Grazie al lavoro pionieristico di Jöreskog e Van Thillo, è stato possibile integrare variabili latenti nei modelli di percorsi, dando vita a quella che oggi conosciamo come SEM. Questo approccio è stato reso progressivamente più accessibile da software sempre più intuitivi, contribuendo alla diffusione dei SEM nella psicologia e nelle scienze sociali. 
+
+### Struttura e Obiettivi dei SEM
+
+Un modello SEM tipico si compone di due parti principali:  
+
+1. **La parte di misurazione**, che collega i costrutti latenti a un insieme di variabili osservate o indicatori.  
+2. **La parte strutturale**, che modella le relazioni ipotizzate tra i costrutti latenti.  
+
+L'obiettivo principale dei SEM è testare ipotesi teoriche specifiche tramite modelli che rappresentano le previsioni di tali ipotesi, utilizzando costrutti misurati attraverso variabili osservabili appropriate. I SEM fungono così da ponte tra teoria e osservazione, consentendo di tradurre concetti astratti in entità misurabili e di analizzarne le relazioni in modo sistematico e coerente con la teoria.
+
+### Considerazioni Critiche sull'Uso dei SEM
+
+Nonostante la loro potenza, i SEM richiedono un uso critico e consapevole. Ogni modello statistico è una semplificazione della realtà, come sottolineato dal celebre aforisma: *“Tutti i modelli sono sbagliati, ma alcuni sono utili”*. Questo implica che un buon adattamento ai dati non garantisce una rappresentazione accurata della realtà. Modelli intrinsecamente imprecisi possono adattarsi bene ai dati, portando a conclusioni errate. Pertanto, la scelta dei modelli non deve essere un semplice esercizio statistico, ma un processo orientato allo sviluppo e al raffinamento di teorie valide. La revisione critica dei modelli, basata su evidenze empiriche e solidi principi teorici, è essenziale per un progresso scientifico affidabile.
+
+## Modelli di Regressione e Introduzione ai SEM  
+
+In questo capitolo, i Modelli di Equazioni Strutturali (SEM) vengono introdotti partendo dal caso più semplice: il modello di regressione multipla, reinterpretato e rappresentato all'interno di un framework SEM. L'obiettivo è fornire un ripasso rigoroso del modello di regressione lineare, evidenziando come possa essere formalizzato e implementato come un caso particolare di un modello SEM. Questa rappresentazione permette di estendere il concetto di regressione multipla a modelli più complessi che includono variabili latenti e relazioni strutturali.  
+
+Utilizzeremo dati empirici per illustrare l'approccio, focalizzandoci sulla *Self-Sompassion Scale* e sulle tre sottoscale del DASS-21: *ansia*, *stress* e *depressione*. Il campione analizzato comprende 526 studenti universitari iscritti a corsi di psicologia.  
+
+Le sottoscale del DASS-21 rappresentano variabili osservate che misurano concetti teorici distinti ma correlati. L'obiettivo è esplorare come il punteggio totale della Self-Compassion possa essere predetto dalle tre sottoscale del DASS-21 utilizzando un approccio di regressione multipla. Successivamente, questo modello sarà riformulato e stimato come un caso specifico di SEM.  
+
+L'implementazione in `R` mediante il pacchetto `lavaan` consentirà di confrontare i risultati della regressione tradizionale con quelli ottenuti dalla rappresentazione SEM, illustrando i vantaggi di quest'ultimo approccio, come la maggiore flessibilità e la possibilità di incorporare errori di misura nelle variabili osservate.  
+
+### Preliminari
+
+Importiamo i dati:
+
+```{r}
+dat <- read.csv(
+    here::here("data", "dass_rosenberg_scs.csv"),
+    header = TRUE
+)
+dat |>
+    head()
+```
+
+```{r}
+dim(dat)
+```
+
+Selezioniamo le variabili di interesse:
+
+```{r}
+d_mr <- dat |>
+    dplyr::select(stress, anxiety, depression, scs_ts)
+
+```
+
+Esaminiamo i diagrammi di dispersione tra le varie misure per verificare che la relazione tra le variabili sia lineare.
+
+```{r}
+pairs(d_mr)
+```
+
+Convertiamo i dati in formato matriciale:
+
+```{r}
+y <- d_mr$scs_ts |> as.matrix()
+dim(y)
+```
+
+## Modello di Regressione Lineare Multipla
+
+Il modello generale di regressione lineare multipla (MLR) può essere espresso attraverso la seguente equazione:
+
+$$
+y_i = \beta_0 + \beta_1 x_{1i} + \cdots + \beta_p x_{pi} + \epsilon_i,
+$$
+
+dove: 
+
+- $i = 1, \ldots, N$ identifica l'$i$-esima osservazione,  
+- $\beta_0$ è l'intercetta del modello,  
+- $\beta_1, \ldots, \beta_p$ sono i coefficienti di regressione associati alle variabili indipendenti,  
+- $\epsilon_i$ è il termine di errore per l'$i$-esima osservazione,  
+- Si assume che $\epsilon_i$ sia indipendente dalle variabili esplicative $x_{1i}, \ldots, x_{pi}$ e distribuito con media zero e varianza costante $\sigma^2$.  
+
+In questa formulazione, $y_i$ rappresenta il valore della variabile dipendente per l'$i$-esima osservazione, mentre i coefficienti $\beta$ quantificano l'effetto delle variabili indipendenti $x_{1i}, \ldots, x_{pi}$ su $y_i$. Il termine di errore $\epsilon_i$ cattura la varianza non spiegata dal modello lineare. Questa struttura consente di modellare relazioni lineari tra una variabile dipendente e più variabili indipendenti, fornendo una base per effettuare inferenze sui parametri $\beta$.
+
+### Forma Matriciale del Modello
+
+Il modello MLR può essere rappresentato in forma matriciale come:
+
+$$
+\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon},
+$$
+
+dove:  
+
+- $\mathbf{y}$ è un vettore $N \times 1$ contenente i valori osservati della variabile dipendente,  
+- $\mathbf{X}$ è una matrice di progettazione $N \times (p+1)$ che include le $p$ variabili indipendenti e una colonna di uni per l'intercetta,  
+- $\boldsymbol{\beta}$ è un vettore $(p+1) \times 1$ dei coefficienti di regressione (inclusa l'intercetta),  
+- $\boldsymbol{\epsilon}$ è un vettore $N \times 1$ che rappresenta i termini di errore.  
+
+Le componenti del modello sono definite come segue:
+
+$$
+\mathbf{y} = 
+\begin{pmatrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_N
+\end{pmatrix}, \quad
+\boldsymbol{\epsilon} = 
+\begin{pmatrix}
+\epsilon_1 \\
+\epsilon_2 \\
+\vdots \\
+\epsilon_N
+\end{pmatrix}, \quad
+\mathbf{X} = 
+\begin{pmatrix}
+1 & x_{11} & \cdots & x_{p1} \\
+1 & x_{12} & \cdots & x_{p2} \\
+\vdots & \vdots & \ddots & \vdots \\
+1 & x_{1N} & \cdots & x_{pN}
+\end{pmatrix}.
+$$
+
+Ogni riga della matrice $\mathbf{X}$ rappresenta un'osservazione e include i valori delle variabili indipendenti per quella osservazione, oltre a un uno per l'intercetta.
+
+### Metodo dei Minimi Quadrati
+
+Il metodo dei minimi quadrati (*Least Squares Estimation*, LSE) mira a stimare i parametri $\boldsymbol{\beta}$ minimizzando la somma dei quadrati degli errori (SSE), definita come:
+
+$$
+\text{SSE} = \boldsymbol{\epsilon}'\boldsymbol{\epsilon} = (\mathbf{y} - \mathbf{X}\boldsymbol{\beta})'(\mathbf{y} - \mathbf{X}\boldsymbol{\beta}).
+$$
+
+Espandendo questa espressione:
+
+$$
+\text{SSE} = \mathbf{y}'\mathbf{y} - 2\boldsymbol{\beta}'\mathbf{X}'\mathbf{y} + \boldsymbol{\beta}'\mathbf{X}'\mathbf{X}\boldsymbol{\beta}.
+$$
+
+Minimizzando la SSE rispetto a $\boldsymbol{\beta}$ e ponendo la derivata prima pari a zero, si ottiene il sistema normale:
+
+$$
+\mathbf{X}'\mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{X}'\mathbf{y}.
+$$
+
+Se la matrice $\mathbf{X}'\mathbf{X}$ è invertibile, la soluzione per i coefficienti stimati è:
+
+$$
+\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y}.
+$$
+
+Questa soluzione fornisce le stime dei coefficienti di regressione che minimizzano la discrepanza tra i valori osservati $\mathbf{y}$ e quelli predetti $\mathbf{X}\hat{\boldsymbol{\beta}}$ dal modello. In tal modo, si ottengono le migliori stime lineari e non distorte dei parametri, sotto le ipotesi classiche di regressione.
+
+
+## Regressione Multipla in R
+
+Applichiamo il modello di regressione lineare multipla (MLR) ai dati disponibili, utilizzando sia la formulazione matriciale sia le funzioni predefinite di R. Come esempio, analizziamo le relazioni tra depressione, ansia, stress e una variabile dipendente (*scs_ts*) nei dati.
+
+### Preparazione dei Dati
+
+Selezioniamo le variabili di interesse dal dataset:
+
+```{r}
+dass <- d_mr |>
+    dplyr::select(depression, anxiety, stress)
+```
+
+Creiamo la matrice di progettazione $\mathbf{X}$, includendo una colonna di uni per l'intercetta:
+
+```{r}
+X <- model.matrix(~ depression + anxiety + stress, data = dass)
+head(X)
+```
+
+### Stima dei Coefficienti con la Formula Matriciale
+
+Calcoliamo i coefficienti $\boldsymbol{\beta}$ utilizzando la formula dei minimi quadrati:
+
+$$
+\hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y}.
+$$
+
+In R, il calcolo viene effettuato come segue:
+
+```{r}
+y <- d_mr$scs_ts
+beta <- solve(t(X) %*% X) %*% t(X) %*% y
+beta
+```
+
+### Verifica dei Risultati con `lm()`
+
+Confrontiamo i risultati ottenuti con la funzione `lm()`:
+
+```{r}
+fm <- lm(scs_ts ~ depression + anxiety + stress, data = d_mr)
+coef(fm) 
+```
+
+I coefficienti stimati con il metodo matriciale e quelli calcolati da `lm()` devono coincidere.
+
+### Valori Predetti e Residui
+
+Calcoliamo i valori predetti $\hat{y}$ utilizzando i coefficienti stimati:
+
+```{r}
+yhat <- X %*% beta
+cor(yhat, fm$fitted.values) 
+```
+
+Calcoliamo i residui $e = \mathbf{y} - \hat{\mathbf{y}}$:
+
+```{r}
+e <- d_mr$scs_ts - yhat
+cor(e, fm$residuals) 
+```
+
+### Somma dei Quadrati dei Residui
+
+La somma dei quadrati dei residui (RSS) è definita come:
+
+$$
+\text{RSS} = \mathbf{e}'\mathbf{e}.
+$$
+
+In R:
+
+```{r}
+RSS <- t(e) %*% e
+RSS 
+```
+
+### Stima della Varianza dei Residui
+
+La stima della varianza dei residui è data da:
+
+$$
+\hat{\sigma}^2 = \frac{\text{RSS}}{N - (p+1)},
+$$
+
+dove $N$ è il numero di osservazioni e $p+1$ è il numero di parametri stimati (inclusa l'intercetta):
+
+```{r}
+var_e <- RSS / (length(y) - dim(X)[2])
+var_e 
+```
+
+### Errore Standard della Regressione
+
+L'errore standard della regressione, $\hat{\sigma}$, è la radice quadrata della varianza dei residui:
+
+```{r}
+sqrt(var_e)
+```
+
+Verifichiamo questi risultati con il sommario del modello `lm()`:
+
+```{r}
+summary(fm)
+```
+
+### Coefficiente di Determinazione $R^2$
+
+Il coefficiente di determinazione $R^2$ misura la proporzione della varianza spiegata dal modello rispetto alla varianza totale:
+
+$$
+R^2 = \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2}.
+$$
+
+In R, calcoliamo $R^2$ come segue:
+
+```{r}
+R2 <- (sum((yhat - mean(y))^2)) / (sum((y - mean(y))^2)) 
+R2 
+```
+
+In conclusione, questo esempio dimostra come implementare un modello di regressione multipla sia utilizzando la formulazione matriciale sia ricorrendo a funzioni predefinite di R. Il confronto tra i due approcci evidenzia la coerenza dei risultati e offre un'utile comprensione del funzionamento interno dei metodi di regressione.
+
+## Modello di Percorso
+
+Passiamo ora al cuore di questo capitolo: la rappresentazione del modello di regressione multipla come un caso speciale di Modello di Equazioni Strutturali (SEM). In precedenza, il modello di regressione è stato descritto nei termini di un modello statistico stimato mediante il **metodo della massima verosimiglianza** (ML). Questo metodo, sotto l'ipotesi di normalità multivariata, coincide con il **metodo dei minimi quadrati ordinari** (OLS). Tuttavia, nei modelli SEM, le relazioni tra le variabili possono essere più complesse rispetto a quelle di un modello di regressione multipla. Di conseguenza, non esistono formule analitiche esplicite per stimare i coefficienti del modello.
+
+### Stima nei Modelli SEM 
+
+Nei modelli di equazioni strutturali (SEM), la stima dei parametri non avviene attraverso l'applicazione diretta di formule analitiche (come abbiamo visto in precedenza), ma si basa su un processo di ottimizzazione numerica iterativa. È importante comprendere che, quando parliamo di massima verosimiglianza (ML) o minimi quadrati generalizzati (GLS), non ci riferiamo a soluzioni analitiche chiuse, ma a funzioni obiettivo che l'algoritmo cerca di ottimizzare.
+
+Il processo funziona così:
+
+1. Si parte da valori iniziali dei parametri (spesso basati su stime preliminari).
+2. L'algoritmo calcola la discrepanza tra la matrice di covarianza osservata (S) e quella predetta dal modello (Σ) con i parametri correnti.
+3. Basandosi su questa discrepanza, l'algoritmo aggiusta i parametri in una direzione che dovrebbe ridurre la differenza.
+4. Si ripetono i passi 2 e 3 finché la discrepanza non può essere ulteriormente ridotta in modo significativo.
+
+La funzione di discrepanza (o funzione di costo) può essere basata su diversi criteri, come la verosimiglianza o la somma dei quadrati delle differenze, ma in tutti i casi l'obiettivo è trovare i valori dei parametri che la minimizzano attraverso successive approssimazioni. Non esiste una formula diretta per trovare questi valori - l'algoritmo "esplora" iterativamente lo spazio dei parametri cercando il punto di minimo della funzione di costo.
+
+Questa natura iterativa del processo di stima ha importanti implicazioni pratiche:
+
+- L'algoritmo potrebbe non convergere a una soluzione.
+- Potrebbe convergere a un minimo locale invece che globale.
+- Il tempo di calcolo aumenta con la complessità del modello.
+- La scelta dei valori iniziali può influenzare il risultato finale.
+
+La differenza fondamentale rispetto a metodi analitici diretti (come la regressione lineare semplice) è che non esiste una formula chiusa per calcolare i parametri ottimali, ma si procede per successive approssimazioni guidate dalla riduzione di una funzione di costo.
+
+### Rappresentazione di un Modello di Percorso con `lavaan`
+
+Per illustrare l'equivalenza tra un modello di regressione multipla e un SEM, riformuliamo il modello di regressione come un **modello di percorso** utilizzando la sintassi del pacchetto `lavaan` in R.
+
+Definiamo il modello:
+
+```{r}
+mod_mr <- "
+  scs_ts ~ anxiety + depression + stress
+"
+```
+
+In questo caso:  
+
+- `scs_ts` rappresenta la variabile dipendente (ad esempio, una misura di self-compassion),  
+- `anxiety`, `depression`, e `stress` sono le variabili predittive.  
+
+Adattiamo il modello ai dati disponibili:
+
+```{r}
+fit_mr <- lavaan::sem(mod_mr, d_mr)
+```
+
+Il comando `lavaan::sem()` specifica che vogliamo stimare il modello utilizzando l'approccio SEM.
+
+Esaminiamo i parametri stimati:
+
+```{r}
+parameterEstimates(fit_mr) 
+```
+
+I parametri stimati includono:  
+
+1. I **coefficienti di regressione** che rappresentano le relazioni tra la variabile dipendente e i predittori.  
+2. L'**errore standard** associato a ciascun parametro stimato.  
+3. Il **valore p** (che può essere ignorato in un'analisi bayesiana o interpretato con cautela).  
+
+### Confronto con il Modello di Regressione Multipla
+
+I parametri stimati da `lavaan` risultano praticamente identici a quelli ottenuti con il metodo della massima verosimiglianza per il modello di regressione multipla. Questo è coerente con il fatto che il modello di regressione multipla è un caso particolare di SEM in cui tutte le variabili sono osservate e non vi sono variabili latenti o relazioni complesse.
+
+In conclusione, rappresentare un modello di regressione multipla come un modello di percorso SEM evidenzia l'equivalenza metodologica tra i due approcci nei casi più semplici. Tuttavia, l'approccio SEM offre maggiore flessibilità, permettendo di includere variabili latenti, relazioni indirette, e modelli più complessi, che non possono essere gestiti con il semplice framework della regressione multipla. Questa flessibilità rende SEM uno strumento indispensabile per analisi avanzate in psicologia e scienze sociali.
+
+## Modelli SEM e Scomposizione della Covarianza
+
+### Principio Fondamentale
+
+I modelli SEM mirano a spiegare le covarianze osservate nei dati attraverso una rete di relazioni causali dirette e indirette tra variabili. Questa rete è rappresentata da coefficienti di percorso che, opportunamente combinati, permettono di ricostruire la struttura di covarianza dei dati osservati.
+
+### Esempio Pratico
+
+Prendiamo come esempio la relazione tra self-compassion (misurata dal punteggio totale) e ansia (misurata dal DASS-21). La covarianza osservata tra queste due variabili può essere scomposta in diversi percorsi causali:
+
+1. **Effetto Diretto**: 
+   - Il coefficiente che rappresenta l'influenza diretta dell'ansia sulla self-compassion
+
+2. **Effetti Indiretti**:
+   - Via depressione: l'ansia è correlata con la depressione, che a sua volta influenza la self-compassion
+   - Via stress: l'ansia è correlata con lo stress, che a sua volta influenza la self-compassion
+
+### Calcolo della Covarianza Predetta
+
+La covarianza totale tra ansia e self-compassion viene calcolata combinando questi percorsi attraverso la seguente formula:
+
+```r
+Covarianza_Predetta = 
+    (Effetto_Diretto × Varianza_Ansia) +
+    (Coefficiente_Depressione × Covarianza_Ansia_Depressione) +
+    (Coefficiente_Stress × Covarianza_Ansia_Stress)
+```
+
+Nel nostro modello specifico:
+
+```{r}
+# Coefficienti di percorso
+beta_anxiety_scs_ts <- 1.0493140    # Effetto diretto ansia → self-compassion
+beta_depression_scs_ts <- -1.4841573 # Effetto diretto depressione → self-compassion
+beta_stress_scs_ts <- -0.9733368    # Effetto diretto stress → self-compassion
+
+# Covarianze tra predittori
+cov_anxiety_depression <- 24.5464225
+cov_anxiety_stress <- 24.5381096
+cov_depression_stress <- 25.6615608
+
+# Varianze dei predittori
+var_anxiety <- 32.0817418
+var_depression <- 31.4182365
+var_stress <- 29.7137880
+
+# Calcolo della covarianza predetta
+predicted_cov_anxiety_scs_ts <- 
+    beta_anxiety_scs_ts * var_anxiety +
+    beta_depression_scs_ts * cov_anxiety_depression +
+    beta_stress_scs_ts * cov_anxiety_stress
+
+predicted_cov_anxiety_scs_ts
+```
+
+### Verifica del Modello
+
+La bontà del modello può essere verificata confrontando la covarianza predetta con quella osservata nei dati:
+
+```{r}
+# Covarianza osservata nei dati
+cov(d_mr$anxiety, d_mr$scs_ts)
+```
+
+Questo procedimento di scomposizione viene applicato a tutti gli elementi della matrice di varianza/covarianza, permettendo di:
+
+1. Comprendere i meccanismi attraverso cui le variabili si influenzano reciprocamente
+2. Quantificare l'importanza relativa dei diversi percorsi causali
+3. Validare la struttura teorica del modello confrontando le covarianze predette con quelle osservate
+
+La visualizzazione del modello attraverso il grafico `semPaths` aiuta a rappresentare questa rete di relazioni in modo intuitivo, mostrando i coefficienti di percorso stimati per ogni relazione.
+
+```{r}
+semPaths(fit_mr,
+    whatLabels = "est",
+    sizeMan = 10,
+    edge.label.cex = 1.15,
+    style = "mx",
+    nCharNodes = 0, nCharEdges = 0
+)
+```
+
+## Errore di Specificazione
+
+Conosciuto spiritosamente come *"heartbreak of L.O.V.E."* (Left-Out Variable Error; @mauro1990understanding), l'**errore di specificazione** rappresenta una problematica fondamentale nei modelli di regressione, che deve essere sempre considerata attentamente durante l'interpretazione dei risultati. 
+
+L'errore di specificazione si verifica quando una variabile viene esclusa dal modello di regressione, e tale variabile soddisfa entrambe le seguenti condizioni:  
+
+1. **È associata ad altre variabili incluse nel modello**.  
+2. **Ha un effetto diretto sulla variabile dipendente** ($y$).  
+
+Quando ciò accade, i coefficienti di regressione stimati per le variabili incluse nel modello risultano **distorti** in termini sia di intensità sia di segno. Questo fenomeno può portare a conclusioni errate sull'effetto delle variabili indipendenti sulla variabile dipendente.
+
+### Un Esempio con Dati Simulati
+
+Consideriamo un esempio in cui la prestazione (*performance*) è positivamente associata alla motivazione (*motivation*) e negativamente all'ansia (*anxiety*). Inoltre, supponiamo che ansia e motivazione siano positivamente correlate. Vogliamo osservare come il coefficiente della variabile "motivazione" cambi se "ansia" viene esclusa dal modello.
+
+Creiamo i dati simulati:
+
+```{r}
+set.seed(123)
+n <- 400
+
+anxiety <- rnorm(n, 10, 1.5)
+motivation <- 4.0 * anxiety + rnorm(n, 0, 3.5)
+cor(anxiety, motivation)
+```
+
+La variabile *performance* è definita come una combinazione lineare di *motivation* e *anxiety*, con un effetto positivo ma piccolo della motivazione e un effetto negativo marcato dell'ansia:
+
+```{r}
+performance <- 0.5 * motivation - 5.0 * anxiety + rnorm(n, 0, 3)
+```
+
+Salviamo i dati in un `data frame`:
+
+```{r}
+sim_dat2 <- tibble(performance, motivation, anxiety)
+sim_dat2 |> head() |> print()
+```
+
+#### Modello corretto
+
+Adattiamo un modello di regressione che includa entrambi i predittori (*motivation* e *anxiety*):
+
+```{r}
+fm1 <- lm(performance ~ motivation + anxiety, sim_dat2)
+coef(fm1) |> print()
+```
+
+Le stime dei coefficienti di regressione riflettono correttamente i parametri utilizzati per generare i dati.
+
+#### Modello con specificazione errata
+
+Ora escludiamo il predittore *anxiety* e stimiamo il modello solo con *motivation*:
+
+```{r}
+fm2 <- lm(performance ~ motivation, sim_dat2)
+summary(fm2) |> print()
+```
+
+In questo caso, il segno del coefficiente di regressione per *motivation* è invertito rispetto al modello generatore dei dati. Questo è un tipico esempio di errore di specificazione.
+
+### Spiegazione Matematica
+
+Supponiamo che il vero modello sia:
+
+$$
+y = \alpha + \beta_1 X_1 + \beta_2 X_2 + \varepsilon,
+$$
+
+stimato come:
+
+$$
+y = a + b_1 X_1 + b_2 X_2 + e.
+$$
+
+Se omettiamo erroneamente $X_2$, il modello diventa:
+
+$$
+y = a^\prime + b_1^\prime X_1 + e^\prime,
+$$
+
+dove $b_1^\prime$ è dato da:
+
+$$
+b_1^\prime = \frac{\text{Cov}(X_1, y)}{\text{Var}(X_1)}.
+$$
+
+Sviluppando l'espressione:
+
+$$
+b_1^\prime = b_1 + b_2 \frac{\text{Cov}(X_1, X_2)}{\text{Var}(X_1)}.
+$$
+
+Pertanto, il coefficiente $b_1^\prime$ stimato nel modello con specificazione errata è distorto dalla presenza di $b_2$ e dalla correlazione $\text{Cov}(X_1, X_2)$.
+
+### Verifica dell'Errore nei Dati Simulati
+
+Calcoliamo manualmente il coefficiente distorto $b_1^\prime$ utilizzando i risultati del modello completo:
+
+```{r}
+fm1$coef[2] + fm1$coef[3] * 
+  cov(sim_dat2$motivation, sim_dat2$anxiety) / 
+  var(sim_dat2$motivation)
+```
+
+Il valore calcolato coincide con quello stimato dal modello `performance ~ motivation`, confermando che il coefficiente è distorto.
+
+Possiamo trarre le seguenti conclusioni:  
+
+1. **Il coefficiente stimato $b_1^\prime$ è distorto** se vengono omessi predittori rilevanti ($X_2$) correlati a quelli inclusi ($X_1$).  
+2. **La distorsione è sistematica e non si riduce all’aumentare della numerosità campionaria**, rendendo lo stimatore **inconsistente**.  
+3. **La causa dell’errore** è l’attribuzione degli effetti di $X_2$ al predittore incluso, $X_1$.  
+
+L'errore di specificazione può essere evitato solo se:  
+
+- Il predittore omesso ($X_2$) non ha un effetto sulla variabile dipendente ($\beta_2 = 0$).  
+- Il predittore omesso è incorrelato con i predittori inclusi ($\text{Cov}(X_1, X_2) = 0$).  
+
+Una corretta specificazione del modello è quindi essenziale per garantire risultati affidabili e interpretazioni corrette.
+
+## Errore di Specificazione e Modelli SEM
+
+Qui abbiamo descritto l'errore di specificazione in riferimento al modello di regressione. Tuttavia, dato che i Modelli di Equazioni Strutturali (SEM) possono essere considerati un'estensione del modello di regressione, le stesse considerazioni si applicano anche ai SEM. 
+
+Anche se i SEM permettono di rappresentare e testare relazioni più complesse tra variabili osservate e latenti, le loro conclusioni rimangono condizionate a un'importante assunzione: che il modello sia specificato correttamente. In altre parole, le inferenze tratte da un SEM presuppongono che non vi siano variabili rilevanti omesse o erroneamente incluse nel modello. Tuttavia, questa ipotesi è spesso irrealistica. Dato che non possiamo sapere con certezza se esistano altre variabili correlate con quelle del modello e che, in generale, tale eventualità è altamente probabile, è inevitabile che le relazioni descritte da un SEM siano **sempre influenzate, almeno in parte, dall'errore di specificazione**.
+
+### La Natura Condizionale delle Conclusioni nei SEM
+
+L'interpretazione dei risultati di un SEM è sempre **condizionale** all'assunzione che il modello rappresenti correttamente le relazioni tra le variabili. Questa condizionalità implica che:  
+
+- Le stime dei parametri e le inferenze derivate sono valide solo all'interno del contesto teorico e delle specifiche del modello scelto.  
+- La validità delle conclusioni è compromessa se il modello è distorto da errori di specificazione, come l'omissione di variabili rilevanti o la presenza di relazioni spurie tra le variabili incluse.
+
+### La Portata dell'Errore di Specificazione nei SEM
+
+L'errore di specificazione è intrinseco a tutti i modelli statistici, SEM inclusi. Questo deriva dal fatto che non possiamo conoscere tutte le variabili rilevanti né possiamo verificare in modo definitivo se il modello include tutte le relazioni pertinenti. Ne consegue che: 
+
+1. **L'errore di specificazione è inevitabile**, ma non sempre rilevante. La sua gravità dipende da quanto le variabili omesse o erroneamente incluse distorcono le stime dei parametri del modello.  
+2. **Non è possibile quantificare con precisione la portata dell'errore di specificazione**, poiché non possiamo osservare direttamente le variabili omesse.  
+
+### Utilità del Modello e il Dilemma della Verità
+
+Tornando al celebre aforisma di George Box: *“Tutti i modelli sono falsi, ma alcuni sono utili”*, l'obiettivo dell'analisi con i SEM non è stabilire se il modello sia "vero". Questa verifica è impossibile, dato che non possiamo mai essere certi di non aver omesso variabili rilevanti o di aver incluso solo relazioni valide. **Il problema non è evitare l'errore di specificazione, bensì valutarne l'impatto e considerare l'utilità del modello nonostante la sua inevitabile falsità.**
+
+### Cosa Significa "Utilità" in un SEM?
+
+Un modello è utile se:  
+
+- Consente di rispondere a specifiche domande di ricerca, anche in presenza di alcune semplificazioni.  
+- Fornisce una rappresentazione ragionevolmente coerente delle relazioni teoriche proposte, pur riconoscendo i limiti del contesto empirico.  
+- Offre predizioni interpretabili e comprensibili che possano guidare ulteriori ricerche, lo sviluppo teorico e decisioni pratiche.
+
+In conclusione, riconoscere l'inevitabilità dell'errore di specificazione è essenziale per un utilizzo critico e consapevole dei SEM. Invece di mirare a modelli "veri" (un obiettivo irrealistico), il nostro scopo dovrebbe essere quello di costruire modelli **sufficientemente validi e utili** da consentire inferenze significative, pur accettandone le limitazioni. Questo approccio non elimina l'incertezza, ma permette di utilizzare i SEM come strumenti potenti per esplorare e chiarire le relazioni tra costrutti teorici complessi.
+
+### Soppressione
+
+Le conseguenze dell'errore di specificazione possono manifestarsi sotto forma di **soppressione** (*suppression*), un fenomeno che si verifica quando le relazioni tra i predittori e la variabile criterio (dipendente) assumono caratteristiche inaspettate o controintuitive nell'analisi di regressione multipla. La soppressione si verifica in due situazioni principali:
+
+1. Il valore assoluto del peso $\beta$ di un predittore è maggiore della sua correlazione bivariata con la variabile criterio.  
+2. Il peso $\beta$ e la correlazione bivariata hanno segni opposti.  
+
+La soppressione può essere suddivisa in tre categorie principali:
+
+#### 1. Soppressione Negativa
+
+Questo fenomeno si verifica quando un predittore ha una **correlazione bivariata positiva con il criterio**, ma riceve un **peso $\beta$ negativo** nell'analisi di regressione multipla.  
+L'esempio precedente dell'errore di specificazione illustra proprio un caso di soppressione negativa: la variabile *motivazione* ha una correlazione bivariata positiva con la *prestazione*, ma, a causa della specificazione errata del modello (omissione della variabile *ansia*), il suo coefficiente $\beta$ diventa negativo. Questo tipo di soppressione è comune nei casi in cui predittori correlati negativamente tra loro competono per spiegare la stessa varianza della variabile criterio.
+
+#### 2. Soppressione Classica
+
+Nella soppressione classica, un predittore **non ha alcuna correlazione bivariata con il criterio**, ma riceve un **peso $\beta$ diverso da zero** nell'analisi di regressione multipla. Questo accade quando il predittore in questione contribuisce a ridurre la varianza non spiegata associata agli altri predittori, aumentando così il potere predittivo complessivo del modello.  
+Ad esempio, una variabile può essere utile per "sopprimere" la varianza irrilevante di un altro predittore, migliorando l'accuratezza delle stime.
+
+#### 3. Soppressione Reciproca
+
+La soppressione reciproca si verifica quando due predittori sono **positivamente correlati con il criterio**, ma sono **negativamente correlati tra loro**. In questi casi, l'inclusione di entrambi i predittori nel modello di regressione può aumentare i pesi $\beta$ di ciascuno, poiché ciascun predittore riduce la varianza non spiegata dell'altro, migliorando la spiegazione complessiva della varianza del criterio.
+
+### Implicazioni della Soppressione
+
+La soppressione, come conseguenza dell'errore di specificazione o della struttura dei dati, ha implicazioni significative per l'interpretazione dei modelli di regressione e SEM:  
+
+- **Distorsione dei risultati:** La soppressione può portare a interpretazioni controintuitive, come l'apparente effetto negativo di un predittore che ha una relazione positiva con il criterio.  
+- **Dipendenza dal modello:** I pesi $\beta$ nei modelli di regressione e SEM sono sempre condizionali alle variabili incluse nel modello. Aggiungere o rimuovere predittori può alterare significativamente i pesi stimati.  
+- **Importanza del controllo delle variabili:** La soppressione evidenzia l'importanza di includere tutti i predittori rilevanti nel modello per evitare distorsioni e garantire stime accurate.
+
+In conclusione, la soppressione è un fenomeno complesso ma inevitabile in analisi multivariate. Comprendere i meccanismi alla base della soppressione, e come essa può emergere a seguito di errori di specificazione, è cruciale per interpretare correttamente i risultati delle analisi statistiche. 
+
+### Regressione Stepwise
+
+Nel contesto della regressione, è fondamentale comprendere che i predittori non dovrebbero essere selezionati basandosi esclusivamente sulle loro correlazioni bivariate con la variabile dipendente (criterio). Queste correlazioni, chiamate **associazioni di ordine zero**, non tengono conto dell'influenza reciproca tra i predittori e, di conseguenza, possono risultare fuorvianti quando si interpretano i coefficienti di regressione parziale.  
+
+La **significatività statistica** delle correlazioni bivariate non è un criterio affidabile per la selezione dei predittori, poiché non considera gli effetti congiunti di altri predittori nel modello. Questo punto è particolarmente rilevante nei modelli con più predittori correlati, dove le relazioni tra le variabili sono complesse e non lineari.
+
+#### Criticità delle Procedure Stepwise
+
+Le procedure automatiche di selezione dei predittori, come la regressione **stepwise**, possono sembrare attraenti per la loro semplicità ed efficienza. Tuttavia, queste tecniche presentano gravi limitazioni:  
+- **Sensibilità alla struttura dei dati:** Piccole non-linearità o interazioni tra predittori possono alterare in modo significativo i coefficienti di regressione stimati.  
+- **Esposizione all'errore di specificazione:** La rimozione o l'aggiunta automatica di variabili può distorcere il modello, attribuendo erroneamente effetti ad altri predittori.  
+- **Non replicabilità dei risultati:** I modelli generati tramite procedure stepwise sono spesso specifici del campione di dati utilizzato, e i risultati tendono a non essere replicabili in altri campioni.
+
+Per queste ragioni, molte riviste scientifiche non accettano studi che utilizzano procedure stepwise. I risultati ottenuti con tali tecniche sono considerati inaffidabili e difficilmente generalizzabili.
+
+#### Selezione dei Predittori: Approccio Teorico vs. Statistico
+
+In alternativa ai metodi automatici, i predittori dovrebbero essere scelti sulla base di **considerazioni teoriche** o di **risultati empirici consolidati**. Questo approccio ponderato aiuta a evitare distorsioni e garantisce che il modello rifletta le ipotesi di ricerca e il contesto teorico di riferimento.  
+
+Una volta selezionati, i predittori possono essere inseriti nell'equazione di regressione con due strategie principali:  
+1. **Inserimento simultaneo:** Tutti i predittori vengono inclusi contemporaneamente nel modello.  
+2. **Inserimento sequenziale:** I predittori vengono aggiunti gradualmente, seguendo un ordine prestabilito, in base a criteri teorici o statistici.  
+
+##### Regressione Gerarchica
+
+L'approccio teorico si traduce spesso nella **regressione gerarchica**, dove l'ordine di inserimento dei predittori è determinato da considerazioni razionali. Ad esempio, è comune includere prima le variabili demografiche e successivamente le variabili psicologiche di interesse. Questo approccio consente di: 
+
+- Controllare gli effetti delle variabili demografiche.  
+- Valutare il contributo unico delle variabili psicologiche, misurato tramite l'incremento del coefficiente di determinazione ($\Delta R^2$).  
+
+##### Regressione Stepwise
+
+L'approccio statistico, invece, è rappresentato dalla **regressione stepwise**, in cui il computer decide l'ordine di inserimento dei predittori in base ai valori di $p$:  
+- Nella **stepwise forward inclusion**, i predittori vengono aggiunti uno alla volta, scegliendo quello con il $p$ più piccolo a ogni passo. Una volta aggiunti, i predittori rimangono nel modello.  
+- Nella **stepwise backward elimination**, il modello parte con tutti i predittori e li elimina progressivamente in base ai loro valori di $p$, fino a ottenere il modello finale.  
+- Nella **stepwise bidirezionale**, predittori possono essere aggiunti o rimossi a ogni passo.  
+
+Queste varianti si interrompono quando l'aggiunta o la rimozione di ulteriori predittori non migliora significativamente $\Delta R^2$. Tuttavia, come già sottolineato, tali procedure sono altamente problematiche e non raccomandate per la ricerca scientifica.
+
+### La Tentazione di Rimuovere Predittori "Non Significativi"
+
+Un errore comune è la rimozione dal modello di predittori che non risultano "statisticamente significativi". Questa pratica è controproducente per diverse ragioni: 
+
+- **Potenza statistica insufficiente:** In campioni piccoli, i test di significatività possono non rilevare effetti reali. Eliminare variabili potenzialmente rilevanti a causa della mancanza di significatività statistica può compromettere il modello.  
+- **Specificazione errata del modello:** La rimozione di predittori senza una giustificazione teorica solida può introdurre errori di specificazione, distorcendo i coefficienti di regressione per le variabili rimanenti.  
+
+Se esiste una motivazione teorica convincente per includere un predittore, questo dovrebbe essere mantenuto nel modello, indipendentemente dalla sua significatività statistica. Le decisioni relative ai predittori dovrebbero essere guidate da un approccio scientifico, non da criteri meccanici come i valori di $p$.  
+
+In conclusione, le procedure di selezione dei predittori, in particolare quelle automatiche come la regressione stepwise, presentano gravi rischi di distorsione e non replicabilità. Al contrario, un approccio basato su solide considerazioni teoriche e supportato da prove empiriche garantisce modelli più robusti e utili Infine, è essenziale superare l'ossessione per la significatività statistica e focalizzarsi sulla coerenza teorica e sull'utilità del modello.
+
+## Oltre la Regressione Multipla
+
+Una volta chiarita la relazione tra modello di regressione e modelli SEM, possiamo usare i modelli SEM per analizzare relazioni tra variabili che non possono essere descritte nei termini di un modello di regressione. Per fare un esempio, concludiamo il capitolo utilizzando il modello SEM per descrivere la relazione tra due costrutti: 
+
+Analizziamo un esempio in cui il modello di Equazioni Strutturali (SEM) viene impiegato per studiare la relazione tra autocompassione e disagio emotivo, utilizzando come indicatori le sotto-scale della DASS-21 (Depressione, Ansia, Stress) e della Self-Compassion Scale. In questo contesto, definiamo due variabili latenti: "disagio emotivo" e "autocompassione". La variabile latente "disagio emotivo" è composta dalle tre sotto-scale della DASS-21, mentre la variabile "autocompassione" è formata dalle sei sotto-scale della Self-Compassion Scale.
+
+Il modello strutturale esplora la relazione tra queste due variabili latenti. L'autocompassione è considerata una variabile esogena, ipotizzata come un fattore di protezione che riduce il disagio emotivo, che a sua volta è trattato come variabile endogena. L'ipotesi principale del modello è che esista una relazione di regressione negativa tra autocompassione e disagio emotivo, indicando che livelli più elevati di autocompassione sono associati a minori livelli di disagio emotivo.
+
+Un elemento chiave dei modelli SEM è la gestione dell'errore di misurazione. Le variabili latenti sono progettate per riflettere il nucleo vero dei costrutti teorici, in questo caso autocompassione e disagio emotivo, isolando gli effetti degli errori di misurazione che possono affliggere gli indicatori osservati. Questo approccio consente di esaminare la "vera" relazione tra i costrutti, eliminando le distorsioni introdotte dagli errori di misurazione nelle misure osservate.
+
+La capacità del modello SEM di separare la variabilità attribuibile ai costrutti latenti da quella dovuta agli errori di misurazione aumenta l'accuratezza e l'affidabilità dell'analisi. Questo è particolarmente vantaggioso in campi come la psicologia, dove i costrutti teorici non sono direttamente osservabili e devono essere inferiti attraverso misure potenzialmente errate.
+
+```{r}
+mod_sc <- "
+  ED =~ anxiety + depression + stress
+  SC =~ self_kindness	+ common_humanity	+ mindfulness	+ 
+        self_judgment	+ isolation	+ over_identification
+  ED ~~ SC 
+"
+```
+
+Adattiamo il modello ai dati.
+
+```{r}
+fit_sc <- lavaan::sem(mod_sc, dat, std.lv = TRUE)
+```
+
+Esaminiamo la soluzione ottenuta.
+
+```{r}
+standardizedSolution(fit_sc) 
+```
+
+1. **Saturazioni Fattoriali (Loadings) per le Variabili Latenti:**
+   - **ED:** Le variabili osservate "anxiety", "depression", e "stress" hanno elevate saturazioni fattoriali sulla variabile latente "ED". Questo suggerisce che ciascuna di queste misure è un buon indicatore della variabile latente "ED".
+   - **SC:** Le variabili "self_kindness", "common_humanity", "mindfulness", "self_judgment", "isolation", e "over_identification" hanno anch'esse significative saturazioni sulla variabile latente "SC". Si noti che "self_judgment", "isolation", e "over_identification" hanno saturazioni negative, indicando che queste variabili sono inversamente associate con "SC".
+
+2. **Correlazione tra Variabili Latenti:**
+   - La correlazione tra "ED" e "SC" mostra un coefficiente negativo (-0.476), il che indica una relazione inversa tra queste due variabili latenti. Questo significa che livelli più alti di "SC" sono associati a livelli più bassi di "ED".
+
+3. **Varianza delle Variabili Latenti:**
+   - La varianza di "ED" e "SC" indica quanto della variazione nelle variabili latenti è spiegata dai loro rispettivi indicatori. La varianza di "ED" (0.77) è relativamente alta, suggerendo che gli indicatori spiegano una buona parte della varianza in "ED". La varianza di "SC" è fissata a 1, un approccio comune per identificare il modello.
+
+4. **Varianze Residue degli Indicatori:**
+   - Le varianze residue (ad esempio, "anxiety ~~ anxiety") rappresentano la varianza non spiegata in ciascun indicatore dalle variabili latenti. Valori più bassi indicano che la variabile latente spiega una maggior parte della varianza dell'indicatore. Ad esempio, "anxiety" ha una varianza residua di 0.28, suggerendo che "ED" spiega una buona parte, ma non tutta, della varianza in "anxiety".
+
+Generiamo una rappresentazione grafica del modello.
+
+```{r}
+semPaths(fit_sc,
+    whatLabels = "std",
+    sizeMan = 10,
+    edge.label.cex = 0.9,
+    style = "mx",
+    nCharNodes = 5, nCharEdges = 0, 
+    fade=FALSE
+)
+```
+
+I coefficienti stimati nel modello SEM appaiono coerenti e in linea con le aspettative, in particolare il coefficiente che descrive la correlazione tra il fattore dell'autocompassione e il disagio emotivo, che si attesta a -0.48. Questo valore negativo corrobora l'ipotesi secondo cui l'autocompassione svolge un ruolo di fattore protettivo contro il disagio emotivo. Tuttavia, prima di confermare definitivamente questa conclusione, è cruciale esaminare gli indici di bontà di adattamento del modello. Questi indici ci permetteranno di valutare quanto accuratamente il modello SEM si adatta ai dati osservati, fornendo un quadro più chiaro della validità delle nostre inferenze. In altre parole, sebbene il modello suggerisca una relazione negativa tra autocompassione e disagio emotivo, la conferma finale di questa associazione dipenderà dall'adeguatezza complessiva del modello rispetto ai dati. Questo argomento verrà affrontato nei prossimi capitoli.
+
+### Vantaggi del Modello SEM
+
+È evidente che avremmo potuto calcolare la correlazione tra disagio emotivo e autocompassione in modo più semplice, utilizzando semplicemente la **correlazione di Pearson** tra il punteggio totale del DASS-21 (disagio emotivo) e il punteggio totale della Self-Compassion Scale (SCS). Per calcolare il punteggio totale del DASS-21, sommiamo le sottoscale di stress, ansia e depressione:
+
+```{r}
+dat <- dat |> 
+  mutate(ed = stress + anxiety + depression)
+```
+
+Il valore della correlazione così ottenuto è pari a 0.405:
+
+```{r}
+cor.test(dat$ed, dat$scs_ts)
+```
+
+Tuttavia, questo valore differisce in maniera rilevante da quello calcolato mediante il modello SEM, dove la correlazione stimata è $r = -0.476$. Questa differenza evidenzia una distinzione fondamentale tra i due approcci:
+
+1. **Correlazione di Pearson:**  
+   La correlazione di Pearson si basa sui punteggi osservati delle variabili, che includono sia il **punteggio vero** (il costrutto sottostante) sia l’**errore di misurazione**. Di conseguenza, la correlazione calcolata può essere distorta dall’errore associato alla misurazione di ciascun costrutto.
+
+2. **Modello SEM:**  
+   Nei modelli SEM, la correlazione è stimata tra i **punteggi veri** dei costrutti, al netto dell’errore di misurazione. Questo approccio fornisce una stima più accurata e affidabile della relazione tra i costrutti teorici, eliminando la varianza attribuibile agli errori di misurazione.
+
+Il principale vantaggio dei modelli SEM è la loro capacità di descrivere le associazioni tra le variabili in modo meno influenzato dagli errori di misurazione rispetto alle semplici correlazioni. Questo permette di ottenere stime più vicine alle relazioni reali tra i costrutti, migliorando la validità delle conclusioni.  
+
+La differenza tra i due valori di correlazione calcolati sottolinea l'importanza di utilizzare modelli SEM quando si vuole ottenere una rappresentazione più precisa delle relazioni tra costrutti latenti, in particolare in presenza di variabili soggette a errori di misurazione.
+
+## Impiego delle Medie nei Modelli SEM
+
+Un altro elemento importante da evidenziare nell'introduzione ai modelli SEM è il ruolo delle **medie**. Nei SEM, l'enfasi è tradizionalmente posta sull'analisi delle covarianze tra variabili. Tuttavia, a differenza dell'analisi fattoriale classica, i SEM permettono di includere anche le medie delle variabili osservate e latenti. Questo arricchisce l'analisi, fornendo informazioni importanti in contesti come i modelli longitudinali di analisi fattoriale confermativa (CFA), dove le ipotesi centrali possono riguardare cambiamenti o differenze nelle medie dei costrutti latenti nel tempo.
+
+### Struttura delle Medie nei Modelli SEM
+
+La struttura delle medie nei SEM può essere descritta con la seguente equazione:
+
+$$ 
+E(\mathbf{y}) = \boldsymbol{\mu}_y = \boldsymbol{\tau} + \mathbf{\Lambda} \boldsymbol{\alpha}, 
+$$
+
+dove:  
+
+- $\mathbf{y}$ rappresenta i punteggi degli indicatori osservati,  
+- $E(\mathbf{y})$ è il vettore delle medie attese degli indicatori,  
+- $\boldsymbol{\mu}_y$ è il vettore delle medie degli indicatori osservati (analogo a $\mathbf{\Sigma}$ nelle strutture di covarianza),  
+- $\boldsymbol{\tau}$ è il vettore delle **intercette** degli indicatori,  
+- $\mathbf{\Lambda}$ è la matrice dei **carichi fattoriali**, che definisce la relazione tra gli indicatori e i costrutti latenti,  
+- $\boldsymbol{\alpha}$ è il vettore delle **medie dei costrutti latenti**.
+
+In un diagramma a percorsi, l'intercetta è rappresentata da un triangolo con il numero 1, che funge da costante di regressione. Questo simbolo indica l'origine della scala per la variabile e permette di stimare la media di una variabile quando viene regredita su questa costante.
+
+### Interpretazione e Collegamento tra Medie e Carichi Fattoriali
+
+Nei modelli SEM, gli indicatori con carichi fattoriali più elevati ($\mathbf{\Lambda}$) esercitano un impatto maggiore sulla media stimata del costrutto ($\boldsymbol{\alpha}$). Questo collegamento evidenzia che i carichi fattoriali non solo influenzano la struttura di covarianza, ma giocano un ruolo chiave anche nella determinazione delle medie latenti.
+
+### Vincoli e Scalatura delle Medie
+
+Come per le strutture di covarianza, anche per le strutture delle medie è necessario imporre vincoli per definire la scala del modello. Spesso si utilizza lo **zero come riferimento** per le medie dei costrutti latenti. Questo vincolo serve a fissare un punto di partenza per le stime e a calcolare le differenze rispetto al riferimento, che possono assumere valori sia positivi sia negativi. 
+
+Ad esempio:  
+
+- Nei modelli CFA longitudinali, i vincoli sulle medie possono essere utilizzati per studiare cambiamenti temporali nei costrutti latenti.  
+- Nei modelli con gruppi multipli, i vincoli sulle medie permettono di confrontare le medie dei costrutti tra gruppi diversi.
+
+### Stima delle Intercette con `lavaan`
+
+Per stimare le intercette e includere la struttura delle medie in un modello SEM, è necessario disporre non solo della matrice di covarianza, ma anche delle **medie delle variabili osservate**. Il software `lavaan` semplifica questo processo attraverso l'opzione `meanstructure = TRUE`. Quando questa opzione è attivata, `lavaan` integra automaticamente una costante "1" in tutte le equazioni del modello, consentendo di stimare:  
+
+- Le **intercette** per le variabili osservate.  
+- Le **medie** dei costrutti latenti ($\boldsymbol{\alpha}$).  
+
+Esempio di codice in `lavaan` per includere le medie:
+
+```r
+model <- "
+  y1 + y2 + y3 =~ latent1
+  y4 + y5 + y6 =~ latent2
+"
+fit <- lavaan::sem(model, data = dat, meanstructure = TRUE)
+summary(fit, standardize = TRUE)
+```
+
+In questo contesto, `lavaan` stimerà sia le strutture di covarianza sia le medie e le intercette per le variabili osservate e latenti. L'inclusione delle medie è specificata dall'uso dell'argomento `meanstructure = TRUE`.
+
+### Importanza delle Medie nei Modelli SEM
+
+L'inclusione delle medie nei modelli SEM fornisce un livello aggiuntivo di informazione, permettendo di confrontare:  
+
+1. **Le medie stimate dai modelli SEM** con le **medie osservate** nei dati.  
+2. Le medie di costrutti latenti tra **diversi gruppi** o in **momenti temporali differenti**.  
+
+In conclusione, l'integrazione delle medie nei modelli SEM rappresenta un importante arricchimento rispetto all'analisi delle sole covarianze. Questo approccio consente di ottenere una visione più completa delle relazioni tra variabili, al netto dell'errore di misurazione, e di esplorare le differenze nelle medie dei costrutti in contesti complessi come studi longitudinali o analisi multigruppo. Di conseguenza, l'analisi delle medie nei SEM non solo amplia la gamma di domande di ricerca a cui è possibile rispondere, ma migliora anche la validità delle conclusioni tratte dai dati.
+
+## Riflessioni Conclusive
+
+In questo capitolo, abbiamo esplorato i Modelli di Equazioni Strutturali (SEM), evidenziando come questi modelli non si limitino a descrivere le correlazioni tra variabili osservabili, ma permettano anche di analizzare le relazioni tra variabili latenti. La forza dei SEM risiede nella loro capacità di integrare il modello di misurazione, che definisce le relazioni tra gli indicatori e le variabili latenti, con il modello strutturale, che esamina le interazioni tra le stesse variabili latenti.
+
+Nei prossimi capitoli, approfondiremo vari aspetti della modellazione SEM. Esamineremo la bontà di adattamento del modello, un criterio fondamentale per verificare la fedeltà con cui il modello riflette la realtà osservata. Analizzeremo anche il confronto tra modelli alternativi, un passaggio cruciale per identificare il modello che migliora l'interpretazione dei dati.
+
+Un altro tema importante sarà l'analisi dell'applicabilità dei modelli a gruppi diversi, vitale per valutare la loro generalizzabilità e la pertinenza in contesti specifici. Inoltre, discuteremo le sfide metodologiche legate alla gestione di dati categoriali, all'implementazione di modelli SEM multilivello e alla gestione di dati mancanti. Questi approfondimenti ci permetteranno di comprendere meglio come i modelli SEM possono essere adattati e applicati efficacemente in diversi ambiti di ricerca.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+

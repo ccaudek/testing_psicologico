@@ -1,0 +1,169 @@
+# Valutazione della matrice di correlazione {#sec-extraction-cor-matrix}
+
+::: callout-important
+## In questo capitolo imparerai a:
+
+- esaminare la matrice di correlazione tra le variabili come passo preliminare di un'analisi fattoriale.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Factor Analysis and Principal Component Analysis* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, corrr, psych)
+```
+:::
+
+## Introduzione
+
+Prima di intraprendere un’analisi fattoriale, è essenziale esaminare la matrice di correlazione tra le variabili. Un determinante nullo della matrice di correlazione indica che l’analisi fattoriale non può essere eseguita a causa di collinearità perfetta tra le variabili. Se il determinante è diverso da zero, è comunque necessario valutare se le correlazioni tra le variabili sono sufficientemente elevate da giustificare un’analisi fattoriale. Correlazioni deboli tra gli item possono portare a soluzioni non parsimoniose. Questo può essere valutato sia tramite ispezione visiva della matrice di correlazione sia attraverso due test statistici: il test di sfericità di Bartlett e l’indice Kaiser-Meyer-Olkin (KMO).
+
+## Analisi Preliminari
+
+Per illustrare il procedimento di analisi preliminare dei dati, utilizziamo il dataset `HolzingerSwineford1939`, che contiene 301 osservazioni relative a punteggi di abilità mentale. In questa analisi consideriamo le variabili `x1`–`x9`.
+
+Cominciamo con un’anteprima del dataset e una verifica della presenza di dati mancanti.
+
+```{r}
+# Caricamento del dataset e visualizzazione iniziale
+data(HolzingerSwineford1939)
+glimpse(HolzingerSwineford1939)
+
+# Selezione delle variabili di interesse
+hz <- HolzingerSwineford1939 |>
+  dplyr::select(x1:x9)
+
+# Visualizzazione delle prime 5 righe
+hz |>
+  slice(1:5)
+```
+
+### Valutazione dei Dati Mancanti
+
+Prima di procedere all’ispezione visiva, è importante verificare la presenza di dati mancanti. Eventuali valori mancanti potrebbero influenzare le correlazioni calcolate e, di conseguenza, l’esito dell’analisi fattoriale.
+
+```{r}
+# Controllo dei dati mancanti
+hz |>
+  summarise(across(everything(), ~ sum(is.na(.))))
+```
+
+In questo set di dati non ci sono dati mancanti.
+
+Se dati mancanti sono presenti, sarà necessario applicare un’adeguata tecnica di gestione, come imputazione o rimozione dei casi con dati mancanti, prima di proseguire con l’analisi. 
+
+Questa fase preliminare è fondamentale per garantire la validità e l’affidabilità delle conclusioni tratte dall’analisi fattoriale.
+
+### Distribuzione delle variabili
+
+Esaminiamo la distribuzione delle variabili.
+
+```{r}
+describe(hz)
+```
+
+I valori di asimmetria e kurosi sono adeguati.
+
+### Correlazioni
+
+Un’ispezione visiva della matrice di correlazione consente di identificare blocchi di variabili con alte correlazioni interne e basse correlazioni con altre variabili. La presenza di tali blocchi suggerisce la possibilità di più fattori comuni sottostanti. 
+
+Esaminiamo le correlazioni tra le variabili usando le funzioni del pacchetto `corrr`:
+
+- `corrr::rearrange` raggruppa le variabili altamente correlate 
+- `corrr::rplot` visualizza il risultato.
+
+```{r}
+cor_tb <- correlate(hz)
+
+cor_tb |>
+  rearrange() |>
+  rplot(colors = c("red", "white", "blue"))
+```
+
+Il grafico suggerisce la presenza di tre gruppi di variabili:
+
+- da x4 a x6 (primo gruppo)
+- da x1 a x3 (secondo gruppo)
+- da x7 a x9 (terzo gruppo).
+
+## Sfericità di Bartlett
+
+Il test di sfericità di Bartlett verifica l’ipotesi che il campione provenga da una popolazione in cui le variabili non sono correlate. Formalmente, il test della sfericità di Bartlett verifica l'ipotesi $H_0 : \boldsymbol{R} = \boldsymbol{I}$ tramite la formula:
+
+$$
+\chi^2 = -\bigg[n -1 -\frac{1}{6} (2p +5)\bigg] \ln |\boldsymbol{R}|,
+$$
+
+in cui $n$ è il numero dei soggetti, $p$ il numero delle variabili e
+$|\boldsymbol{R}|$ il determinante della matrice di correlazione. 
+
+La statistica del test di sfericità di Bartlett segue una distribuzione chi-quadro con $p(p - 1)/2$ gradi di libertà. Un valore elevato della statistica indica che la matrice di correlazione R contiene valori di correlazione significativamente diversi da 0. Al contrario, un valore basso della statistica indica che le correlazioni sono basse e non si distinguono da 0.
+
+Il limite di questo test è che dipende dal numero delle variabili e dalla
+numerosità del campione, quindi tende a rigettare $H_0$ all'aumentare del campione e del numero delle variabili, anche se le
+correlazioni sono piccole.
+
+Applichiamo il test di Bartlet per il dati dell'esempio in discussione.
+
+```{r}
+cor_mat <- cor(hz)
+
+out = cortest.bartlett(R = cor_mat, n = 301)
+print(out)
+```
+
+Il risultato del test di Bartlett sui dati `HolzingerSwineford1939` indica che esiste una correlazione tra le variabili.
+
+## Test di adeguatezza campionaria di Kaiser-Meyer-Olkin
+
+Il test di Kaiser-Meyer-Olkin (KMO) è uno strumento statistico che valuta l’adeguatezza dei dati per l’analisi fattoriale. Esso misura la proporzione di varianza tra le variabili che potrebbe essere attribuita a fattori comuni. Un valore KMO più alto indica una maggiore adattabilità dei dati all’analisi fattoriale. 
+
+La statistica di adeguatezza campionaria KMO è data da
+
+$$\text{KMO} = \frac{\sum_i\sum_j r^2_{ij}}{\sum_i\sum_j r^2_{ij} +\sum_i\sum_jp^2_{ij}},$$
+
+dove $r_{ij}$ sono le correlazioni osservate e $p_{ij}$ sono le
+correlazioni parzializzate su tutte le altre. Se le correlazioni
+parzializzate sono piccole, KMO tende a 1. 
+
+Secondo Kaiser (1970), l'adeguatezza campionaria si valuta nel modo seguente:
+
+- da 0.00 a 0.49: inaccettabile
+- da 0.50 a 0.59: miserabile
+- da 0.60 a 0.69: mediocre
+- da 0.70 a 0.79: media
+- da 0.80 a 0.89: meritevole
+- da 0.90 a 1.00: meravigliosa.
+
+Applichiamo il test KMO ai dati `HolzingerSwineford1939`.
+
+```{r}
+out = KMO(cor_mat)
+print(out)
+```
+
+Per questi dati, il risultato del test KMO indica che l'adeguatezza campionaria è media.
+
+## Riflessioni Conclusive
+
+L'analisi preliminare dei dati rappresenta un passaggio essenziale per verificare l'adeguatezza di un dataset all'analisi fattoriale. L'ispezione visiva della matrice di correlazione, il test di sfericità di Bartlett e il test di adeguatezza campionaria KMO forniscono indicazioni complementari sull'esistenza di relazioni tra le variabili e sulla qualità dei dati rispetto alla struttura fattoriale. Nel caso del dataset `HolzingerSwineford1939`, i risultati suggeriscono che le correlazioni tra le variabili giustificano l'analisi fattoriale, mentre il valore medio del KMO evidenzia un margine di miglioramento nella struttura dei dati, come la revisione delle variabili incluse o l'aumento della numerosità campionaria. Questi strumenti aiutano a garantire che l'analisi fattoriale sia basata su una base dati solida, facilitando interpretazioni affidabili dei fattori estratti.
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

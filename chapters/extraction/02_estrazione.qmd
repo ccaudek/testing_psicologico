@@ -1,0 +1,463 @@
+# L'estrazione dei fattori {#sec-extraction-factor-extraction}
+
+::: callout-important
+## In questo capitolo imparerai:
+
+- Come implementare il **metodo delle componenti principali** per l'estrazione delle saturazioni fattoriali utilizzando l'algebra matriciale.  
+- Come implementare il **metodo dei fattori principali** e comprenderne i fondamenti teorici.  
+- Il funzionamento del **metodo dei fattori principali iterato**, con un focus sul processo di convergenza.  
+- Le caratteristiche principali del **metodo di massima verosimiglianza** e il suo utilizzo nell'analisi fattoriale.  
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Factor Analysis and Principal Component Analysis* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, psych)
+```
+:::
+
+## Introduzione
+
+L'analisi fattoriale è una tecnica statistica che semplifica un insieme complesso di variabili osservate identificando un numero ridotto di fattori latenti che spiegano le correlazioni tra queste variabili. L'obiettivo è individuare un insieme più contenuto di variabili non osservabili (fattori) che rappresentino le interrelazioni tra un ampio numero di variabili osservate.
+
+Il modello statistico dell'analisi fattoriale è rappresentato dalla seguente equazione:
+
+$$
+\boldsymbol{\Sigma} = \boldsymbol{\Lambda} \boldsymbol{\Phi} \boldsymbol{\Lambda}^{\mathsf{T}} + \boldsymbol{\Psi},
+$$
+
+dove:
+
+- **$\boldsymbol{\Sigma}$** è la matrice delle covarianze tra le variabili osservate;
+- **$\boldsymbol{\Lambda}$** è la matrice dei carichi fattoriali, che rappresenta la relazione tra le variabili osservate e i fattori latenti;
+- **$\boldsymbol{\Phi}$** è la matrice delle correlazioni tra i fattori latenti;
+- **$\boldsymbol{\Psi}$** è una matrice diagonale contenente le unicità, ossia la varianza specifica di ciascuna variabile osservata non spiegata dai fattori comuni.
+
+### Estrazione dei Fattori
+
+L'estrazione dei fattori è il processo che consente di stimare la matrice dei carichi fattoriali $\boldsymbol{\Lambda}$. Esistono diversi metodi per eseguire questa stima, tra cui:
+
+1. **Metodo delle componenti principali**  
+   Massimizza la varianza spiegata dai fattori ma non considera esplicitamente l'errore di misura.
+
+2. **Metodo dei fattori principali**  
+   Variante del metodo delle componenti principali, tiene conto dell'errore di misura stimando inizialmente le comunalità.
+
+3. **Metodo dei fattori principali iterato**  
+   Versione iterativa del metodo dei fattori principali in cui le comunalità vengono stimate ripetutamente fino alla convergenza.
+
+4. **Metodo di massima verosimiglianza (ML)**  
+   Stima i parametri del modello assumendo che le variabili osservate seguano una distribuzione normale multivariata. Questo metodo è particolarmente utile per testare ipotesi sui fattori latenti e per confrontare modelli alternativi.
+
+Ciascun metodo presenta vantaggi e limitazioni, e la scelta dipende dagli obiettivi dell'analisi e dalle caratteristiche del dataset.
+
+## Metodo delle Componenti Principali
+
+Nonostante il nome, l'analisi fattoriale eseguita con il metodo delle componenti principali non coincide con un'analisi delle componenti principali. Quest'ultima è, invece, un'applicazione del teorema di scomposizione spettrale di una matrice.
+
+Il *teorema spettrale* stabilisce che, data una matrice simmetrica $\textbf{S}_{p \times p}$, è sempre possibile individuare una matrice ortogonale $\textbf{C}_{p \times p}$ tale che:
+
+$$
+\textbf{S} = \textbf{C}\textbf{D}\textbf{C}^{\mathsf{T}} ,
+$$
+
+dove $\textbf{D}$ è una matrice diagonale. Inoltre, il teorema specifica che gli elementi sulla diagonale di $\textbf{D}$ sono gli autovalori della matrice $\textbf{S}$, mentre le colonne di $\textbf{C}$ rappresentano gli autovettori normalizzati associati a tali autovalori.
+
+### Esempio Numerico
+
+Consideriamo un esempio basato sui dati discussi da @rencher10methods. Una ragazza di 12 anni ha valutato sette persone a lei conosciute rispetto a cinque caratteristiche (*kind*, *intelligent*, *happy*, *likeable* e *just*), usando una scala a nove punti. La matrice di correlazione tra queste variabili è la seguente:
+
+```{r}
+R <- matrix(c(
+  1.000, .296, .881, .995, .545,
+  .296, 1.000, -.022, .326, .837,
+  .881, -.022, 1.000, .867, .130,
+  .995, .326, .867, 1.000, .544,
+  .545, .837, .130, .544, 1.000
+),
+ncol = 5, byrow = TRUE, dimnames = list(
+  c("K", "I", "H", "L", "J"),
+  c("K", "I", "H", "L", "J")
+))
+R
+```
+
+Gli **autovalori** e gli **autovettori** di $\textbf{R}$ si calcolano con la funzione `eigen()` in R:
+
+```{r}
+e <- eigen(R)
+print(e)
+```
+
+#### Ricostruzione della Matrice
+
+Come indicato in precedenza, $\textbf{R}$ può essere scomposta come:
+
+$$
+\textbf{R} = \textbf{C}\textbf{D}\textbf{C}^{\mathsf{T}} .
+$$
+
+Eseguendo i calcoli:
+
+```{r}
+e$vectors %*% diag(e$values) %*% t(e$vectors)
+```
+
+#### Analisi degli Autovalori
+
+Gli autovalori indicano la quantità di varianza spiegata da ciascuna componente. Nel nostro caso, i primi due autovalori spiegano il 96% della varianza totale:
+
+```{r}
+(e$values[1] + e$values[2]) / 5
+```
+
+#### Riduzione della Dimensionalità
+
+Per ridurre la dimensionalità dei dati, usiamo i primi due autovalori e i rispettivi autovettori. Questo ci permette di approssimare $\textbf{R}$ mediante una matrice di rango ridotto:
+
+$$
+\textbf{R} \approx \hat{\boldsymbol{\Lambda}} \hat{\boldsymbol{\Lambda}}^{\mathsf{T}} .
+$$
+
+#### Fattorizzazione
+
+Scriviamo $\textbf{D}$ come prodotto di due matrici $\textbf{D}^{1/2}$:
+
+$$
+\textbf{D} = \textbf{D}^{1/2} \textbf{D}^{1/2} ,
+$$
+
+con $\textbf{D}^{1/2}$ definita come:
+
+$$
+\textbf{D}^{1/2} = 
+\begin{bmatrix}
+\sqrt{\theta_1} & 0 & \dots & 0 \\
+0 & \sqrt{\theta_2} & \dots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \dots & \sqrt{\theta_p}
+\end{bmatrix}
+$$
+
+Definiamo ora $\textbf{D}_1$ come la matrice diagonale contenente i primi $m$ autovalori di $\textbf{R}$ e $\textbf{C}_1$ come la matrice contenente i corrispondenti $m$ autovettori. Le **saturazioni fattoriali** stimate sono:
+
+$$
+\hat{\boldsymbol{\Lambda}} = \textbf{C}_1 \textbf{D}_1^{1/2} .
+$$
+
+Per $m = 2$, calcoliamo $\hat{\boldsymbol{\Lambda}}$:
+
+```{r}
+L <- cbind(
+  e$vectors[, 1] * sqrt(e$values[1]),
+  e$vectors[, 2] * sqrt(e$values[2])
+)
+
+round(L, 3)
+```
+
+#### Matrice Riprodotta e Residuale
+
+La matrice di correlazione approssimata è:
+
+```{r}
+R_hat <- round(L %*% t(L), 3)
+R_hat
+```
+
+La matrice residua, con le specificità sulla diagonale principale, è:
+
+```{r}
+R - R_hat
+```
+
+In conclusione, il nome *metodo delle componenti principali* deriva dal fatto che le saturazioni fattoriali sono proporzionali agli autovettori di $\textbf{R}$. Tuttavia, l'interpretazione differisce da quella dell'analisi delle componenti principali.
+
+Un aspetto critico del metodo è la sua **non invarianza rispetto ai cambiamenti di scala**: le soluzioni ottenute con la matrice $\textbf{S}$ di varianze-covarianze differiscono da quelle calcolate con la matrice $\textbf{R}$ di correlazioni. Inoltre, il metodo non prevede un test di bontà di adattamento, disponibile invece con il metodo della massima verosimiglianza.
+
+## Metodo dei Fattori Principali
+
+Il *metodo dei fattori principali* (*Principal Factor Method* o *Principal Axis Method*) è uno dei metodi più comuni per stimare le **saturazioni fattoriali** e le **comunalità**. A differenza del metodo delle componenti principali, che trascura la specificità $\boldsymbol{\Psi}$ e si limita a fattorializzare direttamente la matrice delle covarianze $\textbf{S}$ o delle correlazioni $\textbf{R}$, il metodo dei fattori principali affronta questo limite introducendo una matrice **ridotta** di varianze-covarianze o correlazioni. 
+
+Questa matrice ridotta si ottiene sostituendo una **stima delle comunalità** alle varianze sulla diagonale principale di $\textbf{S}$ o $\textbf{R}$. Questo processo consente di isolare le comunalità dalle specificità e dall'errore.
+
+### Stima delle Comunalità
+
+#### Caso della Matrice di Correlazioni $\textbf{R}$
+
+Per una matrice ridotta di correlazioni $\textbf{R} - \hat{\boldsymbol{\Psi}}$, la comunalità $i$-esima $\hat{h}^2_i$ può essere stimata come il quadrato del coefficiente di correlazione multipla tra la variabile $Y_i$ e le altre $p-1$ variabili. Questa stima si calcola come:
+
+$$
+\hat{h}^2_i = R^2_i = 1 - \frac{1}{r^{ii}} ,
+$$
+
+dove $r^{ii}$ è l'elemento diagonale $i$-esimo dell'inversa di $\textbf{R}$.
+
+#### Caso della Matrice di Varianze-Covarianze $\textbf{S}$
+
+Se si utilizza la matrice delle varianze-covarianze $\textbf{S}$, la comunalità $i$-esima è stimata come:
+
+$$
+\hat{h}^2_i = s_{ii} - \frac{1}{r^{ii}} ,
+$$
+
+dove $s_{ii}$ è l'elemento diagonale $i$-esimo di $\textbf{S}$.
+
+#### Gestione della Singolarità
+
+Se $\textbf{R}$ è singolare, la comunalità $\hat{h}^2_i$ può essere stimata come il valore assoluto del massimo coefficiente di correlazione lineare tra la variabile $Y_i$ e le altre variabili.
+
+### Matrice Ridotta
+
+Sostituendo le stime delle comunalità nella diagonale principale di $\textbf{S}$ o $\textbf{R}$, otteniamo la matrice ridotta. Ad esempio, per la matrice delle varianze-covarianze:
+
+$$
+\textbf{S} - \hat{\boldsymbol{\Psi}} = 
+\begin{bmatrix}
+\hat{h}^2_1 & s_{12} & \dots & s_{1p} \\
+s_{21} & \hat{h}^2_2 & \dots & s_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+s_{p1} & s_{p2} & \dots & \hat{h}^2_p
+\end{bmatrix} .
+$$
+
+Analogamente, per la matrice delle correlazioni:
+
+$$
+\textbf{R} - \hat{\boldsymbol{\Psi}} = 
+\begin{bmatrix}
+\hat{h}^2_1 & r_{12} & \dots & r_{1p} \\
+r_{21} & \hat{h}^2_2 & \dots & r_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+r_{p1} & r_{p2} & \dots & \hat{h}^2_p
+\end{bmatrix} .
+$$
+
+### Esempio Numerico
+
+Usiamo la matrice di correlazione dell'esempio precedente. Per stimare la comunalità $i$-esima, utilizziamo il valore massimo assoluto nella riga $i$-esima della matrice $\textbf{R}$. Le stime delle comunalità sono:
+
+$$
+\hat{h}^2 = \{0.995, 0.837, 0.881, 0.995, 0.837\} .
+$$
+
+Sostituendo queste stime nella diagonale principale, otteniamo la matrice ridotta:
+
+```{r}
+R1 <- R
+h.hat <- c(.995, .837, .881, .995, .837)
+R1[cbind(1:5, 1:5)] <- h.hat
+R1
+```
+
+#### Autovalori della Matrice Ridotta
+
+Calcoliamo gli autovalori della matrice ridotta:
+
+```{r}
+ee <- eigen(R1)
+round(ee$values, 3)
+```
+
+La somma degli autovalori è:
+
+```{r}
+sum(ee$values)
+```
+
+#### Stima delle Saturazioni Fattoriali
+
+I primi due autovalori e i rispettivi autovettori vengono usati per stimare le saturazioni fattoriali. Moltiplichiamo gli autovettori per la radice quadrata dei rispettivi autovalori:
+
+```{r}
+round(ee$vectors[, 1:2] %*% sqrt(diag(ee$values[1:2])), 3)
+```
+
+In conclusione, il metodo dei fattori principali consente di stimare le saturazioni fattoriali tenendo conto delle comunalità, a differenza del metodo delle componenti principali che trascura la specificità. Tuttavia, questo metodo richiede che $\textbf{R}$ non sia singolare. Le soluzioni ottenute sono influenzate dalle scelte iniziali per le comunalità, ma risultano più interpretabili rispetto a quelle del metodo delle componenti principali, poiché cercano di separare la varianza comune dalla specificità e dall'errore.
+
+## Metodo dei Fattori Principali Iterato
+
+Il **metodo dei fattori principali iterato** migliora la stima delle comunalità attraverso un processo iterativo che aggiorna progressivamente la diagonale della matrice ridotta $\textbf{S} - \hat{\boldsymbol{\Psi}}$ o $\textbf{R} - \hat{\boldsymbol{\Psi}}$. Questo approccio consente di ottenere stime più accurate delle comunalità e, di conseguenza, delle saturazioni fattoriali.
+
+### Procedura
+
+1. **Stima iniziale delle comunalità:**
+   Si parte con una stima iniziale delle comunalità $\hat{h}^2_i$ per tutte le variabili. Queste stime iniziali possono derivare, ad esempio, dal massimo valore assoluto di correlazione per ciascuna variabile.
+
+2. **Costruzione della matrice ridotta:**
+   Sostituendo le comunalità iniziali nella diagonale principale, si ottiene la matrice ridotta $\textbf{S} - \hat{\boldsymbol{\Psi}}$ o $\textbf{R} - \hat{\boldsymbol{\Psi}}$.
+
+3. **Stima delle saturazioni fattoriali:**
+   Dalla matrice ridotta, si calcolano gli **autovalori** e i corrispondenti **autovettori**, utilizzando i primi $m$ autovalori (e i relativi autovettori) per stimare le saturazioni fattoriali $\hat{\boldsymbol{\Lambda}}$. Le saturazioni fattoriali per la variabile $i$ e il fattore $j$ si indicano con $\hat{\lambda}_{ij}$.
+
+4. **Aggiornamento delle comunalità:**
+   Le comunalità vengono ricalcolate come la somma dei quadrati delle saturazioni fattoriali per ciascuna variabile $i$:
+
+   $$
+   \hat{h}^2_i = \sum_{j=1}^m \hat{\lambda}_{ij}^2 .
+   $$
+
+5. **Sostituzione nella matrice ridotta:**
+   I nuovi valori di $\hat{h}^2_i$ vengono sostituiti nella diagonale principale della matrice ridotta $\textbf{S} - \hat{\boldsymbol{\Psi}}$ o $\textbf{R} - \hat{\boldsymbol{\Psi}}$, e il processo viene ripetuto.
+
+6. **Iterazione fino alla convergenza:**
+   Questo ciclo iterativo continua finché i valori stimati delle comunalità $\hat{h}^2_i$ non cambiano significativamente tra un'iterazione e l'altra, indicando la **convergenza**.
+
+7. **Stima finale dei pesi fattoriali:**
+   Una volta raggiunta la convergenza, gli **autovalori** e gli **autovettori** della matrice ridotta finale vengono utilizzati per stimare i pesi fattoriali definitivi.
+
+### Confronto con il Metodo delle Componenti Principali
+
+- **Similitudini:**  
+  Quando il numero di variabili $p$ è grande e le correlazioni tra le variabili sono alte, il metodo dei fattori principali iterato produce risultati simili a quelli del metodo delle componenti principali.
+
+- **Differenze:**  
+  Il metodo dei fattori principali iterato tiene conto delle **specificità** (diagonale $\boldsymbol{\Psi}$) e fornisce una stima più accurata delle comunalità. Al contrario, il metodo delle componenti principali assume implicitamente che tutta la varianza sia spiegata dai fattori comuni, trascurando la specificità.
+
+### Vantaggi del Metodo Iterato
+
+1. **Maggiore precisione:**  
+   L'iterazione migliora progressivamente le stime delle comunalità, riducendo l'impatto di errori iniziali.
+
+2. **Adattabilità:**  
+   Il metodo può essere applicato sia alla matrice delle covarianze $\textbf{S}$ sia a quella delle correlazioni $\textbf{R}$, rendendolo flessibile a diversi contesti analitici.
+
+3. **Convergenza:**  
+   Il processo iterativo garantisce che le stime finali siano ottimali rispetto al modello specificato.
+
+In un'applicazione pratica, il metodo dei fattori principali iterato viene solitamente implementato utilizzando funzioni predefinite disponibili in software statistici come R o altre piattaforme dedicate all'analisi dei dati.
+
+In conclusione, il metodo dei fattori principali iterato rappresenta un miglioramento rispetto ai metodi non iterativi, poiché tiene conto delle specificità e consente una stima più accurata delle comunalità e dei fattori. Pur essendo più complesso, è particolarmente utile in contesti in cui la precisione delle stime è essenziale.
+
+### Casi di Heywood
+
+Uno degli inconvenienti del metodo dei fattori principali iterato è la possibilità di ottenere soluzioni **inammissibili**, note come **casi di Heywood**, che si verificano quando la matrice delle correlazioni $\textbf{R}$ viene fattorizzata e alcune comunalità stimate risultano maggiori di 1. 
+
+Se $\hat{h}^2_i > 1$ per una comunalità stimata, significa che la specificità $\hat{\psi}_i$ è negativa, ossia:
+
+$$
+\hat{\psi}_i = s_{ii} - \hat{h}^2_i < 0 .
+$$
+
+Questo è logicamente inaccettabile, poiché una **varianza non può assumere valori negativi**. Un caso del genere indica un problema nella soluzione iterativa, spesso dovuto a:
+
+- **Inadeguatezza del modello fattoriale:** il numero di fattori scelto potrebbe non essere sufficiente a rappresentare correttamente i dati.
+- **Problemi di multicollinearità:** correlazioni molto alte tra le variabili possono complicare il processo di stima.
+- **Rumore nei dati:** errori di misura o dati imperfetti possono causare queste anomalie.
+
+Quando si verifica un caso di Heywood, il processo iterativo viene solitamente interrotto dal software, che segnala l'impossibilità di trovare una soluzione ammissibile.
+
+Per illustrare il problema, possiamo utilizzare la funzione `fa()` del pacchetto `psych` in R. Questa funzione implementa il metodo iterativo dei fattori principali.
+
+```{r}
+# Esecuzione del metodo dei fattori principali iterato
+pa <- fa(R, nfactors = 2, rotate = "none", fm = "pa")
+pa
+```
+
+Nel risultato ottenuto, è possibile osservare che alcune **unicità** (specificità, $\hat{\psi}_i$) sono negative. Questo è un chiaro segnale di una **soluzione impropria**, che si riconosce come un caso di Heywood.
+
+#### Come Gestire i Casi di Heywood
+
+1. **Aumentare il numero di fattori:**
+   Aggiungere un fattore al modello potrebbe aiutare a catturare una maggiore porzione della varianza totale, riducendo il rischio di comunalità superiori a 1.
+
+2. **Controllare la qualità dei dati:**
+   - Identificare ed eliminare eventuali errori di misura.
+   - Valutare la presenza di variabili con correlazioni eccessivamente alte.
+
+3. **Applicare regolarizzazioni:**
+   Alcuni metodi moderni di analisi fattoriale includono tecniche per evitare soluzioni improprie (ad esempio, vincolando le comunalità o utilizzando approcci bayesiani).
+
+4. **Interpretare con cautela:**
+   In presenza di un caso di Heywood, è importante non accettare automaticamente la soluzione proposta dal modello. Una revisione critica del numero di fattori e della metodologia è essenziale.
+
+In conclusione, i casi di Heywood rappresentano una limitazione importante del metodo dei fattori principali iterato, specialmente quando applicato a dati complessi o modelli non adeguati. Identificarli e gestirli correttamente è fondamentale per garantire la validità delle conclusioni tratte dall'analisi.
+
+## Metodo di Massima Verosimiglianza
+
+Il metodo di **massima verosimiglianza** è particolarmente indicato quando si può ragionevolmente assumere che le variabili manifeste seguano una distribuzione normale multivariata. In tali condizioni, il metodo produce stime dei pesi fattoriali e delle specificità che sono quelle più verosimili date le correlazioni osservate. Questo metodo è spesso preferito rispetto ad altri, a patto che le sue ipotesi di base siano pienamente soddisfatte.
+
+Il metodo di massima verosimiglianza minimizza una funzione di discrepanza $F$, che misura la **distanza** tra la matrice di covarianze osservata $\textbf{S}$ (o la matrice di correlazioni $\textbf{R}$) e quella predetta dal modello $\textbf{M}$. La funzione $F$ può essere espressa come:
+
+$$
+F(\boldsymbol{\Lambda}, \boldsymbol{\Psi}) = \text{discrepanza tra } \textbf{S} \text{ e } \textbf{M}.
+$$
+
+Minimizzando $F$, uguagliando a zero le derivate di $F$ rispetto ai parametri del modello $\boldsymbol{\Lambda}$ (pesi fattoriali) e $\boldsymbol{\Psi}$ (specificità), si ottengono le equazioni per le **stime di massima verosimiglianza**:
+
+$$
+\hat{\boldsymbol{\Lambda}}, \hat{\boldsymbol{\Psi}} .
+$$
+
+Queste equazioni non hanno una soluzione analitica diretta, quindi si ricorre a metodi numerici iterativi per trovare le stime dei parametri. Durante l'iterazione, si cerca di minimizzare la discrepanza tra la matrice osservata e quella predetta dal modello.
+
+### Caratteristiche del Metodo
+
+1. **Precisione delle stime:**  
+   Se le ipotesi sono rispettate, le stime di massima verosimiglianza sono asintoticamente efficienti, ossia hanno la minima varianza possibile tra gli stimatori.
+
+2. **Indipendenza dall'unità di misura:**  
+   La soluzione non dipende dall'unità di misura delle variabili manifeste. Questo significa che si ottiene la stessa soluzione analizzando la matrice di covarianze $\textbf{S}$ o quella di correlazioni $\textbf{R}$.
+
+3. **Test di bontà di adattamento:**  
+   Le stime di massima verosimiglianza consentono di eseguire un **test chi-quadrato** per valutare se la matrice predetta dal modello è coerente con quella osservata. Questo test offre una misura formale della bontà di adattamento del modello ai dati.
+
+4. **Limitazioni:**  
+   - **Problemi di convergenza:** In alcuni casi, il processo iterativo può non convergere, specialmente con dati problematici o ipotesi non rispettate.
+   - **Casi di Heywood:** Analogamente al metodo dei fattori principali iterato, possono verificarsi casi di Heywood in cui alcune comunalità stimate risultano maggiori di 1.
+
+### Applicazione Pratica
+
+Per calcolare le stime di massima verosimiglianza in R, è possibile utilizzare la funzione `factanal()`, che implementa questo metodo direttamente.
+
+Consideriamo i dati dell'esempio precedente e calcoliamo i parametri di massima verosimiglianza:
+
+```{r}
+factanal(
+    covmat = R,        # Matrice di correlazioni
+    factors = 2,       # Numero di fattori
+    rotation = "none", # Nessuna rotazione
+    n.obs = 225        # Numero di osservazioni
+)
+```
+
+1. **Pesi fattoriali:**  
+   I pesi fattoriali stimati $\hat{\boldsymbol{\Lambda}}$ saranno molto simili a quelli ottenuti con il metodo dei fattori principali iterato.
+
+2. **Specificità:**  
+   Le specificità $\hat{\boldsymbol{\Psi}}$ rifletteranno la porzione di varianza non spiegata dai fattori comuni.
+
+3. **Test di bontà di adattamento:**  
+   Il risultato include un test chi-quadrato che valuta la coerenza tra il modello e i dati osservati. Un valore di p elevato indica un buon adattamento del modello.
+
+### Confronto con Altri Metodi
+
+Il metodo di massima verosimiglianza si distingue per la sua capacità di fornire stime ottimali e una valutazione formale dell'adattamento del modello. Tuttavia, richiede che le variabili manifeste seguano una distribuzione normale multivariata, il che potrebbe non essere sempre soddisfatto nei dati reali. Quando le ipotesi di normalità sono violate, metodi alternativi come la stima mediante minimi quadrati ponderati (WLS) potrebbero essere più appropriati.
+
+In conclusione, il metodo di massima verosimiglianza rappresenta uno standard per l'analisi fattoriale, offrendo stime efficienti e strumenti per valutare l'adattamento del modello ai dati. Tuttavia, l'efficacia del metodo dipende dalla validità delle ipotesi di normalità e dalla qualità dei dati utilizzati.
+
+## Riflessioni Conclusive
+
+L’analisi fattoriale rappresenta uno strumento fondamentale per la riduzione della dimensionalità e l’identificazione di strutture latenti nei dati. Ogni metodo analizzato, dal metodo delle componenti principali al metodo di massima verosimiglianza, offre vantaggi e limitazioni, risultando più o meno adatto a seconda delle caratteristiche del dataset e degli obiettivi dell’analisi. 
+
+I metodi iterativi, come il metodo dei fattori principali iterato e quello di massima verosimiglianza, si distinguono per la loro capacità di fornire stime più precise, sebbene possano incontrare problemi di convergenza o casi di Heywood. La scelta del metodo più appropriato dipende quindi non solo dai vincoli teorici, come la normalità multivariata, ma anche dalla complessità dei dati e dalla necessità di strumenti formali per testare l’adattamento del modello.
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered}
+
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,736 @@
+# Exploratory structural equation modelling {#sec-sem-esem}
+
+::: callout-important
+## In questo capitolo imparerai a:
+
+- Comprensione delle differenze tra l'ESEM completo e il set-ESEM, con quest'ultimo come compromesso tra CFA e ESEM per gestire specifici blocchi indipendenti di variabili.
+- Giustificazione dell'uso del set-ESEM nei modelli strutturali come alternativa al CFA.
+- Identificazione degli effetti distorti e dei coefficienti di percorso attenuati nei modelli CFA a causa della multicollinearità, e come il set-ESEM riduce questo problema.
+- Uso dell'invarianza di misura nei modelli longitudinali per garantire la stabilità delle misurazioni nel tempo, applicabile in set-ESEM.
+- Benefici del set-ESEM, inclusi miglior fit del modello, validità discriminante più accurata e riduzione degli errori di tipo II nei modelli strutturali.
+- Implementazione pratica in R con lavaan.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Structural Equation Modeling* del testo di @petersen2024principles.
+- Leggere l'articolo: 
+    - Marsh, H., & Alamer, A. (2024). When and how to use set‐exploratory structural equation modelling to test structural models: A tutorial using the R package lavaan. *British Journal of Mathematical and Statistical Psychology*, *77*, 459--476.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(semTools, tidyr, psych, lavaan, kableExtra, stringr)
+```
+:::
+
+## Introduzione
+
+L'*Exploratory Structural Equation Modeling* (ESEM) è una tecnica statistica innovativa che combina i punti di forza dell'analisi fattoriale esplorativa (EFA) e dell'analisi fattoriale confermativa (CFA). Introdotta da Asparouhov e Muthén nel 2009 e successivamente sviluppata da Marsh et al. (2009, 2014), l'ESEM consente di modellare strutture fattoriali complesse mantenendo una flessibilità analitica che supera i limiti tradizionali della CFA. Questa tecnica si rivela particolarmente vantaggiosa in presenza di item con fonti di varianza multiple, come sottolineato da Morin et al. (2013), grazie alla sua capacità di migliorare l'adattamento del modello, ridurre le correlazioni spurie tra fattori e rappresentare in modo realistico le saturazioni fattoriali incrociate.
+
+L'efficacia dell'ESEM è stata dimostrata in numerosi ambiti della psicologia, tra cui la psicologia clinica, educativa, industriale e della salute, dove spesso supera il CFA in termini di adattamento e interpretabilità del modello. Tuttavia, in contesti specifici, potrebbe essere necessario introdurre restrizioni al modello ESEM completamente libero. Questo ha portato all'evoluzione del set-ESEM (Marsh et al., 2020), una tecnica che integra in modo strategico elementi di ESEM e CFA in un quadro analitico unificato.
+
+In questo capitolo, esploreremo i fondamenti e le applicazioni dell'*Exploratory Structural Equation Modeling* (ESEM), seguendo il tutorial proposto da @marsh2024and.
+
+## EFA, CFA, ESEM e Set-ESEM
+
+L'analisi fattoriale esplorativa (EFA) e l'analisi fattoriale confermativa (CFA) rappresentano i due approcci principali per indagare le strutture latenti nei dati. L'EFA, introdotta da Spearman (1904) e sviluppata ulteriormente da Thurstone (1935, 1947), era inizialmente conosciuta semplicemente come "analisi fattoriale." Solo con l'introduzione della CFA si è stabilita una distinzione tra l'approccio esplorativo (EFA) e quello confermativo (CFA). La CFA è diventata uno strumento centrale nella psicometria grazie alla sua capacità di valutare l'adattamento del modello, gestire dati mancanti con metodi avanzati e confrontare modelli teorici alternativi. Tuttavia, uno dei suoi principali limiti è l'ipotesi rigida che ogni item carichi su un solo fattore, ignorando potenziali carichi incrociati.
+
+Questo limite ha portato allo sviluppo dell'Exploratory Structural Equation Modeling (ESEM) da parte di Asparouhov e Muthén (2009). L'ESEM combina la flessibilità dell'EFA con la potenza analitica della SEM, consentendo carichi incrociati tra i fattori e offrendo un migliore adattamento ai dati psicometrici complessi. Questo approccio si è dimostrato superiore alla CFA in numerosi studi, migliorando l'adattamento del modello e sostenendo la validità discriminante tra i fattori. Una meta-analisi recente condotta da Gegenfurtner (2022) su 158 studi ha confermato che l'ESEM supera la CFA sia per bontà di adattamento sia per validità discriminante.
+
+L'ESEM è ormai uno strumento consolidato nella psicometria moderna, dimostrando la sua efficacia nel modellare strutture fattoriali complesse. Grazie alla sua capacità di rappresentare accuratamente le correlazioni e le regressioni tra fattori e di utilizzare tutte le informazioni disponibili a livello degli indicatori, si è affermato come un'alternativa valida e spesso preferibile alla CFA.
+
+Tuttavia, l'ESEM, pur essendo più flessibile, può risultare meno parsimonioso rispetto alla CFA in alcune situazioni. Per questo motivo è stato sviluppato il set-ESEM (Marsh et al., 2020), un'evoluzione che bilancia la flessibilità dell'ESEM con una struttura più rigorosa, tipica della CFA. Il set-ESEM utilizza tecniche di rotazione come la geomin rotation o il target rotation per limitare i carichi incrociati non essenziali, rendendo il modello più parsimonioso e adatto a specifiche esigenze empiriche.
+
+::: {#fig-set-esem}
+![](../../figures/cfa_esem_set_esem.png){width="80%"}
+
+**CFA, ESEM completo e set-ESEM.** Nota: le linee tratteggiate indicano i carichi incrociati non target. [Figura tratta da Marsh et al., 2024]
+:::
+
+## Situazioni in cui il Set-ESEM è Preferibile all'ESEM Completo
+
+In alcune situazioni, l'ESEM completo potrebbe non essere l'approccio ottimale per un'analisi. Questo accade quando è necessario garantire che specifici insiemi di fattori e item siano distinti da altri insiemi non correlati. Per affrontare tali scenari, si può utilizzare il *set-ESEM*, un approccio introdotto da Marsh et al. (2020) che permette di creare sottoinsiemi di ESEM all'interno di un modello più ampio. Il set-ESEM bilancia la flessibilità dell'ESEM completo con la struttura più rigorosa della CFA, offrendo un compromesso ideale in termini di adattamento del modello, parsimonia e definizione chiara dei modelli di misurazione. Di seguito, descriviamo due situazioni reali in cui il set-ESEM può risultare preferibile, basandoci su dati empirici.
+
+### 1. Item relativi a costrutti teoricamente distinti
+
+La prima situazione riguarda dataset che includono item derivati da costrutti concettualmente distinti o appartenenti a teorie differenti. Ad esempio, consideriamo un dataset che misura le tre necessità psicologiche di base—autonomia, competenza e relazionalità—utilizzando la scala *BPN-L2* (Alamer, 2022), insieme a due costrutti di perseveranza nello sforzo e coerenza dell’interesse, derivati dalla teoria del *grit* (Duckworth et al., 2007) e misurati con la scala *L2-grit* (Alamer, 2021b). Poiché le necessità psicologiche di base e il *grit* si fondano su teorie con obiettivi e funzioni differenti, stimare carichi incrociati tra i loro item risulterebbe inappropriato. Per esempio, i fattori delle necessità psicologiche sono influenzati dal contesto sociale, mentre il *grit* è considerato un tratto stabile della personalità.
+
+In queste circostanze, il set-ESEM consente di suddividere il modello in due blocchi: uno dedicato ai tre fattori delle necessità psicologiche, con carichi incrociati tra loro ma non con gli item del *grit*, e un secondo blocco per i due fattori del *grit*, senza carichi incrociati con le necessità psicologiche. Questo approccio mantiene una maggiore parsimonia, preservando sia la coerenza teorica sia l’accuratezza empirica.
+
+### 2. Costrutti rilevanti misurati in più momenti temporali
+
+Il secondo scenario in cui il set-ESEM è consigliato riguarda analisi longitudinali, in cui i dati provengono da costrutti misurati in più momenti temporali. In questi casi, i carichi incrociati dovrebbero essere stimati solo tra item relativi allo stesso momento temporale. Ad esempio, consideriamo un dataset che misura passione armoniosa, passione ossessiva e autonomia in due momenti distinti. Questi costrutti sono correlati concettualmente, rendendo ragionevoli i carichi incrociati all'interno dello stesso momento. Tuttavia, permettere carichi incrociati tra item di momenti diversi sarebbe teoricamente inappropriato e tecnicamente problematico, introducendo effetti di confondimento.
+
+Inoltre, nelle analisi longitudinali SEM è consuetudine correlare i residui degli stessi item nel tempo (Marsh & Hau, 1996). Utilizzando il set-ESEM, è possibile preservare la flessibilità analitica dell'ESEM mantenendo il rigore strutturale necessario per evitare interpretazioni distorte.
+
+::: {#fig-set-esem}
+![](../../figures/cfa_esem_set_esem.png){width="80%"}
+
+**CFA, ESEM completo e set-ESEM.** Nota: le linee tratteggiate indicano i carichi incrociati non target. [Figura tratta da @marsh2024and]
+:::
+
+## Necessità Psicologiche di Base e Percezione del Sé
+
+Per illustrare il primo scenario descritto in precedenza, esaminiamo uno studio condotto su 269 studenti sauditi che imparano l’inglese come seconda lingua (*L2*) in un’università pubblica saudita [@marsh2024and]. I partecipanti, di età compresa tra 18 e 20 anni (M = 18.5), parlavano arabo come lingua madre e hanno completato un questionario online. Lo studio utilizza il set-ESEM per analizzare i dati, dimostrando come questo approccio possa superare sia l’ESEM completo che la CFA in termini di adattamento del modello e precisione nelle stime.
+
+### Struttura del Modello
+
+Lo studio si basa su due blocchi teorici di costrutti: 
+
+1. **Necessità Psicologiche di Base (BPN)**:  
+   Questo blocco include autonomia, competenza e relazionalità, tre fattori derivati dalla teoria delle necessità psicologiche di base (Ryan & Deci, 2017; Noels, 2023). Gli item valutano la percezione degli studenti sull’insegnante come promotore di questi tre fattori. 
+
+2. **Percezione del Sé**:  
+   Questo blocco comprende senso di significato, senso di sicurezza e motivazione intrinseca, costrutti associati ai risultati positivi delle BPN. La letteratura suggerisce che quando gli studenti percepiscono l’insegnante come un promotore delle BPN, si osserva un aumento della motivazione intrinseca, del senso di significato e della sicurezza (Alamer, 2022; Alamer & Al Khateeb, 2023; Guay et al., 2015).  
+
+### Distinzione Concettuale
+
+Ai partecipanti è stato chiesto di valutare sia la percezione dell’insegnante come promotore delle BPN, sia la loro percezione personale in termini di senso di significato, sicurezza e motivazione intrinseca. Questa distinzione concettuale giustifica l’assenza di carichi incrociati tra i due blocchi di item:  
+
+- Gli item relativi alle BPN si concentrano sull’insegnante e riflettono l’interazione sociale.  
+- Gli item relativi alla percezione di sé misurano costrutti soggettivi e individuali.  
+
+Consentire carichi incrociati tra questi due domini sarebbe teoricamente ingiustificato, data la loro natura distinta.
+
+### Variabile di Esito
+
+Lo studio include anche l’intenzione di abbandonare il corso come variabile di esito. Questo costrutto rappresenta un indicatore pratico delle implicazioni educative delle percezioni relative all’insegnante e al sé.
+
+### Analisi dei Modelli
+
+I modelli alternativi analizzati nello studio—uno basato su CFA e l’altro su set-ESEM—sono illustrati nella @fig-set-esem-cfa. L’analisi dimostra che il set-ESEM bilancia efficacemente rigore teorico e flessibilità empirica, fornendo stime più affidabili delle relazioni tra variabili latenti e risultati migliori rispetto agli approcci tradizionali.
+
+::: {#fig-set-esem-cfa}
+![](../../figures/set_esem_cfa.png){width="90%"}
+
+Set-ESEM (modello A) e CFA (modello B). Nota: le linee tratteggiate indicano i carichi incrociati non target. [Figura tratta da @marsh2024and]
+:::
+
+**Strumenti di Misura**
+
+Per valutare i costrutti oggetto di studio, sono state utilizzate diverse scale validate, ognuna composta da specifici item rappresentativi. 
+
+1. **BPN-L2** *(Alamer, 2022)*:  
+   Questa scala misura le tre necessità psicologiche di base — autonomia, competenza e relazionalità — ciascuna con tre item. Esempi:  
+   - **Autonomia**: *"Il mio insegnante ci permette di scegliere i compiti di apprendimento linguistico"* (ω = .75).  
+   - **Competenza**: *"Il mio insegnante ci dice che siamo capaci di imparare l'inglese"* (ω = .75).  
+   - **Relazionalità**: *"Il mio insegnante di inglese è amichevole e cordiale con noi"* (ω = .91).  
+
+2. **Motivazione intrinseca** *(SDT-L2; Alamer, 2022)*:  
+   Questo costrutto è stato misurato tramite tre item, come:  
+   - *"Imparo l'inglese perché mi piace"* (ω = .91).  
+
+3. **Senso di sicurezza e senso di significato** *(Dörnyei & Ushioda, 2021; Dörnyei & Ryan, 2015)*:  
+   - **Sicurezza**: Tre item, ad esempio: *"Credo nelle mie capacità di fare bene nel corso"* (ω = .74).  
+   - **Significato**: Tre item, come: *"So perché mi sono iscritto a questo corso"* (ω = .91).  
+
+4. **Intenzione di abbandonare il corso** *(Lounsbury et al., 2004)*:  
+   Questo costrutto è stato misurato con cinque item, ad esempio:  
+   - *"Non ho intenzione di continuare a studiare in questo settore"* (ω = .90).  
+Tutte le misure adottano una scala Likert a cinque punti, con risposte che vanno da 1 (*fortemente in disaccordo*) a 5 (*fortemente d'accordo*), per valutare l'accordo o il disaccordo dei partecipanti con ciascun item.
+
+**Dati**
+
+Importiamo i dati e esaminiamo le variabili.
+
+```{r}
+#| vscode: {languageId: r}
+study1_dat <- rio::import(
+    here::here(
+        "data", "marsh_alamer", "Study_1_data.csv"
+    )
+)
+
+glimpse(study1_dat)
+```
+
+**Codice lavaan per il modello ESEM**
+
+Definiamo il modello ESEM.
+
+```{r}
+esem1 <- '
+
+  # the long format (more flexible) each factor is defined separately
+  efa("teacher")*Teacher_autonomy =~ T_autonomy1 + T_autonomy2 + T_autonomy3 + T_competence1 + T_competence2 + T_competence3 + T_relatedness1 + T_relatedness2 + T_relatedness3
+  efa("teacher")*Teacher_competence =~ T_autonomy1 + T_autonomy2 + T_autonomy3 + T_competence1 + T_competence2 + T_competence3 + T_relatedness1 + T_relatedness2 + T_relatedness3
+  efa("teacher")*Teacher_relatedness =~ T_autonomy1 + T_autonomy2 + T_autonomy3 + T_competence1 + T_competence2 + T_competence3 + T_relatedness1 + T_relatedness2 + T_relatedness3
+
+  # the short format (less flexible) all factors defined in one instance (remove ”##” if you want to use this)
+  # efa("teacher")*Teacher_autonomy +
+  # efa("teacher")*Teacher_competence +
+  # efa("teacher")*Teacher_relatedness =~ T_autonomy1 + T_autonomy2 + T_autonomy3 + T_competence1 + T_competence2 + T_competence3 + T_relatedness1 + T_relatedness2 + T_relatedness3
+
+  # defining the second ESEM block
+  efa("self")*Self_Meaning =~ S_meaning1 + S_meaning2 + S_meaning3 + S_confidence1 + S_confidence2 + S_confidence3 + S_Intrinsic1 + S_Intrinsic2+S_Intrinsic3
+  efa("self")*Self_Confidence =~ S_meaning1 + S_meaning2 + S_meaning3 + S_confidence1 + S_confidence2 + S_confidence3 + S_Intrinsic1 + S_Intrinsic2+S_Intrinsic3
+  efa("self")*Intrinsic_Motivation =~ S_meaning1 + S_meaning2 + S_meaning3 + S_confidence1 + S_confidence2 + S_confidence3 + S_Intrinsic1 + S_Intrinsic2+S_Intrinsic3
+
+  # defining the outcome variable
+  Intent_to_Quit =~ Intent_to_withdraw1 + Intent_to_withdraw2 + Intent_to_withdraw3 + Intent_to_withdraw4 + Intent_to_withdraw5
+
+  # defining the structural part
+  Self_Meaning ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Self_Confidence ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Intrinsic_Motivation ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Intent_to_Quit ~ Self_Meaning + Self_Confidence + Intrinsic_Motivation +
+                   Teacher_autonomy + Teacher_competence + Teacher_relatedness
+'
+```
+
+Adattiamo il modello ai dati.
+
+```{r}
+out1 <- sem(
+    model = esem1,
+    data = study1_dat,
+    estimator = "MLR", # verbose = TRUE, test = "yuan.bentler",
+    rotation = "geomin",
+    rotation.args = list(geomin.epsilon = 0.005)
+)
+```
+
+Creiamo il diagramma di percorso.
+
+```{r}
+semPlot::semPaths(
+    out1,
+    what = "col", whatLabels = "no", style = "mx",
+    layout = "tree", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 5, sizeMan2 = 4
+)
+```
+
+Esaminiamo la soluzione fattoriale.
+
+```{r}
+summary(out1, standardized = TRUE, fit.measures = TRUE) 
+```
+
+**Codice lavaan per il modello CFA**
+
+Definiamo ora il modello CFA.
+
+```{r}
+cfa1 <- ' ## Specify the measurement model
+
+  # "teacher" factors
+  Teacher_autonomy    =~    T_autonomy1 +    T_autonomy2 +    T_autonomy3
+  Teacher_competence  =~  T_competence1 +  T_competence2 +  T_competence3
+  Teacher_relatedness =~ T_relatedness1 + T_relatedness2 + T_relatedness3
+
+  # "self" factors
+  Self_Meaning         =~    S_meaning1 +    S_meaning2 +    S_meaning3
+  Self_Confidence      =~ S_confidence1 + S_confidence2 + S_confidence3
+  Intrinsic_Motivation =~  S_Intrinsic1 +  S_Intrinsic2 +  S_Intrinsic3
+
+  # defining the outcome variable
+  Intent_to_Quit =~ Intent_to_withdraw1 + Intent_to_withdraw2 + Intent_to_withdraw3 + Intent_to_withdraw4 + Intent_to_withdraw5
+
+  # specify the structural model
+  Self_Meaning ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Self_Confidence ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Intrinsic_Motivation ~ Teacher_autonomy + Teacher_competence + Teacher_relatedness
+  Intent_to_Quit ~ Self_Meaning + Self_Confidence + Intrinsic_Motivation +
+                   Teacher_autonomy + Teacher_competence + Teacher_relatedness
+
+  # residual covariances among mediating factors in Block 2 ("self")
+  # (not automatically estimated due to being predictors as well,
+  #  but ESEM rotation allows their covariances to be nonzero)
+  Self_Meaning    ~~ Self_Confidence + Intrinsic_Motivation
+  Self_Confidence ~~ Intrinsic_Motivation
+'
+```
+
+Adattiamo il modello.
+
+```{r}
+fit1 <- sem(
+    model = cfa1, data = study1_dat,
+    estimator = "MLR", std.lv = TRUE
+)
+```
+
+Creiamo il diagramma di percorso.
+
+```{r}
+semPlot::semPaths(
+    fit1,
+    what = "col", whatLabels = "no", style = "mx",
+    layout = "tree", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 6, sizeMan2 = 4
+)
+```
+
+Esaminiamo la soluzione fattoriale.
+
+```{r}
+summary(fit1, standardized = TRUE, fit.measures = TRUE) |> print()
+```
+
+**Confronto tra modelli**
+
+```{r}
+# Extract model fit statistics from out1 and fit1
+fit_stats_out1 <- fitMeasures(out1, c("chisq", "df", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "cfi", "tli"))
+fit_stats_fit1 <- fitMeasures(fit1, c("chisq", "df", "rmsea", "rmsea.ci.lower", "rmsea.ci.upper", "cfi", "tli"))
+
+# Create a tibble with the extracted fit statistics
+fit_table <- tibble(
+    Model = c("CFA-based model", "Set-ESEM-based model"),
+    chisq = c(fit_stats_fit1["chisq"], fit_stats_out1["chisq"]),
+    df = c(fit_stats_fit1["df"], fit_stats_out1["df"]),
+    RMSEA = c(fit_stats_fit1["rmsea"], fit_stats_out1["rmsea"]),
+    `RMSEA 90% CI` = c(
+        sprintf("(%.3f, %.3f)", fit_stats_fit1["rmsea.ci.lower"], fit_stats_fit1["rmsea.ci.upper"]),
+        sprintf("(%.3f, %.3f)", fit_stats_out1["rmsea.ci.lower"], fit_stats_out1["rmsea.ci.upper"])
+    ),
+    CFI = c(fit_stats_fit1["cfi"], fit_stats_out1["cfi"]),
+    TLI = c(fit_stats_fit1["tli"], fit_stats_out1["tli"])
+)
+
+# Convert numeric columns to formatted strings with three decimal places
+fit_table <- fit_table %>%
+    mutate(
+        across(where(is.numeric), ~ sprintf("%.3f", .)),
+        chisq = sprintf("%.3f", as.numeric(chisq)), # Ensure chisq is formatted correctly
+        df = as.character(df) # Convert df to character for consistent formatting
+    )
+
+# Calculate column widths for alignment
+col_widths <- fit_table %>%
+    summarise(across(everything(), ~ max(nchar(.), na.rm = TRUE)))
+
+# Create text-based table output
+header <- paste(
+    str_pad("Model", col_widths$Model, side = "right"),
+    str_pad("chisq", col_widths$chisq, side = "right"),
+    str_pad("df", col_widths$df, side = "right"),
+    str_pad("RMSEA", col_widths$RMSEA, side = "right"),
+    str_pad("RMSEA 90% CI", col_widths$`RMSEA 90% CI`, side = "right"),
+    str_pad("CFI", col_widths$CFI, side = "right"),
+    str_pad("TLI", col_widths$TLI, side = "right"),
+    sep = " | "
+)
+separator <- strrep("-", nchar(header))
+
+# Print header and separator
+cat(header, "\n")
+cat(separator, "\n")
+
+# Print each row formatted with aligned columns
+fit_table %>%
+    mutate(
+        Model = str_pad(Model, col_widths$Model, side = "right"),
+        chisq = str_pad(chisq, col_widths$chisq, side = "right"),
+        df = str_pad(df, col_widths$df, side = "right"),
+        RMSEA = str_pad(RMSEA, col_widths$RMSEA, side = "right"),
+        `RMSEA 90% CI` = str_pad(`RMSEA 90% CI`, col_widths$`RMSEA 90% CI`, side = "right"),
+        CFI = str_pad(CFI, col_widths$CFI, side = "right"),
+        TLI = str_pad(TLI, col_widths$TLI, side = "right")
+    ) %>%
+    rowwise() %>%
+    mutate(row_text = paste(Model, chisq, df, RMSEA, `RMSEA 90% CI`, CFI, TLI, sep = " | ")) %>%
+    pull(row_text) %>%
+    cat(sep = "\n")
+```
+
+Per stimare i modelli, @marsh2024and utilizzano la versione robusta della massima verosimiglianza (MLR), che garantisce stime robuste rispetto a deviazioni dalla normalità multivariata (Yuan & Bentler, 2000). Per valutare la qualità dei modelli, sono presi in considerazione diversi indicatori di adattamento: il chi-quadro robusto (χ²) con i relativi gradi di libertà e valore *p*, il Comparative Fit Index (CFI), il Tucker-Lewis Index (TLI), e il Root Mean Square Error of Approximation (RMSEA) con il suo intervallo di confidenza al 90%. Coerentemente con l'approccio MLR, i valori di CFI, TLI e RMSEA riportati nei due esempi sono calcolati nella loro versione robusta.
+
+I risultati presentati nella tabella precedente indicano che sia il modello strutturale basato su CFA sia quello basato su set-ESEM mostrano un buon adattamento ai dati. Tuttavia, @marsh2024and si concentrano principalmente sulle differenze nelle relazioni strutturali tra i due modelli, tralasciando un'analisi dettagliata delle specifiche del modello di misura.
+
+### Miglior adattamento del set-ESEM
+
+La Tabella 2 dell'articolo di @marsh2024and riporta i coefficienti di percorso per entrambi i modelli. Sebbene entrambi mostrino un adattamento accettabile, il modello set-ESEM si distingue per un adattamento superiore. Questo è evidenziato da un incremento di +0.01 nei valori di TLI e CFI rispetto al modello CFA. Anche i criteri informativi confermano il vantaggio del set-ESEM:
+
+- **CFA**: AIC = 15985.43, BIC = 16226.27, BIC corretto = 16013.84.
+- **Set-ESEM**: AIC = 15971.25, BIC = 16298.37, BIC corretto = 16009.84.
+
+Valori più bassi di AIC e BIC indicano un miglior adattamento complessivo per il modello set-ESEM.
+
+### Riduzione delle correlazioni sovrastimate
+
+Un noto limite del CFA è la tendenza a sovrastimare le correlazioni tra variabili latenti esogene, il che può aumentare il rischio di collinearità e compromettere l'accuratezza dei parametri stimati (Shao et al., 2022). Il set-ESEM riduce notevolmente questo problema. Ad esempio:
+
+- La correlazione tra *Autonomia_Insegnante* e *Relazionalità_Insegnante* nel modello CFA è di .80, mentre nel set-ESEM scende a .51 (Δr = .29).
+
+Questa riduzione migliora la validità discriminante e garantisce stime più attendibili.
+
+### Sensibilità ai percorsi significativi
+
+Il set-ESEM dimostra una maggiore capacità di rilevare percorsi significativi rispetto al CFA. Due esempi illustrativi includono:
+
+- Il percorso *Competenza_Insegnante → Motivazione_Intrinseca* è non significativo nel CFA (β = .08, *p* = .51), ma diventa significativo nel set-ESEM (β = .19, *p* = .03).
+- Il percorso *Relazionalità_Insegnante → Intenzione_di_Ritiro* è non significativo nel CFA (β = −.20, *p* = .18), ma significativo nel set-ESEM (β = −.28, *p* = .01).
+
+Questi risultati dimostrano come il set-ESEM possa rivelare relazioni importanti tra variabili latenti che il CFA potrebbe non individuare.
+
+In conclusione, i risultati evidenziano che i modelli CFA e set-ESEM possono portare a interpretazioni diverse sulle relazioni tra variabili latenti. Tuttavia, il miglior adattamento del set-ESEM, unito alla riduzione delle correlazioni spurie e a una maggiore sensibilità ai percorsi significativi, suggerisce che i coefficienti stimati con questo approccio siano più affidabili. In contesti analitici complessi, il set-ESEM si dimostra un'opzione preferibile, garantendo un equilibrio ottimale tra flessibilità, parsimonia e validità delle stime.
+
+
+<!-- ## Studio 2: Utilizzo del set-ESEM per valutare modelli longitudinali -->
+
+<!-- Lo Studio 2 di @marsh2024and illustra un secondo scenario, in cui il ricercatore dispone di costrutti raccolti in momenti temporali differenti. In questo esempio, sono stati misurati tre costrutti in due tempi diversi. I primi due costrutti, autonomia e motivazione intrinseca, sono stati descritti nello Studio 1 e derivano dalla teoria dell’autodeterminazione (Ryan & Deci, 2017). Il terzo costrutto è l’autoefficacia, che riflette la convinzione degli studenti circa la propria capacità di ottenere risultati desiderati e prevenire quelli dannosi (Woodrow, 2006). La ricerca suggerisce che questi tre fattori (autonomia, motivazione intrinseca e autoefficacia) agiscono collettivamente come motivazioni parallele che favoriscono risultati positivi (Alamer et al., 2023; Noels, 2023; Ryan & Deci, 2017). -->
+
+<!-- Un modello che stima i costrutti al tempo 1 per prevedere i corrispondenti al tempo 2 (controllando la stabilità della misura nel tempo) e che valuta anche il loro effetto sulla variabile di esito può essere meglio analizzato con il set-ESEM piuttosto che con il full-ESEM (Marsh et al., 2020). Nei modelli longitudinali SEM, è spesso necessario correlare le unicità dello stesso item nel tempo (Marsh & Hau, 1996). Inoltre, il ricercatore può voler applicare l’invarianza di misura per garantire la stabilità della misura nel tempo, imponendo vincoli di uguaglianza longitudinale sui carichi fattoriali, possibile con il codice in formato long per il set-ESEM in lavaan. -->
+
+<!-- Ecco un esempio di vincoli di uguaglianza sui quattro item di self-confidence nei due tempi. Le etichette a*, b*, c* e d* indicano vincoli di uguaglianza sui carichi primari: lo stesso item ha la stessa etichetta nei due tempi. Parametri con la stessa etichetta sono stimati come uguali. Seguendo la prassi CFA per l’invarianza di misura, bisogna impostare la scala latente per un gruppo di riferimento o occasione (qui, il tempo 1), lasciando liberi i restanti. Il valore mancante, NA*, libera la varianza del fattore al tempo 2. In lavaan, per preservare i vincoli di uguaglianza tra blocchi in una soluzione ruotata, è necessario equare tutti i carichi, affinché il blocco del tempo 2 rispecchi quello del tempo 1. Sebbene vincoli di parziale invarianza siano più realistici, essi non sarebbero mantenuti in una soluzione ruotata. -->
+
+<!-- Ecco un esempio di sintassi per gli item di self-confidence: -->
+
+<!-- ```R -->
+<!-- efa("time1")*SelfConfidenceT1 =~ a*SelfConf1T1 + b*SelfConf2T1 + -->
+<!-- c*SelfConf3T1 + d*SelfConf4T1 + e*Intr1T1 + f*Intr2T1 + g*Intr3T1 + -->
+<!-- h*Auton1T1 + i*Auton2T1 + j*Auton3T1 + k*Auton4T1 -->
+<!-- efa("time2")*SelfConfidenceT2 =~ a*SelfConf1T2 + b*SelfConf2T2 + -->
+<!-- c*SelfConf3T2 + d*SelfConf4T2 + e*Intr1T2 + f*Intr2T2 + g*Intr3T2 + -->
+<!-- h*Auton1T2 + i*Auton2T2 + j*Auton3T2 + k*Auton4T2 -->
+<!-- ## liberazione della varianza del fattore al Tempo 2 -->
+<!-- SelfConfidenceT2 ~~ NA*SelfConfidenceT2 -->
+<!-- ``` -->
+
+<!-- L’utilizzo dell’invarianza di misura nel set-ESEM permette di ridurre la soluzione a un singolo blocco ESEM, più parsimonioso e spesso vantaggioso per l’analisi longitudinale. Tuttavia, per mantenere il focus sulle applicazioni standard del CFA e del set-ESEM, riportiamo solo gli indici di adattamento dei modelli con invarianza di misura senza discutere i coefficienti di percorso. Forniamo comunque la sintassi R nel repository OSF per consentire ai lettori di riprodurre i risultati completi. -->
+
+<!-- Per testare un modello longitudinale set-ESEM, @marsh2024and stimano solo i cross-loading tra i fattori nello stesso tempo. Ad esempio, gli item del tempo 1 per autonomia, motivazione intrinseca e autoefficacia hanno cross-loading sui fattori del tempo 1, ma non su quelli del tempo 2. Allo stesso modo, gli item del tempo 2 hanno cross-loading sui fattori del tempo 2, ma non su quelli del tempo 1. Si noti che le correlazioni tra le unicità dello stesso item nei due tempi sono stimate ma non visualizzate in figura per semplicità (solo un esempio di correlazione tra unicità è mostrato tra Aut1 e Aut1T2). -->
+
+<!-- **Misure** -->
+
+<!-- Per valutare l'autonomia, sono stati utilizzati quattro item della scala BPN-L2 già descritta in precedenza. Un esempio di item è stato presentato nello Studio 1. La motivazione intrinseca è stata misurata con tre item della scala SDT-L2 (Alamer, 2022). La self-confidence (fiducia in sé stessi) è stata valutata tramite quattro item adottati da Dörnyei e Ushioda (2021; vedi anche Dörnyei & Ryan, 2015), come descritto nello Studio 1. Le misurazioni si basano su una scala Likert a cinque punti, con risposte da 1 (fortemente in disaccordo) a 5 (fortemente d'accordo). -->
+
+<!-- Il livello di competenza linguistica è stato misurato tramite un test di collocamento in inglese come seconda lingua. Il test include item sulle quattro abilità principali: vocabolario, grammatica, lettura e scrittura. È stato sviluppato consultando il corso di lingua Unlock, ideato dall'Università di Cambridge (Ostrowska et al., 2021). Sebbene il formato del test possa variare, consiste principalmente in domande a scelta multipla e in esercizi di completamento. Un campione simulato è incluso nel repository OSF. Il punteggio totale del test va da 0 a 20, con una media di 14.2 e una deviazione standard di 4.7. -->
+
+<!-- ::: {#fig-esem-study2} -->
+<!-- ![](../../figures/esem_study2.png){width="90%"} -->
+<!-- Un modello longitudinale basato su CFA (modello A) e un modello longitudinale set-ESEM (modello B).  Nota: le linee tratteggiate indicano i carichi incrociati non target. [Figura tratta da @marsh2024and] -->
+<!-- ::: -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- study2_dat <- rio::import( -->
+<!--     here::here( -->
+<!--         "data", "marsh_alamer", "Study_2_data.csv" -->
+<!--     ) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- esem2_config <- ' -->
+
+<!--   # The measurement model -->
+<!--   # WITHOUT equality constraints on factor loadings -->
+
+<!--   # Time 1 Set-ESEM -->
+<!--   efa("time1")*SelfConfidenceT1 =~ SelfConf1T1 + SelfConf2T1 + SelfConf3T1 + SelfConf4T1 + Intr1T1 + Intr2T1 + Intr3T1 + Auton1T1 + Auton2T1 + Auton3T1 + Auton4T1 -->
+<!--   efa("time1")*IntrinsicT1 =~ SelfConf1T1 + SelfConf2T1 + SelfConf3T1 + SelfConf4T1 + Intr1T1 + Intr2T1 + Intr3T1 + Auton1T1 + Auton2T1 + Auton3T1 + Auton4T1 -->
+<!--   efa("time1")*AutonomyT1 =~ SelfConf1T1 + SelfConf2T1 + SelfConf3T1 + SelfConf4T1 + Intr1T1 + Intr2T1 + Intr3T1 + Auton1T1 + Auton2T1 + Auton3T1 + Auton4T1 -->
+
+<!--   # Time 2 Set-ESEM -->
+<!--   efa("time2")*SelfConfidenceT2 =~ SelfConf1T2 + SelfConf2T2 + SelfConf3T2 + SelfConf4T2 + Intr1T2 + Intr2T2 + Intr3T2 + Auton1T2 + Auton2T2 + Auton3T2 + Auton4T2 -->
+<!--   efa("time2")*IntrinsicT2 =~ SelfConf1T2 + SelfConf2T2 + SelfConf3T2 + SelfConf4T2 + Intr1T2 + Intr2T2 + Intr3T2 + Auton1T2 + Auton2T2 + Auton3T2 + Auton4T2 -->
+<!--   efa("time2")*AutonomyT2 =~ SelfConf1T2 + SelfConf2T2 + SelfConf3T2 + SelfConf4T2 + Intr1T2 + Intr2T2 + Intr3T2 + Auton1T2 + Auton2T2 + Auton3T2 + Auton4T2 -->
+
+<!--   # The structural model -->
+<!--   SelfConfidenceT2 ~ SelfConfidenceT1 -->
+<!--   IntrinsicT2 ~ IntrinsicT1 -->
+<!--   AutonomyT2 ~ AutonomyT1 -->
+<!--   L2_achievement ~ SelfConfidenceT1 + IntrinsicT1 + AutonomyT1 + SelfConfidenceT2 + IntrinsicT2 + AutonomyT2 -->
+
+<!--   # Residual correlations -->
+<!--   SelfConf1T2 ~~ SelfConf1T1 -->
+<!--   SelfConf2T2 ~~ SelfConf2T1 -->
+<!--   SelfConf3T2 ~~ SelfConf3T1 -->
+<!--   SelfConf4T2 ~~SelfConf4T1 -->
+
+<!--   Auton1T2 ~~ Auton1T1 -->
+<!--   Auton2T2 ~~ Auton2T1 -->
+<!--   Auton3T2 ~~ Auton3T1 -->
+<!--   Auton4T2 ~~ Auton4T1 -->
+
+<!--   Intr1T2 ~~ Intr1T1 -->
+<!--   Intr2T2 ~~ Intr2T1 -->
+<!--   Intr3T2 ~~ Intr3T1 -->
+<!-- ' -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- out2_config <- sem( -->
+<!--     model = esem2_config, -->
+<!--     data = study2_dat, -->
+<!--     estimator = "MLR", # verbose = TRUE, -->
+<!--     rotation = "geomin", -->
+<!--     rotation.args = list(geomin.epsilon = 0.005) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- esem2_metric <- ' -->
+
+<!--   # The measurement model -->
+<!--   # WITH equality constraints on factor loadings -->
+
+<!--   # Time 1 Set-ESEM -->
+<!--   efa("time1")*SelfConfidenceT1 =~ a*SelfConf1T1 + b*SelfConf2T1 + c*SelfConf3T1 + d*SelfConf4T1 + e*Intr1T1 + f*Intr2T1 + g*Intr3T1 + h*Auton1T1 + i*Auton2T1 + j*Auton3T1 + k*Auton4T1 -->
+<!--   efa("time1")*IntrinsicT1 =~ aa*SelfConf1T1 + bb*SelfConf2T1 + cc*SelfConf3T1 + dd*SelfConf4T1 + ee*Intr1T1 + ff*Intr2T1 + gg*Intr3T1 + hh*Auton1T1 + ii*Auton2T1 + jj*Auton3T1 + kk*Auton4T1 -->
+<!--   efa("time1")*AutonomyT1 =~ aaa*SelfConf1T1 + bbb*SelfConf2T1 + ccc*SelfConf3T1 + ddd*SelfConf4T1 + eee*Intr1T1 + fff*Intr2T1 + ggg*Intr3T1 + hhh*Auton1T1 + iii*Auton2T1 + jjj*Auton3T1 + kkk*Auton4T1 -->
+
+<!--   # Time 2 Set-ESEM -->
+<!--   efa("time2")*SelfConfidenceT2 =~ a*SelfConf1T2 + b*SelfConf2T2 + c*SelfConf3T2 + d*SelfConf4T2 + e*Intr1T2 + f*Intr2T2 + g*Intr3T2 + h*Auton1T2 + i*Auton2T2 + j*Auton3T2 + k*Auton4T2 -->
+<!--   efa("time2")*IntrinsicT2 =~ aa*SelfConf1T2 + bb*SelfConf2T2 + cc*SelfConf3T2 + dd*SelfConf4T2 + ee*Intr1T2 + ff*Intr2T2 + gg*Intr3T2 + hh*Auton1T2 + ii*Auton2T2 + jj*Auton3T2 + kk*Auton4T2 -->
+<!--   efa("time2")*AutonomyT2 =~ aaa*SelfConf1T2 + bbb*SelfConf2T2 + ccc*SelfConf3T2 + ddd*SelfConf4T2 + eee*Intr1T2 + fff*Intr2T2 + ggg*Intr3T2 + hhh*Auton1T2 + iii*Auton2T2 + jjj*Auton3T2 + kkk*Auton4T2 -->
+
+<!--   # Free factors variances at Time 2 -->
+<!--   SelfConfidenceT2 ~~ NA*SelfConfidenceT2 -->
+<!--   IntrinsicT2 ~~ NA*IntrinsicT2 -->
+<!--   AutonomyT2 ~~ NA*AutonomyT2 -->
+
+<!--   # The structural model -->
+<!--   SelfConfidenceT2 ~ SelfConfidenceT1 -->
+<!--   IntrinsicT2 ~ IntrinsicT1 -->
+<!--   AutonomyT2 ~ AutonomyT1 -->
+<!--   L2_achievement ~ SelfConfidenceT1 + IntrinsicT1 + AutonomyT1 + SelfConfidenceT2 + IntrinsicT2 + AutonomyT2 -->
+
+<!--   # Residual correlations -->
+<!--   SelfConf1T2 ~~ SelfConf1T1 -->
+<!--   SelfConf2T2 ~~ SelfConf2T1 -->
+<!--   SelfConf3T2 ~~ SelfConf3T1 -->
+<!--   SelfConf4T2 ~~SelfConf4T1 -->
+
+<!--   Auton1T2 ~~ Auton1T1 -->
+<!--   Auton2T2 ~~ Auton2T1 -->
+<!--   Auton3T2 ~~ Auton3T1 -->
+<!--   Auton4T2 ~~ Auton4T1 -->
+
+<!--   Intr1T2 ~~ Intr1T1 -->
+<!--   Intr2T2 ~~ Intr2T1 -->
+<!--   Intr3T2 ~~ Intr3T1 -->
+
+<!-- ' -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- out2_metric <- sem( -->
+<!--     model = esem2_metric, data = study2_dat, -->
+<!--     estimator = "MLR", # verbose = TRUE, -->
+<!--     rotation = "geomin", rotation.args = list(geomin.epsilon = 0.005) -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- lavTestLRT(out2_config, out2_metric) -->
+<!-- ``` -->
+
+<!-- @marsh2024and considerano anche i corrispondenti modelli CFA, senza invarianza di misurazione e con invarianza di misurazione. -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- cfa2_config <- " -->
+
+<!--   # The measurement model -->
+<!--   # WITHOUT equality constraints on factor loadings -->
+
+<!--   # Time 1 Set-ESEM -->
+<!--   SelfConfidenceT1 =~ SelfConf1T1 + SelfConf2T1 + SelfConf3T1 + SelfConf4T1 -->
+<!--   IntrinsicT1      =~     Intr1T1 +     Intr2T1 +     Intr3T1 -->
+<!--   AutonomyT1       =~    Auton1T1 +    Auton2T1 +    Auton3T1 +    Auton4T1 -->
+
+<!--   # Time 2 Set-ESEM -->
+<!--   SelfConfidenceT2 =~ SelfConf1T2 + SelfConf2T2 + SelfConf3T2 + SelfConf4T2 -->
+<!--   IntrinsicT2      =~     Intr1T2 +     Intr2T2 +     Intr3T2 -->
+<!--   AutonomyT2       =~    Auton1T2 +    Auton2T2 +    Auton3T2 +    Auton4T2 -->
+
+<!--   ## The structural model -->
+<!--   SelfConfidenceT2 ~ SelfConfidenceT1 -->
+<!--   IntrinsicT2 ~ IntrinsicT1 -->
+<!--   AutonomyT2 ~ AutonomyT1 -->
+<!--   L2_achievement ~ SelfConfidenceT1 + IntrinsicT1 + AutonomyT1 + SelfConfidenceT2 + IntrinsicT2 + AutonomyT2 -->
+
+<!--   # Residual correlations -->
+<!--   SelfConf1T2 ~~ SelfConf1T1 -->
+<!--   SelfConf2T2 ~~ SelfConf2T1 -->
+<!--   SelfConf3T2 ~~ SelfConf3T1 -->
+<!--   SelfConf4T2 ~~SelfConf4T1 -->
+
+<!--   Auton1T2 ~~ Auton1T1 -->
+<!--   Auton2T2 ~~ Auton2T1 -->
+<!--   Auton3T2 ~~ Auton3T1 -->
+<!--   Auton4T2 ~~ Auton4T1 -->
+
+<!--   Intr1T2 ~~ Intr1T1 -->
+<!--   Intr2T2 ~~ Intr2T1 -->
+<!--   Intr3T2 ~~ Intr3T1 -->
+
+<!--   # Residual correlations among Time-2 factors -->
+<!--   # (not automatically estimated due to being predictors as well, -->
+<!--   #  but ESEM rotation allows their covariances to be nonzero) -->
+<!--   SelfConfidenceT2 ~~ IntrinsicT2 + AutonomyT2 -->
+<!--   IntrinsicT2      ~~ AutonomyT2 -->
+
+<!-- " -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- fit2_config <- sem( -->
+<!--     model = cfa2_config, -->
+<!--     data = study2_dat, -->
+<!--     estimator = "MLR", -->
+<!--     std.lv = TRUE -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- cfa2_metric <- " -->
+
+<!--   # The measurement model -->
+<!--   # WITHOUT equality constraints on factor loadings -->
+
+<!--   # Time 1 Set-ESEM -->
+<!--   SelfConfidenceT1 =~ a*SelfConf1T1 + b*SelfConf2T1 + c*SelfConf3T1 + d*SelfConf4T1 -->
+<!--   IntrinsicT1      =~     e*Intr1T1 +     f*Intr2T1 +     g*Intr3T1 -->
+<!--   AutonomyT1       =~    h*Auton1T1 +    i*Auton2T1 +    j*Auton3T1 +    k*Auton4T1 -->
+
+<!--   # Time 2 Set-ESEM -->
+<!--   SelfConfidenceT2 =~ a*SelfConf1T2 + b*SelfConf2T2 + c*SelfConf3T2 + d*SelfConf4T2 -->
+<!--   IntrinsicT2      =~     e*Intr1T2 +     f*Intr2T2 +     g*Intr3T2 -->
+<!--   AutonomyT2       =~    h*Auton1T2 +    i*Auton2T2 +    j*Auton3T2 +    k*Auton4T2 -->
+
+<!--   # Free factors variances at Time 2 -->
+<!--   SelfConfidenceT2 ~~ NA*SelfConfidenceT2 -->
+<!--   IntrinsicT2 ~~ NA*IntrinsicT2 -->
+<!--   AutonomyT2 ~~ NA*AutonomyT2 -->
+
+<!--   # The structural model -->
+<!--   SelfConfidenceT2 ~ SelfConfidenceT1 -->
+<!--   IntrinsicT2 ~ IntrinsicT1 -->
+<!--   AutonomyT2 ~ AutonomyT1 -->
+<!--   L2_achievement ~ SelfConfidenceT1 + IntrinsicT1 + AutonomyT1 + SelfConfidenceT2 + IntrinsicT2 + AutonomyT2 -->
+
+<!--   # Residual correlations -->
+<!--   SelfConf1T2 ~~ SelfConf1T1 -->
+<!--   SelfConf2T2 ~~ SelfConf2T1 -->
+<!--   SelfConf3T2 ~~ SelfConf3T1 -->
+<!--   SelfConf4T2 ~~SelfConf4T1 -->
+
+<!--   Auton1T2 ~~ Auton1T1 -->
+<!--   Auton2T2 ~~ Auton2T1 -->
+<!--   Auton3T2 ~~ Auton3T1 -->
+<!--   Auton4T2 ~~ Auton4T1 -->
+
+<!--   Intr1T2 ~~ Intr1T1 -->
+<!--   Intr2T2 ~~ Intr2T1 -->
+<!--   Intr3T2 ~~ Intr3T1 -->
+
+<!--   # Residual correlations among Time-2 factors -->
+<!--   # (not automatically estimated due to being predictors as well, -->
+<!--   #  but ESEM rotation allows their covariances to be nonzero) -->
+<!--   SelfConfidenceT2 ~~ IntrinsicT2 + AutonomyT2 -->
+<!--   IntrinsicT2      ~~ AutonomyT2 -->
+
+<!-- " -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- fit2_metric <- sem( -->
+<!--     model = cfa2_metric, -->
+<!--     data = study2_dat, -->
+<!--     estimator = "MLR", -->
+<!--     std.lv = TRUE -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- lavTestLRT(fit2_config, fit2_metric) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| vscode: {languageId: r} -->
+<!-- summary(fit2_metric, standardized = TRUE, fit.measures = TRUE) |> print() -->
+<!-- ``` -->
+
+<!-- **Risultati** -->
+
+<!-- **Stima dei modelli strutturali set-ESEM e CFA** -->
+
+<!-- @marsh2024and stimano i modelli strutturali basati su set-ESEM e CFA usando l'MLR. I risultati dei due modelli sono riportati nella Tabella 3 e indicano che entrambi offrono un buon adattamento ai dati. Si noti che questi risultati si riferiscono ai modelli con invarianza metrica, poiché essi hanno mostrato un adattamento simile ai modelli configurali. Tuttavia, il modello set-ESEM ha mostrato un adattamento migliore ai dati (ΔTLI/CFI = +.01). Gli indici AIC, BIC e BIC corretto per la dimensione del campione per il modello CFA sono rispettivamente 23,782.68, 24,034.45 e 23,834.55, mentre per il modello ESEM sono 23,764.25, 24,067.98 e 23,826.82. Valori più bassi di AIC e BIC corretto nel modello ESEM indicano un adattamento migliore di questo modello. -->
+
+<!-- Come mostrato nella Tabella 4, le correlazioni tra i fattori esogeni sono notevolmente più basse nel modello strutturale set-ESEM rispetto al modello CFA. Ad esempio, la correlazione tra Self_Confidence_T1 e Autonomy_T1 è 0.55 nel modello CFA, ma solo 0.29 nel modello set-ESEM (Δr = .26). Questi valori di correlazione più bassi influenzano la predizione degli effetti nel modello strutturale, come spiegato di seguito. In particolare, alcuni coefficienti di percorso differiscono in dimensione e valore di p tra i due modelli. -->
+
+<!-- **TABELLA 3: Indici di adattamento per i modelli longitudinali CFA e set-ESEM** -->
+<!-- \*Significativo a p < .01. -->
+
+<!-- | Modello                           | χ²     | df  | RMSEA | Intervallo di confidenza RMSEA (90%) | CFI   | TLI   | -->
+<!-- |-----------------------------------|--------|-----|-------|--------------------------------------|-------|-------| -->
+<!-- | Modello basato su CFA             | 346.24\* | 205 | .044  | (.036, .052)                        | .951  | .940  | -->
+<!-- | Modello CFA con invarianza metrica| 353.48\* | 213 | .043  | (.035, .050)                        | .952  | .943  | -->
+<!-- | Modello basato su set-ESEM        | 283.98\* | 173 | .042  | (.033, .050)                        | .962  | .945  | -->
+<!-- | Modello set-ESEM con invarianza   | 314.93\* | 200 | .040  | (.031, .048)                        | .961  | .950  | -->
+
+<!-- **TABELLA 4: Coefficienti di percorso nei due modelli con invarianza metrica** -->
+
+<!-- | Variabile dipendente    | Predittore              | Risultati CFA       | Risultati set-ESEM    | -->
+<!-- |-------------------------|-------------------------|---------------------|------------------------| -->
+<!-- | Self_Confidence_T2      | Self_Confidence_T1      | .66 (p < .01)       | .66 (p < .01)          | -->
+<!-- | Intrinsic_T2            | Intrinsic_T1            | .61 (p < .01)       | .55 (p < .01)          | -->
+<!-- | Autonomy_T2             | Autonomy_T1             | .45 (p < .01)       | .42 (p < .01)          | -->
+<!-- | L2_achievement          | Self_Confidence_T1      | .30 (p < .01)       | .27 (p < .01)          | -->
+<!-- | L2_achievement          | Intrinsic_T1            | .10 (p = .07)       | .14 (p < .01)          | -->
+<!-- | L2_achievement          | Autonomy_T1             | .11 (p = .05)       | .16 (p < .01)          | -->
+<!-- | L2_achievement          | Self_Confidence_T2      | .39 (p < .01)       | .40 (p < .01)          | -->
+<!-- | L2_achievement          | Intrinsic_T2            | .08 (p = .09)       | .12 (p = .01)          | -->
+<!-- | L2_achievement          | Autonomy_T2             | .23 (p < .01)       | .26 (p < .01)          | -->
+
+<!-- Le correlazioni tra fattori mostrano differenze sostanziali nei due modelli, con valori inferiori per il set-ESEM. Ad esempio, nel modello CFA, la correlazione tra Self_Confidence_T1 e Autonomy_T1 è 0.55 (p < .01), mentre nel modello set-ESEM è 0.29 (p < .01). -->
+
+<!-- Alcuni coefficienti di percorso mostrano anche risultati differenti tra i modelli CFA e set-ESEM. Ad esempio, il modello CFA indica che la motivazione intrinseca al tempo 1 e al tempo 2 non è significativa come predittore del successo linguistico (e.g., Intrinsic_T1 → L2_achievement, β = .10, p = .07 e Intrinsic_T2 → L2_achievement, β = .08, p = .09), mentre nel modello set-ESEM questi effetti risultano significativi (Intrinsic_T1 → L2_achievement, β = .14, p < .01, e Intrinsic_T2 → L2_achievement, β = .12, p = .01). La significatività di questi coefficienti di percorso nel modello set-ESEM, ma non nel CFA, porta a conclusioni diverse sugli effetti predittivi delle variabili. -->
+
+
+## Riflessioni Conclusive
+
+In questo tutorial, @marsh2024and presentano un'introduzione approfondita all'ESEM, con particolare attenzione al set-ESEM. Sebbene questa tecnica sia spesso utilizzata per i modelli di misurazione, gli autori ne esplorano l'applicazione nei modelli strutturali, evidenziando i vantaggi concettuali ed empirici rispetto al CFA e all'ESEM completamente rilassato. Il set-ESEM, grazie alla possibilità di specificare “mini-set” indipendenti di ESEM all'interno di un unico modello (Marsh et al., 2020), rappresenta un compromesso ottimale tra flessibilità e parsimonia. Questo approccio è particolarmente utile quando l'ESEM completo risulta tecnicamente impraticabile o teoricamente non giustificato. 
+
+Gli esempi discussi dagli autori dimostrano che il set-ESEM offre una rappresentazione più accurata dei dati rispetto al CFA. Sebbene entrambi i modelli possano mostrare un adattamento accettabile, le correlazioni tra fattori esogeni nel CFA tendono a essere sistematicamente sovrastimate, come evidenziato in entrambi gli studi presentati. Questo porta a un rischio maggiore di multicollinearità, che può influenzare negativamente la stima dei coefficienti di percorso (Mai et al., 2018; Morin, 2023). Ad esempio, nello Studio 1, alcune relazioni tra variabili latenti risultano significative nel set-ESEM, ma non nel CFA. In particolare:
+
+- Il percorso **Competenza_Insegnante → Motivazione_Intrinseca**, non significativo nel CFA (β = .08, *p* = .51), diventa significativo nel set-ESEM (β = .19, *p* = .03).
+- Il percorso **Relazionalità_Insegnante → Intenzione_di_Ritiro**, non significativo nel CFA (β = −.20, *p* = .18), risulta significativo nel set-ESEM (β = −.28, *p* = .01).
+
+Queste differenze sottolineano come il set-ESEM riesca a identificare relazioni importanti tra variabili che il CFA potrebbe non rilevare. Simili variazioni emergono nello Studio 2 (non trattato qui), dove le differenze tra i due approcci influenzano le conclusioni sulle relazioni longitudinali.
+
+@marsh2024and identificano i principali vantaggi del set-ESEM rispetto a CFA ed ESEM completo:
+
+- **Equilibrio tra parsimonia e adattamento**: Il set-ESEM è più parsimonioso dell’ESEM completo e si adatta spesso meglio del CFA.
+- **Separazione dei costrutti teorici**: Permette di includere costrutti teoricamente distinti in un unico modello, evitando carichi incrociati non giustificati.
+- **Rotazione target**: Consente un approccio confermativo, superando le limitazioni delle rotazioni meccaniche (es. geomin).
+- **Gestione di modelli strutturali complessi**: Rende possibile testare modelli strutturali che l’ESEM completo non può trattare.
+- **Migliore validità discriminante**: Le correlazioni tra fattori risultano più realistiche rispetto al CFA.
+- **Precisione dei coefficienti di percorso**: Riduce l'attenuazione degli effetti, migliorando l’accuratezza delle stime e diminuendo i tassi di errore di tipo II.
+
+Nonostante i suoi vantaggi, il set-ESEM rimane meno parsimonioso rispetto al CFA. Pertanto, quando i modelli CFA e set-ESEM mostrano correlazioni tra fattori e indici di adattamento simili, il CFA dovrebbe essere preferito per la sua semplicità. Tuttavia, in presenza di cross-loading teoricamente giustificati, il set-ESEM rappresenta l’opzione migliore.
+
+In sintesi, il set-ESEM offre una soluzione metodologica efficace per superare i limiti del CFA e dell’ESEM completo. Gli esempi empirici mostrano come l’adozione del set-ESEM possa migliorare l'adattamento del modello e la precisione delle stime, evitando problemi di collinearità comuni nel CFA. L'analisi dei dati con il CFA, senza considerare il set-ESEM, potrebbe portare a interpretazioni parziali o errate delle relazioni tra variabili, con implicazioni importanti per la teoria e la pratica (Shao et al., 2022; Tabachnick & Fidell, 2023).
+
+In definitiva, @marsh2024and raccomandano l'uso del set-ESEM per analisi strutturali e di misurazione, specialmente quando l’ESEM completo è troppo flessibile o il CFA troppo restrittivo. La loro analisi evidenzia che, in situazioni in cui i coefficienti di percorso differiscono significativamente tra CFA e set-ESEM, quest'ultimo fornisce risultati più affidabili e interpretabili.
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered}
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+
