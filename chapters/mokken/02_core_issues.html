@@ -1,0 +1,2484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Corrado Caudek">
+<title>62&nbsp; Analisi della Scala di Mokken – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/mokken/03_applications.html" rel="next">
+<link href="../../chapters/mokken/01_logistic_regr.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2363a7b1713459e3bb7e05f1febbb7c9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-6160eebdccf729e88acfdd1d92726e70.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-62e4b2809dfb41b5160f340e7c383cce.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5b1b7f210f9f8712579e048ed54cd39.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "clean"
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_logistic_regr.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/02_core_issues.html"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Calendario</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../cal_testing_psic_2025.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calendario Didattico e Programma del Corso</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/02_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/03_equating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Equating nei Test Psicologici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E4_norming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/02_clement_2022.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Riparazione affettiva post-infedeltà</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/07_fa_in_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Strategia Integrata per un’Analisi Fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_02_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/13_esem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Exploratory structural equation modelling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/14_sem_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Dimensione Campionaria e Analisi della Potenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/15_prior_pred_mod_check.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Prior Predictive Model Checking</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_core_issues.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/03_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/03_assumptions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Modelli 1PL, 2PL e 3PL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">LGM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/01_lgm_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/02_lgm_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Considerazioni Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/06_lgm_mixed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">LGM e modelli misti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/03_time_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Dati longitudinali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/05_intro_panel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Specificare e Interpretare un Modello Longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/07_growth_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/08_growth_cont.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Il tempo su una metrica continua</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/09_time_inv_cov.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Covariate indipendenti dal tempo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/10_growth_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Modelli di crescita latenti a gruppi multipli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/11_lgm_wais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Lo Sviluppo dell’Intelligenza</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false">
+ <span class="menu-text">Predizione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/prediction/01_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false">
+ <span class="menu-text">Networks</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-17" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/networks/01_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a4_linear_alg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth2 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Indice</h2>
+   
+  <ul>
+<li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">62.1</span> Introduzione</a></li>
+  <li>
+<a href="#assunzioni-dellanalisi-delle-scale-di-mokken" id="toc-assunzioni-dellanalisi-delle-scale-di-mokken" class="nav-link" data-scroll-target="#assunzioni-dellanalisi-delle-scale-di-mokken"><span class="header-section-number">62.2</span> Assunzioni dell’Analisi delle Scale di Mokken</a>
+  <ul>
+<li><a href="#assunzione-di-unidimensionalit%C3%A0" id="toc-assunzione-di-unidimensionalità" class="nav-link" data-scroll-target="#assunzione-di-unidimensionalit%C3%A0"><span class="header-section-number">62.2.1</span> Assunzione di Unidimensionalità</a></li>
+  <li><a href="#assunzione-di-indipendenza-locale" id="toc-assunzione-di-indipendenza-locale" class="nav-link" data-scroll-target="#assunzione-di-indipendenza-locale"><span class="header-section-number">62.2.2</span> Assunzione di Indipendenza Locale</a></li>
+  <li>
+<a href="#assunzione-di-monotonicit%C3%A0-latente" id="toc-assunzione-di-monotonicità-latente" class="nav-link" data-scroll-target="#assunzione-di-monotonicit%C3%A0-latente"><span class="header-section-number">62.2.3</span> Assunzione di Monotonicità Latente</a>
+  <ul>
+<li><a href="#come-verificare-la-monotonicit%C3%A0" id="toc-come-verificare-la-monotonicità" class="nav-link" data-scroll-target="#come-verificare-la-monotonicit%C3%A0"><span class="header-section-number">62.2.3.1</span> Come verificare la monotonicità</a></li>
+  <li><a href="#esempio-di-calcolo-del-restscore" id="toc-esempio-di-calcolo-del-restscore" class="nav-link" data-scroll-target="#esempio-di-calcolo-del-restscore"><span class="header-section-number">62.2.3.2</span> Esempio di calcolo del restscore</a></li>
+  <li><a href="#verifica-della-monotonicit%C3%A0-con-le-funzioni-di-risposta-agli-item-irf" id="toc-verifica-della-monotonicità-con-le-funzioni-di-risposta-agli-item-irf" class="nav-link" data-scroll-target="#verifica-della-monotonicit%C3%A0-con-le-funzioni-di-risposta-agli-item-irf"><span class="header-section-number">62.2.3.3</span> Verifica della monotonicità con le Funzioni di Risposta agli Item (IRF)</a></li>
+  <li><a href="#esempio" id="toc-esempio" class="nav-link" data-scroll-target="#esempio"><span class="header-section-number">62.2.3.4</span> Esempio</a></li>
+  <li><a href="#aggregazione-dei-restscore" id="toc-aggregazione-dei-restscore" class="nav-link" data-scroll-target="#aggregazione-dei-restscore"><span class="header-section-number">62.2.3.5</span> Aggregazione dei restscore</a></li>
+  <li><a href="#monotonicit%C3%A0-e-coefficienti-di-scalabilit%C3%A0" id="toc-monotonicità-e-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#monotonicit%C3%A0-e-coefficienti-di-scalabilit%C3%A0"><span class="header-section-number">62.2.3.6</span> Monotonicità e coefficienti di scalabilità</a></li>
+  <li><a href="#formula-del-coefficiente-di-scalabilit%C3%A0" id="toc-formula-del-coefficiente-di-scalabilità" class="nav-link" data-scroll-target="#formula-del-coefficiente-di-scalabilit%C3%A0"><span class="header-section-number">62.2.3.7</span> Formula del coefficiente di scalabilità</a></li>
+  <li><a href="#relazione-tra-monotonicit%C3%A0-e-coefficienti-di-scalabilit%C3%A0" id="toc-relazione-tra-monotonicità-e-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#relazione-tra-monotonicit%C3%A0-e-coefficienti-di-scalabilit%C3%A0"><span class="header-section-number">62.2.3.8</span> Relazione tra monotonicità e coefficienti di scalabilità</a></li>
+  <li><a href="#esempio-pratico" id="toc-esempio-pratico" class="nav-link" data-scroll-target="#esempio-pratico"><span class="header-section-number">62.2.3.9</span> Esempio pratico</a></li>
+  </ul>
+</li>
+  <li><a href="#assunzione-di-non-intersezione-delle-funzioni-di-risposta" id="toc-assunzione-di-non-intersezione-delle-funzioni-di-risposta" class="nav-link" data-scroll-target="#assunzione-di-non-intersezione-delle-funzioni-di-risposta"><span class="header-section-number">62.2.4</span> Assunzione di Non-Intersezione delle Funzioni di Risposta</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#modelli-della-mokken-scale-analysis" id="toc-modelli-della-mokken-scale-analysis" class="nav-link" data-scroll-target="#modelli-della-mokken-scale-analysis"><span class="header-section-number">62.3</span> Modelli della Mokken Scale Analysis</a>
+  <ul>
+<li>
+<a href="#errori-standard-nei-coefficienti-di-scalabilit%C3%A0" id="toc-errori-standard-nei-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#errori-standard-nei-coefficienti-di-scalabilit%C3%A0"><span class="header-section-number">62.3.1</span> Errori Standard nei Coefficienti di Scalabilità</a>
+  <ul>
+<li><a href="#importanza-degli-errori-standard" id="toc-importanza-degli-errori-standard" class="nav-link" data-scroll-target="#importanza-degli-errori-standard"><span class="header-section-number">62.3.1.1</span> Importanza degli Errori Standard</a></li>
+  <li><a href="#esempio-di-calcolo-del-ci" id="toc-esempio-di-calcolo-del-ci" class="nav-link" data-scroll-target="#esempio-di-calcolo-del-ci"><span class="header-section-number">62.3.1.2</span> Esempio di Calcolo del CI</a></li>
+  </ul>
+</li>
+  <li><a href="#fattori-che-influenzano-lerrore-standard" id="toc-fattori-che-influenzano-lerrore-standard" class="nav-link" data-scroll-target="#fattori-che-influenzano-lerrore-standard"><span class="header-section-number">62.3.2</span> Fattori che Influenzano l’Errore Standard</a></li>
+  <li>
+<a href="#utilizzo-pratico-degli-errori-standard" id="toc-utilizzo-pratico-degli-errori-standard" class="nav-link" data-scroll-target="#utilizzo-pratico-degli-errori-standard"><span class="header-section-number">62.3.3</span> Utilizzo Pratico degli Errori Standard</a>
+  <ul>
+<li><a href="#interpretazione-del-ci" id="toc-interpretazione-del-ci" class="nav-link" data-scroll-target="#interpretazione-del-ci"><span class="header-section-number">62.3.3.1</span> Interpretazione del CI</a></li>
+  </ul>
+</li>
+  <li><a href="#eliminazione-degli-item-con-bassi-coefficienti-di-scalabilit%C3%A0" id="toc-eliminazione-degli-item-con-bassi-coefficienti-di-scalabilità" class="nav-link" data-scroll-target="#eliminazione-degli-item-con-bassi-coefficienti-di-scalabilit%C3%A0"><span class="header-section-number">62.3.4</span> Eliminazione degli Item con Bassi Coefficienti di Scalabilità</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#estensione-della-msa-agli-item-politomici" id="toc-estensione-della-msa-agli-item-politomici" class="nav-link" data-scroll-target="#estensione-della-msa-agli-item-politomici"><span class="header-section-number">62.4</span> Estensione della MSA agli Item Politomici</a>
+  <ul>
+<li>
+<a href="#funzioni-di-risposta-del-passaggio-dellitem" id="toc-funzioni-di-risposta-del-passaggio-dellitem" class="nav-link" data-scroll-target="#funzioni-di-risposta-del-passaggio-dellitem"><span class="header-section-number">62.4.1</span> Funzioni di Risposta del Passaggio dell’Item</a>
+  <ul>
+<li><a href="#caratteristiche-delle-isrf" id="toc-caratteristiche-delle-isrf" class="nav-link" data-scroll-target="#caratteristiche-delle-isrf"><span class="header-section-number">62.4.1.1</span> Caratteristiche delle ISRF:</a></li>
+  <li><a href="#requisito-di-monotonicit%C3%A0-per-le-isrf" id="toc-requisito-di-monotonicità-per-le-isrf" class="nav-link" data-scroll-target="#requisito-di-monotonicit%C3%A0-per-le-isrf"><span class="header-section-number">62.4.1.2</span> Requisito di monotonicità per le ISRF</a></li>
+  <li><a href="#esempio-di-applicazione" id="toc-esempio-di-applicazione" class="nav-link" data-scroll-target="#esempio-di-applicazione"><span class="header-section-number">62.4.1.3</span> Esempio di Applicazione</a></li>
+  <li><a href="#vantaggi-dellestensione-agli-item-politomici" id="toc-vantaggi-dellestensione-agli-item-politomici" class="nav-link" data-scroll-target="#vantaggi-dellestensione-agli-item-politomici"><span class="header-section-number">62.4.1.4</span> Vantaggi dell’estensione agli item politomici</a></li>
+  </ul>
+</li>
+  <li><a href="#assunzioni-fondamentali-per-la-msa-con-item-politomici" id="toc-assunzioni-fondamentali-per-la-msa-con-item-politomici" class="nav-link" data-scroll-target="#assunzioni-fondamentali-per-la-msa-con-item-politomici"><span class="header-section-number">62.4.2</span> Assunzioni Fondamentali per la MSA con Item Politomici</a></li>
+  <li><a href="#vantaggi-dellanalisi-politomica-con-la-msa" id="toc-vantaggi-dellanalisi-politomica-con-la-msa" class="nav-link" data-scroll-target="#vantaggi-dellanalisi-politomica-con-la-msa"><span class="header-section-number">62.4.3</span> Vantaggi dell’Analisi Politomica con la MSA</a></li>
+  <li><a href="#implicazioni-per-la-costruzione-di-scale" id="toc-implicazioni-per-la-costruzione-di-scale" class="nav-link" data-scroll-target="#implicazioni-per-la-costruzione-di-scale"><span class="header-section-number">62.4.4</span> Implicazioni per la costruzione di scale</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#mokken-reliability-coefficient" id="toc-mokken-reliability-coefficient" class="nav-link" data-scroll-target="#mokken-reliability-coefficient"><span class="header-section-number">62.5</span> Mokken Reliability Coefficient</a>
+  <ul>
+<li>
+<a href="#procedura-di-selezione-automatica-degli-item" id="toc-procedura-di-selezione-automatica-degli-item" class="nav-link" data-scroll-target="#procedura-di-selezione-automatica-degli-item"><span class="header-section-number">62.5.1</span> Procedura di Selezione Automatica degli Item</a>
+  <ul>
+<li><a href="#come-funziona-laisp" id="toc-come-funziona-laisp" class="nav-link" data-scroll-target="#come-funziona-laisp"><span class="header-section-number">62.5.1.1</span> Come Funziona l’AISP</a></li>
+  <li><a href="#soglia-c-e-implicazioni" id="toc-soglia-c-e-implicazioni" class="nav-link" data-scroll-target="#soglia-c-e-implicazioni"><span class="header-section-number">62.5.1.2</span> Soglia (<span class="math inline">\(c\)</span>) e Implicazioni</a></li>
+  <li><a href="#limitazioni-dellaisp" id="toc-limitazioni-dellaisp" class="nav-link" data-scroll-target="#limitazioni-dellaisp"><span class="header-section-number">62.5.1.3</span> Limitazioni dell’AISP</a></li>
+  </ul>
+</li>
+  </ul>
+</li>
+  <li>
+<a href="#ordinamento-invariante-degli-item-iio" id="toc-ordinamento-invariante-degli-item-iio" class="nav-link" data-scroll-target="#ordinamento-invariante-degli-item-iio"><span class="header-section-number">62.6</span> Ordinamento Invariante degli Item (IIO)</a>
+  <ul>
+<li><a href="#perch%C3%A9-liio-%C3%A8-importante" id="toc-perché-liio-è-importante" class="nav-link" data-scroll-target="#perch%C3%A9-liio-%C3%A8-importante"><span class="header-section-number">62.6.1</span> Perché l’IIO è Importante?</a></li>
+  <li><a href="#come-verificare-liio" id="toc-come-verificare-liio" class="nav-link" data-scroll-target="#come-verificare-liio"><span class="header-section-number">62.6.2</span> Come Verificare l’IIO?</a></li>
+  <li><a href="#cosa-succede-se-liio-non-%C3%A8-rispettato" id="toc-cosa-succede-se-liio-non-è-rispettato" class="nav-link" data-scroll-target="#cosa-succede-se-liio-non-%C3%A8-rispettato"><span class="header-section-number">62.6.3</span> Cosa Succede se l’IIO Non È Rispettato?</a></li>
+  </ul>
+</li>
+  <li><a href="#dimensione-del-campione-per-lmsa" id="toc-dimensione-del-campione-per-lmsa" class="nav-link" data-scroll-target="#dimensione-del-campione-per-lmsa"><span class="header-section-number">62.7</span> Dimensione del Campione per l’MSA</a></li>
+  <li>
+<a href="#confronto-tra-la-ctt-e-la-msa" id="toc-confronto-tra-la-ctt-e-la-msa" class="nav-link" data-scroll-target="#confronto-tra-la-ctt-e-la-msa"><span class="header-section-number">62.8</span> Confronto tra la CTT e la MSA</a>
+  <ul>
+<li><a href="#somiglianze-tra-ctt-e-msa" id="toc-somiglianze-tra-ctt-e-msa" class="nav-link" data-scroll-target="#somiglianze-tra-ctt-e-msa"><span class="header-section-number">62.8.1</span> Somiglianze tra CTT e MSA</a></li>
+  <li><a href="#differenze-tra-ctt-e-msa" id="toc-differenze-tra-ctt-e-msa" class="nav-link" data-scroll-target="#differenze-tra-ctt-e-msa"><span class="header-section-number">62.8.2</span> Differenze tra CTT e MSA</a></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">62.8.3</span> Riflessioni Conclusive</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/mokken/01_logistic_regr.html">Mokken</a></li><li class="breadcrumb-item"><a href="../../chapters/mokken/02_core_issues.html"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-mokken-core-issues" class="quarto-section-identifier"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Obiettivi del capitolo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In questo capitolo apprenderai:</p>
+<ul>
+<li>come la MSA rappresenti un approccio meno restrittivo rispetto allo scaling di Guttman e più flessibile rispetto ai modelli parametrici;<br>
+</li>
+<li>come verificare empiricamente se i punteggi grezzi riflettono dati ordinali;<br>
+</li>
+<li>come interpretare e utilizzare i coefficienti di scalabilità (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_i\)</span>, <span class="math inline">\(H_{ij}\)</span>) per valutare l’omogeneità monotona degli item;<br>
+</li>
+<li>come comprendere e calcolare l’Ordinamento Invariante degli Item (IIO).<br>
+</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prerequisiti
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Leggere <em>An instructional module on Mokken scale analysis</em> <span class="citation" data-cites="wind2017instructional">(<a href="../../99-references.html#ref-wind2017instructional" role="doc-biblioref">Wind, 2017</a>)</span>.</li>
+<li>Leggere <em>Item-Explanatory Mokken Scale Analysis: Using Nonparametric Item Response Theory to Explore Item Attributes</em> <span class="citation" data-cites="wind2024item">(<a href="../../99-references.html#ref-wind2024item" role="doc-biblioref">Wind, 2024</a>)</span>.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Preparazione del Notebook
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load packages</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">mirt</span>, <span class="va">mokken</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="introduzione" class="level2" data-number="62.1"><h2 data-number="62.1" class="anchored" data-anchor-id="introduzione">
+<span class="header-section-number">62.1</span> Introduzione</h2>
+<p>L’<strong>Analisi delle Scale di Mokken (MSA)</strong>, sviluppata dal ricercatore olandese Robert J. Mokken, è un metodo psicometrico utilizzato per verificare se un test misura in modo coerente un costrutto psicologico latente, come l’ansia o l’autostima. Si basa sulla <strong>Teoria Non Parametrica della Risposta agli Item (NIRT)</strong>, una branca della psicometria che analizza le risposte delle persone agli item di un test per dedurre caratteristiche non direttamente osservabili, chiamate <strong>costrutti latenti</strong>.</p>
+<p>Un <strong>costrutto latente</strong>, come l’ansia, non può essere osservato direttamente, ma viene stimato attraverso le risposte degli individui agli item di un test. L’idea principale è che queste risposte riflettano la posizione dell’individuo lungo un <strong>continuum</strong> (ad esempio, da “poco ansioso” a “molto ansioso”). Tuttavia, nella pratica, la relazione tra le risposte agli item e il costrutto latente può essere complessa e non seguire un andamento matematico preciso.</p>
+<p>La MSA consente di verificare:</p>
+<ol type="1">
+<li>Se gli <strong>item</strong> di un test sono <strong>coerenti</strong> tra loro e misurano lo stesso costrutto psicologico (concetto di <strong>omogeneità</strong>).<br>
+</li>
+<li>Se è possibile ordinare sia le persone sia gli item lungo una scala, dalla persona con il punteggio più basso a quella con il punteggio più alto.</li>
+</ol>
+<p>A differenza dei modelli parametrici della <strong>Teoria della Risposta agli Item (IRT)</strong>, la MSA adotta un approccio <strong>non parametrico</strong>, che offre maggiore flessibilità. Non richiede di assumere una relazione matematica specifica (ad esempio, una curva logistica) tra il costrutto latente e le risposte agli item. Questa caratteristica rende la MSA particolarmente utile quando:</p>
+<ul>
+<li>i dati non soddisfano le ipotesi richieste dai modelli parametrici;<br>
+</li>
+<li>si preferisce un’analisi più semplice e robusta, senza ricorrere a formule matematiche complesse.</li>
+</ul>
+<p>La MSA amplia il modello di <strong>Guttman</strong>, basato sull’idea di <strong>perfetta cumulatività</strong>: una persona che risponde correttamente a un item più difficile dovrebbe rispondere correttamente anche a tutti gli item più semplici. Sebbene utile per creare scale gerarchiche, questo principio risulta spesso troppo rigido nella pratica, poiché non tiene conto delle variazioni naturali nei dati reali.</p>
+<p>La MSA introduce un <strong>approccio probabilistico</strong> per affrontare queste complessità. Consente alcune deviazioni dalla perfetta cumulatività, rendendo il modello più realistico e adattabile a situazioni in cui le risposte ai test sono influenzate da fattori esterni, come la motivazione, la comprensione degli item o la stanchezza.</p>
+<p>Una caratteristica distintiva della MSA è che la forma della relazione tra il livello del tratto latente (<span class="math inline">\(\theta\)</span>) e la probabilità di rispondere correttamente a un item (nota come <strong>funzione di risposta all’item</strong>, IRF) non deve seguire una forma matematica specifica, come avviene nei modelli parametrici della Teoria della Risposta agli Item (IRT). Tuttavia, pur non imponendo vincoli rigidi alla forma delle IRF, la MSA introduce requisiti di ordinamento per item e rispondenti, che impongono alcune restrizioni sulle caratteristiche delle risposte agli item. Questi requisiti permettono di mantenere la coerenza nell’interpretazione del costrutto latente, pur lasciando spazio per variazioni nei dati reali.</p>
+</section><section id="assunzioni-dellanalisi-delle-scale-di-mokken" class="level2" data-number="62.2"><h2 data-number="62.2" class="anchored" data-anchor-id="assunzioni-dellanalisi-delle-scale-di-mokken">
+<span class="header-section-number">62.2</span> Assunzioni dell’Analisi delle Scale di Mokken</h2>
+<p>Le principali assunzioni della MSA sono descritte di seguito.</p>
+<section id="assunzione-di-unidimensionalità" class="level3" data-number="62.2.1"><h3 data-number="62.2.1" class="anchored" data-anchor-id="assunzione-di-unidimensionalità">
+<span class="header-section-number">62.2.1</span> Assunzione di Unidimensionalità</h3>
+<p>L’assunzione di <strong>unidimensionalità</strong> richiede che le risposte agli item siano governate da un unico tratto latente, ovvero che tutti gli item della scala misurino lo stesso costrutto psicologico. Questo tratto rappresenta una variabile sottostante non osservabile che determina le risposte ai singoli item. Nella pratica, progettare scale che misurano un unico tratto latente facilita l’interpretazione dei punteggi, riduce la complessità analitica e aumenta la validità delle conclusioni.</p>
+</section><section id="assunzione-di-indipendenza-locale" class="level3" data-number="62.2.2"><h3 data-number="62.2.2" class="anchored" data-anchor-id="assunzione-di-indipendenza-locale">
+<span class="header-section-number">62.2.2</span> Assunzione di Indipendenza Locale</h3>
+<p>L’<strong>indipendenza locale</strong> è un concetto fondamentale nella <strong>MSA</strong> e nella <strong>IRT</strong>. In parole semplici, questa assunzione dice che, una volta noto il livello del tratto latente <span class="math inline">\(\theta\)</span> (ad esempio, un’abilità o un tratto psicologico), le risposte di una persona ai diversi item di un test non devono influenzarsi a vicenda.</p>
+<p>Immagina un test composto da più domande, tutte progettate per misurare lo stesso tratto latente <span class="math inline">\(\theta\)</span>, come la competenza matematica. L’indipendenza locale afferma che:</p>
+<ol type="1">
+<li>le risposte alle singole domande dipendono solo dal livello di <span class="math inline">\(\theta\)</span> della persona;</li>
+<li>le risposte a una domanda non sono condizionate da come la persona ha risposto alle altre domande.</li>
+</ol>
+<p>In pratica, ogni domanda misura <strong>esclusivamente</strong> <span class="math inline">\(\theta\)</span> senza essere influenzata dal contesto o da altre risposte.</p>
+<p>Questa proprietà può essere descritta con una formula:</p>
+<p><span class="math display">\[
+P(X = x \mid \theta) = \prod_{i=1}^k P(X_i = x_i \mid \theta),
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(P(X = x \mid \theta)\)</span> è la probabilità che una persona risponda in un certo modo a tutte le domande, dato il suo livello di <span class="math inline">\(\theta\)</span>.</li>
+<li>
+<span class="math inline">\(P(X_i = x_i \mid \theta)\)</span> è la probabilità di rispondere a una singola domanda <span class="math inline">\(i\)</span>, dato il livello di <span class="math inline">\(\theta\)</span>.</li>
+<li>
+<span class="math inline">\(\prod\)</span> indica che moltiplichiamo insieme le probabilità per tutte le domande del test.</li>
+</ul>
+<p>Questa formula mostra che, dato <span class="math inline">\(\theta\)</span>, le risposte sono indipendenti tra loro.</p>
+<p>L’indipendenza locale ha due implicazioni fondamentali:</p>
+<ol type="1">
+<li><p><strong>Le risposte non sono correlate (dato <span class="math inline">\(\theta\)</span>):</strong><br>
+Una volta noto il livello di <span class="math inline">\(\theta\)</span>, non esiste relazione tra le risposte a domande diverse. Se osserviamo delle correlazioni, sono dovute esclusivamente alla variabilità di <span class="math inline">\(\theta\)</span>.</p></li>
+<li>
+<p><strong>Le risposte riflettono solo <span class="math inline">\(\theta\)</span>:</strong></p>
+<p>Le risposte non devono essere influenzate da altri fattori, come:</p>
+<ul>
+<li>similarità tra i contenuti delle domande;</li>
+<li>effetti dell’ordine delle domande o stanchezza;</li>
+<li>indizi presenti in alcune domande che aiutano a rispondere ad altre.</li>
+</ul>
+</li>
+</ol>
+<p>Se questa assunzione viene violata, il test potrebbe non rappresentare accuratamente il tratto latente <span class="math inline">\(\theta\)</span>. Alcuni esempi comuni di violazione includono:</p>
+<ul>
+<li>Domande troppo simili possono creare correlazioni non legate a <span class="math inline">\(\theta\)</span>. Ad esempio, se due item riguardano frazioni e decimali, la conoscenza di uno potrebbe influenzare l’altro.</li>
+<li>Stanchezza, distrazione o l’ordine delle domande potrebbero modificare il modo in cui una persona risponde.</li>
+<li>Rispondere a una domanda potrebbe fornire informazioni utili per rispondere a un’altra.</li>
+</ul>
+<p>L’indipendenza locale garantisce che il test misuri in modo accurato il tratto latente <span class="math inline">\(\theta\)</span>. Quando questa assunzione è rispettata, possiamo essere certi che le risposte riflettano solo <span class="math inline">\(\theta\)</span> e non altri fattori esterni. Tuttavia, nella pratica, l’indipendenza locale può essere compromessa. Per questo motivo, è essenziale verificare che sia rispettata, così da assicurare la validità del modello psicometrico (sia in MSA che in IRT).</p>
+</section><section id="assunzione-di-monotonicità-latente" class="level3" data-number="62.2.3"><h3 data-number="62.2.3" class="anchored" data-anchor-id="assunzione-di-monotonicità-latente">
+<span class="header-section-number">62.2.3</span> Assunzione di Monotonicità Latente</h3>
+<p>L’<strong>assunzione di monotonicità latente</strong> garantisce che, all’aumentare del tratto latente (<span class="math inline">\(\theta\)</span>), la probabilità di rispondere correttamente a un item (per domande dicotomiche) o di scegliere una categoria di risposta più alta (per domande politomiche) aumenti o rimanga costante, senza mai diminuire.</p>
+<p>Matematicamente, si esprime così:</p>
+<p><span class="math display">\[
+P_i(\theta_a) \leq P_i(\theta_b) \quad \text{se} \quad \theta_a \leq \theta_b ,
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(P_i(\theta)\)</span> è la probabilità di rispondere correttamente o di scegliere una risposta più alta per l’item <span class="math inline">\(i\)</span>;</li>
+<li>
+<span class="math inline">\(\theta_a\)</span> e <span class="math inline">\(\theta_b\)</span> rappresentano due livelli del tratto latente.</li>
+</ul>
+<p>In altre parole, questa proprietà assicura che individui con livelli più alti di <span class="math inline">\(\theta\)</span> abbiano una probabilità maggiore o uguale di ottenere punteggi migliori rispetto a quelli con livelli più bassi. Ciò garantisce una relazione coerente tra il tratto latente e le risposte al test, rendendo la scala interpretabile e robusta.</p>
+<section id="come-verificare-la-monotonicità" class="level4" data-number="62.2.3.1"><h4 data-number="62.2.3.1" class="anchored" data-anchor-id="come-verificare-la-monotonicità">
+<span class="header-section-number">62.2.3.1</span> Come verificare la monotonicità</h4>
+<p>Per valutare la monotonicità si analizza la relazione tra il tratto latente (o una sua stima) e la probabilità di rispondere correttamente a un item. Un approccio comune utilizza il <strong>restscore</strong>, che rappresenta il punteggio totale di un partecipante sulle risposte agli altri item del test, escludendo l’item che si sta analizzando. Il restscore fornisce una stima indiretta del livello del tratto latente.</p>
+</section><section id="esempio-di-calcolo-del-restscore" class="level4" data-number="62.2.3.2"><h4 data-number="62.2.3.2" class="anchored" data-anchor-id="esempio-di-calcolo-del-restscore">
+<span class="header-section-number">62.2.3.2</span> Esempio di calcolo del restscore</h4>
+<p>Supponiamo che un test abbia 10 item e che un partecipante abbia risposto così:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Item</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td>Risposta</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr></tbody>
+</table>
+<p>Se vogliamo calcolare il <strong>restscore</strong> per l’item 10, sommiamo le risposte agli altri 9 item:</p>
+<p><span class="math display">\[
+\text{Restscore} = 1 + 1 + 0 + 1 + 0 + 1 + 1 + 1 + 0 = 6.
+\]</span></p>
+<p>Il restscore indica la prestazione complessiva del partecipante senza considerare l’item analizzato.</p>
+</section><section id="verifica-della-monotonicità-con-le-funzioni-di-risposta-agli-item-irf" class="level4" data-number="62.2.3.3"><h4 data-number="62.2.3.3" class="anchored" data-anchor-id="verifica-della-monotonicità-con-le-funzioni-di-risposta-agli-item-irf">
+<span class="header-section-number">62.2.3.3</span> Verifica della monotonicità con le Funzioni di Risposta agli Item (IRF)</h4>
+<p>Per confermare la monotonicità, si costruiscono le <strong>Funzioni di Risposta agli Item (IRF)</strong>, che mostrano graficamente come varia la probabilità di rispondere correttamente a un item al crescere del restscore. Una funzione monotona è <strong>non decrescente</strong>, cioè la probabilità aumenta o rimane costante.</p>
+</section><section id="esempio" class="level4" data-number="62.2.3.4"><h4 data-number="62.2.3.4" class="anchored" data-anchor-id="esempio">
+<span class="header-section-number">62.2.3.4</span> Esempio</h4>
+<p>Consideriamo un test con 5 item e i seguenti dati relativi all’item 5:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 24%">
+<col style="width: 25%">
+<col style="width: 35%">
+</colgroup>
+<thead><tr class="header">
+<th>Restscore</th>
+<th>Frequenza Totale</th>
+<th>Risposte Corrette</th>
+<th>Probabilità Correttezza</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>5</td>
+<td>1</td>
+<td><span class="math inline">\(1/5 = 0.20\)</span></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>10</td>
+<td>3</td>
+<td><span class="math inline">\(3/10 = 0.30\)</span></td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>15</td>
+<td>6</td>
+<td><span class="math inline">\(6/15 = 0.40\)</span></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>10</td>
+<td>5</td>
+<td><span class="math inline">\(5/10 = 0.50\)</span></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>5</td>
+<td>4</td>
+<td><span class="math inline">\(4/5 = 0.80\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>In questo caso, la probabilità di risposta corretta aumenta (0.20, 0.30, 0.40, 0.50, 0.80), confermando la monotonicità. Questa relazione può essere visualizzata graficamente:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">restscore</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">prob_correct</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.20</span>, <span class="fl">0.30</span>, <span class="fl">0.40</span>, <span class="fl">0.50</span>, <span class="fl">0.80</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Grafico</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">restscore</span>, <span class="va">prob_correct</span>,</span>
+<span>    type <span class="op">=</span> <span class="st">"b"</span>, pch <span class="op">=</span> <span class="fl">16</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
+<span>    xlab <span class="op">=</span> <span class="st">"Restscore"</span>, ylab <span class="op">=</span> <span class="st">"Probabilità di Risposta Corretta"</span>,</span>
+<span>    main <span class="op">=</span> <span class="st">"Funzione di Risposta all'Item (IRF)"</span></span>
+<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="02_core_issues_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Il grafico dovrebbe mostrare una curva crescente o piatta, segnalando che la monotonicità è rispettata.</p>
+</section><section id="aggregazione-dei-restscore" class="level4" data-number="62.2.3.5"><h4 data-number="62.2.3.5" class="anchored" data-anchor-id="aggregazione-dei-restscore">
+<span class="header-section-number">62.2.3.5</span> Aggregazione dei restscore</h4>
+<p>Se il numero di partecipanti con un determinato restscore è troppo basso, le probabilità calcolate potrebbero essere instabili. In questi casi, è utile aggregare i restscore in gruppi.</p>
+<p>Esempio:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 21%">
+<col style="width: 23%">
+<col style="width: 31%">
+</colgroup>
+<thead><tr class="header">
+<th>Gruppo Restscore</th>
+<th>Frequenza Totale</th>
+<th>Risposte Corrette</th>
+<th>Probabilità Correttezza</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>0-2</td>
+<td>30</td>
+<td>10</td>
+<td><span class="math inline">\(10/30 = 0.33\)</span></td>
+</tr>
+<tr class="even">
+<td>3-4</td>
+<td>15</td>
+<td>9</td>
+<td><span class="math inline">\(9/15 = 0.60\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Questa aggregazione migliora l’affidabilità delle stime mantenendo il focus sulla relazione tra restscore e probabilità.</p>
+</section><section id="monotonicità-e-coefficienti-di-scalabilità" class="level4" data-number="62.2.3.6"><h4 data-number="62.2.3.6" class="anchored" data-anchor-id="monotonicità-e-coefficienti-di-scalabilità">
+<span class="header-section-number">62.2.3.6</span> Monotonicità e coefficienti di scalabilità</h4>
+<p>Nella <strong>MSA</strong>, la monotonicità viene analizzata anche tramite i <strong>coefficienti di scalabilità</strong> (<span class="math inline">\(H_i\)</span> per i singoli item e <span class="math inline">\(H_{ij}\)</span> per le coppie di item). Questi coefficienti verificano se gli item rispettano le assunzioni del modello, come l’omogeneità e, indirettamente, la monotonicità.</p>
+<p>Nella MSA esistono tre principali tipi di coefficienti di scalabilità:</p>
+<ol type="1">
+<li>
+<p><strong><span class="math inline">\(H_i\)</span>: Coefficiente di scalabilità per un singolo item</strong><br>
+Misura quanto un item specifico contribuisce alla scala totale. Indica se le risposte a un dato item sono coerenti con il costrutto latente misurato dalla scala.</p>
+<ul>
+<li>
+<strong>Interpretazione:</strong>
+<ul>
+<li>
+<span class="math inline">\(H_i &gt; 0.30\)</span>: l’item è considerato accettabile.<br>
+</li>
+<li>
+<span class="math inline">\(H_i &gt; 0.40\)</span>: l’item è considerato buono.<br>
+</li>
+<li>
+<span class="math inline">\(H_i &gt; 0.50\)</span>: l’item è considerato molto buono.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong><span class="math inline">\(H_{ij}\)</span>: Coefficiente di scalabilità per una coppia di item</strong><br>
+Misura la relazione tra due item specifici in termini di coerenza con il costrutto latente. Questo coefficiente verifica se le risposte a una coppia di item mostrano una relazione coerente con il tratto latente misurato dalla scala.</p></li>
+<li>
+<p><strong><span class="math inline">\(H\)</span>: Coefficiente di scalabilità per l’intera scala</strong><br>
+È la media dei coefficienti di scalabilità di tutti gli item e misura quanto bene la scala complessiva rappresenta il costrutto latente.</p>
+<ul>
+<li>
+<strong>Interpretazione:</strong>
+<ul>
+<li>
+<span class="math inline">\(H &gt; 0.30\)</span>: la scala è accettabile.<br>
+</li>
+<li>
+<span class="math inline">\(H &gt; 0.40\)</span>: la scala è buona.<br>
+</li>
+<li>
+<span class="math inline">\(H &gt; 0.50\)</span>: la scala è molto buona.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol></section><section id="formula-del-coefficiente-di-scalabilità" class="level4" data-number="62.2.3.7"><h4 data-number="62.2.3.7" class="anchored" data-anchor-id="formula-del-coefficiente-di-scalabilità">
+<span class="header-section-number">62.2.3.7</span> Formula del coefficiente di scalabilità</h4>
+<p>Il coefficiente di scalabilità per un item <span class="math inline">\(i\)</span> (<span class="math inline">\(H_i\)</span>) è calcolato come:</p>
+<p><span class="math display">\[
+H_i = \frac{\sum_{j \neq i} \text{Cov}(X_i, X_j)}{\sum_{j \neq i} \text{Var}(X_i)},
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(\text{Cov}(X_i, X_j)\)</span> è la covarianza tra le risposte agli item <span class="math inline">\(i\)</span> e <span class="math inline">\(j\)</span>;</li>
+<li>
+<span class="math inline">\(\text{Var}(X_i)\)</span> è la varianza delle risposte all’item <span class="math inline">\(i\)</span>;</li>
+<li>la sommatoria <span class="math inline">\(\sum_{j \neq i}\)</span> indica che vengono considerati tutti gli item tranne <span class="math inline">\(i\)</span>.</li>
+</ul>
+<p>In termini semplici, <span class="math inline">\(H_i\)</span> misura quanto le risposte a un item sono correlate con le risposte agli altri item, rispetto alla variabilità interna dell’item stesso.</p>
+</section><section id="relazione-tra-monotonicità-e-coefficienti-di-scalabilità" class="level4" data-number="62.2.3.8"><h4 data-number="62.2.3.8" class="anchored" data-anchor-id="relazione-tra-monotonicità-e-coefficienti-di-scalabilità">
+<span class="header-section-number">62.2.3.8</span> Relazione tra monotonicità e coefficienti di scalabilità</h4>
+<p>I coefficienti di scalabilità verificano l’<strong>omogeneità</strong> degli item (cioè, se misurano lo stesso costrutto latente), ma non garantiscono automaticamente la <strong>monotonicità</strong>. Ad esempio:</p>
+<ul>
+<li>
+<strong><span class="math inline">\(H_i &gt; 0.30\)</span></strong> indica che un item contribuisce in modo rilevante alla scala, ma non assicura che la probabilità di rispondere correttamente all’item cresca monotonamente con il livello del tratto latente (<span class="math inline">\(\theta\)</span>).<br>
+</li>
+<li>
+<strong>Violazioni della monotonicità</strong> possono verificarsi anche in presenza di coefficienti di scalabilità elevati. Pertanto, è necessario analizzare le <strong>Funzioni di Risposta agli Item (IRF)</strong> per verificare che la probabilità di risposte corrette o di scelte superiori aumenti in modo non decrescente con il tratto latente.</li>
+</ul></section><section id="esempio-pratico" class="level4" data-number="62.2.3.9"><h4 data-number="62.2.3.9" class="anchored" data-anchor-id="esempio-pratico">
+<span class="header-section-number">62.2.3.9</span> Esempio pratico</h4>
+<p>Supponiamo di avere una scala con tre item (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span>) e i seguenti coefficienti di scalabilità calcolati:</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th>Item</th>
+<th><span class="math inline">\(H_i\)</span></th>
+<th>Note</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X_1\)</span></td>
+<td>0.45</td>
+<td>L’item contribuisce bene alla scala.</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(X_2\)</span></td>
+<td>0.32</td>
+<td>L’item è accettabile.</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(X_3\)</span></td>
+<td>0.28</td>
+<td>L’item potrebbe non essere adeguato.</td>
+</tr>
+</tbody>
+</table>
+<p>In questo caso:</p>
+<ul>
+<li>
+<span class="math inline">\(X_1\)</span> e <span class="math inline">\(X_2\)</span> sono sufficientemente scalabili, mentre <span class="math inline">\(X_3\)</span> potrebbe essere problematico.<br>
+</li>
+<li>La monotonicità deve comunque essere verificata per ciascun item, anche per <span class="math inline">\(X_1\)</span>, che ha un valore elevato di <span class="math inline">\(H_i\)</span>.</li>
+</ul>
+<p>In conclusione, i coefficienti di scalabilità sono strumenti essenziali per valutare la qualità degli item in una scala, misurando la loro capacità di rappresentare il costrutto latente. Tuttavia, non garantiscono che la monotonicità sia rispettata. Per costruire una scala psicometrica valida e robusta, è necessario combinare l’analisi dei coefficienti di scalabilità con la verifica delle Funzioni di Risposta agli Item (IRF).</p>
+</section></section><section id="assunzione-di-non-intersezione-delle-funzioni-di-risposta" class="level3" data-number="62.2.4"><h3 data-number="62.2.4" class="anchored" data-anchor-id="assunzione-di-non-intersezione-delle-funzioni-di-risposta">
+<span class="header-section-number">62.2.4</span> Assunzione di Non-Intersezione delle Funzioni di Risposta</h3>
+<p>L’assunzione di non-intersezione delle funzioni di risposta (IRF) prevede che le probabilità di successo su item più difficili non superino mai quelle relative a item più facili, per ogni livello del tratto latente. In altre parole, le IRF devono essere ordinate in modo che la probabilità di rispondere correttamente a un item più difficile sia sempre inferiore o uguale rispetto a un item meno difficile. Formalmente, questa proprietà può essere espressa come:</p>
+<p><span class="math display">\[
+P_1(\theta) \leq P_2(\theta) \leq ... \leq P_k(\theta) \quad \text{per ogni} \ \theta .
+\]</span></p>
+<p>L’intersezione delle IRF comporterebbe una violazione dell’ordinamento degli item, il che renderebbe difficile interpretare i risultati della scala.</p>
+<p>In sintesi, l’Analisi delle Scale di Mokken si basa su assunzioni chiave simili a quelle dell’IRT, ma le implementa in un contesto non parametrico. La verifica di queste assunzioni garantisce la validità delle scale costruite e la corretta interpretazione dei risultati, rendendo l’MSA uno strumento potente per la costruzione di scale psicometriche robuste.</p>
+</section></section><section id="modelli-della-mokken-scale-analysis" class="level2" data-number="62.3"><h2 data-number="62.3" class="anchored" data-anchor-id="modelli-della-mokken-scale-analysis">
+<span class="header-section-number">62.3</span> Modelli della Mokken Scale Analysis</h2>
+<p>Dalle suddette assunzioni derivano due modelli della MSA:</p>
+<ol type="1">
+<li><p><strong>Modello di Monotonicità Omogenea</strong> (Mokken, 1971): rispetta le prime tre assunzioni (unidimensionalità, indipendenza locale e monotonicità latente). Questo modello permette di ordinare i rispondenti in base al tratto latente.</p></li>
+<li><p><strong>Modello di Doppia Monotonicità</strong>: rispetta tutte e quattro le assunzioni (unidimensionalità, indipendenza locale, monotonicità latente e non-intersezione). Consente di ordinare non solo i rispondenti, ma anche gli item in termini di difficoltà.</p></li>
+</ol>
+<section id="errori-standard-nei-coefficienti-di-scalabilità" class="level3" data-number="62.3.1"><h3 data-number="62.3.1" class="anchored" data-anchor-id="errori-standard-nei-coefficienti-di-scalabilità">
+<span class="header-section-number">62.3.1</span> Errori Standard nei Coefficienti di Scalabilità</h3>
+<p>Gli <strong>errori standard (SE)</strong> sono essenziali per interpretare i coefficienti di scalabilità (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_j\)</span>, <span class="math inline">\(H_{ij}\)</span>) nell’<strong>Analisi delle Scale di Mokken (MSA)</strong>. Forniscono una misura dell’incertezza associata alle stime e aiutano a valutare quanto il valore stimato rappresenti accuratamente il coefficiente reale nella popolazione.</p>
+<section id="importanza-degli-errori-standard" class="level4" data-number="62.3.1.1"><h4 data-number="62.3.1.1" class="anchored" data-anchor-id="importanza-degli-errori-standard">
+<span class="header-section-number">62.3.1.1</span> Importanza degli Errori Standard</h4>
+<p>Un <strong>errore standard elevato</strong> rispetto al coefficiente stimato indica maggiore incertezza. Ad esempio, se <span class="math inline">\(H_j = 0.30\)</span> e <span class="math inline">\(SE = 0.08\)</span>, il coefficiente stimato potrebbe essere inferiore alla soglia accettabile di 0.30 nella popolazione, sollevando dubbi sulla scalabilità dell’item.</p>
+<p>Grazie agli errori standard, è possibile calcolare <strong>intervalli di confidenza (CI)</strong> per quantificare la precisione della stima. Per un livello di confidenza del 95%, la formula è:</p>
+<p><span class="math display">\[
+\text{95\% CI} = H_j \pm (1.96 \times SE),
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(H_j\)</span> è il coefficiente stimato.</li>
+<li>
+<span class="math inline">\(1.96\)</span> è il valore critico associato al 95% di confidenza.</li>
+<li>
+<span class="math inline">\(SE\)</span> è l’errore standard.</li>
+</ul>
+<p>L’intervallo di confidenza descrive l’incertezza della stima e indica che, su un gran numero di campioni estratti dalla stessa popolazione, il 95% degli intervalli calcolati includerà il vero valore del coefficiente.</p>
+</section><section id="esempio-di-calcolo-del-ci" class="level4" data-number="62.3.1.2"><h4 data-number="62.3.1.2" class="anchored" data-anchor-id="esempio-di-calcolo-del-ci">
+<span class="header-section-number">62.3.1.2</span> Esempio di Calcolo del CI</h4>
+<p>Supponiamo che un coefficiente di scalabilità abbia <span class="math inline">\(H_j = 0.30\)</span> e un errore standard di <span class="math inline">\(SE = 0.10\)</span>. Il 95% CI è:</p>
+<p><span class="math display">\[
+\text{95\% CI} = 0.30 \pm (1.96 \times 0.10) = [0.10, 0.50].
+\]</span></p>
+<p>Questo intervallo mostra che, se ripetessimo il campionamento molte volte, il valore reale di <span class="math inline">\(H_j\)</span> sarebbe compreso tra 0.10 e 0.50 nel 95% dei casi. Tuttavia, un intervallo così ampio riflette una stima relativamente incerta, e la possibilità che <span class="math inline">\(H_j\)</span> sia sotto la soglia accettabile di 0.30 richiede ulteriori considerazioni.</p>
+</section></section><section id="fattori-che-influenzano-lerrore-standard" class="level3" data-number="62.3.2"><h3 data-number="62.3.2" class="anchored" data-anchor-id="fattori-che-influenzano-lerrore-standard">
+<span class="header-section-number">62.3.2</span> Fattori che Influenzano l’Errore Standard</h3>
+<p>Diversi elementi influenzano la dimensione dell’errore standard, tra cui:</p>
+<ol type="1">
+<li>
+<strong>Dimensione del campione:</strong>
+<ul>
+<li>Campioni più grandi riducono l’errore standard, migliorando la precisione delle stime.<br>
+</li>
+<li>Nei campioni piccoli, l’incertezza è maggiore, rendendo difficile interpretare <span class="math inline">\(H_j\)</span> con precisione.</li>
+</ul>
+</li>
+<li>
+<strong>Distribuzione dei punteggi degli item:</strong>
+<ul>
+<li>Distribuzioni sbilanciate (ad esempio, molte risposte estreme come tutto 0 o tutto 1) aumentano l’errore standard.<br>
+</li>
+<li>Una distribuzione più uniforme dei punteggi garantisce una stima più stabile.</li>
+</ul>
+</li>
+<li>
+<strong>Eterogeneità degli item:</strong>
+<ul>
+<li>Se gli item non misurano lo stesso costrutto o presentano deviazioni significative dal modello, i coefficienti di scalabilità diventano meno affidabili e i SE aumentano.</li>
+</ul>
+</li>
+</ol></section><section id="utilizzo-pratico-degli-errori-standard" class="level3" data-number="62.3.3"><h3 data-number="62.3.3" class="anchored" data-anchor-id="utilizzo-pratico-degli-errori-standard">
+<span class="header-section-number">62.3.3</span> Utilizzo Pratico degli Errori Standard</h3>
+<p>Gli errori standard offrono informazioni cruciali per decidere se un item contribuisce in modo adeguato alla scala. Se <span class="math inline">\(H_j\)</span> è basso o il suo intervallo di confidenza include valori inferiori a 0.30, l’item potrebbe non essere idoneo.</p>
+<section id="interpretazione-del-ci" class="level4" data-number="62.3.3.1"><h4 data-number="62.3.3.1" class="anchored" data-anchor-id="interpretazione-del-ci">
+<span class="header-section-number">62.3.3.1</span> Interpretazione del CI</h4>
+<ol type="1">
+<li><p><strong>Se il CI è interamente sopra 0.30:</strong><br>
+L’item è probabilmente scalabile e contribuisce in modo adeguato alla scala.</p></li>
+<li><p><strong>Se il CI include valori sotto 0.30:</strong><br>
+C’è incertezza sulla scalabilità dell’item, e potrebbe essere necessaria una revisione.</p></li>
+<li><p><strong>Se il CI è interamente sotto 0.30:</strong><br>
+L’item non è scalabile e dovrebbe essere considerato per la rimozione, a meno che non misuri aspetti unici e rilevanti del costrutto.</p></li>
+</ol></section></section><section id="eliminazione-degli-item-con-bassi-coefficienti-di-scalabilità" class="level3" data-number="62.3.4"><h3 data-number="62.3.4" class="anchored" data-anchor-id="eliminazione-degli-item-con-bassi-coefficienti-di-scalabilità">
+<span class="header-section-number">62.3.4</span> Eliminazione degli Item con Bassi Coefficienti di Scalabilità</h3>
+<p>Mokken (1971) ha sottolineato che item con bassi coefficienti di scalabilità (<span class="math inline">\(H_j &lt; 0.30\)</span>) spesso introducono errori nel modello, riducendo la coerenza della scala. Tuttavia, rimuovere automaticamente questi item può avere conseguenze sia positive sia negative:</p>
+<ul>
+<li>
+<strong>Pro:</strong>
+<ul>
+<li>Migliora la coerenza interna della scala.<br>
+</li>
+<li>Aumenta l’affidabilità psicometrica.</li>
+</ul>
+</li>
+<li>
+<strong>Contro:</strong>
+<ul>
+<li>Riduce la copertura del costrutto.<br>
+</li>
+<li>Può eliminare aspetti teoricamente rilevanti del costrutto latente.</li>
+</ul>
+</li>
+</ul>
+<p>Per evitare problemi, la decisione di eliminare un item dovrebbe considerare non solo i coefficienti di scalabilità e i SE, ma anche la validità teorica dell’item.</p>
+<p>In conclusione, gli errori standard nei coefficienti di scalabilità sono strumenti essenziali per valutare l’incertezza delle stime e la qualità degli item in una scala psicometrica. Attraverso l’analisi di <span class="math inline">\(SE\)</span>, CI e coefficienti di scalabilità, i ricercatori possono prendere decisioni più informate sulla costruzione e sulla revisione delle scale, bilanciando le esigenze psicometriche con quelle teoriche.</p>
+<div id="exm-" class="theorem example">
+<p><span class="theorem-title"><strong>Esempio 62.1</strong></span> Item con basso <span class="math inline">\(H_j\)</span>: se <span class="math inline">\(H_j = 0.20\)</span> e il 95% CI è <span class="math inline">\([0.05, 0.35]\)</span>, il coefficiente è inferiore alla soglia accettabile di 0.30. Tuttavia, prima di eliminare l’item, si dovrebbe verificare se:</p>
+<ul>
+<li>l’item copre un aspetto importante del costrutto;</li>
+<li>la sua rimozione influisce sull’affidabilità della scala.</li>
+</ul>
+</div>
+</section></section><section id="estensione-della-msa-agli-item-politomici" class="level2" data-number="62.4"><h2 data-number="62.4" class="anchored" data-anchor-id="estensione-della-msa-agli-item-politomici">
+<span class="header-section-number">62.4</span> Estensione della MSA agli Item Politomici</h2>
+<p>La MSA, inizialmente sviluppata per item dicotomici (es. risposte “sì/no”), è stata ampliata da Molenaar (1982a, 1997) per includere <strong>item politomici</strong>, come quelli utilizzati nelle scale Likert. Questa estensione mantiene i principi di base della MSA ma li adatta per gestire la maggiore complessità degli item con più categorie di risposta.</p>
+<p>Gli <strong>item politomici</strong> sono domande che offrono più di due opzioni di risposta ordinate, come una scala Likert a 5 punti (da “fortemente in disaccordo” a “fortemente d’accordo”). A differenza degli item dicotomici, gli item politomici introducono una struttura più articolata, dove le risposte non sono semplicemente giuste o sbagliate, ma riflettono livelli crescenti di accordo, preferenza o intensità.</p>
+<p>Nel caso degli item politomici, la MSA non valuta solo l’item nel suo complesso, ma analizza anche i <strong>“passaggi”</strong> tra categorie di risposta consecutive. Questi passaggi rappresentano le transizioni da una categoria a quella successiva lungo la scala di risposta.</p>
+<p>Ad esempio, in un item Likert a 5 punti (“fortemente in disaccordo”, “in disaccordo”, “neutrale”, “d’accordo”, “fortemente d’accordo”), ci sono <strong>4 passaggi</strong> distinti:</p>
+<ol type="1">
+<li>Da “fortemente in disaccordo” a “in disaccordo o superiore”.</li>
+<li>Da “in disaccordo” a “neutrale o superiore”.</li>
+<li>Da “neutrale” a “d’accordo o superiore”.</li>
+<li>Da “d’accordo” a “fortemente d’accordo”.</li>
+</ol>
+<p>Ogni passaggio riflette una progressione lungo il <strong>continuum latente</strong> del tratto psicologico che si sta misurando.</p>
+<section id="funzioni-di-risposta-del-passaggio-dellitem" class="level3" data-number="62.4.1"><h3 data-number="62.4.1" class="anchored" data-anchor-id="funzioni-di-risposta-del-passaggio-dellitem">
+<span class="header-section-number">62.4.1</span> Funzioni di Risposta del Passaggio dell’Item</h3>
+<p>Per analizzare i passaggi tra categorie, la MSA utilizza le <strong>Funzioni di Risposta del Passaggio dell’Item</strong> (<em>Item Step Response Functions</em>, ISRF). Le ISRF descrivono la probabilità che una persona con un certo livello di tratto latente (<span class="math inline">\(\theta\)</span>) scelga una determinata categoria o una categoria superiore.</p>
+<section id="caratteristiche-delle-isrf" class="level4" data-number="62.4.1.1"><h4 data-number="62.4.1.1" class="anchored" data-anchor-id="caratteristiche-delle-isrf">
+<span class="header-section-number">62.4.1.1</span> Caratteristiche delle ISRF:</h4>
+<ol type="1">
+<li><p><strong>Probabilità di transizione:</strong><br>
+Le ISRF collegano la probabilità di scegliere una categoria (o una superiore) al livello di <span class="math inline">\(\theta\)</span> dell’individuo. Ad esempio, per un partecipante con <span class="math inline">\(\theta\)</span> medio-alto, la probabilità di passare a “d’accordo o superiore” dovrebbe essere maggiore rispetto a un partecipante con <span class="math inline">\(\theta\)</span> basso.</p></li>
+<li><p><strong>Contributo di ogni passaggio:</strong><br>
+Ogni passaggio tra categorie viene analizzato separatamente, per verificare quanto contribuisce al progresso lungo il continuum latente. Questo permette di identificare eventuali problemi in specifiche transizioni.</p></li>
+</ol></section><section id="requisito-di-monotonicità-per-le-isrf" class="level4" data-number="62.4.1.2"><h4 data-number="62.4.1.2" class="anchored" data-anchor-id="requisito-di-monotonicità-per-le-isrf">
+<span class="header-section-number">62.4.1.2</span> Requisito di monotonicità per le ISRF</h4>
+<p>Le probabilità rappresentate dalle ISRF devono essere <strong>monotone crescenti</strong>. Ciò significa che, all’aumentare del livello di <span class="math inline">\(\theta\)</span>, la probabilità di scegliere una categoria più alta (o una superiore) deve aumentare o rimanere costante.</p>
+</section><section id="esempio-di-applicazione" class="level4" data-number="62.4.1.3"><h4 data-number="62.4.1.3" class="anchored" data-anchor-id="esempio-di-applicazione">
+<span class="header-section-number">62.4.1.3</span> Esempio di Applicazione</h4>
+<p>Immaginiamo un item Likert a 5 punti in una scala che misura l’autostima. Per un individuo con un basso livello di autostima (<span class="math inline">\(\theta\)</span> basso), le ISRF potrebbero mostrare una probabilità più alta di rimanere nelle categorie più basse (“fortemente in disaccordo”, “in disaccordo”). Al contrario, per un individuo con un alto livello di autostima (<span class="math inline">\(\theta\)</span> alto), le ISRF indicherebbero una maggiore probabilità di scegliere categorie superiori (“d’accordo”, “fortemente d’accordo”).</p>
+</section><section id="vantaggi-dellestensione-agli-item-politomici" class="level4" data-number="62.4.1.4"><h4 data-number="62.4.1.4" class="anchored" data-anchor-id="vantaggi-dellestensione-agli-item-politomici">
+<span class="header-section-number">62.4.1.4</span> Vantaggi dell’estensione agli item politomici</h4>
+<ol type="1">
+<li><p><strong>Maggiore flessibilità:</strong><br>
+La MSA può essere applicata a una gamma più ampia di test psicologici, inclusi quelli con risposte più sfumate e dettagliate.</p></li>
+<li><p><strong>Analisi dettagliata:</strong><br>
+Esaminando i passaggi tra categorie, è possibile individuare problemi specifici in alcune transizioni (ad esempio, una mancanza di progressione coerente tra categorie adiacenti).</p></li>
+<li><p><strong>Adattamento alle scale ordinarie:</strong><br>
+Gli item politomici sono comuni nei test psicologici e sociali; questa estensione rende la MSA più applicabile ai dati reali.</p></li>
+</ol>
+<p>In conclusione, l’estensione della MSA agli item politomici rappresenta un importante avanzamento nell’analisi delle scale psicometriche. Analizzando non solo gli item nel loro complesso ma anche i singoli passaggi tra categorie, la MSA offre una visione più dettagliata di come gli item riflettono il tratto latente. Tuttavia, è fondamentale verificare che le probabilità rappresentate dalle ISRF rispettino la monotonicità, per garantire la validità e l’affidabilità della scala.</p>
+</section></section><section id="assunzioni-fondamentali-per-la-msa-con-item-politomici" class="level3" data-number="62.4.2"><h3 data-number="62.4.2" class="anchored" data-anchor-id="assunzioni-fondamentali-per-la-msa-con-item-politomici">
+<span class="header-section-number">62.4.2</span> Assunzioni Fondamentali per la MSA con Item Politomici</h3>
+<p>L’estensione della <strong>MSA</strong> agli item politomici mantiene i principi fondamentali del modello originariamente sviluppato per gli item dicotomici, adattandoli ai singoli <strong>passaggi</strong> tra categorie. Ecco le principali assunzioni:</p>
+<ol type="1">
+<li>
+<strong>Monotonicità delle ISRF:</strong>
+<ul>
+<li>La <strong>probabilità</strong> di scegliere una categoria <span class="math inline">\(k\)</span> o superiore deve aumentare o rimanere costante all’aumentare del tratto latente <span class="math inline">\(\theta\)</span>.<br>
+</li>
+<li>Questo garantisce che le categorie siano ordinate in modo coerente e riflettano livelli crescenti di <span class="math inline">\(\theta\)</span>. Ad esempio, un individuo con un tratto latente più alto dovrebbe avere una maggiore probabilità di selezionare categorie superiori rispetto a chi ha un tratto latente più basso.</li>
+</ul>
+</li>
+<li>
+<strong>Ordinamento coerente delle categorie:</strong>
+<ul>
+<li>Ogni categoria di risposta deve rappresentare un livello progressivamente più alto del tratto latente.<br>
+</li>
+<li>Ad esempio, il passaggio da “neutrale” a “d’accordo” dovrebbe indicare un incremento tangibile lungo il continuum di <span class="math inline">\(\theta\)</span>, garantendo che le categorie siano interpretabili e coerenti.</li>
+</ul>
+</li>
+<li>
+<strong>Validità del modello di omogeneità monotona:</strong>
+<ul>
+<li>Come per gli item dicotomici, il modello presuppone che tutti gli item misurino lo stesso tratto latente in modo coerente e monotono.<br>
+</li>
+<li>Questa coerenza implica che le risposte degli individui siano influenzate principalmente dal livello di <span class="math inline">\(\theta\)</span>, con minime interferenze da altri fattori.</li>
+</ul>
+</li>
+</ol></section><section id="vantaggi-dellanalisi-politomica-con-la-msa" class="level3" data-number="62.4.3"><h3 data-number="62.4.3" class="anchored" data-anchor-id="vantaggi-dellanalisi-politomica-con-la-msa">
+<span class="header-section-number">62.4.3</span> Vantaggi dell’Analisi Politomica con la MSA</h3>
+<p>L’estensione della <strong>MSA agli item politomici</strong> offre strumenti utili per affrontare la complessità di scale con più categorie di risposta, come quelle basate su scale Likert. I principali vantaggi includono:</p>
+<ol type="1">
+<li>
+<strong>Maggiore precisione nella misurazione:</strong>
+<ul>
+<li>La presenza di più categorie di risposta consente di catturare differenze più sottili tra i rispondenti rispetto agli item dicotomici.<br>
+</li>
+<li>Questo è particolarmente utile per misurare tratti psicologici che variano su un continuum, come atteggiamenti, opinioni o livelli di motivazione. Le categorie multiple offrono un modo per rappresentare una gamma più ampia di livelli del tratto latente.</li>
+</ul>
+</li>
+<li>
+<strong>Valutazione approfondita delle transizioni tra categorie:</strong>
+<ul>
+<li>La MSA politomica analizza le transizioni tra categorie consecutive (passaggi), permettendo di verificare se ciascun passaggio è coerente con un progresso lungo il tratto latente.<br>
+</li>
+<li>Questa analisi consente di identificare problemi come:
+<ul>
+<li>Categorie che non rappresentano un aumento coerente del tratto latente.<br>
+</li>
+<li>Passaggi con probabilità di transizione non monotone, che potrebbero indicare una cattiva formulazione dell’item o una scarsa capacità discriminativa.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>Applicabilità a scale con risposte articolate:</strong>
+<ul>
+<li>La MSA per item politomici è particolarmente adatta per scale frequentemente utilizzate in ambiti psicologici, educativi e sociali, dove le risposte graduali (ad esempio, “in disaccordo” a “d’accordo”) sono comuni.<br>
+</li>
+<li>Questo approccio consente di valutare con precisione la coerenza delle categorie di risposta rispetto al tratto latente e di identificare eventuali categorie ridondanti o poco utili.</li>
+</ul>
+</li>
+</ol></section><section id="implicazioni-per-la-costruzione-di-scale" class="level3" data-number="62.4.4"><h3 data-number="62.4.4" class="anchored" data-anchor-id="implicazioni-per-la-costruzione-di-scale">
+<span class="header-section-number">62.4.4</span> Implicazioni per la costruzione di scale</h3>
+<p>L’analisi politomica con la MSA non si limita a verificare se gli item misurano un tratto latente, ma permette anche di ottimizzare la struttura della scala. Attraverso l’analisi dei passaggi, è possibile:</p>
+<ul>
+<li>
+<strong>Garantire che ogni categoria rappresenti un livello del tratto latente:</strong>
+<ul>
+<li>Ogni passaggio deve riflettere un progresso chiaro lungo il continuum latente, senza sovrapposizioni tra categorie.</li>
+</ul>
+</li>
+<li>
+<strong>Individuare anomalie nelle categorie:</strong>
+<ul>
+<li>Categorie che non seguono un ordine coerente possono essere riformulate o combinate con altre per migliorare la qualità della scala.</li>
+</ul>
+</li>
+<li>
+<strong>Valutare l’utilità di ciascun passaggio:</strong>
+<ul>
+<li>Se un passaggio tra categorie ha una bassa capacità discriminativa o non rispecchia adeguatamente il progresso lungo <span class="math inline">\(\theta\)</span>, potrebbe essere necessario modificarlo o eliminarlo.</li>
+</ul>
+</li>
+</ul>
+<p>In conclusione, l’estensione della MSA agli item politomici offre strumenti analitici per verificare la coerenza e l’utilità delle categorie di risposta. Attraverso l’analisi dei passaggi tra categorie, si può ottenere una misurazione più dettagliata e precisa dei tratti latenti, migliorando la capacità delle scale di rappresentare accuratamente il costrutto d’interesse. Questo approccio è particolarmente rilevante in ambiti in cui le risposte articolate sono indispensabili per catturare la complessità dei fenomeni misurati.</p>
+</section></section><section id="mokken-reliability-coefficient" class="level2" data-number="62.5"><h2 data-number="62.5" class="anchored" data-anchor-id="mokken-reliability-coefficient">
+<span class="header-section-number">62.5</span> Mokken Reliability Coefficient</h2>
+<p>L’affidabilità di un test psicometrico si riferisce alla sua capacità di fornire risultati coerenti nel tempo o attraverso somministrazioni ripetute. Sebbene l’alfa di Cronbach sia l’indicatore di affidabilità più diffuso, presenta alcune limitazioni, soprattutto quando gli item non sono omogenei o quando si lavora con scale ordinali. In questi casi, il coefficiente <span class="math inline">\(\rho\)</span> di Mokken (<em>Mokken reliability coefficient</em> o <span class="math inline">\(\rho_M\)</span>) rappresenta un’alternativa valida, basandosi su assunzioni meno restrittive e adattandosi meglio ai dati ordinali.</p>
+<p>Il coefficiente <span class="math inline">\(\rho\)</span> di Mokken è una misura di consistenza interna che deriva dalla teoria della scala non parametrica di Mokken, utilizzata principalmente per dati ordinali. A differenza dell’alfa di Cronbach, <span class="math inline">\(\rho\)</span> non richiede che gli item soddisfino rigorosi criteri di omogeneità o equivalenza, rendendolo particolarmente utile in contesti in cui i dati non rispettano pienamente i presupposti della teoria classica dei test (CTT).</p>
+<p>Il coefficiente <span class="math inline">\(\rho\)</span> di Mokken misura il rapporto tra la varianza spiegata dal punteggio totale (<span class="math inline">\(S^2_T\)</span>) e la varianza totale osservata. La formula è la seguente:</p>
+<p><span class="math display">\[
+\rho = 1 - \frac{\sum_{i=1}^k S^2_i}{S^2_T},
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(k\)</span>: numero di item del test,</li>
+<li>
+<span class="math inline">\(S^2_i\)</span>: varianza di ciascun item,</li>
+<li>
+<span class="math inline">\(S^2_T\)</span>: varianza totale del punteggio del test (somma dei punteggi degli item).</li>
+</ul>
+<p><strong>Interpretazione di <span class="math inline">\(\rho\)</span>:</strong></p>
+<ul>
+<li>
+<span class="math inline">\(\rho\)</span> varia tra 0 e 1.<br>
+</li>
+<li>valori vicini a 1 indicano maggiore affidabilità.
+<ul>
+<li>
+<strong><span class="math inline">\(\rho &gt; 0.70\)</span>:</strong> accettabile per la ricerca esplorativa.<br>
+</li>
+<li>
+<strong><span class="math inline">\(\rho &gt; 0.80\)</span>:</strong> preferibile per applicazioni pratiche.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Vantaggi di <span class="math inline">\(\rho\)</span> di Mokken:</strong></p>
+<ol type="1">
+<li>a differenza dell’alfa di Cronbach, che assume una scala intervallare, <span class="math inline">\(\rho\)</span> può essere utilizzato con dati ordinali come le scale Likert.</li>
+<li>non richiede che tutti gli item abbiano correlazioni simili (omogeneità), né che riflettano lo stesso grado di relazione con la variabile latente.</li>
+<li>può essere applicato a test che non rispettano i presupposti della teoria classica dei test o di modelli parametrici più rigidi.</li>
+</ol>
+<p><strong>Limitazioni di <span class="math inline">\(\rho\)</span> di Mokken:</strong></p>
+<ol type="1">
+<li>se gli item non rispettano l’assunzione di monotonicità, l’interpretazione del coefficiente può risultare ambigua.</li>
+<li>il coefficiente è appropriato per scale unidimensionali; in presenza di più dimensioni, è necessario analizzare ogni sottoscala separatamente.</li>
+</ol>
+<p>In conclusione, il coefficiente <span class="math inline">\(\rho\)</span> di Mokken valuta l’affidabilità di scale ordinali, offrendo un’alternativa all’alfa di Cronbach quando le assunzioni della teoria classica dei test non sono soddisfatte. Tuttavia, è essenziale verificare la monotonicità degli item e considerare la dimensionalità della scala per un’interpretazione accurata.</p>
+<section id="procedura-di-selezione-automatica-degli-item" class="level3" data-number="62.5.1"><h3 data-number="62.5.1" class="anchored" data-anchor-id="procedura-di-selezione-automatica-degli-item">
+<span class="header-section-number">62.5.1</span> Procedura di Selezione Automatica degli Item</h3>
+<p>La <strong>Procedura di Selezione Automatica degli Item</strong> (AISP) è una metodologia impiegata nella MSA per selezionare insiemi di item che rispettino le assunzioni del Modello di Mokken (MHM). A differenza di tecniche più comuni come l’analisi fattoriale o l’analisi parallela, l’AISP non determina esplicitamente la dimensionalità dei dati. Piuttosto, si basa sui coefficienti di scalabilità per identificare gruppi di item che misurano lo stesso costrutto latente, formando così una o più scale.</p>
+<section id="come-funziona-laisp" class="level4" data-number="62.5.1.1"><h4 data-number="62.5.1.1" class="anchored" data-anchor-id="come-funziona-laisp">
+<span class="header-section-number">62.5.1.1</span> Come Funziona l’AISP</h4>
+<p>L’AISP segue un approccio iterativo che:</p>
+<ol type="1">
+<li>Seleziona l’item iniziale, valutato come più rappresentativo di una dimensione, utilizzando il <strong>coefficiente di scalabilità individuale</strong> (<span class="math inline">\(H_i\)</span>).</li>
+<li>Successivamente, analizza le <strong>coppie di item</strong> (<span class="math inline">\(H_{ij}\)</span>) per identificare un insieme scalabile di item che misurano lo stesso costrutto.</li>
+</ol>
+<p>Un item viene incluso in una scala se:</p>
+<ul>
+<li>Il suo coefficiente di scalabilità individuale (<span class="math inline">\(H_i\)</span>) supera una soglia predefinita (<span class="math inline">\(c\)</span>, solitamente pari a 0.30);</li>
+<li>La covarianza tra ogni coppia di item (<span class="math inline">\(H_{ij}\)</span>) è positiva e superiore alla stessa soglia.</li>
+</ul>
+<p>Se un item non soddisfa questi criteri, la procedura tenta di assegnarlo a una nuova scala. Questo processo iterativo continua finché tutti gli item non sono stati assegnati a una scala o esclusi come non scalabili.</p>
+</section><section id="soglia-c-e-implicazioni" class="level4" data-number="62.5.1.2"><h4 data-number="62.5.1.2" class="anchored" data-anchor-id="soglia-c-e-implicazioni">
+<span class="header-section-number">62.5.1.2</span> Soglia (<span class="math inline">\(c\)</span>) e Implicazioni</h4>
+<p>La scelta della soglia <span class="math inline">\(c\)</span> è cruciale:</p>
+<ul>
+<li>
+<strong>Valore alto di <span class="math inline">\(c\)</span></strong>: Maggiore precisione nella selezione degli item, ma rischio di escluderne troppi, riducendo la lunghezza della scala e la copertura del costrutto.</li>
+<li>
+<strong>Valore basso di <span class="math inline">\(c\)</span></strong>: Aumenta il numero di item inclusi, ma rischia di compromettere la coerenza e la validità della scala.</li>
+</ul>
+<p>Un valore comunemente utilizzato è <span class="math inline">\(c = 0.30\)</span>, che rappresenta un buon equilibrio tra inclusività e rigore. Tuttavia, il valore ottimale dipende dagli obiettivi dello studio e dalla natura dei dati.</p>
+</section><section id="limitazioni-dellaisp" class="level4" data-number="62.5.1.3"><h4 data-number="62.5.1.3" class="anchored" data-anchor-id="limitazioni-dellaisp">
+<span class="header-section-number">62.5.1.3</span> Limitazioni dell’AISP</h4>
+<ol type="1">
+<li>
+<strong>Relazioni tra dimensioni</strong>: L’AISP può risultare meno efficace in presenza di dimensioni fortemente correlate o di item che saturano su più dimensioni, poiché non distingue esplicitamente tali situazioni.</li>
+<li>
+<strong>Dipendenza dai dati statistici</strong>: L’AISP si basa esclusivamente sui coefficienti di scalabilità e non considera le relazioni teoriche tra gli item. Questo può portare all’inclusione di item con scarso valore teorico o alla loro esclusione inappropriata.</li>
+<li>
+<strong>Unidimensionalità richiesta</strong>: Gli item selezionati da una scala devono riflettere un unico costrutto. In caso di multidimensionalità, occorre considerare scale separate.</li>
+</ol>
+<p>In conclusione, l’AISP offre un’alternativa flessibile all’analisi fattoriale per la costruzione di scale psicometriche, particolarmente utile quando si lavora con dati ordinali. Sebbene non forzi soluzioni e tenga conto della scalabilità degli item, è fondamentale integrarla con considerazioni teoriche per garantire che le scale siano valide e utili nel contesto di applicazione.</p>
+</section></section></section><section id="ordinamento-invariante-degli-item-iio" class="level2" data-number="62.6"><h2 data-number="62.6" class="anchored" data-anchor-id="ordinamento-invariante-degli-item-iio">
+<span class="header-section-number">62.6</span> Ordinamento Invariante degli Item (IIO)</h2>
+<p>L’<strong>Ordinamento Invariante degli Item</strong> (<em>Invariant Item Ordering</em>, IIO) è un concetto fondamentale nella MSA. Garantisce che l’ordine di difficoltà degli item rimanga costante per tutti i partecipanti, indipendentemente dal loro livello sul costrutto latente misurato (ad esempio, ansia o autostima).</p>
+<p>In pratica, l’IIO richiede che:</p>
+<ol type="1">
+<li><p><strong>Gli item abbiano sempre lo stesso ordine di difficoltà:</strong><br>
+Un item considerato “più difficile” deve essere percepito come tale da tutti i partecipanti, indipendentemente dal loro livello del tratto latente.<br>
+Ad esempio, in un test di matematica, un problema complesso deve risultare più difficile di uno semplice per tutti gli studenti, sia quelli più abili sia quelli meno abili.</p></li>
+<li><p><strong>I punteggi totali siano interpretabili:</strong><br>
+Se un partecipante ha un punteggio totale più alto, deve avere una probabilità maggiore di rispondere positivamente (o correttamente) a ogni item rispetto a un partecipante con un punteggio più basso.</p></li>
+</ol>
+<p>L’IIO garantisce che le differenze nei punteggi totali riflettano effettivamente differenze nel costrutto latente, senza essere influenzate da variabili estranee come età, genere o interpretazioni diverse degli item.</p>
+<section id="perché-liio-è-importante" class="level3" data-number="62.6.1"><h3 data-number="62.6.1" class="anchored" data-anchor-id="perché-liio-è-importante">
+<span class="header-section-number">62.6.1</span> Perché l’IIO è Importante?</h3>
+<ol type="1">
+<li><p><strong>Uniformità nella misurazione:</strong><br>
+L’IIO assicura che gli item misurino lo stesso tratto latente per tutti i partecipanti.<br>
+Ad esempio, in una scala di depressione, un punteggio totale più alto deve indicare una maggiore gravità del disturbo, con una progressione coerente dagli item più “facili” (come stanchezza) ai più “difficili” (come pensieri suicidari).</p></li>
+<li><p><strong>Validità dei punteggi:</strong><br>
+Se l’ordine degli item cambia tra sottogruppi di partecipanti, i punteggi totali potrebbero non rappresentare correttamente il costrutto latente, invalidando i confronti tra gruppi.</p></li>
+<li><p><strong>Identificazione di bias:</strong><br>
+La verifica dell’IIO aiuta a individuare problemi come la <strong>Funzione Differenziale degli Item</strong> (<em>Differential Item Functioning</em>, DIF), che si verifica quando un item funziona diversamente per sottogruppi specifici (ad esempio, uomini e donne).</p></li>
+</ol></section><section id="come-verificare-liio" class="level3" data-number="62.6.2"><h3 data-number="62.6.2" class="anchored" data-anchor-id="come-verificare-liio">
+<span class="header-section-number">62.6.2</span> Come Verificare l’IIO?</h3>
+<p>Un metodo semplice per verificare l’IIO è il <strong>metodo dei gruppi di restscore</strong>. Ecco come funziona:</p>
+<ol type="1">
+<li><p><strong>Calcolo del restscore:</strong><br>
+Per ciascun partecipante, calcola il punteggio totale sugli item, escludendo l’item che stai analizzando. Questo punteggio si chiama <strong>restscore</strong>.</p></li>
+<li><p><strong>Creazione di gruppi basati sul restscore:</strong><br>
+Dividi i partecipanti in gruppi (ad esempio, punteggi bassi, medi e alti) in base al loro restscore.</p></li>
+<li>
+<p><strong>Confronto dell’ordine degli item:</strong><br>
+Verifica se l’ordine di difficoltà degli item rimane lo stesso tra i gruppi.</p>
+<ul>
+<li>Ad esempio, se l’ordine teorico degli item è <span class="math inline">\(A &lt; B &lt; C\)</span> (da più facile a più difficile), questo ordine deve essere confermato nei gruppi con restscore basso, medio e alto.</li>
+</ul>
+</li>
+</ol>
+<p>Se l’ordine degli item cambia tra i gruppi, l’IIO non è rispettato. Questo potrebbe indicare che alcuni item non misurano il costrutto latente in modo coerente.</p>
+</section><section id="cosa-succede-se-liio-non-è-rispettato" class="level3" data-number="62.6.3"><h3 data-number="62.6.3" class="anchored" data-anchor-id="cosa-succede-se-liio-non-è-rispettato">
+<span class="header-section-number">62.6.3</span> Cosa Succede se l’IIO Non È Rispettato?</h3>
+<p>Se l’IIO viene violato, si possono riscontrare i seguenti problemi:</p>
+<ul>
+<li><p><strong>Bias negli item:</strong><br>
+Alcuni item potrebbero misurare qualcosa di diverso dal costrutto latente (ad esempio, un item di depressione potrebbe essere influenzato dal genere o dalla cultura).</p></li>
+<li><p><strong>Punteggi non interpretabili:</strong><br>
+I punteggi totali non riflettono accuratamente il livello del tratto latente, compromettendo l’utilità del test.</p></li>
+<li><p><strong>Invalidità della scala:</strong><br>
+La scala potrebbe non misurare un unico costrutto latente, rendendola poco affidabile per applicazioni pratiche.</p></li>
+</ul>
+<p>In conclusione, l’IIO è essenziale per garantire che una scala misuri in modo coerente un costrutto latente. Verificare l’IIO consente di assicurarsi che:</p>
+<ul>
+<li>gli item mantengano un ordine di difficoltà stabile per tutti i partecipanti;</li>
+<li>i punteggi totali siano validi e rappresentino accuratamente il tratto latente;<br>
+</li>
+<li>la scala sia priva di bias o funzionamenti differenziali tra sottogruppi.</li>
+</ul>
+<p>Il metodo dei gruppi di restscore offre un approccio intuitivo per valutare l’IIO e identificare eventuali problematiche nella costruzione o interpretazione della scala.</p>
+</section></section><section id="dimensione-del-campione-per-lmsa" class="level2" data-number="62.7"><h2 data-number="62.7" class="anchored" data-anchor-id="dimensione-del-campione-per-lmsa">
+<span class="header-section-number">62.7</span> Dimensione del Campione per l’MSA</h2>
+<p>La determinazione della dimensione del campione è essenziale per garantire l’affidabilità dei risultati nella MSA, ma non esistono linee guida univoche. Campioni troppo piccoli possono portare a:</p>
+<ul>
+<li>
+<strong>Falsi positivi</strong>, con scale erroneamente ritenute valide.</li>
+<li>
+<strong>Falsi negativi</strong>, con scale esistenti che non vengono rilevate.</li>
+</ul>
+<p><strong>Principali Fattori che Influenzano la Dimensione del Campione</strong></p>
+<ol type="1">
+<li>
+<p><strong>Coefficiente di scalabilità (<span class="math inline">\(H_i\)</span>):</strong></p>
+<ul>
+<li>Per <span class="math inline">\(H_i\)</span> basso (<span class="math inline">\(\approx 0.22\)</span>): sono necessari campioni molto grandi (750-2500 partecipanti).<br>
+</li>
+<li>Per <span class="math inline">\(H_i\)</span> moderato o alto (<span class="math inline">\(\approx 0.42\)</span>): campioni più piccoli (50-250 partecipanti) sono sufficienti.</li>
+</ul>
+</li>
+<li><p><strong>Lunghezza del test:</strong><br>
+La lunghezza del test ha un impatto minore, poiché test più lunghi non richiedono necessariamente campioni più grandi.</p></li>
+<li><p><strong>Correlazione tra dimensioni:</strong><br>
+Scale multidimensionali possono necessitare di campioni più grandi a causa della complessità del modello.</p></li>
+</ol>
+<p><strong>Linee Guida Generali</strong></p>
+<ul>
+<li>Per <strong>$H_i </strong>: almeno 1000-2500 partecipanti per ottenere risultati accurati.</li>
+<li>Per <strong>$H_i </strong>: campioni di 50-250 partecipanti possono essere adeguati.</li>
+</ul>
+<p>Studi come quelli di Watson et al.&nbsp;(2018) suggeriscono che, sebbene i valori medi di <span class="math inline">\(H\)</span> e <span class="math inline">\(H_i\)</span> siano stabili anche con campioni più piccoli, i loro <strong>intervalli di confidenza</strong> sono molto ampi, aumentando il rischio di errori nelle decisioni sugli item.</p>
+<p>In conclusione, campioni più grandi migliorano la precisione delle stime e la stabilità dei coefficienti di scalabilità. Tuttavia, per scale con <span class="math inline">\(H_i\)</span> elevato, campioni moderati possono essere sufficienti per un’analisi accurata.</p>
+</section><section id="confronto-tra-la-ctt-e-la-msa" class="level2" data-number="62.8"><h2 data-number="62.8" class="anchored" data-anchor-id="confronto-tra-la-ctt-e-la-msa">
+<span class="header-section-number">62.8</span> Confronto tra la CTT e la MSA</h2>
+<p>La <strong>Classical Test Theory (CTT)</strong> e la MSA rappresentano due approcci distinti alla misurazione psicometrica, ognuno con vantaggi e limiti. Pur condividendo alcuni concetti di base, si differenziano per assunzioni, flessibilità e modalità di analisi dei dati.</p>
+<section id="somiglianze-tra-ctt-e-msa" class="level3" data-number="62.8.1"><h3 data-number="62.8.1" class="anchored" data-anchor-id="somiglianze-tra-ctt-e-msa">
+<span class="header-section-number">62.8.1</span> Somiglianze tra CTT e MSA</h3>
+<p>Entrambi gli approcci analizzano le relazioni tra item e punteggi totali per valutare la qualità di un test. Alcuni indicatori delle due teorie sono concettualmente simili:</p>
+<ul>
+<li>Il <strong>coefficiente di scalabilità degli item</strong> (<span class="math inline">\(H_i\)</span>) della MSA è paragonabile alla correlazione tra un item e il punteggio totale nella CTT.</li>
+<li>Il <strong>coefficiente di scalabilità tra coppie di item</strong> (<span class="math inline">\(H_{ij}\)</span>) della MSA si avvicina alla correlazione tra coppie di item nella CTT.</li>
+<li>Il <strong>coefficiente complessivo di scalabilità</strong> (<span class="math inline">\(H\)</span>) nella MSA è analogo all’indice medio di discriminazione degli item nella CTT.</li>
+</ul>
+<p>Queste somiglianze rendono entrambi gli approcci utili per descrivere le caratteristiche degli item e dei test.</p>
+</section><section id="differenze-tra-ctt-e-msa" class="level3" data-number="62.8.2"><h3 data-number="62.8.2" class="anchored" data-anchor-id="differenze-tra-ctt-e-msa">
+<span class="header-section-number">62.8.2</span> Differenze tra CTT e MSA</h3>
+<ol type="1">
+<li>
+<strong>Assunzioni e loro verifica:</strong>
+<ul>
+<li>La <strong>CTT</strong> si basa su assunzioni teoriche non direttamente verificabili dai dati, come l’indipendenza degli errori di misura e l’unidimensionalità del costrutto.<br>
+</li>
+<li>La <strong>MSA</strong>, invece, consente di testare empiricamente assunzioni fondamentali come la monotonicità, l’indipendenza locale e l’unidimensionalità. Per esempio, un coefficiente di scalabilità negativo (<span class="math inline">\(H_i &lt; 0\)</span>) indicherebbe che i dati non sono compatibili con il modello.</li>
+</ul>
+</li>
+<li>
+<strong>Livello di misurazione:</strong>
+<ul>
+<li>La CTT richiede dati a livello di scala ad intervalli e considera i punteggi totali come un’approssimazione diretta del costrutto latente.<br>
+</li>
+<li>La MSA è più adatta per dati ordinali (come risposte su una scala Likert) e non presuppone una relazione specifica tra il costrutto latente e le risposte agli item.</li>
+</ul>
+</li>
+</ol>
+<p>In conclusione, la CTT e la MSA non si escludono a vicenda, ma possono essere viste come approcci complementari. La CTT fornisce una base teorica solida e intuitiva per la misurazione, mentre la MSA permette un’analisi più rigorosa e adattabile alle caratteristiche dei dati. Utilizzare entrambi gli approcci in modo integrato può offrire una visione più completa della qualità e della validità di una scala psicometrica.</p>
+</section><section id="riflessioni-conclusive" class="level3" data-number="62.8.3"><h3 data-number="62.8.3" class="anchored" data-anchor-id="riflessioni-conclusive">
+<span class="header-section-number">62.8.3</span> Riflessioni Conclusive</h3>
+<p>Questo capitolo ha evidenziato l’importanza di non dare per scontata l’assunzione, tipica della <strong>Classical Test Theory (CTT)</strong>, che i punteggi grezzi rappresentino dati ordinali validi. Tale presupposto, spesso implicito, necessita di una verifica empirica per garantire che le interpretazioni siano accurate e affidabili. In questo contesto, l’<strong>Analisi delle Scale di Mokken (MSA)</strong> offre strumenti efficaci per valutare empiricamente questa ipotesi.</p>
+<p>Attraverso i <strong>coefficienti di scalabilità</strong> (<span class="math inline">\(H\)</span>, <span class="math inline">\(H_i\)</span>, <span class="math inline">\(H_{ij}\)</span>), la MSA permette di verificare se un test misura un costrutto unidimensionale in modo coerente, mentre il principio dell’<strong>Ordinamento Invariante degli Item (IIO)</strong> garantisce che l’ordine di difficoltà degli item sia stabile per tutti i livelli di abilità dei rispondenti. Questi strumenti forniscono un quadro analitico robusto per validare la qualità di una scala psicometrica, superando alcune limitazioni della CTT.</p>
+<p>La MSA rappresenta un’evoluzione rispetto al modello di Guttman, introducendo maggiore flessibilità e adattabilità nella gestione delle deviazioni dalla cumulatività perfetta. Questo la rende particolarmente utile per l’analisi esplorativa di scale psicologiche, consentendo di indagare la struttura delle risposte agli item e la loro relazione con il costrutto latente.</p>
+<p>In sintesi, l’MSA non solo integra ma amplia i tradizionali approcci della psicometria, offrendo strumenti analitici utili per costruire e validare scale che misurano costrutti complessi in modo accurato e interpretabile.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-wind2017instructional" class="csl-entry" role="listitem">
+Wind, S. A. (2017). An instructional module on Mokken scale analysis. <em>Educational Measurement: Issues and Practice</em>, <em>36</em>(2), 50–66.
+</div>
+<div id="ref-wind2024item" class="csl-entry" role="listitem">
+Wind, S. A. (2024). Item-Explanatory Mokken Scale Analysis: Using Nonparametric Item Response Theory to Explore Item Attributes. <em>The Journal of Experimental Education</em>, 1–21.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../chapters/mokken/01_logistic_regr.html" class="pagination-link" aria-label="Modello di Regressione Logistica">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/mokken/03_applications.html" class="pagination-link" aria-label="Applicazione Pratica">
+        <span class="nav-page-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p><strong>Testing Psicologico</strong> è una dispensa scritta da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>
