@@ -1,0 +1,534 @@
+# Riparazione affettiva post-infedeltà {#sec-path-analysis-clement}
+
+::: callout-important
+## In questo capitolo imparerai a
+
+- distinguere tra moderazione, mediazione e mediazione moderata.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere *A step-by-step tutorial for performing a moderated mediation analysis using PROCESS* di @clement2022step
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaanExtra, lavaanPlot, semTools, haven, mediation, semPlot, 
+    performance, car, lmtest, interactions, sjPlot)
+```
+:::
+
+
+## Introduzione
+
+Lo scopo di questo capitolo è quello di discutere il tutorial di @clement2022step in cui la path anaysis viene impiegata per tre analisi statistiche: il modello di moderazione, il modello di mediazione semplice, e il modello di mediazione moderata.
+
+## Modello di Mediazione Semplice
+
+L'indagine sull'associazione tra variabili spesso inizia con analisi correlazionali, come la correlazione bivariata. Questo approccio si concentra sul legame tra due variabili senza tentare di stabilire un rapporto causale o predittivo. Tuttavia, quando l'obiettivo è comprendere se e come una variabile indipendente influenza una variabile dipendente, si utilizza l'analisi di regressione lineare. 
+
+Per eseguire un'analisi di regressione, il ricercatore deve identificare una variabile esplicativa (variabile indipendente, IV o X) e una o più variabili di risposta (variabile dipendente, DV o Y). È cruciale ricordare che la regressione, di per sé, non fornisce prove definitive sull'influenza causale della IV sulla DV. Nei disegni di ricerca correlazionali, la scelta di quale variabile trattare come IV o DV dovrebbe essere guidata da un quadro teorico solido.
+
+Un esempio illustrativo è fornito da @clement2022step. Consideriamo coppie che hanno affrontato una trasgressione nella loro relazione. Promuovere la ricostruzione della fiducia nel partner trasgressore potrebbe aiutare il partner ferito a perdonare [@hargrave2016restoration]. In questo contesto, la fiducia nel trasgressore (IV) potrebbe essere associata al perdono (DV). Tuttavia, esplorare i meccanismi sottostanti, ad esempio come la fiducia nel trasgressore influenzi il perdono, può fornire spunti utili per la terapia di coppia. Questo tipo di analisi può essere approfondito con un modello di mediazione semplice, utile per identificare aree su cui focalizzare gli interventi terapeutici.
+
+### Struttura del Modello di Mediazione Semplice
+
+In un modello di mediazione semplice, la variabile indipendente (IV) non influenza direttamente la variabile dipendente (DV), ma lo fa attraverso una variabile intermedia, detta variabile mediatrice (M). La M media l'effetto della IV sulla DV: la IV ha un effetto su M, che a sua volta esercita un'influenza sulla DV. Questa relazione costituisce l'**effetto indiretto**, il cuore della mediazione. 
+
+In sintesi, un modello di mediazione semplice consente di andare oltre la relazione diretta tra IV e DV, fornendo una comprensione più approfondita dei meccanismi attraverso cui le variabili si influenzano reciprocamente.
+
+::: {#fig-clement-1}
+![](../../figures/clement_2022.png){width="70%"}
+
+Pannello A: Mediazione semplice; Pannello B: Moderazione; e Pannello C: Modelli di Mediazione Moderata. Nel Pannello A, le linee tratteggiate indicano il percorso indiretto (ab), mentre la linea continua indica il percorso diretto (c'). (Figura tratta da @clement2022step)
+:::
+
+La ricerca ha evidenziato che la fiducia in un partner romantico è positivamente associata alla compassione per quel partner (Salazar, 2015) e che la compassione rappresenta uno dei più forti predittori del perdono (Davis, 2017). Di conseguenza, si potrebbe ipotizzare che la fiducia influenzi il perdono attraverso la compassione per il partner romantico. In termini di analisi, questo si traduce in un modello di mediazione, in cui:
+
+1. **La fiducia nel partner romantico influenza la compassione per il partner** (percorso $a$);
+2. **La compassione per il partner influenza il perdono di quel partner** (percorso $b$).
+
+Questa relazione combinata rappresenta l'**effetto indiretto** della fiducia sul perdono mediato dalla compassione ($ab$). Se i risultati dell'analisi mostrano che l'effetto indiretto è consistente e rilevante, si potrebbe concludere che la compassione media il rapporto tra fiducia e perdono. Al contrario, un effetto indiretto trascurabile indicherebbe che la compassione non svolge un ruolo significativo in questa associazione.
+
+### Effetti Diretti e Indiretti in un Modello di Mediazione
+
+Oltre all'effetto indiretto, un modello di mediazione permette di esaminare l'**effetto diretto** della variabile indipendente (IV) sulla variabile dipendente (DV). Nel contesto di questo esempio, ciò implica verificare se la fiducia nel partner romantico è direttamente associata al perdono quando si controlla per la compassione. 
+
+- L’**effetto diretto** ($c′$) rappresenta il collegamento tra fiducia e perdono senza passare attraverso la compassione.
+- L’**effetto totale** ($c$) è la somma dell’effetto diretto ($c′$) e dell’effetto indiretto ($a \times b$): 
+
+  $$
+  c = c′ + (a \times b)
+  $$
+
+### Tipologie di Mediazione
+
+Nella letteratura si distinguono due tipi principali di mediazione (Meule, 2019):
+
+1. **Mediazione completa**: l’effetto indiretto ($ab$) è significativo, mentre l’effetto diretto ($c′$) non lo è, suggerendo che la variabile mediatrice spiega completamente la relazione tra IV e DV.  
+2. **Mediazione parziale**: sia l’effetto indiretto ($ab$) che l’effetto diretto ($c′$) sono significativi, indicando che la variabile mediatrice spiega solo una parte della relazione tra IV e DV.
+
+### Implicazioni del Modello
+
+Analizzare un modello di mediazione semplice può offrire preziose informazioni sui meccanismi attraverso cui la compassione collega fiducia e perdono in una relazione romantica. Tuttavia, potrebbe essere altrettanto importante esplorare le condizioni in cui la fiducia è associata alla compassione. Questo richiederebbe un modello di moderazione, che consente di esaminare se e come una variabile moderatrice influenzi la relazione tra fiducia e compassione. 
+
+Combinare modelli di mediazione e moderazione offre un quadro più completo delle dinamiche psicologiche all'interno delle relazioni romantiche, migliorando la comprensione dei processi sottostanti e delle possibili implicazioni per interventi terapeutici.
+
+## Modello di Moderazione
+
+Un modello di moderazione esplora se una terza variabile, chiamata moderatore (W), influenza la forza o la direzione della relazione tra una variabile indipendente (IV) e una variabile dipendente (DV). In particolare, il ruolo del moderatore aiuta a identificare le condizioni specifiche in cui un effetto è più o meno forte, presente o assente, oppure positivo o negativo. Come afferma Hayes (2018, p. 220): 
+
+> "Identificare un moderatore di un effetto aiuta a stabilire le condizioni limite di quell'effetto o le circostanze, gli stimoli o il tipo di persone per cui l'effetto è maggiore o minore, presente o assente, positivo o negativo, e così via."
+
+Dal punto di vista statistico, testare un modello di moderazione equivale a esaminare un'interazione tra variabili, come avviene nell'analisi della varianza (ANOVA; Frazier, Tix, & Barron, 2004). Un’interazione è presente quando l’effetto dell’IV sulla DV cambia a seconda del livello di W (Hayes, 2018). In altre parole, l’obiettivo è verificare se l’associazione tra IV e DV varia in funzione dei diversi livelli di W.
+
+La **Figura 1B** rappresenta un diagramma di un modello di moderazione. Tornando all’esempio di fiducia, compassione e perdono, potremmo essere interessati a capire in quali circostanze la fiducia è più fortemente associata alla compassione. Nella letteratura sui comportamenti sociali sani, l’umiltà è considerata un fattore cruciale per la coltivazione della compassione (Worthington & Allison, 2018). Ad esempio, studi hanno dimostrato che percepire il proprio partner romantico come umile è associato a una maggiore considerazione del partner come compassionevole (McDonald, Olson, Goddard, & Marshall, 2018). Inoltre, la fiducia e l’umiltà sono positivamente correlate (Wang, Edwards, & Hill, 2017). 
+
+Si potrebbe dunque ipotizzare un modello di moderazione in cui l’associazione tra fiducia e compassione per il partner romantico dipende dalla percezione del partner come umile. In questo caso, il livello di umiltà percepita (W) modera l’effetto della fiducia (IV) sulla compassione (DV).
+
+## Modello di Mediazione Moderata
+
+Il concetto di **mediazione moderata**, introdotto da James e Brett (1984), si riferisce all’analisi di come un moderatore (W) influenzi l’intensità di un effetto indiretto (Preacher, Rucker, & Hayes, 2007). In particolare, si parla di mediazione moderata quando l’effetto mediato di una variabile indipendente (IV) su una variabile dipendente (DV) attraverso una variabile mediatrice (M) dipende dai livelli del moderatore (W). 
+
+La **Figura 1C** rappresenta un modello di mediazione moderata. Riprendendo l’esempio precedente, si potrebbe ipotizzare che la fiducia nel partner romantico (IV) sia associata al perdono (DV) attraverso la compassione per il partner (M), ma che questa relazione mediata dipenda dalla percezione del partner come umile (W). 
+
+In questo caso: 
+
+- La fiducia (X) influenza la compassione (M) attraverso il percorso \(a\);  
+- La compassione (M) influenza il perdono (Y) attraverso il percorso \(b\);  
+- L'effetto indiretto (\(ab\)) è condizionato dal livello di umiltà percepita (W).  
+
+Un modello di mediazione moderata consente di esplorare come e quando una relazione mediata si manifesta, fornendo una comprensione più approfondita dei processi psicologici sottostanti. Ad esempio, l’associazione tra fiducia e perdono mediata dalla compassione potrebbe essere più forte nelle relazioni in cui il partner è percepito come umile, mentre potrebbe indebolirsi o essere assente in relazioni in cui il partner non è considerato umile. 
+
+Questi modelli offrono strumenti potenti per identificare non solo le relazioni tra le variabili, ma anche le condizioni che influenzano tali relazioni, con implicazioni significative per la ricerca e le applicazioni pratiche.
+
+## Esempio di Mediazione Moderata
+
+Nel suo tutorial, @clement2022step presenta un esempio basato sui dati di uno studio che ha analizzato la relazione tra fiducia di coppia, compassione verso il partner che ha commesso un’offesa, percezione di quel partner come umile, e perdono in individui che hanno vissuto un “attaccamento ferito” nella loro relazione romantica. 
+Le ferite da attaccamento sono definite come violazioni percepite della fiducia o abbandoni che si verificano in momenti critici, quando il sostegno e la cura del partner romantico erano particolarmente necessari (Johnson, Makinen, & Millikin, 2001). In questi casi, il ripristino della fiducia e il perdono giocano un ruolo centrale nel processo di riparazione della relazione.
+
+### Definizioni Chiave
+
+1. **Fiducia di coppia**: In questo studio, la fiducia è stata definita come il grado di percezione del partner ferito rispetto all’onestà e alla buona volontà del partner che ha commesso l’offesa (Larzelere & Huston, 1980). La fiducia rappresenta un elemento essenziale per ricostruire un legame dopo una violazione.  
+
+2. **Perdono**: Il perdono è stato operazionalizzato come la presenza di alte motivazioni benevolenti (es. buona volontà) e la riduzione di motivazioni di evitamento o vendetta nei confronti del partner offensivo. Questo approccio cattura la complessità del perdono, inteso non solo come un’assenza di risentimento, ma anche come un’attiva disposizione al bene dell’altro.
+
+3. **Compassione**: La compassione per il partner rappresenta un elemento chiave nel superare l’offesa, riflettendo empatia e il desiderio di alleviare la sofferenza dell’altro.
+
+4. **Umiltà**: La percezione del partner come umile è stata identificata come un fattore cruciale, in grado di influenzare il modo in cui la fiducia si traduce in compassione e, in ultima analisi, in perdono. Studi precedenti hanno evidenziato che l’umiltà del partner è strettamente associata alla capacità di riconoscere l’offesa e lavorare per ripararla (McDonald, Olson, Goddard, & Marshall, 2018).
+
+### Applicazione della Mediazione Moderata
+
+L’esempio esamina se la percezione dell’umiltà del partner moderi il percorso mediato tra fiducia e perdono attraverso la compassione. In altre parole:
+
+- **Fiducia → Compassione**: La fiducia nel partner che ha commesso l’offesa aumenta la compassione verso di lui/lei.  
+- **Compassione → Perdono**: Maggiore compassione porta a livelli più alti di perdono.  
+- **Moderazione (Umiltà)**: L’associazione tra fiducia e compassione è più forte quando il partner è percepito come umile.
+
+Questo modello di mediazione moderata permette di comprendere non solo come la fiducia influenza il perdono, ma anche le circostanze in cui questa relazione è più efficace. Ad esempio, in coppie in cui il partner offensivo non è percepito come umile, la fiducia potrebbe avere un impatto più debole sulla compassione, riducendo così la probabilità di perdono. 
+
+### Implicazioni per la Ricerca e l’Intervento
+
+L’utilizzo di un modello di mediazione moderata fornisce informazioni preziose per interventi clinici e terapeutici. Comprendere il ruolo dell’umiltà potrebbe aiutare i terapeuti a concentrare gli interventi sull’aumento della percezione di umiltà nel partner offensivo, promuovendo così compassione e perdono. Questo approccio mira a ripristinare la fiducia e a ricostruire relazioni compromesse da ferite da attaccamento. 
+
+**Partecipanti**
+
+Il campione utilizzato per questo tutorial era composto da 138 persone che hanno riferito di aver vissuto una ferita da attaccamento nella loro attuale relazione romantica e di aver perdonato il proprio partner. 
+
+I partecipanti hanno completato i questionari auto-compilati online.
+
+I partecipanti hanno descritto brevemente la ferita da attaccamento subita nella relazione e indicato se avevano perdonato o meno il partner romantico per tale ferita (sì/no).
+
+La fiducia di coppia è stata misurata utilizzando la **Dyadic Trust Scale** (DTS; Larzelere & Huston, 1980), composta da 8 item valutati su una scala da 1 (fortemente d'accordo) a 7 (fortemente in disaccordo).
+
+La compassione verso il partner è stata misurata con la **Compassion Scale** (CS; Pommier, Neff, & Tóth-Király, 2020), modificata per riflettere la compassione verso il partner che ha commesso l'offesa. La scala includeva 16 item valutati da 1 (quasi mai) a 5 (quasi sempre).
+
+La percezione del partner come umile è stata misurata con la **Relational Humility Scale** (RHS; Davis et al., 2011), modificata per riflettere i sentimenti attuali del partner ferito verso il partner che ha commesso l'offesa. Gli item sono stati valutati su una scala da 1 (fortemente in disaccordo) a 5 (fortemente d'accordo).
+
+Il perdono del partner che ha commesso l'offesa è stato misurato con il **Transgressions-related Interpersonal Motivations Inventory** (TRIM; McCullough et al., 1998; McCullough, Fincham, & Tsang, 2003). Il TRIM misura:
+
+- Motivazione ad evitare il partner.
+- Motivazione a cercare vendetta.
+- Motivazione a dimostrare benevolenza verso il partner.
+
+Per questo studio, il perdono è stato definito come bassi livelli di motivazione ad evitare o vendicarsi del partner, e alti livelli di motivazione benevolente verso di lui/lei. L'esempio discusso nel tutorial include solo la sottoscala della benevolenza del TRIM-18.
+
+```{r}
+#| vscode: {languageId: r}
+# Load the data from SPSS file
+data <- read_sav(here::here("data", "clement_2022.sav"))
+```
+
+```{r}
+#| vscode: {languageId: r}
+glimpse(data)
+```
+
+```{r}
+#| vscode: {languageId: r}
+# Statistiche descrittive
+describe(data)
+```
+
+```{r}
+#| vscode: {languageId: r}
+# Identificazione degli outliers per ogni variabile
+outliers_results <- check_outliers(data)
+
+# Visualizzazione dei risultati
+print(outliers_results)
+```
+
+```{r}
+#| vscode: {languageId: r}
+# Visualizzare un boxplot con outliers
+boxplot(data, main = "Boxplot delle variabili", col = "lightblue", las = 2)
+```
+
+## Indipendenza
+
+Per soddisfare l'assunzione di indipendenza nella regressione, i residui del modello devono essere indipendenti. Questo significa che l'errore nella stima di un partecipante non deve influenzare l'errore nella stima di un altro partecipante. Nel nostro esempio, ciò vuol dire che l'errore nella stima del punteggio di benevolenza di un partecipante non dovrebbe influenzare l'errore nella stima del punteggio di un altro partecipante. Per verificare questa assunzione, utilizzeremo la statistica di Durbin-Watson, che testa la presenza di autocorrelazione nei termini di errore (Uyanto, 2020).
+
+La statistica di Durbin-Watson varia tra 0 e 4, e valori compresi tra 1.5 e 2.5 indicano che l'assunzione di indipendenza è rispettata (Glen, 2022). 
+
+In R, possiamo utilizzare la funzione `durbinWatsonTest()` dal pacchetto **car** per testare l'assunzione di indipendenza dei residui in un modello di regressione.
+
+Prima di testare l'indipendenza dei residui, dobbiamo definire un modello di regressione. Per esempio, possiamo creare un modello dove `TRIM_Ben` è la variabile dipendente e `DTST`, `CS_TOT` e `RHSTOT` sono le variabili indipendenti:
+
+```{r}
+#| vscode: {languageId: r}
+# Creazione del modello di regressione
+model <- lm(TRIM_Ben ~ DTST + CS_TOT + RHSTOT, data = data)
+```
+
+Dopo aver creato il modello, possiamo testare l'indipendenza dei residui utilizzando la funzione `durbinWatsonTest()`:
+
+```{r}
+#| vscode: {languageId: r}
+# Esecuzione del test di Durbin-Watson per verificare l'indipendenza dei residui
+dw_test <- durbinWatsonTest(model)
+
+# Visualizzazione del risultato
+print(dw_test)
+```
+
+Il valore del test di Durbin-Watson varierà tra 0 e 4, e un valore compreso tra **1.5 e 2.5** indica che l'assunzione di indipendenza dei residui è soddisfatta. Possiamo quindi procedere a verificare la successiva assunzione, cioè quella di linearità.
+
+## Linearità
+
+Un'ipotesi fondamentale nella regressione è che le variabili indipendenti (IV) siano correlate con la variabile dipendente (DV) in modo lineare. Questo significa che all'aumentare o al diminuire delle IV, i valori della DV aumentano o diminuiscono in modo proporzionale. Per verificare questa ipotesi, si può tracciare un grafico tra le IV e la DV, oppure utilizzare grafici parziali per verificare la relazione lineare tra ciascuna IV e la DV.
+
+Nel suo tutorial, @clement2022step verifica l'assunzione di linearità tra tutte le variabili usando un grafico di dispersione che confronta i residui studentizzati (SRE_1) e i valori previsti non standardizzati (PRE_1).
+
+```{r}
+#| vscode: {languageId: r}
+# Calcolare i residui studentizzati e i valori previsti
+SRE_1 <- rstudent(model) # Residui studentizzati
+PRE_1 <- predict(model) # Valori previsti non standardizzati
+
+# Creare un grafico di dispersione per verificare la linearità
+plot(PRE_1, SRE_1,
+    main = "Verifica della linearità: residui vs valori previsti",
+    xlab = "Valori previsti (PRE_1)",
+    ylab = "Residui studentizzati (SRE_1)",
+    pch = 19, col = "blue"
+)
+abline(h = 0, col = "red", lwd = 2)
+```
+
+Se i punti nel grafico sono distribuiti in modo casuale attorno alla linea orizzontale (che rappresenta i residui pari a 0), l'assunzione di linearità è soddisfatta. Se invece si notano dei pattern, questo potrebbe essere indicativo di una violazione della linearità.
+
+## Omoschedasticità
+
+L'assunzione di **omoschedasticità** richiede che l'errore nella relazione tra le variabili indipendenti (IV) e la variabile dipendente (DV) sia costante su tutti i valori delle IV. Quando questa assunzione è violata, si verifica **eteroschedasticità**, che significa che l'errore (la variabilità nei punteggi della DV non spiegata dalle IV) varia in base ai punteggi della DV (Osborne & Waters, 2002). Per verificare se questa assunzione è soddisfatta, possiamo utilizzare lo stesso grafico di dispersione dei residui che abbiamo creato prima. Se i residui sono distribuiti in modo casuale attorno ai valori previsti e formano una forma rettangolare, possiamo concludere che l'assunzione di omoschedasticità è soddisfatta.
+
+```{r}
+#| vscode: {languageId: r}
+ # Calcolo dei residui e dei valori previsti
+ residuals <- resid(model)
+ predicted_values <- predict(model)
+
+ # Grafico di dispersione per verificare l'omoschedasticità
+ plot(predicted_values, residuals,
+     main = "Verifica dell'omoschedasticità: Residui vs Valori previsti",
+     xlab = "Valori previsti",
+     ylab = "Residui",
+     pch = 19, col = "blue"
+ )
+ abline(h = 0, col = "red", lwd = 2)
+```
+
+- Se i punti nel grafico sono distribuiti casualmente attorno alla linea orizzontale (che rappresenta residui pari a 0) e non mostrano alcun pattern evidente (ad esempio, non formano un cono o una forma curva), allora l'assunzione di omoschedasticità è soddisfatta.
+- Se invece i punti mostrano una dispersione non uniforme (ad esempio, aumentano o diminuiscono con i valori previsti), potrebbe esserci eteroschedasticità, e l'assunzione sarebbe violata.
+
+È anche possibile  eseguire un test statistico per l'omoschedasticità, come il test di Breusch-Pagan, utilizzando il pacchetto `lmtest`:
+
+```{r}
+#| vscode: {languageId: r}
+bptest(model)
+```
+
+- Se il **p-value** è alto (di solito > 0.05), non ci sono evidenze di eteroschedasticità e l'assunzione di omoschedasticità è soddisfatta.
+- Se il **p-value** è basso (di solito < 0.05), c'è eteroschedasticità e l'assunzione è violata.
+
+## Multicollinearità
+
+Quando due o più variabili indipendenti (IV) sono fortemente correlate tra loro, potrebbe esserci **multicollinearità**, il che significa che i punteggi di una o più IV sono determinati da altre IV nel modello (Kim, 2019). Per verificare se esiste multicollinearità, possiamo calcolare il **fattore di inflazione della varianza** (VIF) o la **statistica di tolleranza**. Queste due misure sono reciproche, quindi è sufficiente controllarne una. 
+
+- La **tolleranza** dovrebbe essere superiore a 0.1.
+- Il **VIF** non dovrebbe superare il valore di 10 (Miles, 2005).
+
+```{r}
+#| vscode: {languageId: r}
+ # Calcolo del VIF per le variabili indipendenti
+ vif_values <- vif(model)
+
+ # Visualizzazione dei valori VIF
+ print(vif_values)
+```
+
+- Se tutti i valori di **VIF** sono inferiori a 10, non c'è multicollinearità nel modello.
+- Se trovi valori di **VIF** superiori a 10, potresti avere un problema di multicollinearità e dovresti considerare di rimuovere o combinare alcune variabili indipendenti.
+
+## Normalità
+
+L'assunzione di **normalità** richiede che i residui, ossia gli errori nella stima, siano distribuiti normalmente (Hayes, 2018). Per verificare questa assunzione, possiamo ispezionare visivamente l'istogramma dei residui sovrapposto a una curva di normalità e un grafico P-P (probability-probability plot). 
+
+- **Istogramma**: Se i residui sono distribuiti normalmente, l'istogramma avrà una forma simile a una campana.
+- **Grafico P-P**: Se i punti si allineano bene lungo la diagonale, significa che la distribuzione è normale.
+
+Anche se ci sono piccole deviazioni dalla normalità, la regressione è robusta a violazioni non gravi della normalità, quindi possiamo comunque procedere con l'analisi.
+
+**Verificare la normalità visivamente**
+
+Creeremo un istogramma dei residui e sovrapporremo una curva di densità normale per vedere se i residui seguono una distribuzione normale.
+
+```{r}
+#| vscode: {languageId: r}
+# Calcolo dei residui
+residuals <- resid(model)
+
+# Creare l'istogramma con curva di normalità sovrapposta
+hist(residuals,
+    prob = TRUE, main = "Istogramma dei residui",
+    xlab = "Residui", col = "lightblue", border = "black"
+)
+
+# Sovrapporre la curva di normalità
+lines(density(residuals), col = "red", lwd = 2)
+```
+
+Se la curva rossa (curva di densità) segue bene la forma dell'istogramma, possiamo concludere che i residui sono distribuiti normalmente.
+
+Un altro metodo per verificare la normalità è creare un grafico P-P (probability-probability plot).
+
+```{r}
+#| vscode: {languageId: r}
+# Creazione del P-P plot
+qqnorm(residuals, main = "Grafico P-P dei residui")
+qqline(residuals, col = "red", lwd = 2)
+```
+
+Se i punti nel grafico P-P seguono da vicino la linea diagonale, i residui sono distribuiti normalmente. Se ci sono alcune deviazioni, la regressione è comunque robusta a violazioni lievi della normalità.
+
+## Analisi di moderazione
+
+Per determinare se esiste una relazione di moderazione tra DTST (fiducia di coppia) e RHSTOT (umiltà percepita del partner), possiamo fare riferimento ai risultati dell'output del seguente modello di regressione lineare:
+
+```{r}
+#| vscode: {languageId: r}
+# Creare il modello di moderazione
+model <- lm(CS_TOT ~ DTST * RHSTOT, data = data)
+summary(model)
+```
+
+Dalla tabella dei coefficienti, possiamo notare che:
+
+- L'intercetta ha un valore stimato di 74.86, con un errore standard di 9.90, risultando altamente significativa (p < 0.001).
+- L'effetto principale di *DTST* (fiducia di coppia) è negativo (b = -0.517), ma non significativo al 5% (p = 0.0662).
+- L'effetto principale di *RHSTOT* (percezione dell'umiltà del partner) è anch'esso negativo (b = -0.355), ma non significativo (p = 0.1439).
+- Tuttavia, l'interazione tra *DTST* e *RHSTOT* risulta significativa (b = 0.0143, p = 0.0224), suggerendo che l'effetto di *DTST* su *CS_TOT* varia in base ai livelli di *RHSTOT*.
+
+### Interpretazione dell'interazione
+Poiché l'interazione è significativa, significa che l'associazione tra la fiducia di coppia (*DTST*) e la compassione verso il partner che ha ferito (*CS_TOT*) dipende dalla percezione dell'umiltà del partner (*RHSTOT*). Questo implica che la fiducia di coppia avrà un effetto diverso sulla compassione a seconda del livello di umiltà percepita.
+
+### Pendenze semplici
+Per visualizzare questa interazione, possiamo usare un grafico che mostra l'effetto di *DTST* (fiducia di coppia) su *CS_TOT* (compassione) a tre livelli di *RHSTOT* (umiltà percepita del partner): alla media, e a ±1 deviazione standard dalla media. Il codice fornito per visualizzare le pendenze semplici è:
+
+```{r}
+#| vscode: {languageId: r}
+# Calcolo della media e delle deviazioni standard di RHSTOT
+mean_RHSTOT <- mean(data$RHSTOT, na.rm = TRUE)
+sd_RHSTOT <- sd(data$RHSTOT, na.rm = TRUE)
+
+# Stampa dei valori
+mean_RHSTOT
+sd_RHSTOT
+
+# Visualizzare le semplici pendenze dell'interazione usando la media e ± 1 SD
+interact_plot(model,
+    pred = DTST, modx = RHSTOT,
+    modx.values = c(mean_RHSTOT - sd_RHSTOT, mean_RHSTOT, mean_RHSTOT + sd_RHSTOT),
+    plot.points = TRUE,
+    main.title = "Interazione tra DTST e RHSTOT su CS_TOT",
+    x.label = "Fiducia di coppia (DTST)",
+    y.label = "Compassione (CS_TOT)",
+    legend.main = "Umiltà del partner (RHSTOT)"
+)
+```
+
+Dal grafico risultante, possiamo visualizzare le pendenze dell'interazione, mostrando come l'effetto della fiducia di coppia sulla compassione cambi in base ai diversi livelli di umiltà percepita del partner. Questo tipo di visualizzazione permette di vedere chiaramente che quando *RHSTOT* è alto (partner percepito come molto umile), l'effetto di *DTST* su *CS_TOT* aumenta.
+
+## Analisi della Mediazione
+
+Ora dobbiamo capire se c'è un'associazione diretta tra la variabile indipendente (*X*, ad esempio, la fiducia di coppia) e la variabile dipendente (*Y*, ad esempio, il perdono). Per farlo, analizziamo il riepilogo del modello per la variabile di esito *TRIM_Ben* (che rappresenta il perdono).
+
+```{r}
+#| vscode: {languageId: r}
+# Definizione del modello di mediazione
+model <- "
+  # Effetto diretto di DTST su TRIM_Ben
+  TRIM_Ben ~ c_prime*DTST
+
+  # Effetto di DTST su CS_TOT (mediazione)
+  CS_TOT ~ a*DTST
+
+  # Effetto di CS_TOT su TRIM_Ben (mediazione)
+  TRIM_Ben ~ b*CS_TOT
+
+  # Effetto indiretto (a * b)
+  ab := a*b
+
+  # Effetto totale di DTST su TRIM_Ben
+  total := c_prime + ab
+"
+
+# Esegui il modello con i dati
+fit <- sem(model, data = data)
+
+# Riassunto dei risultati
+summary(fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE) |>
+  print()
+```
+
+### Interpretazione del Modello di Mediazione
+
+L'output di **lavaan** fornisce tutte le informazioni necessarie per interpretare il modello di mediazione, con particolare attenzione ai coefficienti standardizzati e non standardizzati. Poiché il modello presenta zero gradi di libertà, non è possibile interpretare gli indici di adattamento (CFI, TLI, RMSEA). L'interpretazione si concentra quindi sui coefficienti del modello di percorso.
+
+### Effetto Diretto e Indiretto
+
+- **Effetto diretto** (*c' path*): Il coefficiente di percorso standardizzato dell'effetto diretto di *DTST* (fiducia di coppia) su *TRIM_Ben* (perdono) è pari a 0.267, con un coefficiente non standardizzato di 0.148 (SE = 0.040, z = 3.691, p < 0.001). Questo risultato indica che la fiducia di coppia ha un effetto positivo diretto sul perdono. Le persone che hanno maggiore fiducia nel partner tendono a mostrare un livello più elevato di perdono, indipendentemente dalla compassione verso il partner.
+
+- **Effetto indiretto** (*ab path*): Il coefficiente standardizzato per l'effetto indiretto di *DTST* su *TRIM_Ben*, mediato da *CS_TOT* (compassione), è pari a 0.104, con un coefficiente non standardizzato di 0.058 (SE = 0.022, z = 2.589, p = 0.010). Questo suggerisce che la fiducia di coppia influisce sul perdono anche attraverso la compassione. In altre parole, una maggiore fiducia nel partner porta a un aumento della compassione verso di lui, e questo incremento di compassione favorisce ulteriormente il perdono.
+
+### Effetto Totale
+
+- **Effetto totale**: Sommando gli effetti diretto e indiretto, l'effetto totale di *DTST* su *TRIM_Ben* è pari a 0.371, con un coefficiente non standardizzato di 0.205 (SE = 0.044, z = 4.690, p < 0.001). Ciò indica che la fiducia di coppia ha un'influenza complessiva positiva sul perdono, sia direttamente che attraverso la mediazione della compassione.
+
+### Varianza Spiegata (R²)
+
+- La fiducia di coppia e la compassione spiegano il **31.9%** della varianza in *TRIM_Ben* (perdono), suggerendo che questi predittori contribuiscono in modo sostanziale a spiegare il perdono.
+- Inoltre, *DTST* spiega il **5.6%** della varianza in *CS_TOT* (compassione), indicando che una parte dell'influenza della fiducia di coppia è esercitata attraverso la compassione.
+
+### Conclusioni
+
+In sintesi:
+
+1. **Effetto diretto**: La fiducia di coppia (*DTST*) ha un'influenza positiva diretta sul perdono (*TRIM_Ben*), con un coefficiente standardizzato pari a 0.267. Questo significa che, indipendentemente da altri fattori, le persone che hanno più fiducia nel partner sono più inclini a perdonare.
+2. **Effetto indiretto**: Oltre all'effetto diretto, c'è un'influenza indiretta mediata dalla compassione (*CS_TOT*), con un coefficiente standardizzato pari a 0.104. Questo implica che la fiducia di coppia aumenta la compassione verso il partner, e la maggiore compassione favorisce ulteriormente il perdono.
+3. **Effetto totale**: L'effetto complessivo della fiducia di coppia sul perdono, che include sia l'effetto diretto che quello mediato dalla compassione, è pari a 0.371, evidenziando un'influenza positiva e significativa.
+
+### Implicazioni
+
+Questi risultati suggeriscono che per promuovere il perdono, la fiducia nel partner è un fattore chiave. Tuttavia, anche la compassione verso il partner gioca un ruolo essenziale, mediando parte dell'effetto della fiducia sul perdono. Pertanto, lavorare sia sulla fiducia che sulla compassione potrebbe essere utile per migliorare la capacità di perdonare in una relazione di coppia. 
+
+## Mediazione Moderata
+
+```{r}
+#| vscode: {languageId: r}
+# Define the moderated mediation model (PROCESS model 7 equivalent)
+# Here, DTST is the independent variable (X), CS_TOT is the mediator (M),
+# TRIM_Ben is the outcome (Y), and RHSTOT is the moderator (W).
+
+# Specify the model in lavaan syntax
+model <- "
+  # Direct effect of X on Y
+  TRIM_Ben ~ c*DTST + b*CS_TOT + d*RHSTOT + e*DTST:RHSTOT
+
+  # Mediation pathway (X -> M -> Y)
+  CS_TOT ~ a*DTST + f*RHSTOT + g*DTST:RHSTOT
+
+  # Indirect effect of X on Y through M (CS_TOT)
+  indirect := a*b
+  direct := c
+  total := indirect + direct
+"
+
+# Fit the model
+fit <- sem(model, data = data, se = "bootstrap", bootstrap = 100)
+
+# Summary of the model
+summary(fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE) |> print()
+```
+
+### Interpretazione dell'Analisi di Mediazione Moderata
+
+L'output del modello mostra un'analisi di mediazione moderata, dove la variabile *RHSTOT* (percezione dell'umiltà del partner) modera la relazione tra *DTST* (fiducia di coppia) e *TRIM_Ben* (perdono) tramite *CS_TOT* (compassione verso il partner).
+
+Dall'indice di mediazione moderata, possiamo verificare se *RHSTOT* influenza l'effetto indiretto di *DTST* su *TRIM_Ben* attraverso *CS_TOT*. L'intervallo di confidenza per l'effetto moderato dell'umiltà del partner sull'effetto indiretto della fiducia di coppia va da 0.0001 a 0.0077, il che indica che la percezione dell'umiltà modera effettivamente l'effetto indiretto.
+
+### Effetto Diretto e Indiretto
+
+- **Effetto diretto** (*c path*): Il coefficiente per l'effetto diretto di *DTST* su *TRIM_Ben* è pari a 0.203, con un intervallo di confidenza che non include valori sufficientemente vicini allo zero (z = 1.378, p = 0.168), suggerendo che l'effetto diretto non è robusto. Tuttavia, il coefficiente indica una possibile relazione positiva tra la fiducia di coppia e il perdono.
+  
+- **Effetto indiretto** (*ab path*): L'effetto indiretto di *DTST* su *TRIM_Ben*, mediato da *CS_TOT*, è pari a -0.149, con un intervallo di confidenza che include valori vicini allo zero (z = -1.435, p = 0.151). Questo indica che l'effetto indiretto non è rilevante in questo modello.
+
+- **Interazione moderata** (*g path*): La percezione dell'umiltà del partner modera l'effetto di *DTST* su *CS_TOT*, con un coefficiente di interazione pari a 0.014 (z = 2.162, p = 0.031). Questo suggerisce che la fiducia di coppia influenza la compassione in maniera diversa a seconda del livello di umiltà percepita del partner.
+
+### Effetto Totale
+
+L'effetto totale di *DTST* su *TRIM_Ben* (includendo l'effetto diretto e indiretto) è di 0.054 (z = 0.380, p = 0.704), il che suggerisce che la fiducia di coppia ha un'influenza complessiva molto ridotta sul perdono, in parte dovuta alla mancanza di un effetto indiretto rilevante.
+
+### Varianza Spiegata (R²)
+
+- La fiducia di coppia, la compassione, e l'umiltà percepita spiegano il **32.5%** della varianza in *TRIM_Ben* (perdono).
+- Le stesse variabili spiegano il **11.7%** della varianza in *CS_TOT* (compassione).
+
+### Conclusioni
+
+In sintesi:
+
+1. La fiducia di coppia (*DTST*) ha un'influenza diretta positiva, anche se debole, sul perdono (*TRIM_Ben*), ma l'effetto non è forte né chiaramente rilevante.
+2. L'effetto indiretto della fiducia di coppia sul perdono, mediato dalla compassione (*CS_TOT*), non è particolarmente rilevante in questo modello.
+3. L'umiltà percepita del partner (*RHSTOT*) modera significativamente la relazione tra fiducia di coppia e compassione, suggerendo che l'effetto della fiducia sul perdono può dipendere dal livello di umiltà percepita nel partner.
+
+Nel complesso, questo modello di mediazione moderata mostra che l'umiltà del partner influenza la relazione tra fiducia e compassione, ma non ci sono prove chiare di un effetto indiretto significativo di *DTST* su *TRIM_Ben* attraverso *CS_TOT*.
+
+## Considerazioni conclusive
+
+Dalle tre analisi condotte emerge un quadro complesso della relazione tra fiducia di coppia (*DTST*), compassione verso il partner che ha ferito (*CS_TOT*) e perdono (*TRIM_Ben*). I risultati indicano che la fiducia di coppia ha un'influenza diretta e positiva sul perdono, anche se in alcuni modelli questo effetto non risulta sufficientemente robusto. Tuttavia, la fiducia di coppia sembra agire in modo più consistente attraverso il suo effetto mediato dalla compassione verso il partner.
+
+Un aspetto chiave emerso dalle analisi è il ruolo della percezione dell'umiltà del partner (*RHSTOT*). Questa variabile non solo modera l'effetto della fiducia di coppia sulla compassione, ma contribuisce anche a modellare l'effetto complessivo della fiducia sul perdono. L'interazione tra fiducia di coppia e umiltà percepita evidenzia che, in contesti in cui il partner è percepito come umile, l'effetto della fiducia sulla compassione aumenta, il che a sua volta rafforza la propensione al perdono.
+
+In sintesi, i risultati suggeriscono che:
+1. La fiducia di coppia è un fattore rilevante per il perdono, ma la sua influenza è amplificata quando la compassione verso il partner funge da mediatore.
+2. La percezione dell'umiltà del partner gioca un ruolo cruciale nel rafforzare il legame tra fiducia e compassione, sottolineando l'importanza del contesto relazionale.
+3. Il perdono non è semplicemente una funzione della fiducia, ma è anche profondamente influenzato dalla capacità di sviluppare compassione verso il partner, soprattutto quando quest'ultimo è visto come umile e disposto a riconoscere il proprio errore.
+
+Questi risultati offrono una visione sfumata della dinamica tra fiducia, compassione e perdono, suggerendo che interventi volti a promuovere il perdono in coppia dovrebbero considerare non solo il livello di fiducia tra i partner, ma anche la percezione di umiltà e la capacità di sviluppare compassione reciproca.
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

@@ -1,0 +1,466 @@
+# L'affidabilità tra giudici {#sec-raters-interrater-reliability}
+
+::: callout-important
+## In questo capitolo apprenderai come:
+
+- calcolare l'accordo nominale e l'indice di concordanza Kappa di Cohen per due giudici, analizzando le loro differenze metodologiche e interpretative;
+- applicare il coefficiente di correlazione intraclasse (ICC) per valutare l'affidabilità in contesti con più giudici, distinguendo tra consistenza e accordo assoluto;
+- utilizzare metodi di analisi avanzata, come l'ANOVA a una via e a due vie, per separare le fonti di varianza e valutare l'impatto del bias dei giudici;
+- implementare modelli a effetti misti con R (`lmer()`), interpretare l'output, e calcolare componenti di varianza e ICC;
+- comprendere le implicazioni dei diversi tipi di disegni sperimentali (crossed vs. nested) e approcci ai giudici (fixed vs. random) nell'analisi della coerenza delle valutazioni.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Reliability* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(car, lme4)
+```
+:::
+
+## Introduzione
+
+L'affidabilità inter-valutatore, nota anche come *inter-rater reliability*, è un elemento cruciale in molti ambiti della psicologia, soprattutto quando i test si basano su giudizi soggettivi. Questo concetto si riferisce al grado di concordanza tra valutatori diversi nel misurare lo stesso fenomeno o campione. Un'elevata affidabilità inter-valutatore indica che i punteggi o i giudizi assegnati da persone diverse sono altamente coerenti, a parità di condizioni, e quindi replicabili.
+
+### Importanza dell'Affidabilità Inter-Valutatore
+
+L'affidabilità inter-valutatore garantisce che i risultati di un test siano consistenti e riproducibili indipendentemente dal valutatore. Questo aspetto è essenziale per assicurare la validità e la solidità delle conclusioni derivanti dai dati, riducendo l'influenza di bias soggettivi. 
+
+Ad esempio:
+
+- **Diagnosi psicologica**: Nella valutazione di disturbi dell'umore, diversi psicologi devono giungere a conclusioni simili basandosi sui sintomi osservati e sulle risposte dei pazienti a questionari standardizzati. Un disaccordo significativo tra valutatori comprometterebbe l'accuratezza diagnostica.
+- **Valutazione terapeutica**: Durante uno studio sull'efficacia di una terapia contro l'ansia, terapeuti diversi possono valutare i livelli di ansia prima e dopo il trattamento. La coerenza tra le loro valutazioni è fondamentale per confermare l'efficacia dell'intervento.
+
+Questo capitolo approfondisce il concetto di affidabilità inter-valutatore in due contesti principali:
+
+1. **Due giudici**: Verranno analizzati l'accordo nominale e l'indice di concordanza *Kappa* di Cohen, che corregge per l'accordo atteso casuale.
+2. **Giudici multipli**: Esploreremo tecniche avanzate come il Coefficiente di Correlazione Intraclasse (ICC) e l'ANOVA, sia a una via che a due vie. In questo contesto, i modelli a effetti misti saranno utilizzati per:
+   - Distinguere la variabilità tra giudici e partecipanti.
+   - Fornire una stima globale dell'affidabilità delle valutazioni.
+
+L'obiettivo è offrire una panoramica completa delle metodologie per misurare e interpretare l'affidabilità inter-valutatore, fornendo strumenti pratici per applicazioni in contesti psicologici e di ricerca.
+
+## Un Esempio Concreto
+
+In questo capitolo, analizzeremo i dati dello studio [*The Reliability and Validity of Speech-Language Pathologists’ Estimations of Intelligibility in Dysarthria*](https://www.mdpi.com/2076-3425/12/8/1011) condotto da Hirsch et al. (2022). Lo studio si concentra sulla valutazione della **"Percentuale di Intelligibilità del Discorso"**, un indicatore soggettivo che misura la percentuale di parole o frasi comprese durante una conversazione con persone affette da disartria. 
+
+La disartria è una condizione patologica che compromette la chiarezza e l'intelligibilità del linguaggio parlato, influenzando negativamente la comunicazione quotidiana. Per stimare questa percentuale, i giudici ascoltano registrazioni vocali dei partecipanti disartrici e forniscono una valutazione del grado di comprensibilità del loro discorso. Questa misura rappresenta un parametro chiave per quantificare l'impatto della disartria sulla capacità di comunicazione verbale e per progettare interventi mirati a migliorare la qualità della vita delle persone colpite.
+
+Importiamo i dati in R:
+
+```{r}
+slp_dat <- read.csv("https://osf.io/download/p9gqk/")
+slp_vas_wide <- slp_dat |>
+    dplyr::select(slpID, Speaker, slp_VAS) |>
+    pivot_wider(names_from = slpID, values_from = slp_VAS)
+```
+
+Visualizziamo il data frame:
+
+```{r}
+glimpse(slp_vas_wide)
+```
+
+
+## Due giudici
+
+In questa sezione, esamineremo come calcolare l'accordo nominale e l'indice di concordanza Kappa di Cohen nel caso di due giudici.
+
+Selezioniamo due giudici.
+
+```{r}
+slp_2rater <- slp_vas_wide |>
+    dplyr::select(slp14, slp15)
+head(slp_2rater)
+```
+
+### Accordo nominale
+
+L'accordo nominale misura la percentuale di perfetta corrispondenza tra le valutazioni fornite dai due giudici. In altre parole, questo metodo rileva quanto spesso i giudici assegnano esattamente lo stesso punteggio per ciascun caso osservato. Ad esempio, se i giudici forniscono valutazioni identiche per il 40% dei casi, l'accordo nominale sarà pari a 0.4.
+
+Utilizzando questa definizione, si ottiene:
+
+```{r}
+with(slp_2rater, mean(slp14 == slp15))
+```
+
+\
+Per rendere il criterio di concordanza più flessibile, si può applicare un arrotondamento ai punteggi: dividendo ciascun punteggio per 10 e arrotondando al numero intero più vicino, anche valori leggermente diversi possono essere considerati concordanti. Ad esempio, valutazioni come 75 e 78, dopo essere state divise per 10 e arrotondate, diventano entrambe 8. Questo metodo amplia il criterio di accordo, riconoscendo che piccole discrepanze potrebbero essere irrilevanti nella pratica.
+
+```{r}
+slp_2round <- round(slp_2rater / 10)
+slp_2round |> print()
+```
+
+```{r}
+slp_2round <- lapply(slp_2round, FUN = factor, levels = 0:10)
+# Contingency table
+table(slp_2round)
+```
+
+\
+Il codice precedente fa uso di due funzioni principali: `lapply()` e `table()`. Esso opera su una lista o su un dataframe chiamato `slp_2round`, applicando una trasformazione ai dati e successivamente creando una tabella di contingenza. 
+
+1. `slp_2round <- lapply(slp_2round, FUN = factor, levels = 0:10)`
+
+- `lapply()`: questa funzione appartiene alla famiglia delle funzioni "*apply" in R, che sono utilizzate per applicare una funzione a ciascun elemento di una lista o di un vettore. `lapply()` restituisce sempre una lista come risultato, mantenendo la lunghezza dell'input originale.
+  
+- `slp_2round`: è la lista o il dataframe su cui si sta operando. Il codice modifica questa variabile, sostituendola con il risultato dell'applicazione di `lapply()`.
+  
+- `FUN = factor`: specifica che la funzione da applicare a ciascun elemento di `slp_2round` è `factor()`. La funzione `factor()` è utilizzata per codificare un vettore come un fattore, che è utile in R per rappresentare dati categorici.
+  
+- `levels = 0:10`: indica i livelli del fattore, che in questo caso sono i numeri da 0 a 10. Questo parametro assicura che i fattori creati abbiano esattamente questi livelli, anche se alcuni di essi non appaiono nei dati. Questo è particolarmente utile per garantire la coerenza dei livelli dei fattori attraverso vari elementi di `slp_2round`, soprattutto se si intende confrontarli o combinarli in seguito.
+
+2. `table(slp_2round)`
+
+- `table()`: questa funzione crea una tabella di contingenza dai dati forniti. Una tabella di contingenza è un tipo di tabella in formato matriciale che conta la frequenza di combinazioni specifiche di valori all'interno di una o più variabili categoriche.
+
+Dopo l'applicazione di `lapply()`, `slp_2round` diventa una lista di elementi, ciascuno dei quali è un fattore con livelli da 0 a 10. Quando si passa questa lista modificata alla funzione `table()`, viene generata una tabella di contingenza. Questa tabella riassume le frequenze dei vari livelli dei fattori attraverso gli elementi della lista `slp_2round`.
+
+```{r}
+p0 <- with(slp_2round, mean(slp14 == slp15))
+p0
+```
+
+\
+Qui, l'arrotondamento serve a ridurre la specificità delle valutazioni, permettendo un confronto più più flessibile tra le valutazioni dei due giudici​​. Questo approccio riflette una visione più tollerante dell'accordo, riconoscendo che piccole discrepanze nelle valutazioni potrebbero non essere rilevanti in un contesto pratico.
+
+Nel contesto specifico descritto, l'arrotondamento implica dividere le valutazioni per 10 e poi arrotondarle al numero intero più vicino. Questo processo rende i valori leggermente diversi equivalenti. Ad esempio, se un giudice assegna una valutazione di 75 e l'altro assegna 78, dividendo per 10 otteniamo 7.5 e 7.8; arrotondando, entrambi i valori diventano 8. Così, valutazioni originalmente diverse vengono arrotondate allo stesso numero intero, permettendo un accordo più ampio tra i giudici. Questo metodo riconosce l'accordo anche in presenza di piccole variazioni nelle valutazioni, riflettendo una visione più flessibile dell'accordo tra i giudici.
+
+### Kappa di Cohen
+
+L'indice di concordanza Kappa di Cohen è una misura più robusta dell'accordo tra i giudici, poiché tiene conto della concordanza casuale. A differenza dell'accordo nominale, che considera solo la frequenza delle concordanze perfette, Kappa di Cohen corregge per l'accordo che potrebbe verificarsi per puro caso.
+
+Kappa è definito dalla formula:
+
+$$
+\kappa = \frac{p_o - p_c}{1 - p_c},
+$$ {#eq-kappa-choen}
+
+dove:
+
+- $p_o$ è la proporzione di accordo osservato, ossia la frazione di volte in cui i giudici concordano effettivamente nelle loro valutazioni,
+- $p_c$ è la proporzione di accordo attesa per caso, calcolata assumendo che le valutazioni siano indipendenti.
+
+Il valore $p_o$ si calcola nel modo seguente:
+
+$$
+p_o = \frac{{\text{Numero di accordi osservati}}}{{\text{Numero totale di confronti}}}.
+$$ 
+
+In altre parole, $p_o$ è il rapporto tra il numero di volte in cui gli osservatori sono concordi (hanno dato la stessa valutazione) e il numero totale di confronti effettuati.
+
+Il valore $p_c$ rappresenta l'indice di concordanza attesa per caso:
+
+$$
+p_c = \frac{{\sum (\text{Riga i-esima del totale}) \times (\text{Colonna i-esima del totale})}}{{\text{Numero totale di confronti}}^2}.
+$$
+
+In altre parole, $p_c$ è il rapporto atteso di concordanza tra gli osservatori nel caso in cui le loro valutazioni siano indipendenti.
+
+Un valore di Kappa vicino a 1 indica un'alta concordanza corretta per l'accordo casuale, mentre un valore vicino a 0 suggerisce che l'accordo non è superiore a quello casuale. Un valore negativo indica una concordanza peggiore di quella casuale.
+
+Ad esempio, calcolando il Kappa per due giudici che valutano lo stesso campione, possiamo ottenere una misura di concordanza che tiene conto della probabilità di accordo fortuito. 
+
+```{r}
+slp_2tab <- table(slp_2round)
+pc <- sum(colSums(slp_2tab) * rowSums(slp_2tab)) / sum(slp_2tab)^2
+(kappa <- (p0 - pc) / (1 - pc))
+```
+
+\
+Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o poche categorie, creando una distribuzione non uniforme, come nell’esempio fornito.
+
+## Giudici multipli
+
+### Coefficiente $\alpha$
+
+Il coefficiente $\alpha$ di Cronbach è comunemente utilizzato per misurare l'affidabilità interna di un test, cioè la coerenza con cui gli item all'interno del test misurano un costrutto comune. Tuttavia, può essere utilizzato anche per valutare l'affidabilità tra giudici in uno studio in cui più valutatori assegnano punteggi o giudizi a una serie di item.
+
+Nel contesto dell'affidabilità tra giudici, il coefficiente $\alpha$ di Cronbach misura quanto consistentemente i diversi giudici valutano gli stessi item. Un valore di $\alpha$ vicino a 1 indica un alto livello di consistenza (o affidabilità) tra i giudici, suggerendo che stanno valutando gli item in modo simile. Un valore più basso indica una minore coerenza nelle valutazioni tra i giudici.
+
+Per calcolare il coefficiente $\alpha$ di Cronbach in questo contesto, si considerano i punteggi assegnati da ciascun giudice a ciascun item come se fossero item individuali di un test. Quindi, si applica la formula standard del coefficiente $\alpha$ per valutare la coerenza interna di questi "item" (in questo caso, le valutazioni dei giudici).
+
+```{r}
+psych::alpha(slp_vas_wide[-1])
+```
+
+Nell'esempio in discussione, il valore del coefficiente $\alpha$ di Cronbach è 0.98. Questo indica un'altissima affidabilità interna, suggerendo che i giudici coinvolti nello studio hanno fornito delle valutazioni molto consistenti tra loro. Un valore così elevato di $\alpha$ è raro e suggerisce che ci sia un'alta coerenza nelle valutazioni tra i giudici. In termini pratici, questo significa che si può avere un'elevata fiducia nel fatto che le valutazioni fornite dai diversi giudici siano intercambiabili e riflettano in modo affidabile la "Percentuale di Intelligibilità del Discorso" che viene valutata.
+
+### Coefficiente di correlazione intraclasse
+
+Il *Coefficiente di Correlazione Intraclasse* (ICC) quantifica il grado di somiglianza tra le unità all'interno dello stesso gruppo. A differenza della maggior parte delle altre misure di correlazione, l'ICC viene impiegato con dati organizzati in gruppi anziché con coppie di osservazioni. Questo lo rende particolarmente idoneo per valutare la concordanza tra giudici che stanno valutando lo stesso insieme di individui o item.
+
+L'ICC si basa sul framework del modello a effetti misti. Questi modelli statistici consentono di analizzare le variazioni dei punteggi sia all'interno dei gruppi (ovvero le differenze tra le osservazioni all'interno dello stesso gruppo) che tra i gruppi (ovvero le differenze tra i gruppi stessi). Pertanto, l'ICC tiene conto di due fonti di varianza: la varianza all'interno dei gruppi (varianza delle valutazioni dei giudici all'interno dello stesso gruppo) e la varianza tra i gruppi (varianza delle valutazioni dei giudici tra gruppi diversi). Inoltre, viene considerato l'errore casuale presente nelle valutazioni.
+
+In sintesi, l'ICC valuta la consistenza delle misurazioni quando queste vengono effettuate da diversi osservatori su un insieme di soggetti o item. Un valore elevato di ICC segnala una forte concordanza tra le valutazioni degli osservatori, indicando che le misurazioni sono affidabili e riproducibili. Al contrario, un ICC basso riflette una discrepanza significativa tra gli osservatori, suggerendo che le valutazioni sono meno consistenti.
+
+#### Calcolo dell'ICC
+
+Il calcolo dell'ICC si basa su un modello ad effetti misti, in cui i giudici (o osservatori) sono considerati come variabili indipendenti e i punteggi assegnati costituiscono la variabile dipendente. Questo modello permette di scomporre e quantificare le diverse fonti di variazione nei dati, tra cui:
+
+1. La variazione attribuibile ai soggetti (o item) valutati, che rappresenta la varianza principale di interesse.
+2. La variazione imputabile ai giudici (differenze tra valutatori).
+3. La variazione dovuta all'interazione tra soggetti (o item) e giudici.
+4. La variazione derivante dall'errore casuale.
+
+L'ICC si ottiene dividendo la varianza attribuibile ai soggetti valutati per la somma di questa varianza con la varianza dovuta all'errore. Questo rapporto rappresenta la quota della varianza totale dei punteggi che può essere attribuita alle differenze tra i soggetti stessi, fornendo un indicatore dell'affidabilità delle misurazioni. Un ICC elevato indica che la maggior parte della varianza dei punteggi è dovuta alle differenze reali tra i soggetti, suggerendo che le valutazioni sono affidabili.
+
+Tuttavia, cosa viene considerato come "errore" dipende da alcune considerazioni chiave:
+
+1. **Tipo di disegno: crossed o nested**  
+   - In un disegno **crossed**, tutti i giudici valutano ogni soggetto o item, quindi l'errore riflette le differenze tra giudici che valutano gli stessi soggetti.
+   - In un disegno **nested**, diversi gruppi di giudici valutano gruppi diversi di soggetti o item; in questo caso, l'errore riflette le differenze tra i gruppi di giudici.
+
+2. **Giudici come fixed o random**  
+   - Se i giudici sono considerati **fixed** (fissi), si presume che i giudici inclusi siano gli unici rilevanti e che l'interesse sia nella loro specifica concordanza.
+   - Se i giudici sono **random** (casuali), si assume che siano un campione rappresentativo di una popolazione più ampia di giudici, e l'ICC misura la concordanza generalizzabile a tutta questa popolazione.
+
+3. **Consistenza vs. accordo assoluto**  
+   - **Consistenza**: misura il grado di concordanza nell'ordinamento dei punteggi assegnati dai giudici, ignorando le differenze nei valori numerici assoluti. È utile quando interessa solo l'ordine relativo dei punteggi.
+   - **Accordo assoluto**: valuta la concordanza nei valori effettivi dei punteggi assegnati dai giudici. È rilevante quando i giudici devono assegnare esattamente lo stesso punteggio.
+
+Queste considerazioni sono essenziali per interpretare correttamente l'ICC o altri indici di affidabilità tra giudici. La scelta del modello statistico e la definizione dell'errore dipendono da queste variabili e da come si desidera interpretare la concordanza. Una comprensione approfondita di questi aspetti è necessaria per una valutazione accurata della coerenza e dell'affidabilità delle misurazioni effettuate da giudici o osservatori multipli.
+
+### ANOVA ad una via per disegni nidificati
+
+Consideriamo il caso in cui i dati rappresentano da due valutazioni assegnate a ciascuna persona da giudici diversi.
+
+```{r}
+slp_vas_nested <- slp_dat |>
+    mutate(SpeakerID = as.numeric(as.factor(Speaker))) |>
+    # Select only 10 speakers
+    dplyr::filter(SpeakerID <= 10) |>
+    group_by(Speaker) |>
+    # Filter specific raters
+    dplyr::filter(row_number() %in% (SpeakerID[1] * 2 - (1:0)))
+
+head(slp_vas_nested)
+```
+
+Verifichiamo che ogni giudice abbia fornito due giudizi per soggetto:
+
+```{r}
+slp_vas_nested %>%
+  group_by(Speaker) %>%
+  summarise(Count = n())
+```
+
+Ci sono 20 giudici:
+
+```{r}
+length(slp_vas_nested$Speaker)
+```
+
+In questo studio, analizziamo dati costituiti da due valutazioni fornite a ciascun individuo da giudici diversi. Il nostro obiettivo è identificare e separare due principali fonti di variazione: le differenze tra i giudici e le variazioni casuali all'interno delle valutazioni di ciascun giudice. 
+
+La sfida risiede nel distinguere queste fonti di variazione, essenziale per determinare la proporzione di variabilità nei punteggi attribuibile a reali differenze tra i giudici, rispetto a quella derivante da errori casuali. Per affrontare questo problema, applichiamo un'analisi della varianza a effetti casuali (Random-Effects ANOVA), utilizzando il modello lineare misto implementato attraverso la funzione `lmer()` di R. Questa metodologia ci permette di stimare separatamente la varianza dovuta alle differenze tra i giudici e quella associata all'errore casuale.
+
+Implementiamo il modello `lmer(slp_VAS ~ 1 + (1 | Speaker), data = slp_vas_nested)`, dove il termine `Speaker` rappresenta i giudici. Attraverso questo modello, trattiamo le intercette associate a ciascun giudice come effetti casuali, consentendoci di catturare le specifiche variazioni tra i giudici al di là delle fluttuazioni casuali.
+
+```{r}
+m1 <- lmer(slp_VAS ~ 1 + (1 | Speaker), data = slp_vas_nested)
+summary(m1)
+```
+
+Dall'analisi emergono due componenti principali di varianza:
+- La varianza attribuibile a differenze intrinseche tra i soggetti valutati (`slpID`), che riflette la variabilità naturale tra gli individui.
+- La varianza attribuibile ai giudici (`Speaker`), che misura l'estensione del bias sistematico, ossia la tendenza di alcuni giudici a fornire valutazioni sistematicamente più alte o più basse rispetto ad altri.
+
+In aggiunta, abbiamo la varianza residua, che include l'errore di misurazione e altre fonti di variabilità non spiegate dal modello.
+
+```{r}
+vc_m1 <- as.data.frame(VarCorr(m1))
+vc_m1
+```
+
+Per valutare l'affidabilità delle valutazioni, calcoliamo l'*Intraclass Correlation Coefficient* (ICC) utilizzando i dati estratti dal modello. Questo coefficiente quantifica la proporzione della varianza totale attribuibile alle differenze tra i soggetti valutati, offrendoci un indice dell'affidabilità delle valutazioni in contesti dove sono coinvolti giudizi o misurazioni ripetute.
+
+Un ICC prossimo a 1 indica che la maggior parte della variabilità nei dati è dovuta a differenze reali tra i soggetti valutati, mentre un valore più basso suggerisce un'influenza significativa di variazioni casuali o di bias dei giudici sulla variabilità totale osservata.
+
+Calcoliamo l'ICC per una singola valutazione:
+
+$$
+ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E}.
+$$
+
+Nella formula, l'ICC misura la proporzione della varianza totale del punteggio `slp_VAS` che è attribuibile alla variazione tra i gruppi dei giudici (Speaker) rispetto alla variazione residua o errore.
+
+```{r}
+vc_m1$vcov[1] / (vc_m1$vcov[1] + vc_m1$vcov[2])
+```
+
+Utilizziamo la funzione `icc()` del pacchetto `performance`:
+
+```{r}
+performance::icc(m1)
+```
+
+Utilizzando il modello specificato `m1 <- lmer(slp_VAS ~ 1 + (1 | Speaker), data = slp_vas_nested)`, con l'ICC calcolato tramite la formula `vc_m1$vcov[1] / (vc_m1$vcov[1] + vc_m1$vcov[2])`, è possibile fare alcune osservazioni sulle considerazioni precedenti:
+
+1. **Crossed vs. Nested**:  
+   Il disegno sia "nested", il che implica che diversi gruppi di giudici valutano gruppi diversi di soggetti o item. In un disegno nested, non tutti i giudici valutano tutti i soggetti, quindi l'errore riflette le differenze tra i gruppi di giudici assegnati a specifici soggetti o item. Questo approccio è adatto in situazioni dove non si può o non si vuole che tutti i giudici valutino ogni soggetto.
+
+2. **Fixed vs. Random**:  
+   Nella formulazione `(1 | Speaker)`, l'effetto per "Speaker" (che identifica i giudici) è specificato come **random**. Ciò significa che stiamo trattando i giudici come un campione casuale di una popolazione più ampia, piuttosto che come un insieme fisso di valutatori. Di conseguenza, l'ICC calcolato qui è interpretato come una misura di affidabilità che potrebbe essere generalizzata a una popolazione di giudici simili, non limitata solo ai giudici specifici coinvolti nel campione.
+
+3. **Consistenza vs. Accordo Assoluto**:  
+   Il modello calcolato è basato su un'intercetta casuale `(1 | Speaker)`, il che indica che l'ICC stima la **consistenza** tra i giudici, piuttosto che l'accordo assoluto. Questo significa che l'ICC si concentra sul grado in cui i giudici mantengono lo stesso ordine o classificazione tra i soggetti, senza richiedere che assegnino esattamente gli stessi valori numerici. 
+
+#### ICC per la valutazione media
+
+Calcoliamo ora l'ICC per la valutazione media:
+
+$$
+ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E / k},
+$$
+
+dove $k$ rappresenta il numero di giudizi assegnati a ciascun soggetto da ciascun giudice. 
+
+La formula calcola l'ICC basandosi sulla varianza tra i gruppi (in questo caso, la varianza attribuibile ai giudici, $\sigma^2_{\text{giudici}}$) e la varianza entro i gruppi (l'errore casuale, $\sigma^2_E$), aggiustando per il numero di giudizi ($k$) dati per ogni soggetto. L'inserimento di $k$ nel denominatore serve a normalizzare l'effetto dell'errore casuale in base al numero di giudizi, assumendo che più giudizi per soggetto possano ridurre l'impatto dell'errore casuale sulla stima dell'affidabilità.
+
+Quindi, se l'ICC è vicino a 1, ciò indica che la maggior parte della varianza nei dati è dovuta a differenze reali tra i soggetti valutati, piuttosto che a variazioni casuali o a differenze tra i giudici. In questo modo, l'ICC fornisce un indice utile per valutare l'affidabilità delle valutazioni in studi in cui sono coinvolti giudizi o misurazioni ripetute.
+
+Nel caso presente, ogni giudice fornisce due valutazioni per ogni soggetto:
+
+```{r}
+vc_m1$vcov[1] / (vc_m1$vcov[1] + vc_m1$vcov[2] / 2)
+```
+
+Questa seconda formula calcola l'affidabilità per la media delle valutazioni di più giudici. È pertinente quando si ha a che fare con più valutazioni per ciascun soggetto e si vuole sapere l'affidabilità della media di queste valutazioni. Questa formula differisce dalla prima perché considera la riduzione dell'errore di misurazione che si verifica quando si calcola la media di più valutazioni.
+
+### ANOVA a due vie e l'Impatto del Bias dei Giudici
+
+L'ANOVA a due vie è uno strumento statistico cruciale per esaminare gli effetti di più fattori, inclusi i giudici, sulla variabile dipendente in contesti di valutazione. Per interpretare accuratamente i risultati, è fondamentale distinguere tra il bias sistematico introdotto dai giudici e la variabilità intrinseca nelle valutazioni.
+
+- **Bias dei Giudici**: Questo si verifica quando i giudici hanno una tendenza costante a fornire valutazioni più alte o più basse rispetto agli altri, influenzando potenzialmente l'equità delle valutazioni.
+  
+- **Variabilità Intrinseca**: Si riferisce alle differenze naturali nelle valutazioni che emergono dalle percezioni individuali o dalle interpretazioni soggettive dei giudici.
+
+In termini di **Contesto di Valutazione**:
+- Nelle analisi di **Consistenza**, dove l'attenzione è sull'ordine relativo delle valutazioni, il bias dei giudici non è considerato problematico poiché non altera questo ordine.
+- Nelle analisi di **Accordo**, che si concentrano sulla concordanza dei valori assoluti delle misurazioni, il bias dei giudici è trattato come una fonte di errore significativa.
+
+L'applicazione dell'**ANOVA a due vie** consente di distinguere l'effetto del bias dei giudici rispetto ad altre fonti di varianza, offrendo così un'importante metodologia per valutare l'affidabilità delle valutazioni e l'impatto del bias in diversi contesti.
+
+Utilizzando `lmer(slp_VAS ~ 1 + (1 | Speaker) + (1 | slpID), data = slp_dat)`, analizziamo i dati considerando due principali fonti di variazione:
+- **Effetti Casuali dei Giudici (`(1 | Speaker)`):** Valutiamo il bias dei giudici come fonte di variazione, distinguendo tra analisi di consistenza e di accordo a seconda di come questo bias influisce sui risultati.
+- **Variabilità Intrinseca tra i Soggetti (`(1 | slpID)`):** Esploriamo le differenze naturali tra i soggetti valutati, fondamentali per comprendere la diversità delle risposte individuali.
+
+Questo approccio ci permette di facilitare la distinzione tra l'effetto del bias dei giudici e altre fonti di varianza, fornendo una metodologia preziosa per valutare l'affidabilità delle valutazioni e l'impatto del bias in diversi contesti.
+
+Eseguiamo l'analisi con `lmer()`:
+
+```{r}
+m2 <- lmer(slp_VAS ~ 1 + (1 | Speaker) + (1 | slpID), data = slp_dat)
+```
+
+Questa formula considera due principali fonti di variazione:
+
+- Effetti Casuali dei Giudici (`(1 | Speaker)`): Valutiamo il bias dei giudici come una fonte di variazione, differenziando tra le analisi di consistenza e di accordo a seconda dell'impatto di questo bias sui risultati.
+- Variabilità Intrinseca tra i Soggetti (`(1 | slpID)`): Esploriamo le differenze naturali tra i soggetti valutati, cruciali per comprendere la diversità delle risposte individuali.
+
+```{r}
+summary(m2)
+```
+
+Estraiamo le fonti di varianza:
+
+```{r}
+vc_m2 <- as.data.frame(VarCorr(m2))
+vc_m2
+```
+
+### Componenti di Varianza
+
+- **Variazione dovuta a `slpID` (Intercept):** Indica la variabilità attribuibile alle differenze tra i soggetti.
+- **Variazione dovuta a `Speaker` (Intercept):** Riflette la variabilità nelle valutazioni dovuta al bias dei giudici.
+- **Residui (Residual):** Comprende l'errore di misurazione e altre fonti di variabilità non spiegate.
+
+### Calcolo dell'ICC
+
+Per calcolare l'ICC, dobbiamo distinguere tra le diverse versioni dell'ICC basate sulle definizioni generali. Tuttavia, il calcolo specifico dell'ICC può variare a seconda della struttura del modello e dell'interpretazione desiderata. Nella versione più semplice e comune, si considera la formula:
+
+$$ 
+\text{ICC} = \frac{\sigma^2_{\text{tra gruppo}}}{\sigma^2_{\text{tra gruppo}} + \sigma^2_{\text{errore}}},
+$$
+
+dove $\sigma^2_{\text{tra gruppo}}$ è la varianza attribuita agli effetti casuali tra gruppi, e $\sigma^2_{\text{errore}}$ è la varianza residua.
+
+Nel modello precedente, ci sono due componenti di varianza tra gruppi (`slpID` e `Speaker`), quindi è possibile considerare la somma di queste due come la varianza totale tra gruppo. Così, l'ICC adjusted può essere calcolato come:
+
+$$ 
+\text{ICC}_{\text{adjusted}} = \frac{\sigma^2_{slpID} + \sigma^2_{Speaker}}{\sigma^2_{slpID} + \sigma^2_{Speaker} + \sigma^2_{Residual}}.
+$$
+
+Sostituendo i valori ottenuti:
+
+$$ 
+\text{ICC}_{\text{adjusted}} = \frac{132.8257 + 585.6568}{132.8257 + 585.6568 + 291.2401}.
+$$
+
+Questo calcolo assume che tutte le componenti di varianza contribuiscano al calcolo dell'ICC in modo equivalente e che l'ICC adjusted consideri la somma delle varianze tra gruppi (in questo caso, `slpID` e `Speaker`) rispetto alla varianza totale (inclusa la varianza residua).
+
+Calcoliamo ora questo valore usando R per ottenere il risultato esatto.
+
+```{r}
+(vc_m2$vcov[1] + vc_m2$vcov[2]) / (vc_m2$vcov[1] + vc_m2$vcov[2] + vc_m2$vcov[3])
+```
+
+Questo valore riproduce quello trovato da `performance::icc()`:
+
+```{r}
+performance::icc(m2)
+```
+
+L'Intraclass Correlation Coefficient (ICC) di 0.7115643 offre una misura dell'affidabilità o della coerenza delle valutazioni all'interno dei gruppi definiti nel tuo modello (in questo caso, `slpID` e `Speaker`). 
+
+- **Valore dell'ICC**: Il valore di 0.71 indica un livello relativamente alto di coerenza o omogeneità tra le misurazioni all'interno dei gruppi rispetto alla variabilità totale. In altre parole, una proporzione sostanziale della varianza totale nei dati è attribuibile alle differenze tra i gruppi piuttosto che alle variazioni casuali all'interno dei gruppi o agli errori di misurazione.
+
+- **Affidabilità delle Misure**: Un ICC più vicino a 1 suggerisce che le misure sono molto affidabili, poiché indica che la maggior parte della varianza nei dati può essere attribuita alle differenze sistematiche tra i gruppi piuttosto che al rumore casuale o agli errori. Nel tuo caso, un ICC di circa 0.71 può essere interpretato come indicativo di un'alta affidabilità, suggerendo che le differenze tra i gruppi (ad esempio, tra diversi `Speaker` o differenti `slpID`) sono significative e consistenti.
+
+- **Implicazioni per la Ricerca**: Per la ricerca, un ICC alto come questo implica che il disegno dello studio e la misurazione utilizzata sono adeguatamente sensibili per distinguere tra gli individui o le unità all'interno dei gruppi definiti. Questo è particolarmente rilevante quando si studiano gli effetti di interventi o trattamenti specifici su gruppi distinti o si valuta la consistenza delle risposte tra i membri di un gruppo.
+
+- **Contesto e Benchmark**: L'interpretazione dell'ICC dipende dal contesto specifico e dal campo di studio. Alcuni campi potrebbero considerare un ICC di 0.71 come eccellente, mentre altri potrebbero considerarlo solo moderatamente buono. È importante confrontare questo valore con benchmark o standard specifici del campo di interesse.
+
+- **Struttura del Modello e Dati**: L'interpretazione dovrebbe anche tenere conto della struttura specifica del modello e della natura dei dati. Diversi tipi di ICC possono essere calcolati a seconda degli obiettivi dello studio e della configurazione del modello misto, quindi è cruciale assicurarsi che l'ICC calcolato sia il più appropriato per il tuo specifico contesto di ricerca.
+
+In sintesi, un ICC di 0.7115643 indica un'alta affidabilità nelle misure all'interno dei gruppi definiti nel tuo modello, suggerendo che le variazioni osservate sono significativamente influenzate dalle differenze tra i gruppi piuttosto che dalla varianza casuale o dall'errore di misurazione.
+
+## Riflessioni Conclusive
+
+L'*Intraclass Correlation Coefficient* (ICC) può essere interpretato come "la proporzione di varianza spiegata dalla struttura di raggruppamento nella popolazione". Questa struttura di raggruppamento implica che le misurazioni siano organizzate in gruppi (ad esempio, i punteggi di un test in una scuola possono essere raggruppati per classe, se ci sono più classi e a ciascuna è stato somministrato lo stesso test), e l'ICC indica quanto fortemente le misurazioni nello stesso gruppo si assomiglino. Questo indice varia da 0, se il raggruppamento non trasmette alcuna informazione, a 1, se tutte le osservazioni in un gruppo sono identiche (Gelman e Hill, 2007, p. 258). In altre parole, l'ICC - a volte concettualizzato come ripetibilità della misurazione - "può anche essere interpretato come la correlazione attesa tra due unità estratte casualmente che si trovano nello stesso gruppo" (Hox 2010), sebbene questa definizione potrebbe non applicarsi a modelli misti con strutture di effetti casuali più complesse. L'ICC può aiutare a determinare se un modello misto è necessario: un ICC pari a zero (o molto vicino a zero) significa che le osservazioni all'interno dei cluster non sono più simili tra loro rispetto a osservazioni di cluster diversi, e quindi considerarlo come un fattore casuale potrebbe non essere necessario.
+
+- *Alto ICC* significa che i dati sono altamente raggruppati, il che significa che i risultati dipendono fortemente dai gruppi a cui appartengono le osservazioni.
+- *Basso ICC* significa che i dati non sono altamente (o per niente) raggruppati, il che significa che i risultati non dipendono molto (o per niente) dai gruppi a cui appartengono le osservazioni.
+
+**Differenza con R^2**
+
+Il coefficiente di determinazione R^2 quantifica la proporzione di varianza spiegata da un modello statistico, ma la sua definizione in modelli misti è complessa (da qui l'esistenza di diversi metodi per calcolare un'approssimazione). L'ICC è associato a R^2 poiché entrambi sono rapporti di componenti di varianza. Più precisamente, R^2 rappresenta la proporzione della varianza spiegata (del modello completo), mentre l'ICC è la proporzione della varianza spiegata attribuibile agli effetti casuali. 
+
+**Calcolo**
+
+L'ICC viene calcolato dividendo la varianza degli effetti casuali, σ^2_i, per la varianza totale, cioè la somma della varianza degli effetti casuali e della varianza residua, σ^2_ε.
+
+**ICC aggiustato e non aggiustato**
+
+La funzione `icc()` calcola un ICC aggiustato e uno non aggiustato, che tengono conto di tutte le fonti di incertezza (cioè di tutti gli effetti casuali). Mentre l'ICC aggiustato si riferisce solo agli effetti casuali, l'ICC non aggiustato considera anche le varianze degli effetti fissi, aggiungendo più precisamente la varianza degli effetti fissi al denominatore della formula per calcolare l'ICC (vedi Nakagawa et al. 2017). Tipicamente, l'ICC aggiustato è di interesse quando l'analisi degli effetti casuali è di interesse. `icc()` restituisce un valore ICC anche per strutture di effetti casuali più complesse, come modelli con pendenze casuali o design nidificato (più di due livelli) ed è applicabile per modelli con distribuzioni diverse dalla gaussiana. 
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

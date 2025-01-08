@@ -1,0 +1,909 @@
+# Modelli multilivello {#sec-raters-multilevel-models}
+
+::: callout-important
+## In questo capitolo apprenderai come:
+
+- implementare e confrontare i modelli di **complete pooling**, **no pooling** e **partial pooling**, comprendendone le differenze concettuali e applicative;
+- interpretare l'output della funzione `lmer()` e utilizzare le stime dei parametri per analisi e visualizzazioni dei risultati.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Reliability* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(car, lme4, lavaan, semPlot, repr, kableExtra)
+```
+:::
+
+## Introduzione 
+
+I modelli multilivello, anche denominati modelli gerarchici o a effetti misti, costituiscono un approccio statistico avanzato progettato per analizzare dati organizzati in strutture gerarchiche o nidificate. Tali modelli consentono di modellare simultaneamente variazioni a diversi livelli di aggregazione, come il livello individuale e quello di gruppo, migliorando la precisione dell'inferenza e la comprensione delle dinamiche sottostanti ai dati.
+
+In psicologia, i modelli multilivello rivestono un ruolo fondamentale, poiché i dati spesso derivano da contesti complessi in cui fattori individuali e ambientali interagiscono. Per esempio, nell’analisi delle prestazioni cognitive o delle risposte emotive, questi modelli permettono di distinguere le variazioni attribuibili a caratteristiche individuali (ad es., abilità cognitiva, tratti di personalità) da quelle dovute a fattori ambientali (ad es., clima scolastico, dinamiche familiari).
+
+Le principali applicazioni dei modelli multilivello includono:
+
+- **Analisi di dati longitudinali**: Gestiscono la dipendenza seriale introdotta da misurazioni ripetute sugli stessi soggetti, migliorando l’accuratezza nell’estimare gli effetti temporali.
+- **Studio dell’impatto di fattori contestuali**: Permettono di quantificare l'influenza dell'ambiente su variabili psicologiche, fornendo stime che isolano gli effetti specifici dei contesti.
+- **Rappresentazione della variabilità intra- e inter-individuale**: Offrono una modellazione flessibile che cattura sia le differenze tra individui sia le fluttuazioni all'interno dello stesso individuo, riflettendo fedelmente la complessità dei processi psicologici.
+
+## Un Esempio Concreto: Analisi dei Dati di Deprivazione del Sonno
+
+Questo capitolo illustra l'applicazione pratica dei modelli multilivello nell'analisi dei dati di uno studio sperimentale che ha investigato l'effetto della deprivazione del sonno sulle prestazioni psicomotorie. I dati analizzati provengono dalla ricerca di Belenky et al. (2003), che ha esaminato gli effetti cumulativi della restrizione del sonno.
+
+### Accesso ai Dati
+
+I dati utilizzati sono inclusi nel dataset `sleepstudy`, disponibile nel pacchetto `lme4` di R [@bates2014fitting]:
+
+```{r}
+data(sleepstudy)
+```
+
+Il dataset è costituito da 180 osservazioni e contiene tre variabili principali:
+
+- **`Reaction`**: Tempo medio di reazione (in millisecondi).
+- **`Days`**: Numero di giorni consecutivi di deprivazione del sonno.
+- **`Subject`**: Identificativo del partecipante.
+
+### Struttura del Dataset
+
+Il dataset presenta una tipica struttura multilivello: dati longitudinali con misurazioni ripetute del tempo medio di reazione (variabile dipendente) raccolte dai medesimi partecipanti nell’arco di dieci giorni. Tale configurazione è comune in psicologia sperimentale, dove è frequente analizzare variazioni intra-individuali e inter-individuali.
+
+I 18 partecipanti dello studio sono stati sottoposti a una restrizione del sonno di tre ore per notte. Ogni giorno, per dieci giorni consecutivi, hanno eseguito un "test di vigilanza psicomotoria" di dieci minuti. Durante il test, i partecipanti monitoravano uno schermo e premevano un pulsante il più rapidamente possibile alla comparsa di uno stimolo visivo. La variabile di interesse è il **tempo medio di reazione (RT)**, utilizzato come indicatore delle prestazioni psicomotorie.
+
+### Analisi Esplorativa
+
+#### Visualizzazione per un Singolo Partecipante
+
+Per iniziare, si può esaminare l’andamento del tempo medio di reazione per un singolo partecipante. Ad esempio, consideriamo il soggetto identificato con `308`:
+
+```{r}
+just_308 <- sleepstudy |>
+    filter(Subject == "308")
+
+ggplot(just_308, aes(x = Days, y = Reaction)) +
+    geom_point(size = 2.5) +
+    scale_x_continuous(breaks = 0:9) +
+    labs(title = "Andamento del tempo di reazione (Soggetto 308)", 
+         x = "Giorni di deprivazione del sonno", 
+         y = "Tempo medio di reazione (ms)"
+    )
+```
+
+#### Visualizzazione per Tutti i Partecipanti
+
+Per un'analisi più completa, è utile rappresentare i dati di tutti i 18 partecipanti in un'unica visualizzazione, evidenziando le differenze individuali nelle prestazioni psicomotorie durante il periodo di studio:
+
+```{r}
+ggplot(sleepstudy, aes(x = Days, y = Reaction)) +
+    geom_point(alpha = 0.6) +
+    scale_x_continuous(breaks = 0:9) +
+    facet_wrap(~Subject) +
+    labs(title = "Andamento del tempo di reazione per tutti i partecipanti", 
+         x = "Giorni di deprivazione del sonno", 
+         y = "Tempo medio di reazione (ms)"
+    )
+```
+
+Queste visualizzazioni preliminari evidenziano sia le tendenze generali che le differenze individuali nel tempo di reazione in risposta alla deprivazione del sonno. Tali pattern saranno ulteriormente analizzati utilizzando modelli multilivello, che consentono di quantificare le variazioni intra-individuali e inter-individuali, isolando l’effetto cumulativo della deprivazione del sonno.
+
+### Descrizione del Disegno Sperimentale
+
+- **Fase di Adattamento e Baseline**: Lo studio è iniziato con tre giorni preliminari dedicati all'adattamento e all'addestramento (T1 e T2) seguiti dalla misurazione baseline (B). Durante questi giorni, i partecipanti hanno mantenuto un regime di sonno controllato, trascorrendo 8 ore a letto ogni notte (dalle 23:00 alle 07:00). Lo scopo di questa fase era garantire una condizione standardizzata e ridurre la variabilità individuale dovuta a precedenti abitudini di sonno.
+
+- **Condizioni di Restrizione e Prolungamento del Sonno**: A partire dal quarto giorno, i partecipanti sono stati assegnati a diverse condizioni sperimentali per un periodo di sette giorni consecutivi (E1-E7). La durata del tempo trascorso a letto (Time in Bed, TIB) è stata manipolata e variava da un minimo di 3 ore a un massimo di 9 ore, al fine di indurre stati progressivi di deprivazione o recupero del sonno.
+
+Nella codifica temporale dello studio:
+- I giorni 0 e 1 rappresentano la fase di adattamento e addestramento.
+- Il giorno 2 corrisponde alla misurazione baseline, che riflette le prestazioni psicomotorie in condizioni di sonno ottimale.
+- I giorni 3-9 rappresentano il periodo sperimentale, durante il quale è stata applicata la manipolazione del sonno.
+
+Per l'analisi, è fondamentale considerare il giorno di baseline (2) come punto di riferimento per valutare gli effetti della manipolazione del sonno sulle prestazioni. I giorni di adattamento e addestramento (0 e 1) devono essere esclusi dall'analisi, poiché le variazioni osservate in questa fase sono attribuibili all'acclimatazione ai protocolli dello studio e non alle condizioni sperimentali di sonno. L'esclusione di questi giorni garantisce che le stime dell'effetto siano focalizzate esclusivamente sull'impatto della restrizione o del prolungamento del sonno.
+
+### Preparazione dei Dati
+
+La preparazione dei dati è un passaggio essenziale per garantire che l'analisi rifletta accuratamente gli effetti della manipolazione sperimentale. I seguenti passaggi sono stati eseguiti:
+
+1. **Rimozione delle Osservazioni Iniziali**  
+   Le osservazioni relative ai giorni 0 e 1, corrispondenti alla fase di adattamento e addestramento, sono state escluse dal dataset. Questo assicura che l'analisi si concentri esclusivamente sul periodo di interesse, ovvero il baseline (giorno 2) e i successivi giorni di manipolazione del sonno.
+
+2. **Creazione di una Variabile Ricodificata**  
+   È stata generata una nuova variabile, `days_deprived`, per rappresentare il numero di giorni di privazione del sonno a partire dal giorno baseline (giorno 2). La ricodifica inizia con 0 per il giorno baseline, 1 per il primo giorno di privazione (giorno 3), e così via. Questa variabile facilita la lettura e l'interpretazione dei risultati nel contesto del protocollo sperimentale.
+
+3. **Salvataggio del Dataset Modificato**  
+   Il dataset modificato è stato denominato `sleep2` e ora include solo le osservazioni rilevanti per l'analisi, con una chiara distinzione tra il baseline e i giorni di privazione del sonno.
+
+Ecco il codice per implementare questi passaggi:
+
+```{r}
+# Filtraggio e creazione della nuova variabile
+sleep2 <- sleepstudy |>
+    filter(Days >= 2L) |>  # Escludiamo i giorni 0 e 1
+    mutate(days_deprived = Days - 2L)  # Ricodifichiamo la variabile Days
+```
+
+4. **Verifica della Ricodifica**  
+   La correttezza della ricodifica è stata verificata calcolando il numero di osservazioni per ciascun valore di `days_deprived` e confrontandolo con i valori originali della variabile `Days`:
+
+```{r}
+sleep2 |>
+    count(days_deprived, Days)
+```
+
+5. **Visualizzazione dei Dati**  
+   Per esplorare le tendenze individuali nel tempo di reazione in funzione dei giorni di privazione del sonno, è stato creato un grafico a dispersione con le seguenti caratteristiche:
+   - L'asse x rappresenta i giorni di privazione del sonno, con 0 corrispondente al baseline.
+   - L'asse y rappresenta il tempo medio di reazione (`Reaction`).
+   - Ogni partecipante è visualizzato separatamente tramite il wrapping dei facet.
+
+```{r}
+ggplot(sleep2, aes(x = days_deprived, y = Reaction)) +
+    geom_point() +
+    scale_x_continuous(breaks = 0:7) +
+    facet_wrap(~Subject) +
+    labs(
+        y = "Tempo medio di reazione (ms)",
+        x = "Giorni di privazione del sonno (0 = baseline)",
+        title = "Andamento del tempo di reazione durante la privazione del sonno"
+    )
+```
+
+Questa preparazione consente un'analisi più mirata, isolando gli effetti della privazione del sonno e semplificando l'interpretazione delle dinamiche temporali.
+
+## Relazione tra Tempo di Reazione e Privazione del Sonno
+
+L'analisi dei dati relativi alla privazione del sonno rivela che, con una singola eccezione (il soggetto 335), il tempo medio di reazione tende ad aumentare progressivamente con ogni giorno di privazione aggiuntivo. Questo trend suggerisce che un modello di regressione lineare potrebbe essere utile per descrivere le prestazioni di ciascun partecipante.
+
+La regressione lineare è definita dalla seguente equazione:
+
+$$ 
+E(Y) = \beta_0 + \beta_1 X,
+$$
+
+dove:
+
+- $Y$ rappresenta la variabile dipendente (il tempo di reazione medio),
+- $\beta_0$ è l'intercetta, ovvero il tempo di reazione stimato al giorno iniziale (baseline, senza privazione del sonno),
+- $\beta_1$ è il coefficiente di pendenza, che rappresenta la variazione stimata nel tempo di reazione per ogni giorno di privazione aggiuntivo,
+- $X$ indica il numero di giorni di privazione del sonno.
+
+I parametri $\beta_0$ e $\beta_1$ vengono stimati dai dati, e la loro interpretazione fornisce informazioni chiave sulle dinamiche delle prestazioni psicomotorie.
+
+## Scelta del Modello di Regressione
+
+Un aspetto cruciale nell'analisi è decidere quale struttura modellistica adottare per descrivere i dati. Si devono considerare le seguenti opzioni:
+
+1. **Complete Pooling**  
+   Questo approccio utilizza un unico modello di regressione lineare per tutti i partecipanti, assumendo che la relazione tra privazione del sonno e tempo di reazione sia identica per tutti. In pratica, si stima una singola intercetta ($\beta_0$) e una singola pendenza ($\beta_1$) comuni a tutti i soggetti. Sebbene semplice, questo metodo ignora completamente le differenze individuali.
+
+2. **No Pooling**  
+   Qui, si stima un modello di regressione lineare separato per ciascun partecipante, consentendo a ogni soggetto di avere una propria intercetta e una propria pendenza. Questo approccio riconosce pienamente le variazioni individuali, ma potrebbe risultare eccessivamente complesso e sensibile al rumore nei dati, specialmente con pochi punti di osservazione per soggetto.
+
+3. **Partial Pooling**  
+   Questo approccio intermedio, spesso implementato attraverso modelli multilivello, bilancia i due estremi sopra descritti. Si assume una relazione media condivisa tra i soggetti (ad esempio, una pendenza media), ma si consente una variazione individuale attorno a questa media. Il partial pooling sfrutta le informazioni condivise tra i partecipanti, migliorando la robustezza delle stime, specialmente in presenza di pochi dati per soggetto.
+
+## Complete pooling
+
+L'approccio di "complete pooling" in analisi statistica implica l'utilizzo di un modello che calcola un'unica intercetta e una sola pendenza per l'intero dataset. Questo metodo si basa sull'ipotesi che tutti i soggetti nel dataset condividano le stesse caratteristiche di base riguardo alla relazione tra la variabile dipendente e indipendente.
+
+Questo approccio non tiene conto delle possibili differenze individuali nelle intercette o nelle pendenze tra i diversi soggetti. Ad esempio, ignorara come ciascun soggetto reagisce in modo diverso alla privazione del sonno.
+
+Dall'analisi preliminare dei dati, abbiamo notato che l'approccio di complete pooling potrebbe non essere adatto per il nostro studio. La visualizzazione dei dati suggerisce che ogni partecipante potrebbe avere una propria relazione unica tra il tempo di reazione e i giorni di privazione del sonno, indicando la necessità di valori individuali per le intercette e le pendenze.
+
+### Modello di Regressione Lineare in Complete Pooling
+
+Il modello generale lineare (GLM) per l'approccio di complete pooling è formulato come segue:
+
+$$
+Y_{sd} = \beta_0 + \beta_1 X_{sd} + e_{sd},
+$$
+
+dove:
+
+- $Y_{sd}$ rappresenta il tempo di reazione medio del soggetto $s$ nel giorno $d$.
+- $X_{sd}$ è il numero di giorni di privazione del sonno (variabile `days_deprived`), che varia da 0 a 7.
+- $e_{sd}$ è il termine di errore, che rappresenta le fluttuazioni casuali non spiegate dal modello.
+
+Per adattare questo modello in R, si utilizza la funzione `lm()`:
+
+```{r}
+cp_model <- lm(Reaction ~ days_deprived, sleep2)
+summary(cp_model)
+```
+
+Il modello di regressione che abbiamo considerato offre una stima del tempo di risposta medio per i soggetti allo studio al Giorno 0 (prima della privazione del sonno) e la variazione media del tempo di risposta per ogni giorno aggiuntivo di privazione. Secondo questo modello, il tempo di risposta medio iniziale è stimato essere di circa 268 millisecondi, con un incremento medio di circa 11 millisecondi per ogni giorno successivo di privazione del sonno.
+
+È importante notare, tuttavia, che questo modello potrebbe avere delle limitazioni nella sua applicabilità:
+
+- **Assunzione di Indipendenza**: Il modello assume che tutte le osservazioni siano indipendenti. Questa assunzione potrebbe non essere valida nel nostro studio, dato che le osservazioni provengono da misurazioni ripetute sugli stessi soggetti.
+- **Errori Standard dei Coefficienti**: La presunta indipendenza delle osservazioni implica che gli errori standard dei coefficienti di regressione potrebbero non essere completamente affidabili.
+
+### Visualizzazione
+
+Per visualizzare meglio questi risultati, possiamo aggiungere le previsioni del modello al grafico che abbiamo già creato. Utilizziamo la funzione `geom_abline()` di R per tracciare la linea di regressione stimata direttamente sul grafico esistente:
+
+- **Utilizzo di `geom_abline()`**: Questa funzione ci permette di aggiungere una linea di regressione al grafico, specificando l'intercetta e la pendenza.
+- **Coefficienti del Modello**: Utilizziamo `coef(cp_model)` per ottenere i coefficienti di regressione (intercetta e pendenza) dal nostro modello. Questa funzione restituisce un vettore con due elementi corrispondenti all'intercetta e alla pendenza, che possono essere poi utilizzati per definire la linea nel grafico.
+
+```{r}
+#| vscode: {languageId: r}
+ggplot(sleep2, aes(x = days_deprived, y = Reaction)) +
+    geom_abline(
+        intercept = coef(cp_model)[1],
+        slope = coef(cp_model)[2],
+        color = "blue"
+    ) +
+    geom_point() +
+    scale_x_continuous(breaks = 0:7) +
+    facet_wrap(~Subject) +
+    labs(y = "Reaction Time", x = "Days deprived of sleep (0 = baseline)")
+```
+
+Dall'analisi effettuata, emerge che il modello attuale non si adatta in modo ottimale ai dati raccolti. Questa situazione indica la necessità di esplorare un approccio diverso per modellare in modo più accurato le relazioni presenti nei dati.
+
+## Approccio di No Pooling 
+
+In alternativa al modello di "complete pooling", consideriamo l'approccio di "no pooling". Questo approccio si basa sull'idea di adattare modelli di regressione separati per ogni partecipante, trattando ogni individuo come un'entità distinta. 
+
+### Caratteristiche del No Pooling
+
+- **Indipendenza delle Stime**: In questo approccio, ogni partecipante ha il proprio set di stime per l'intercetta e la pendenza. Le stime relative a un partecipante non sono influenzate dalle stime degli altri.
+- **Stime Individualizzate**: Si stima separatamente una coppia di intercetta/pendenza per ciascuno dei 18 partecipanti, riconoscendo la possibilità di variazioni significative nelle risposte individuali.
+
+### Implementazione del Modello di No Pooling
+
+Esistono due modi principali per implementare questo approccio:
+
+1. **Regressioni Separate per Ogni Partecipante**: Eseguire una serie di regressioni lineari individuali, una per ogni soggetto.
+2. **Modello di Regressione Unificato con Effetti Principali e Interazione**: Utilizzare un unico modello di regressione che includa sia gli effetti principali sia l'interazione tra le variabili `Subject` (soggetto) e `Day` (giorno). Questo metodo permette di includere tutte le stime in un unico modello.
+
+Per il secondo approccio, è necessario considerare le seguenti fasi:
+
+- **Creazione di Variabili Dummy per il Fattore `Subject`**: Poiché `Subject` ha 18 livelli, saranno necessarie 17 variabili dummy per rappresentare questi livelli. In R, questo può essere fatto automaticamente definendo `Subject` come un fattore.
+- **Includere `Subject` come Fattore nel Modello**: Aggiungere `Subject`, definito come un fattore, come predittore nel modello. L'inclusione dell'interazione tra `Subject` e `days_deprived` permette variazioni nelle intercette e nelle pendenze tra i soggetti.
+
+Prima di procedere, è importante assicurarsi che `Subject` sia definito correttamente come un fattore. Questo può essere verificato utilizzando la funzione `summary()` in R, che fornisce una sintesi delle caratteristiche della variabile, compreso se è trattata come un fattore.
+
+```{r}
+sleep2 |> 
+    summary()
+```
+
+La funzione `pull()` viene utilizzata per estrarre una specifica colonna da un data frame. Con le seguenti istruzioni verifichiamo se la colonna `Subject` è codificata come `factor`.
+
+```{r}
+sleep2 |>
+    pull(Subject) |>
+    is.factor()
+```
+
+Adattiamo il modello di regressione ai dati. Si noti che la sintassi seguente può essere semplificata utilizzando `Reaction ~ days_deprived * Subject`.
+
+```{r}
+np_model <- lm(Reaction ~ days_deprived + Subject + days_deprived:Subject,
+    data = sleep2
+)
+
+summary(np_model)
+```
+
+Per chiarire, il soggetto di riferimento è il 308; in R, la modalità predefinita è quella di ordinare i livelli del fattore in ordine alfabetico e di scegliere il primo come soggetto di riferimento. Questo significa che l'intercetta e la pendenza per il soggetto 308 sono rappresentate rispettivamente da `(Intercept)` e `days_deprived`, poiché tutte le altre 17 variabili dummy saranno nulle per il soggetto 308.
+
+Tutti i coefficienti di regressione degli altri soggetti sono rappresentati come scostamenti da questo soggetto di riferimento. Se desideriamo calcolare l'intercetta e la pendenza per un dato soggetto, dobbiamo semplicemente sommare gli scostamenti corrispondenti. Pertanto, abbiamo:
+
+Intercetta per 308: 288.217\
+Pendenza per 308: 21.69
+
+Intercetta per 335: `(Intercept) + Subject335` = 288.217 + -25.343 = 262.874\
+Pendenza per 335: `days_deprived + days_deprived:Subject335` = 21.69 + -25.899 = -4.209
+
+E così via.
+
+Nel modello "no pooling", non viene stimata un'intercetta e una pendenza complessive per l'intera popolazione; in questo caso, `(Intercept)` e `days_deprived` sono stime dell'intercetta e della pendenza per il soggetto 308, che è stato scelto (arbitrariamente) come soggetto di riferimento. Per ottenere stime per l'intera popolazione, è possibile procedere con una seconda fase dell'analisi statistica in cui calcoliamo le medie delle intercette e delle pendenze individuali. 
+
+```{r}
+#| vscode: {languageId: r}
+coef(np_model) |> as.data.frame()
+```
+
+Calcoliamo le intercette individuali:
+
+```{r}
+#| vscode: {languageId: r}
+all_intercepts <- c(
+    coef(np_model)["(Intercept)"],
+    coef(np_model)[3:19] + coef(np_model)["(Intercept)"]
+)
+```
+
+Calcliamo le pendenze individuali:
+
+```{r}
+#| vscode: {languageId: r}
+all_slopes <- c(
+    coef(np_model)["days_deprived"],
+    coef(np_model)[20:36] + coef(np_model)["days_deprived"]
+)
+```
+
+Creiamo un DataFrame con le colonne Subject, intercept e slope:
+
+```{r}
+#| vscode: {languageId: r}
+ids <- sleep2 |>
+    pull(Subject) |>
+    levels() |>
+    factor()
+print(ids)
+```
+
+```{r}
+#| vscode: {languageId: r}
+# make a tibble with the data extracted above
+np_coef <- tibble(
+    Subject = ids,
+    intercept = all_intercepts,
+    slope = all_slopes
+)
+
+print(np_coef)
+```
+
+Esaminiamo l'adattamento di questo modello ai dati.
+
+```{r}
+#| vscode: {languageId: r}
+ggplot(sleep2, aes(x = days_deprived, y = Reaction)) +
+    geom_abline(
+        data = np_coef,
+        mapping = aes(
+            intercept = intercept,
+            slope = slope
+        ),
+        color = "blue"
+    ) +
+    geom_point() +
+    scale_x_continuous(breaks = 0:7) +
+    facet_wrap(~Subject) +
+    labs(y = "Reaction Time", x = "Days deprived of sleep (0 = baseline)")
+```
+
+Questa situazione è notevolmente migliorata rispetto al modello di pooling completo. Se desideriamo testare l'ipotesi nulla secondo cui la pendenza della retta di regressione è uguale a zero, possiamo farlo eseguendo un test $t$ di Student sul campione di pendenze individuali.
+
+```{r}
+#| vscode: {languageId: r}
+np_coef |>
+    pull(slope) |>
+    t.test()
+```
+
+Questo test suggerisce che la pendenza media di 11.435 è diversa da zero, t(17) = 6.20 p < .001.
+
+## Partial Pooling
+
+Nell'analisi dei dati psicologici, la scelta del metodo di pooling rappresenta una decisione cruciale per bilanciare la variabilità individuale con la necessità di sfruttare le informazioni aggregate. Da un lato, l'approccio di *complete pooling* tratta tutti i dati come se appartenessero a un unico gruppo omogeneo, ignorando completamente le differenze tra individui. Dall'altro lato, l'approccio di *no pooling* analizza i dati di ciascun partecipante separatamente, senza beneficiare delle informazioni condivise tra i soggetti. Entrambi questi estremi presentano limiti significativi: il *complete pooling* può occultare variazioni individuali rilevanti, mentre il *no pooling* rischia di produrre stime instabili e meno robuste, soprattutto in presenza di pochi dati per soggetto.
+
+### Il Vantaggio del Partial Pooling
+
+Il *partial pooling*, implementato tramite modelli lineari a effetti misti, rappresenta un approccio intermedio che supera queste limitazioni. Questo metodo sfrutta le informazioni condivise tra i partecipanti per migliorare le stime a livello individuale, mantenendo al contempo la capacità di catturare variazioni specifiche. In pratica, il modello:
+
+- **Condivide informazioni tra soggetti**: Le stime individuali sono influenzate dalle tendenze generali osservate nel gruppo, evitando così di basarsi esclusivamente sui dati limitati di ciascun partecipante.
+- **Permette variazioni individuali**: Ogni soggetto può avere una propria intercetta e pendenza che si discostano dalla media di gruppo, riflettendo le differenze individuali.
+
+Questo equilibrio consente di ottenere stime che sono sia robuste sia rappresentative, riducendo il rischio di sovradattamento (*overfitting*) e migliorando la generalizzabilità dei risultati.
+
+
+### Implementazione dei Modelli a Effetti Misti
+
+- **Trattare i Soggetti come Fattori Casuali**: Nel *partial pooling*, i soggetti vengono considerati come un fattore casuale anziché fisso. Ciò implica che i livelli del fattore (i soggetti nel nostro caso) sono visti come un campione casuale da una popolazione più ampia.
+- **Modello Lineare a Effetti Misti**: Questo tipo di modello statistico consente di includere i fattori casuali nell'analisi. In un modello misto, le stime per ogni soggetto sono "informate" o influenzate dalle informazioni aggregate degli altri soggetti.
+- **Shrinkage**: Il fenomeno dello *shrinkage* (restringimento) indica che le stime per ciascun soggetto vengono regolate o "spostate" verso le stime medie della popolazione, permettendo una valutazione più equilibrata e meno influenzata da variazioni estreme o casuali.
+
+### Articolazione e Applicazione del Modello Multilivello
+
+Il modello multilivello descritto cattura le relazioni tra variabili misurate a più livelli, integrando dinamicamente la variabilità individuale e di gruppo. La struttura a due livelli consente di modellare sia le differenze tra soggetti che le relazioni all'interno di ciascun soggetto.
+
+### Livello 1: Relazione Individuale
+
+Al livello individuale, il modello esprime una relazione lineare tra la variabile di risposta $Y_{sd}$ (tempo di reazione) e il predittore $X_{sd}$ (giorni di privazione del sonno):
+
+$$
+Y_{sd} = \beta_{0s} + \beta_{1s} X_{sd} + e_{sd},
+$$
+
+dove:
+
+- $Y_{sd}$: Tempo di reazione del soggetto $s$ al giorno $d$,
+- $\beta_{0s}$: Intercetta specifica del soggetto $s$,
+- $\beta_{1s}$: Pendenza specifica del soggetto $s$,
+- $e_{sd} \sim N(0, \sigma^2)$: Errore residuo per il soggetto $s$ al giorno $d$, distribuito normalmente con varianza $\sigma^2$.
+
+Le intercette ($\beta_{0s}$) e le pendenze ($\beta_{1s}$) variano tra i soggetti e sono determinate al Livello 2.
+
+
+### Livello 2: Variabilità Tra Soggetti
+
+Al livello superiore, il modello specifica come le intercette e le pendenze variano tra i soggetti:
+
+$$
+\beta_{0s} = \gamma_{0} + S_{0s},
+$$
+$$
+\beta_{1s} = \gamma_{1} + S_{1s},
+$$
+
+dove:
+
+- $\gamma_0$: Intercetta media della popolazione,
+- $\gamma_1$: Pendenza media della popolazione,
+- $S_{0s} \sim N(0, \tau_{00}^2)$: Effetto casuale sull'intercetta per il soggetto $s$,
+- $S_{1s} \sim N(0, \tau_{11}^2)$: Effetto casuale sulla pendenza per il soggetto $s$,
+- $\langle S_{0s}, S_{1s} \rangle$: Effetti casuali correlati con covarianza $\rho \tau_{00} \tau_{11}$.
+
+La matrice di varianza-covarianza degli effetti casuali è data da:
+
+$$
+\Sigma = 
+\begin{pmatrix}
+\tau_{00}^2 & \rho \tau_{00} \tau_{11} \\
+\rho \tau_{00} \tau_{11} & \tau_{11}^2
+\end{pmatrix},
+$$
+
+dove $\tau_{00}^2$ e $\tau_{11}^2$ rappresentano rispettivamente la varianza delle intercette e delle pendenze, e $\rho$ descrive la correlazione tra questi effetti.
+
+### Modello Completo
+
+Combinando i due livelli, il modello multilivello può essere espresso come:
+
+$$
+Y_{sd} = \gamma_0 + S_{0s} + (\gamma_1 + S_{1s}) X_{sd} + e_{sd},
+$$
+
+dove:
+
+- $\gamma_0$ e $\gamma_1$: Effetti fissi (intercetta e pendenza medie della popolazione),
+- $S_{0s}$ e $S_{1s}$: Effetti casuali che catturano variazioni individuali,
+- $e_{sd}$: Errore residuo specifico per ciascuna osservazione.
+
+### Interpretazione degli Effetti Fissi e Casuali
+
+- **Effetti Fissi ($\gamma_0$, $\gamma_1$)**: Rappresentano la tendenza generale della popolazione, fornendo stime medie valide per tutti i soggetti.
+- **Effetti Casuali ($S_{0s}$, $S_{1s}$)**: Catturano la variabilità tra i soggetti, modellando le deviazioni rispetto agli effetti fissi.
+
+### Importanza della Matrice di Varianza-Covarianza
+
+La matrice di varianza-covarianza consente di:
+
+1. **Quantificare la variabilità tra i soggetti**: Le varianze $\tau_{00}^2$ e $\tau_{11}^2$ indicano l'eterogeneità delle intercette e delle pendenze rispettivamente.
+2. **Esaminare le relazioni tra intercette e pendenze**: La covarianza $\rho \tau_{00} \tau_{11}$ fornisce informazioni sulle correlazioni tra i due parametri. Ad esempio, una correlazione positiva potrebbe indicare che soggetti con tempi di reazione iniziali più elevati (intercetta maggiore) tendono a mostrare aumenti più rapidi del tempo di reazione con la privazione del sonno.
+
+### Vantaggi del Modello Multilivello
+
+1. **Bilancia complete pooling e no pooling**: Integra tendenze generali con variazioni specifiche.
+2. **Stime robuste**: Migliora l'accuratezza delle stime per i soggetti individuali sfruttando le informazioni condivise tra tutti i soggetti.
+3. **Generalizzabilità**: Fornisce una base solida per inferenze valide sull'intera popolazione.
+
+In conclusione, il modello multilivello offre un approccio flessibile e potente per analizzare dati gerarchici, come quelli longitudinali o nidificati. Permette di distinguere tra effetti generali e variazioni individuali, fornendo una rappresentazione dettagliata dei fenomeni psicologici e una base solida per interpretazioni e inferenze.
+
+## Stima dei Parametri del Modello
+
+Per stimare i parametri del modello in R, utilizzeremo la funzione `lmer()` del pacchetto **lme4** [@bates2014fitting]. Questa funzione consente di specificare sia gli effetti fissi (ad esempio, giorni di deprivazione del sonno) sia gli effetti casuali (ad esempio, variazioni tra soggetti), costruendo un modello che bilancia informazioni aggregate e individuali.
+
+### Sintassi Generale di `lmer()`
+
+La sintassi base di `lmer()` è:
+
+$$
+\text{lmer(formula, data, ...)},
+$$
+
+dove:
+
+- **`formula`** definisce la struttura del modello, specificando la relazione tra variabili dipendenti, effetti fissi e casuali.
+- **`data`** indica il dataset contenente le variabili.
+
+La struttura generale della formula è:
+
+```r
+DV ~ fix1 + fix2 + ... + fixN + (ran1 + ran2 + ... + ranK | random_factor)
+```
+
+dove:
+
+- **`DV`**: variabile dipendente.
+- **`fix1, fix2, ..., fixN`**: effetti fissi (fattori indipendenti a livello globale).
+- **`ran1, ran2, ..., ranK`**: effetti casuali che variano tra i livelli del fattore casuale specificato da `random_factor`.
+
+Le **interazioni** tra i fattori possono essere definite utilizzando:
+
+- `A * B` (effetti principali + interazione),
+- `A:B` (solo interazione).
+
+### Effetti Casuali nella Formula
+
+Gli effetti casuali sono specificati all'interno di parentesi, ad esempio:
+
+```r
+(1 + days_deprived | Subject)
+```
+
+Questa sintassi indica che sia l'intercetta ($1$) sia il coefficiente associato a `days_deprived` variano tra i livelli del fattore casuale `Subject`. È anche possibile avere più termini di effetti casuali nella stessa formula, ad esempio, per fattori casuali incrociati.
+
+Sul lato sinistro della barra `|` si elencano gli effetti che vogliamo far variare, mentre sul lato destro si specifica la variabile che identifica i livelli del fattore casuale (ad esempio, `Subject`).
+
+### Esempi di Modelli con `sleep2`
+
+Consideriamo diverse specifiche di modello per i dati `sleep2`, con le rispettive formule e strutture della matrice di varianza-covarianza ($\mathbf{\Sigma}$).
+
+#### Solo Intercette Casuali
+
+```r
+Reaction ~ days_deprived + (1 | Subject)
+```
+In questo modello, solo l'intercetta varia tra i soggetti ($\tau_{00}^2$):
+
+$$
+\mathbf{\Sigma} =
+\begin{pmatrix}
+\tau_{00}^2 & 0 \\
+0 & 0
+\end{pmatrix}
+$$
+
+#### Intercette e Pendenze Casuali
+```r
+Reaction ~ days_deprived + (1 + days_deprived | Subject)
+```
+In questo modello, sia l'intercetta ($\tau_{00}^2$) sia la pendenza ($\tau_{11}^2$) variano tra i soggetti, con una correlazione ($\rho$) tra i due:
+
+$$
+\mathbf{\Sigma} =
+\begin{pmatrix}
+\tau_{00}^2 & \rho \tau_{00} \tau_{11} \\
+\rho \tau_{00} \tau_{11} & \tau_{11}^2
+\end{pmatrix}
+$$
+
+#### Pendenze Casuali Senza Correlazione
+```r
+Reaction ~ days_deprived + (days_deprived || Subject)
+```
+Questa sintassi alternativa esclude la covarianza tra intercette e pendenze, risultando in una matrice diagonale:
+
+$$
+\mathbf{\Sigma} =
+\begin{pmatrix}
+\tau_{00}^2 & 0 \\
+0 & \tau_{11}^2
+\end{pmatrix}
+$$
+
+#### Solo Pendenze Casuali
+```r
+Reaction ~ days_deprived + (0 + days_deprived | Subject)
+```
+In questo caso, solo le pendenze variano tra i soggetti ($\tau_{11}^2$):
+
+$$
+\mathbf{\Sigma} =
+\begin{pmatrix}
+0 & 0 \\
+0 & \tau_{11}^2
+\end{pmatrix}
+$$
+
+**Tabella Riassuntiva dei Modelli**
+
+| **Modello**                | **Formula**                                            | **Struttura di $\mathbf{\Sigma}$**                                                   |
+|----------------------------|-------------------------------------------------------|---------------------------------------------------------------------------------------|
+| **1. Solo intercette**      | `Reaction ~ days_deprived + (1 | Subject)`            | $\begin{pmatrix} \tau_{00}^2 & 0 \\ 0 & 0 \end{pmatrix}$                           |
+| **2. Intercette e pendenze**| `Reaction ~ days_deprived + (1 + days_deprived | Subject)`| $\begin{pmatrix} \tau_{00}^2 & \rho \tau_{00} \tau_{11} \\ \rho \tau_{00} \tau_{11} & \tau_{11}^2 \end{pmatrix}$ |
+| **3. No covarianza**        | `Reaction ~ days_deprived + (days_deprived || Subject)`| $\begin{pmatrix} \tau_{00}^2 & 0 \\ 0 & \tau_{11}^2 \end{pmatrix}$                |
+| **4. Solo pendenze**        | `Reaction ~ days_deprived + (0 + days_deprived | Subject)`| $\begin{pmatrix} 0 & 0 \\ 0 & \tau_{11}^2 \end{pmatrix}$                          |
+
+### Scelta del Modello
+
+La scelta del modello dipende dalla complessità dei dati e dalle ipotesi sull’eterogeneità tra i soggetti:
+
+- **Modello 1**: È il più semplice, adatto quando si ritiene che le differenze tra soggetti influenzino solo l'intercetta.
+- **Modello 2**: Modello più flessibile, consente variazioni sia nelle intercette che nelle pendenze.
+- **Modello 3**: Variante di Modello 2, esclude la correlazione tra intercette e pendenze, utile per semplificare il modello.
+- **Modello 4**: Adatto quando si ritiene che la variabilità tra soggetti influenzi solo le pendenze.
+
+In conclusione, la funzione `lmer()` offre una potente flessibilità per modellare dati multilivello, adattandosi a diverse ipotesi e configurazioni. La comprensione delle strutture della matrice di varianza-covarianza è fondamentale per interpretare correttamente i risultati e scegliere il modello più appropriato per il contesto analitico.
+
+### Applicazione
+
+Per i dati dell'esempio, il modello più appropriato è il **Modello 2**, che include intercette e pendenze casuali per ciascun soggetto. Procediamo quindi a stimarlo:
+
+```{r}
+pp_mod <- lmer(
+    Reaction ~ 1 + days_deprived + (1 + days_deprived | Subject), 
+    data = sleep2
+)
+```
+
+Per verificare la stima del modello, utilizziamo la funzione `summary()`:
+
+```{r}
+summary(pp_mod)
+```
+
+### Predizioni del Modello
+
+Prima di interpretare i risultati, rappresentiamo graficamente i dati osservati e le previsioni del modello. La funzione `predict()` permette di calcolare le stime previste per ciascun livello del predittore, considerando gli effetti casuali e fissi. Di seguito, i passaggi per creare un dataset per le predizioni.
+
+#### Creazione di un Nuovo Dataset
+
+Per ottenere le previsioni, creiamo un nuovo dataset (`newdata`) con tutte le combinazioni dei livelli di `Subject` e `days_deprived`. Utilizziamo la funzione `crossing()` del pacchetto **dplyr**.
+
+```{r}
+newdata <- crossing(
+    Subject = sleep2 |> 
+        pull(Subject) |> 
+        levels() |> 
+        factor(),
+    days_deprived = 0:7
+)
+```
+
+Ecco un'anteprima del dataset generato:
+
+```{r}
+head(newdata, 17)
+```
+
+#### Dettagli del Codice
+
+- `Subject = sleep2 |> pull(Subject) |> levels() |> factor()`:
+  1. `pull(Subject)`: Estrae la colonna `Subject` dal dataset `sleep2`.
+  2. `levels()`: Recupera i livelli unici della variabile categorica `Subject`.
+  3. `factor()`: Converte i livelli in un fattore, garantendo la compatibilità con la funzione `crossing()`.
+
+- `days_deprived = 0:7`:
+  Genera una sequenza di valori da 0 a 7, rappresentando i giorni di privazione del sonno.
+
+- `crossing()`:
+  Combina tutte le possibili coppie di livelli di `Subject` e valori di `days_deprived`, creando un dataset completo per calcolare le predizioni.
+
+#### Calcolo delle Predizioni
+
+Utilizziamo la funzione `predict()` per stimare i valori di `Reaction` per ciascuna combinazione di soggetto e giorno:
+
+```{r}
+newdata2 <- newdata |>
+    mutate(Reaction = predict(pp_mod, newdata))
+```
+
+Visualizziamo i primi valori del nuovo dataset:
+
+```{r}
+head(newdata2)
+```
+
+### Visualizzazione Grafica
+
+Per rappresentare graficamente le rette di regressione previste dal modello per ciascun soggetto, utilizziamo **ggplot2**:
+
+```{r}
+ggplot(sleep2, aes(x = days_deprived, y = Reaction)) +
+    geom_line(
+        data = newdata2,
+        aes(group = Subject),
+        color = "blue"
+    ) +
+    geom_point() +
+    scale_x_continuous(breaks = 0:7) +
+    facet_wrap(~Subject) +
+    labs(
+        y = "Reaction Time (ms)", 
+        x = "Days Deprived of Sleep (0 = baseline)",
+        title = "Reaction Time by Days of Sleep Deprivation"
+    )
+```
+
+1. `geom_line()`: Disegna le rette di regressione previste per ciascun soggetto utilizzando i dati di `newdata2`. 
+   - `aes(group = Subject)`: Specifica che ogni linea è associata a un soggetto distinto.
+   - `color = "blue"`: Imposta il colore delle linee.
+
+2. `geom_point()`: Aggiunge i punti corrispondenti ai dati osservati.
+
+3. `facet_wrap(~Subject)`: Crea un pannello separato per ciascun soggetto, facilitando il confronto tra dati osservati e predizioni.
+
+4. `labs()`: Personalizza le etichette degli assi e il titolo del grafico.
+
+Il grafico risultante mostra le predizioni del modello (linee blu) sovrapposte ai dati osservati (punti) per ciascun soggetto. Questo consente di valutare visivamente l'adeguatezza del modello nel catturare sia le tendenze generali sia le variazioni individuali.
+
+
+
+## Interpretare l'output di `lmer()` ed estrarre le stime
+
+La chiamata a `lmer()` restituisce un oggetto della classe "lmerMod". 
+
+### Effetti fissi
+
+La sezione dell'output chiamata "Effetti fissi:" è simile a ciò che si vede nell'output per un modello lineare semplice adattato con `lm()`.
+
+```
+Fixed effects:
+              Estimate Std. Error t value
+(Intercept)    267.967      8.266  32.418
+days_deprived   11.435      1.845   6.197
+```
+
+L'output precedente indica che il tempo di reazione medio stimato per i partecipanti al Giorno 0 era di circa 268 millisecondi, con ogni giorno di privazione del sonno che aggiungeva mediamente ulteriori 11 millisecondi al tempo di risposta.
+
+Se dobbiamo ottenere gli effetti fissi dal modello, possiamo estrarli utilizzando la funzione `fixef()`.
+
+```{r}
+#| vscode: {languageId: r}
+fixef(pp_mod) |> 
+    print()
+```
+
+Gli errori standard ci forniscono stime della variabilità di questi parametri dovuta all'errore di campionamento. Possiamo utilizzarli per calcolare i valori $t$ o derivare gli intervalli di confidenza. Per estrarli, utilizziamo `vcov(pp_mod)`, che restituirà una matrice di varianza-covarianza (non quella associata agli effetti casuali), quindi estraiamo la diagonale utilizzando `diag()` e calcoliamo infine la radice quadrata utilizzando `sqrt()`.
+
+```{r}
+#| vscode: {languageId: r}
+vcov(pp_mod)
+```
+
+```{r}
+#| vscode: {languageId: r}
+vcov(pp_mod) |> 
+    diag() |> 
+    sqrt() |> 
+    print()
+```
+
+Si noti che, nell'output di `lmer`, i valori $t$ non sono accompagnati dai valori $p$, come avviene di solito nei contesti di modellazione più semplici. Esistono molteplici approcci per ottenere i valori $p$ da modelli a effetti misti, ciascuno con vantaggi e svantaggi (si veda, ad esempio, Luke (2017) per un'analisi delle opzioni disponibili). I valori $t$ non vengono accompagnati dai gradi di libertà, poiché i gradi di libertà in un modello a effetti misti non sono ben definiti. Spesso i ricercatori trattano i valori $t$ come valori $z$ di Wald, ossia come osservazioni provenienti da una distribuzione normale standard. Poiché la distribuzione $t$ si avvicina alla distribuzione normale standard all'aumentare del numero di osservazioni, questa pratica "t-as-z" è legittima se il numero di osservazioni campionarie è sufficientemente grande.
+
+Per calcolare i valori $z$ di Wald, basta dividere la stima dell'effetto fisso per il suo errore standard:
+
+```{r}
+#| vscode: {languageId: r}
+tvals <- fixef(pp_mod) / sqrt(diag(vcov(pp_mod)))
+
+tvals |> 
+    print()
+```
+
+I valori-$p$ si ottengono nel modo seguente:
+
+```{r}
+#| vscode: {languageId: r}
+print(2 * (1 - pnorm(abs(tvals))))
+```
+
+Questo fornisce una forte evidenza contro l'ipotesi nulla $H_0: \gamma_1 = 0$. Sembra che la privazione del sonno aumenti effettivamente il tempo di risposta.
+
+È possibile ottenere gli intervalli di confidenza per le stime utilizzando la funzione `confint()` (questa tecnica utilizza il bootstrap parametrico). 
+
+```{r}
+#| vscode: {languageId: r}
+confint(pp_mod) |> 
+    print()
+```
+
+### Effetti random
+
+```
+Random effects:
+ Groups   Name          Variance Std.Dev. Corr
+ Subject  (Intercept)   958.35   30.957       
+          days_deprived  45.78    6.766   0.18
+ Residual               651.60   25.526       
+Number of obs: 144, groups:  Subject, 18
+```
+
+La parte relativa agli effetti casuali dell'output di `summary()` ci fornisce una tabella con informazioni sulle diverse componenti della varianza: la matrice di varianza-covarianza (o matrici, se ci sono più fattori casuali) e la varianza residua.
+
+Cominciamo con la riga `Residual`. Questo ci indica che la varianza residua, $\sigma^2$, è stata stimata a circa 651.6. Il valore nella colonna successiva, 25.526, è la deviazione standard, $\sigma$, che è la radice quadrata della varianza.
+
+Estraiamo la deviazione standard dei residui utilizzando la funzione `sigma()`.
+
+```{r}
+#| vscode: {languageId: r}
+sigma(pp_mod) # residual
+```
+
+Le due righe sopra la riga Residual ci forniscono informazioni sulla matrice di varianza-covarianza per il fattore casuale "Subject".
+
+```
+Random effects:
+ Groups   Name          Variance Std.Dev. Corr
+ Subject  (Intercept)   958.35   30.957       
+          days_deprived  45.78    6.766   0.18
+```
+
+I valori nella colonna "Variance" ci forniscono la diagonale principale della matrice, mentre i valori nella colonna "Std.Dev." rappresentano semplicemente le radici quadrate di questi valori. La colonna "Corr" indica la correlazione tra l'intercetta e la pendenza.
+
+Possiamo estrarre questi valori dall'oggetto adattato `pp_mod` utilizzando la funzione `VarCorr()`. Questa funzione restituisce una lista nominata, con un elemento per ciascun fattore casuale. Nel nostro caso, "Subject" è l'unico fattore casuale, quindi la lista avrà lunghezza 1.
+
+```{r}
+#| vscode: {languageId: r}
+# variance-covariance matrix for random factor Subject
+VarCorr(pp_mod)[["Subject"]] |> 
+    print() # oppure: VarCorr(pp_mod)[[1]]
+```
+
+Le prime righe rappresentano la matrice di varianza-covarianza. Le varianze sono riportate sulla diagonale principale. `correlation` indica la correlazione tra la stima della pendenza e la stima dell'intercetta.
+
+Possiamo estrarre gli effetti casuali stimati (BLUPS) utilizzando la funzione `ranef()`.
+
+```{r}
+#| vscode: {languageId: r}
+ranef(pp_mod)[["Subject"]] |> 
+    print()
+```
+
+Possiamo ottenere i valori stimati dal modello utilizzando `fitted()` e i residui utilizzando `residuals()`.
+
+```{r}
+#| vscode: {languageId: r}
+mutate(sleep2,
+    fit = fitted(pp_mod),
+    resid = residuals(pp_mod)
+) |>
+    group_by(Subject) %>%
+    slice(c(1, 10)) %>%
+    print(n = +Inf)
+```
+
+Infine, possiamo ottenere previsioni per nuovi dati utilizzando `predict()`, come abbiamo fatto in precedenza. 
+
+```{r}
+#| vscode: {languageId: r}
+## create the table with new predictor values
+ndat <- crossing(
+    Subject = sleep2 %>% pull(Subject) %>% levels() %>% factor(),
+    days_deprived = 8:10
+) %>%
+    mutate(Reaction = predict(pp_mod, newdata = .))
+
+ndat |> 
+    head()
+```
+
+```{r}
+#| vscode: {languageId: r}
+ggplot(sleep2, aes(x = days_deprived, y = Reaction)) +
+    geom_line(
+        data = bind_rows(newdata2, ndat),
+        color = "blue"
+    ) +
+    geom_point() +
+    scale_x_continuous(breaks = 0:10) +
+    facet_wrap(~Subject) +
+    labs(y = "Reaction Time", x = "Days deprived of sleep (0 = baseline)")
+```
+
+## Riflessioni Conclusive
+
+Questo capitolo ha presentato una panoramica sui modelli statistici multilivello, con un focus sull'effetto della deprivazione del sonno sulle prestazioni psicomotorie utilizzando il dataset `sleepstudy`. In tale contesto, sono stati introdotti e discussi concetti fondamentali come il "complete pooling", il "no pooling" e il "partial pooling", esplorandone le implicazioni nella modellazione dei dati con misure ripetute.
+
+L'analisi ha posto l'accento sull'applicazione pratica dei modelli multilivello, con una particolare attenzione alla distinzione tra variabili fisse e casuali e alla loro rilevanza per la struttura del modello. Un aspetto centrale della trattazione è stata la matrice di varianza-covarianza, essenziale per comprendere le relazioni interne ai modelli multilivello.
+
+Questi modelli rivestono un ruolo cruciale nel campo dell’assessment psicologico e della psicometria, poiché permettono di analizzare dati complessi tenendo conto delle variazioni individuali e di gruppo. Offrono strumenti flessibili per esaminare come fattori contestuali e individuali influenzino il comportamento e le prestazioni psicologiche, un elemento chiave per una valutazione psicologica accurata.
+
+Infine, il capitolo prepara il terreno per il successivo approfondimento sui modelli multilivello nell’ambito del calcolo dell’affidabilità tra giudici, argomento che sarà sviluppato nel capitolo seguente. Inoltre, viene tracciato un collegamento con i modelli di crescita latente, i quali saranno trattati nei capitoli successivi come naturale prosecuzione o alternativa ai modelli multilivello. Questo sottolinea la continuità e la rilevanza di tali approcci nell'ambito della ricerca psicologica e psicometrica.
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

@@ -1,15 +1,9 @@
-# Elementi di algebra lineare 🔸
+# Elementi di algebra lineare
 
 ::: callout-note
 ## In questo capitolo imparerai a
 
-- 
-:::
-
-::: callout-tip
-## Prerequisiti
-
-- 
+- comprendere e applicare i concetti fondamentali di algebra lineare necessari per l'analisi e l'assessment psicologico.
 :::
 
 ::: callout-important
@@ -18,10 +12,6 @@
 ```{r}
 here::here("code", "_common.R") |> 
   source()
-
-# Load packages
-if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(readr)
 ```
 :::
 
@@ -848,7 +838,7 @@ legend(
 )
 ```
 
-#### Analisi con il Pacchetto `lm` (Equivalente a `pingouin`)
+#### Analisi con il Pacchetto `lm` 
 
 ```{r}
 # Modello di regressione con lm()
@@ -861,10 +851,614 @@ summary(lm_model)
 - La somma dei quadrati residui ($SS_{res}$) e la somma totale dei quadrati ($SS_{tot}$) sono calcolate manualmente per derivare $R^2$.
 - La funzione `lm()` offre un modo alternativo e diretto per ottenere il modello di regressione e i relativi output statistici.
 
+
+
+
+
+### Traccia di una matrice
+
+Si definisce *traccia* di una matrice quadrata $\boldsymbol{A}$
+$n \times n$, e si denota con $tr(\boldsymbol{A})$ la somma degli
+elementi sulla diagonale principale di $\boldsymbol{A}$:
+
+$$
+tr(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}.
+$$
+
+La traccia gode delle seguenti proprietà: 
+
+$$
+\begin{aligned}
+&tr(\rho \boldsymbol{A}) = \rho tr( \boldsymbol{A}) \notag \\
+&tr(\boldsymbol{A} + \boldsymbol{B}) =  tr( \boldsymbol{A})+tr( \boldsymbol{B}) \notag \\
+&tr(\boldsymbol{A}') =  tr( \boldsymbol{A}) \notag \\
+&tr(\boldsymbol{AB}) =  tr( \boldsymbol{BA}) \notag\end{aligned}
+$$ 
+
+Per esempio, sia 
+
+$$
+\boldsymbol{A} =  \left[ \begin{array}{c c c}
+7 & 1 & 2\\
+1 & 8 & 3\\
+2 & 3 & 9 \end{array} \right]
+$$ 
+
+allora
+
+$$
+tr(\boldsymbol{A}) = 7 + 8 + 9 = 24.
+$$
+
+```{r}
+#| vscode: {languageId: r}
+A <- matrix(
+  c(7,1, 2, 1, 8, 3, 2, 3, 9),
+  nrow = 3,
+  byrow = TRUE
+)
+A |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+sum(diag(A)) |> print()
+```
+
+### Dipendenza lineare
+
+Si consideri la matrice 
+
+$$
+\boldsymbol{A}=
+\left(%
+\begin{array}{ccc}
+  1 & 1 & 1 \\
+  3 & 1 & 5 \\
+  2 & 3 & 1 \\
+\end{array}%
+\right).
+$$ 
+
+Siano $\boldsymbol{c}_1$, $\boldsymbol{c}_2$,
+$\boldsymbol{c}_3$ le colonne di $\boldsymbol{A}$. Si noti che
+
+$$
+2\boldsymbol{c}_1 + -\boldsymbol{c}_2 + - \boldsymbol{c}_3 =
+\boldsymbol{0}
+$$ 
+
+dove $\boldsymbol{0}$ è un vettore ($3 \times 1$) di
+zeri.
+
+Dato che le 3 colonne di $\boldsymbol{A}$ possono essere combinate
+linearmente in modo da produrre un vettore $\boldsymbol{0}$ vi è
+chiaramente una qualche forma di relazione, o dipendenza, tra le
+informazioni nelle colonne. Detto in un altro modo, sembra esserci una
+qualche duplicazione delle informazione nelle colonne. In generale, si
+dice che $k$ colonne $\boldsymbol{c}_1, \boldsymbol{c}_2,
+\dots \boldsymbol{c}_k$ di una matrice sono *linearmente dipendenti* se
+esiste un insieme di valori scalari $\lambda_1,
+\dots, \lambda_k$ tale per cui
+
+$$
+\lambda_1 \boldsymbol{c}_1 + \dots + \lambda_k \boldsymbol{c}_k=\boldsymbol{0}
+$$
+
+e almeno uno dei valori $\lambda_i$ non è uguale a 0.
+
+La dipendenza lineare implica che ciascun vettore colonna è una
+combinazione degli altri. Per esempio
+
+$$
+\boldsymbol{c}_k= -(\lambda_1 \boldsymbol{c}_1 + \dots + \lambda_{k-1}
+   \boldsymbol{c}_{k-1})/\lambda_k.
+$$ 
+   
+Questo implica che tutta "l'informazione" della matrice è contenuta in un sottoinsieme delle colonne -- se $k-1$ colonne sono conosciute, l'ultima resta determinata. È in questo senso che abbiamo detto che l'informazione della matrice
+veniva "duplicata".
+
+Se l'unico insieme di valori scalari $\lambda_i$ che soddisfa
+l'equazione
+
+$$
+\lambda_1 \boldsymbol{c}_1 + \dots + \lambda_k \boldsymbol{c}_k=\boldsymbol{0}
+$$
+
+è un vettore di zeri, allora questo significa che non vi è alcuna
+relazione tra le colonne della matrice. Le colonne si dicono
+*linearmente indipendenti*, nel senso che non contengono alcuna
+"duplicazione" di informazione.
+
+### Rango di una matrice
+
+Il *rango della matrice* è il massimo numero di vettori colonna
+linearmente indipendenti che possono essere selezionati dalla matrice.
+In maniera equivalente, il rango di una matrice può essere definito come
+il massimo numero di vettori riga linermente indipendenti. Il rango
+minimo di una matrice è 1, il che significa che vi è una colonna tale
+per cui le altre colonne sono dei multipli di questa. Per l'esempio
+precedente, il rango della matrice $\boldsymbol{A}$ è 2.
+
+Se la matrice è quadrata, $\boldsymbol{A}_{n \times n}$, ed è costituita
+da vettori tutti indipendenti tra di loro, allora il suo rango è $n$.
+Se, invece, la matrice è rettangolare, $\boldsymbol{A}_{m \times n}$, allora il suo rango può essere al massimo il più piccolo tra
+i due valori *m* ed *n*, cioè:
+
+$$
+r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
+$$
+
+## Radici e vettori latenti
+
+Dal determinante di una matrice si possono ricavare le *radici latenti*
+o *autovalori* (denotati da $\lambda_i$) e i *vettori latenti* o
+*autovettori* della matrice. Alle nozioni di autovalore e autovettore
+verrà qui fornita un'interpretazione geometrica.
+
+Simuliamo di dati di due variabili associate tra loro:
+
+```{r}
+#| vscode: {languageId: r}
+set.seed(123456)
+options(repr.plot.width = 8, repr.plot.height = 8)
+
+npoints <- 20
+x <- as.numeric(scale(rnorm(npoints, 0, 1)))
+y <- as.numeric(scale(3 * x + rnorm(npoints, 0, 2)))
+mean(x) |> print()
+mean(y) |> print()
+cor(x, y) |> print()
+```
+
+Disegnamo il diagramma di dispersione con un ellisse che contiene la
+nube di punti:
+
+```{r}
+#| fig.asp: 1.1
+#| fig.height: 4
+#| fig.width: 4
+#| vscode: {languageId: r}
+Y <- cbind(x, y)
+car::dataEllipse(
+  Y[, 1], Y[, 2],
+  levels = 0.95,
+  lty = 2,
+  ylim = c(-3, 3),
+  xlim = c(-3, 3)
+)
+```
+
+Se racchiudiamo le osservazioni ($v_1, v_2$) con un'ellisse, allora la
+lunghezza dei semiassi maggiori e minori dell'ellisse sarà proporzionale
+a $\sqrt{\lambda_1}$ e $\sqrt{\lambda_2}$. L'asse maggiore è la linea
+passante per il punto ($\bar{v_1}, \bar{v_2}$) nella direzione
+determinata dal primo autovettore $\boldsymbol{a}_1'$ con pendenza
+uguale a $a_{12}/a_{11}$. L'asse minore è la linea passante per il punto
+($\bar{v_1}, \bar{v_2}$) nella direzione determinata dal secondo
+autovettore $\boldsymbol{a}_2$.
+
+Calcoliamo ora gli autovettori e gli autovalori:
+
+```{r}
+#| vscode: {languageId: r}
+s <- cov(Y)
+ee <- eigen(s)
+ee |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+# First eigenvector 
+ev_1 <- ee$vectors[, 1]
+
+# Slope of the first eigenvector
+ev1_m <- ev_1[2] / ev_1[1]
+
+# Second eigenvector 
+ev_2 <- ee$vectors[, 2]
+
+# Slope of the second eigenvector
+ev2_m <- ev_2[2] / ev_2[1]
+```
+
+```{r}
+#| vscode: {languageId: r}
+# Scatter plot showing the span of both eigenvectors 
+data.frame(zx=scale(x), zy=scale(y))  |>
+ggplot(aes(x = zx, y = zy)) +
+  geom_point(color = "blue", size = 2) +
+  geom_vline(xintercept = 0, linewidth = .5) +
+  geom_hline(yintercept = 0, linewidth = .5) +
+  geom_abline(slope = ev1_m, color = "blue", linewidth = 0.7) +
+  geom_abline(slope = ev2_m, color = "red", linewidth = 0.7) 
+```
+
+Gli autovettori sono ortogonali:
+
+```{r}
+#| vscode: {languageId: r}
+# Multiply both eigenvectors 
+print(ev_1 %*% ev_2)
+```
+
+Generiamo uno Scree Plot.
+
+```{r}
+#| vscode: {languageId: r}
+# Calculate the estimated variance for each eigenvalue
+e_var <- ee$values / (length(x) - 1)
+
+# Data frame with variance percentages
+var_per <- tibble(
+  PC  = c("PC1", "PC2"),
+  PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
+    )
+
+# Scree plot 
+ggplot(var_per, aes(x = PC, y = PER)) +
+  geom_col(width = 0.5, color = "black") +
+  xlab("Principal component") +
+  ylab("Percentage of variation (%)") 
+```
+
+Verifichiamo che la somma degli autovalori sia uguale alla varianza totale.
+
+```{r}
+#| vscode: {languageId: r}
+var(x) + var(y)
+```
+
+```{r}
+#| vscode: {languageId: r}
+ee$values |> sum()
+```
+
+Gli autovettori ottenuti utilizzando la funzione `eigen()` sono normalizzati. Ciò significa che la loro lunghezza è uguale a 1:
+
+```{r}
+#| vscode: {languageId: r}
+t(as.matrix(ee$vectors[, 1])) %*% as.matrix(ee$vectors[, 1]) |> print()
+```
+
+Utilizziamo le informazioni degli autovettori e degli autovalori per disegnare gli assi dell'ellisse: 
+
+- gli autovettori determinano la direzione degli assi; 
+- la radice quadrata degli autovalori è proporzionale alla lunghezza degli assi dell'ellisse.
+
+```{r}
+#| fig.asp: 1.1
+#| fig.height: 4
+#| fig.width: 4
+#| vscode: {languageId: r}
+car::dataEllipse(
+  Y[, 1], Y[, 2],
+  levels = 0.95,
+  lty = 2,
+  ylim = c(-3, 3),
+  xlim = c(-3, 3)
+)
+k <- 2.65
+arrows(
+  0, 0, 
+  k * sqrt(ee$values[1]) * ee$vectors[1],
+  k * sqrt(ee$values[1]) * ee$vectors[2],
+  code = 2, 
+  col = "red", 
+  lwd = 2
+)
+arrows(
+  0, 0, 
+  k * sqrt(ee$values[2]) * ee$vectors[1],
+  k * sqrt(ee$values[2]) * -ee$vectors[2],
+  code = 2, 
+  col = "red", 
+  lwd = 2
+)
+```
+
+Tale analisi si può estendere a qualunque numero di variabili. Per
+esempio, nel caso di tre variabili, possiamo pensare di disegnare un
+ellisoide attorno ad una nube di punti nello spazio tridimensionale.
+Anche in questo caso, gli autovalori e gli associati autovettori
+corrisponderanno agli assi dell'elissoide.
+
+## Scomposizione spettrale di una matrice
+
+Data una matrice quadrata e simmetrica di dimensione $n$,
+$\boldsymbol{A}$, esistono una matrice diagonale $\boldsymbol{\Lambda}$
+e una matrice ortogonale $\boldsymbol{V}$ tali che
+
+$$\boldsymbol{A} =\boldsymbol{V} \boldsymbol{\Lambda} \boldsymbol{V}',$$
+dove
+
+-   $\boldsymbol{\Lambda}$ è una matrice diagonale i cui elementi sono
+    gli autovalori di $\boldsymbol{A}$:
+    $\boldsymbol{\Lambda} = diag(\lambda_1, \lambda_2,
+        \dots, \lambda_n)$;
+-   $\boldsymbol{V}$ è una matrice ortogonale le cui colonne
+    $(v_1, v_2, \dots, v_p)$ sono gli autovettori di $\boldsymbol{A}$
+    associati ai rispettivi autovalori.
+
+In maniera equivalente
+
+$$\boldsymbol{A} \boldsymbol{V} =  \boldsymbol{\Lambda} \boldsymbol{V}'.$$
+
+Premoltiplicando entrambi i membri per $\boldsymbol{V}'$ si ottiene
+
+$$\boldsymbol{V}'\boldsymbol{A} \boldsymbol{V} =
+\boldsymbol{\Lambda},$$ 
+
+da cui l'affermazione che la matrice degli autovettori diagonalizza $\boldsymbol{A}$.
+
+Per esempio,
+
+```{r}
+#| vscode: {languageId: r}
+sigma <- matrix(
+  data = c(1, 0.5, 0.5, 1.25), 
+  nrow = 2, 
+  ncol = 2
+)
+sigma |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+out <- eigen(sigma)
+out |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+Lambda <- diag(out$values)
+Lambda |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+U <- out$vectors
+U |> print()
+```
+
+```{r}
+#| vscode: {languageId: r}
+U %*% Lambda %*% t(U) |> print()
+```
+
+### Autovalori e determinante
+
+Il determinante di una matrice è il prodotto degli autovalori:
+
+$$\begin{aligned}
+    |\boldsymbol{A}| &= \prod_{i=1}^{p} \lambda_i. \notag
+    \end{aligned}$$
+
+La traccia di una matrice è uguale alla somma degli autovalori:
+
+$$\begin{aligned}
+    tr(\boldsymbol{A}) &= \sum_{i=1}^{p} \lambda_i. \notag
+    \end{aligned}$$
+
+```{r}
+#| vscode: {languageId: r}
+sigma <- matrix(data = c(1, 0.5, 0.5, 2), nrow = 2, ncol = 2)
+sigma |> print()
+
+out <- eigen(sigma)
+out |> print()
+```
+
+La traccia di una matrice è uguale alla somma degli autovalori:
+
+```{r}
+#| vscode: {languageId: r}
+sum(out$values) |> print()
+```
+
+Il determinante di una matrice è il prodotto degli autovalori:
+
+```{r}
+#| vscode: {languageId: r}
+det(sigma) |> print()
+(out$values[1] * out$values[2]) |> print()
+```
+
+Gli autovalori di $\boldsymbol{A}^{-1}$ sono i reciproci degli
+autovalori di $\boldsymbol{A}$; gli autovettori sono coincidenti.
+
+## La distanza euclidea
+
+Per calcolare la **distanza euclidea** tra due punti utilizzando l'algebra matriciale, consideriamo i punti come vettori in uno spazio euclideo.
+
+
+### In due dimensioni:
+
+Siano dati i vettori:
+
+- **x** = $\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$,
+- **y** = $\begin{bmatrix} y_1 \\ y_2 \end{bmatrix}$.
+
+La distanza euclidea tra **x** e **y** è la norma del vettore differenza ($\mathbf{x} - \mathbf{y}$):
+
+$$ d(\mathbf{x}, \mathbf{y}) = \| \mathbf{x} - \mathbf{y} \| $$.
+
+In termini di algebra matriciale, questa norma è calcolata come:
+
+$$ d(\mathbf{x}, \mathbf{y}) = \sqrt{ (\mathbf{x} - \mathbf{y})^\top (\mathbf{x} - \mathbf{y}) } $$
+
+**Passaggi dettagliati:**
+
+1. **Calcolo del vettore differenza:**
+
+   $$
+   \mathbf{x} - \mathbf{y} = \begin{bmatrix} x_1 - y_1 \\ x_2 - y_2 \end{bmatrix}
+   $$
+
+2. **Calcolo del prodotto scalare:**
+
+   $$
+   (\mathbf{x} - \mathbf{y})^\top (\mathbf{x} - \mathbf{y}) = (x_1 - y_1)^2 + (x_2 - y_2)^2
+   $$
+
+3. **Calcolo della radice quadrata:**
+
+   $$
+   d(\mathbf{x}, \mathbf{y}) = \sqrt{ (x_1 - y_1)^2 + (x_2 - y_2)^2 }
+   $$
+
+Questo risultato corrisponde alla formula classica per la distanza tra due punti nel piano cartesiano.
+
+
+### Estensione a più dimensioni
+
+Per vettori in uno spazio $ n $-dimensionale:
+
+- **x** = $\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}$
+- **y** = $\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}$
+
+La distanza euclidea diventa:
+
+$$ d(\mathbf{x}, \mathbf{y}) = \sqrt{ (\mathbf{x} - \mathbf{y})^\top (\mathbf{x} - \mathbf{y}) } $$
+
+Che si espande in:
+
+$$ d(\mathbf{x}, \mathbf{y}) = \sqrt{ \sum_{i=1}^{n} (x_i - y_i)^2 } $$
+
+In conclusione:
+
+l'utilizzo dell'algebra matriciale permette di esprimere in modo compatto e generalizzato il calcolo della distanza euclidea tra due punti in qualsiasi dimensione, sfruttando operazioni matriciali come la trasposizione e il prodotto scalare.
+
+## La distanza di Mahalanobis
+
+La distanza euclidea presuppone che le variabili siano non correlate e su scale comparabili. Tuttavia, in molti casi, le variabili possono avere scale diverse e possono essere correlate tra loro. La **distanza di Mahalanobis** tiene conto di queste differenze utilizzando la matrice di covarianza, permettendo una misurazione della distanza che considera sia la scala che la correlazione tra le variabili.
+
+### Definizione
+
+La distanza di Mahalanobis tra due vettori $\mathbf{x}$ e $\mathbf{y}$ è definita come:
+
+$$
+d_M(\mathbf{x}, \mathbf{y}) = \sqrt{ (\mathbf{x} - \mathbf{y})^\top \mathbf{S}^{-1} (\mathbf{x} - \mathbf{y}) }
+$$
+
+dove:
+
+- $\mathbf{S}$ è la matrice di **covarianza** delle variabili.
+- $\mathbf{S}^{-1}$ è l'**inversa** della matrice di covarianza.
+
+### Perché è necessaria la matrice di covarianza?
+
+- **Scala delle variabili**: Se le variabili hanno varianze diverse, la matrice di covarianza normalizza queste differenze, evitando che variabili con varianze maggiori dominino la misura della distanza.
+- **Correlazione tra variabili**: La matrice di covarianza tiene conto delle correlazioni tra le variabili, riducendo l'influenza delle variabili altamente correlate sulla distanza totale.
+
+### Esempio numerico
+
+Supponiamo di avere due punti in uno spazio bidimensionale:
+
+- **Punto A**: $\mathbf{x} = \begin{bmatrix} 2 \\ 3 \end{bmatrix}$
+- **Punto B**: $\mathbf{y} = \begin{bmatrix} 5 \\ 7 \end{bmatrix}$
+
+E una matrice di covarianza stimata:
+
+$$
+\mathbf{S} = \begin{bmatrix}
+4 & 2 \\
+2 & 3
+\end{bmatrix}
+$$
+
+#### Passaggi per il calcolo
+
+1. **Calcolo del vettore differenza $\mathbf{d}$:**
+
+   $$
+   \mathbf{d} = \mathbf{x} - \mathbf{y} = \begin{bmatrix} 2 - 5 \\ 3 - 7 \end{bmatrix} = \begin{bmatrix} -3 \\ -4 \end{bmatrix}
+   $$
+
+2. **Calcolo dell'inversa della matrice di covarianza $\mathbf{S}^{-1}$:**
+
+   - **Determinante di $\mathbf{S}$:**
+
+     $$
+     \det(\mathbf{S}) = (4)(3) - (2)(2) = 12 - 4 = 8
+     $$
+
+   - **Matrice aggiunta (comatrice trasposta) di $\mathbf{S}$:**
+
+     $$
+     \text{adj}(\mathbf{S}) = \begin{bmatrix}
+     3 & -2 \\
+     -2 & 4
+     \end{bmatrix}
+     $$
+
+   - **Inversa di $\mathbf{S}$:**
+
+     $$
+     \mathbf{S}^{-1} = \frac{1}{\det(\mathbf{S})} \text{adj}(\mathbf{S}) = \frac{1}{8} \begin{bmatrix}
+     3 & -2 \\
+     -2 & 4
+     \end{bmatrix} = \begin{bmatrix}
+     0.375 & -0.25 \\
+     -0.25 & 0.5
+     \end{bmatrix}
+     $$
+
+3. **Calcolo della distanza di Mahalanobis:**
+
+   $$
+   d_M(\mathbf{x}, \mathbf{y}) = \sqrt{ \mathbf{d}^\top \mathbf{S}^{-1} \mathbf{d} }
+   $$
+
+   - **Calcolo del prodotto $\mathbf{S}^{-1} \mathbf{d}$:**
+
+     $$
+     \mathbf{S}^{-1} \mathbf{d} = \begin{bmatrix}
+     0.375 & -0.25 \\
+     -0.25 & 0.5
+     \end{bmatrix} \begin{bmatrix} -3 \\ -4 \end{bmatrix} = \begin{bmatrix}
+     (-0.375 \times 3) + (0.25 \times 4) \\
+     (0.25 \times 3) + (-0.5 \times 4)
+     \end{bmatrix} = \begin{bmatrix}
+     -0.125 \\
+     -1.25
+     \end{bmatrix}
+     $$
+
+   - **Calcolo del prodotto scalare:**
+
+     $$
+     \mathbf{d}^\top (\mathbf{S}^{-1} \mathbf{d}) = \begin{bmatrix} -3 & -4 \end{bmatrix} \begin{bmatrix} -0.125 \\ -1.25 \end{bmatrix} = (-3)(-0.125) + (-4)(-1.25) = 0.375 + 5 = 5.375
+     $$
+
+   - **Calcolo della distanza:**
+
+     $$
+     d_M(\mathbf{x}, \mathbf{y}) = \sqrt{5.375} \approx 2.318
+     $$
+
+
+### Confronto con la distanza euclidea
+
+La distanza euclidea tra gli stessi punti è:
+
+$$
+d_E(\mathbf{x}, \mathbf{y}) = \sqrt{ (-3)^2 + (-4)^2 } = \sqrt{9 + 16} = \sqrt{25} = 5
+$$
+
+Come si può notare, la distanza di Mahalanobis ($\approx 2.318$) è diversa dalla distanza euclidea (5) a causa della considerazione delle varianze e delle correlazioni tra le variabili.
+
+### Interpretazione
+
+- **Varianze diverse**: Se una variabile ha una varianza elevata, le differenze lungo quella direzione avranno meno peso nella distanza totale.
+- **Correlazioni**: Se due variabili sono altamente correlate, la distanza di Mahalanobis riduce l'importanza delle differenze lungo la direzione in cui le variabili sono correlate.
+
+In conclusione, la distanza di Mahalanobis è particolarmente utile in contesti multivariati dove le variabili hanno scale diverse e possono essere correlate. Essa fornisce una misura di distanza che è invariante rispetto alle trasformazioni lineari dei dati, rendendola ideale per l'analisi di dati statistici e il rilevamento di outlier.
+
+**Nota:** È importante assicurarsi che la matrice di covarianza $\mathbf{S}$ sia non singolare (invertibile). In pratica, quando si lavora con campioni di dati, $\mathbf{S}$ viene stimata dai dati stessi.
+
 ## Informazioni sull'Ambiente di Sviluppo {.unnumbered} 
 
 ```{r}
 sessionInfo()
 ```
-
-## Bibliografia {.unnumbered}
