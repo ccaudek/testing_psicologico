@@ -1,0 +1,530 @@
+# Modelli 1PL, 2PL e 3PL {#sec-irt-123pl}
+
+::: callout-important  
+## In questo capitolo apprenderai come:
+
+- adattare e interpretare i modelli IRT: 1PL, 2PL e 3PL, comprendendo le differenze concettuali e pratiche tra loro;  
+- analizzare il principio dell'invarianza di gruppo e la sua importanza per confronti equi tra popolazioni diverse.  
+:::  
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo 8, *Item Response Theory*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(eRm, mirt, grid, TAM, ggmirt, psychotools, latex2exp)
+```
+:::
+
+## Introduzione
+
+All'interno della teoria della risposta agli item (IRT), il **modello di Rasch** rappresenta l'approccio più restrittivo, poiché impone vincoli stringenti sulle relazioni tra abilità delle persone e difficoltà degli item. Questi vincoli garantiscono semplicità e proprietà matematiche utili, ma limitano la flessibilità del modello nel rappresentare dati complessi.
+
+Progressivamente, tali restrizioni possono essere allentate per definire modelli più flessibili:
+
+- Il **modello 1PL (One-Parameter Logistic)**, che conserva l'assunzione di uguale discriminazione tra gli item ma non richiede tutte le proprietà rigorose del modello di Rasch.  
+- Il **modello 2PL (Two-Parameter Logistic)**, che introduce un parametro aggiuntivo per descrivere la capacità discriminante degli item, consentendo una rappresentazione più accurata delle risposte.  
+- Il **modello 3PL (Three-Parameter Logistic)**, che aggiunge un terzo parametro per tenere conto della probabilità di risposta corretta casuale (detta anche "guessing").  
+
+Questa progressione da Rasch a 1PL, 2PL e 3PL permette una maggiore adattabilità del modello IRT, bilanciando semplicità e flessibilità a seconda delle esigenze specifiche dei dati e dell’analisi.
+
+## Un Esempio Pratico
+
+In questo capitolo, utilizzeremo nuovamente i dati che abbiamo esaminato in precedenza nel @sec-irt-estimation. 
+
+```{r}
+data(data.fims.Aus.Jpn.scored, package = "TAM")
+fims <- data.fims.Aus.Jpn.scored
+```
+
+Il data set include 400 partecipanti. Per facilitare la manipolazione dei dati, cambiamo il nome delle colonne.
+
+```{r}
+responses <- fims[1:400, 2:15]
+colnames(responses) <- gsub("M1PTI", "I", colnames(responses))
+glimpse(responses)
+```
+
+Definiamo il fattore `gender`:
+
+```{r}
+gender <- as.factor(fims$SEX[1:400])
+levels(gender) <- c("male", "female")
+
+gender |> table()
+```
+
+
+## Modello 1PL
+
+Il **modello ad un parametro logistico (1PL)** descrive la probabilità che un rispondente con un certo livello di abilità dia una risposta corretta a un item specifico. La formula del modello è:
+
+$$
+P(X_i = 1 \mid \theta_v, \alpha, \delta_i) = \frac{\exp(\alpha(\theta_v - \delta_i))}{1 + \exp(\alpha(\theta_v - \delta_i))} = \frac{1}{1 + \exp(-\alpha(\theta_v - \delta_i))}, \tag{1}
+$$
+
+dove:
+
+- $\theta_v$ è il livello di abilità del rispondente $v$,
+- $\delta_i$ è il parametro di difficoltà dell'item $i$,
+- $\alpha$ è il parametro di discriminazione dell'item, fissato e uguale per tutti gli item nel modello 1PL.
+
+L'assunzione fondamentale del modello 1PL è che **$\alpha$ sia costante** per tutti gli item, indicando che tutti gli item hanno la stessa capacità di discriminazione tra rispondenti con abilità diverse.
+
+### Il Ruolo del Parametro $\alpha$
+
+Il parametro $\alpha$ definisce la pendenza della curva caratteristica dell'item (ICC). Maggiore è $\alpha$, più ripida è la curva ICC, e maggiore è la capacità dell'item di discriminare tra rispondenti con abilità vicine alla difficoltà dell'item ($\delta_i$).  
+
+- $\alpha = 0$: L'item non discrimina affatto; la probabilità di risposta corretta è costante e indipendente dal livello di abilità.
+- $\alpha > 0$: L'item discrimina, e la sua capacità discriminatoria cresce con l'aumento di $\alpha$.
+
+### Esempio Pratico
+
+Consideriamo tre item ($i_1$, $i_2$, $i_3$) con la stessa difficoltà $\delta = 0$ e tre valori di discriminazione: $\alpha_1 = 0.0$, $\alpha_2 = 1.0$ e $\alpha_3 = 2.0$. Esaminiamo due rispondenti con livelli di abilità:
+
+- Rispondente A con $\theta_A = -1$,
+- Rispondente B con $\theta_B = 1$.
+
+**Item con $\alpha = 0.0**  
+
+Con $\alpha = 0$, la probabilità di risposta corretta è costante, pari a 0.5 per tutti i livelli di abilità:
+
+$$
+P(X_i = 1 \mid \theta, \delta) = 0.5.
+$$
+
+Questo item non discrimina tra rispondenti con abilità diverse e non aggiunge alcuna informazione utile.
+
+**Item con $\alpha$ = 1.0** 
+
+Con $\alpha = 1.0$, la probabilità di risposta corretta dipende dal livello di abilità:
+
+$$
+P(X_i = 1 \mid \theta, \delta) = \frac{1}{1 + \exp(-(\theta - \delta))}.
+$$
+
+- Per $\theta_A = -1$: $P(X_i = 1) \approx 0.269$,
+- Per $\theta_B = 1$: $P(X_i = 1) \approx 0.731$.
+
+La curva ICC è moderatamente ripida e l'item discrimina tra rispondenti con abilità diverse.
+
+**Item con $\alpha$ = 2.0** 
+
+Con $\alpha = 2.0$, l'ICC diventa più ripida:
+
+$$
+P(X_i = 1 \mid \theta, \delta) = \frac{1}{1 + \exp(-2(\theta - \delta))}.
+$$
+
+- Per $\theta_A = -1$: $P(X_i = 1) \approx 0.119$,
+- Per $\theta_B = 1$: $P(X_i = 1) \approx 0.881$.
+
+La maggiore ripidità riflette una capacità discriminatoria più alta, permettendo di distinguere con maggiore precisione i rispondenti in base alle loro abilità.
+
+In conclusione, nel modello 1PL, il parametro $\alpha$ controlla la capacità degli item di discriminare tra rispondenti con abilità diverse. Un aumento di $\alpha$ rende la curva ICC più ripida, migliorando la discriminazione, mentre un $\alpha$ più basso rende la curva piatta e riduce la capacità informativa dell'item. Tuttavia, nel 1PL, l'assunzione che $\alpha$ sia costante per tutti gli item rappresenta un limite rispetto ai modelli più complessi, come il 2PL, che permettono a ogni item di avere una discriminazione diversa.
+
+### Modello di Rasch e Modello 1PL: Confronto e Differenze
+
+Il modello di Rasch e il modello 1PL (One-Parameter Logistic) sono due approcci alla misurazione che condividono una struttura matematica simile. Entrambi utilizzano un parametro di discriminazione (α) costante per tutti gli item, pur permettendo variazioni nei parametri di difficoltà (δᵢ). 
+
+La differenza tecnica principale sta nel valore del parametro α:
+
+- Nel modello di Rasch, α è sempre fissato a 1.0
+- Nel modello 1PL, α può assumere qualsiasi valore costante, anche diverso da 1.0
+
+Matematicamente, i due modelli sono equivalenti: è possibile convertire i parametri da un modello all'altro attraverso una semplice riscalatura, moltiplicando o dividendo θᵥ e δᵢ per α, mantenendo invariate le probabilità di risposta corretta.
+
+Nonostante la loro equivalenza matematica, i due modelli si distinguono per filosofia e obiettivi:
+
+Il modello 1PL si concentra sull'adattamento ai dati empirici:
+
+- Mira a descrivere al meglio i dati osservati
+- Offre flessibilità nella scelta del parametro α
+- Si adatta ai dati esistenti
+
+Il modello di Rasch privilegia la misurazione oggettiva:
+
+- Pone l'enfasi sulla costruzione di misure stabili e generalizzabili
+- Considera il modello come uno standard di riferimento
+- Richiede che i dati si conformino al modello, non viceversa
+- Si pone come strumento per sviluppare misurazioni valide e oggettive
+
+In sintesi, mentre il modello 1PL è più orientato alla descrizione statistica dei dati, il modello di Rasch si propone come standard per la costruzione di strumenti di misurazione oggettivi e universalmente applicabili.
+
+::: {#exr-}
+In $\mathsf{R}$, il modello di Rasch si implementa nel modo seguente:
+
+```{r}
+mirt_rm <- mirt(responses, 1, "Rasch", verbose = FALSE)
+```
+
+Il modello 1PL si implementa nel modo seguente:
+
+```{r}
+mirt_1pl <- mirt(responses, 1, "1PL", verbose = FALSE)
+```
+
+Confrontiamo i due modelli:
+
+```{r}
+anova(mirt_rm, mirt_1pl)
+```
+
+I modelli `mirt_rm` e `mirt_1pl` sono praticamente equivalenti in termini di adattamento ai dati. Il modello `mirt_1pl` mostra lievi miglioramenti nei criteri di informazione (AIC e BIC), ma la differenza è minima.
+:::
+
+### Modello 2PL
+
+Il **modello 2PL** (Modello IRT a due parametri) rappresenta un’estensione del modello 1PL che consente una maggiore flessibilità, poiché permette alle Curve Caratteristiche degli Item (ICC) di avere pendenze diverse. Questo significa che, a differenza del modello 1PL e del modello di Rasch, le ICC degli item non sono necessariamente parallele. Nel modello 2PL, ogni item è descritto da due parametri fondamentali:
+
+1. **Parametro di difficoltà ($b$):** Indica il livello di abilità ($\theta$) a cui la probabilità di risposta corretta è del 50%. Determina il posizionamento della curva ICC lungo l’asse delle abilità.
+2. **Parametro di discriminazione ($a$):** Regola la pendenza della curva ICC, rappresentando la capacità dell’item di distinguere tra rispondenti con abilità simili. Un valore più alto di $a$ indica una maggiore sensibilità dell’item alle variazioni di abilità.
+
+La formula generale per le ICC nel modello 2PL è:
+
+$$
+P(X_i = 1 \mid \theta, a_i, b_i) = \frac{1}{1 + \exp(-a_i (\theta - b_i))},
+$$
+
+dove:
+
+- $\theta$ rappresenta l’abilità del rispondente,
+- $a_i$ è il parametro di discriminazione per l’item $i$,
+- $b_i$ è il parametro di difficoltà per l’item $i$.
+
+
+### Implementazione in R con il Pacchetto `mirt`
+
+Utilizziamo il pacchetto **mirt** per adattare il modello 2PL ai dati. Il comando `mirt()` permette di stimare i parametri specificando il modello 2PL:
+
+```{r}
+mirt_2pl <- mirt(responses, 1, "2PL")
+```
+
+Per analizzare graficamente le Curve Caratteristiche degli Item, usiamo la funzione `plot()`:
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+plot(mirt_2pl, type = "trace")
+```
+
+Se desideriamo visualizzare tutte le ICC in un unico grafico, senza separarle per item, aggiungiamo l’opzione `facet_items = FALSE`:
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+plot(mirt_2pl, type = "trace", facet_items = FALSE)
+```
+
+La funzione `coef()` consente di ottenere le stime dei parametri degli item:
+
+```{r}
+coef(mirt_2pl, IRTpars = TRUE, simplify = TRUE)
+```
+
+Queste stime includono:
+
+- $a$, parametro di discriminazione,
+- $b$, parametro di difficoltà.
+
+### Confronto tra Modello 1PL e Modello 2PL
+
+Per valutare quale modello si adatta meglio ai dati, confrontiamo il modello 1PL (discriminazione fissa) con il modello 2PL (discriminazione variabile) utilizzando la funzione `anova()`:
+
+```{r}
+anova(mirt_rm, mirt_2pl)
+```
+
+**Interpretazione dei Risultati**
+
+1. **Criteri di Informazione (AIC e BIC):** Il modello 2PL tipicamente mostra valori di AIC e BIC più bassi rispetto al modello 1PL, indicando un miglior adattamento ai dati.
+2. **Log-Likelihood:** Il modello 2PL presenta un log-likelihood superiore rispetto al modello 1PL, a indicare una maggiore probabilità di osservare i dati sotto il modello 2PL.
+3. **Test di $X^2$:** Se il p-value associato è significativo ($p < 0.05$), ciò suggerisce che il modello 2PL spiega significativamente più variazione rispetto al modello 1PL.
+
+
+### Differenze Chiave tra Modello 1PL e Modello 2PL
+
+| **Caratteristica**          | **Modello 1PL**                              | **Modello 2PL**                              |
+|-----------------------------|---------------------------------------------|---------------------------------------------|
+| **Parametro di discriminazione ($a$)** | Fisso per tutti gli item ($a = \alpha$ costante) | Variabile tra gli item ($a_i$ specifico)    |
+| **Curva ICC**               | Tutte le curve ICC sono parallele          | Le curve ICC possono avere pendenze diverse |
+| **Adattamento ai dati**     | Meno flessibile, buono per dati uniformi   | Più flessibile, cattura differenze di discriminazione |
+
+In conclusione, il modello 2PL è particolarmente utile quando gli item differiscono nella loro capacità di discriminare tra rispondenti con abilità simili. Questo lo rende una scelta preferibile rispetto al modello 1PL in situazioni in cui gli item non sono omogenei in termini di discriminazione. Tuttavia, la maggiore flessibilità del modello 2PL comporta una maggiore complessità e richiede un dataset con sufficiente variabilità per stimare accuratamente i parametri $a_i$ e $b_i$.
+
+## Modello 3PL
+
+Il **modello IRT a tre parametri (3PL)** è un’estensione del modello 2PL che aggiunge un terzo parametro, il **guessing** ($g$), per tenere conto della probabilità di rispondere correttamente a un item semplicemente per caso. Questo parametro è particolarmente utile nei test a scelta multipla, dove i rispondenti con abilità molto bassa possono comunque selezionare la risposta corretta in modo casuale.
+
+La probabilità di risposta corretta nel modello 3PL è espressa come:
+
+$$
+P(X_i = 1 \mid \theta, a_i, b_i, g_i) = g_i + (1 - g_i) \cdot \frac{1}{1 + \exp(-a_i (\theta - b_i))},
+$$
+
+dove:
+
+- $\theta$: abilità latente del rispondente,
+- $a_i$: parametro di discriminazione dell’item $i$ (controlla la pendenza della curva ICC),
+- $b_i$: parametro di difficoltà dell’item $i$ (indica il livello di abilità richiesto per una probabilità del 50% di risposta corretta, escludendo il guessing),
+- $g_i$: parametro di guessing (probabilità minima di rispondere correttamente a un item, anche per rispondenti con abilità molto bassa).
+
+### Caratteristiche del Modello 3PL
+
+1. **Parametro di Guessing ($g$):**
+   - Introduce un asintoto inferiore maggiore di zero nella curva caratteristica dell’item (ICC).
+   - Ad esempio, un valore $g_i = 0.25$ indica che, anche per abilità molto basse ($\theta \to -\infty$), la probabilità di rispondere correttamente all’item è almeno del 25%. Questo valore è tipico per test a scelta multipla con quattro opzioni, dove c'è il 25% di probabilità di indovinare.
+
+2. **Relazione con il Modello 2PL:**
+   - Il modello 3PL generalizza il modello 2PL aggiungendo il parametro $g$, che aumenta la flessibilità per rappresentare meglio il comportamento degli item in situazioni reali.
+   - Mentre nel modello 2PL la probabilità di risposta corretta può scendere a zero per abilità molto basse, nel modello 3PL la probabilità minima è definita da $g$.
+
+3. **Curve Caratteristiche degli Item (ICC):**
+   - La presenza del parametro $g$ modifica la forma della curva ICC, che non tocca mai lo zero ma si avvicina asintoticamente al valore di $g$ per $\theta$ molto basso.
+
+4. **Complessità del Modello:**
+   - L’aggiunta del parametro $g$ rende il modello più complesso rispetto al 2PL, aumentando il numero di parametri da stimare.
+   - Per ottenere stime affidabili, è necessario disporre di un dataset con un numero sufficiente di item e rispondenti.
+
+::: {#exr-}
+
+Utilizziamo il pacchetto **mirt** per stimare i parametri del modello 3PL:
+
+```{r}
+#| output: false
+mirt_3pl <- mirt(responses, 1, "3PL")
+```
+
+Le curve ICC possono essere visualizzate con il comando:
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+plot(mirt_3pl, type = "trace", facet_items = TRUE)
+```
+
+Utilizziamo la funzione `coef()` per ottenere le stime dei parametri degli item ($a$, $b$, $g$):
+
+```{r}
+coef(mirt_3pl, IRTpars = TRUE, simplify = TRUE)
+```
+
+**Confronto tra modelli 2PL e 3PL**
+
+```{r}
+anova(mirt_2pl, mirt_3pl)
+```
+
+- Il **modello 3PL** presenta un AIC inferiore rispetto al modello 2PL, suggerendo un miglior adattamento ai dati.
+- Tuttavia, il BIC penalizza maggiormente la complessità del modello, favorendo leggermente il modello 2PL.
+- La significatività del test $X^2$ ($p = 0.0004$) indica che il modello 3PL offre un miglioramento significativo rispetto al modello 2PL.
+
+**Valutazione della bontà dell’adattamento**
+
+Per verificare se il modello 3PL rappresenta adeguatamente i dati, utilizziamo la statistica $M2$:
+
+```{r}
+M2(mirt_3pl)
+```
+
+- Il valore $p = 0.125$ indica che il modello 3PL non può essere rifiutato come rappresentazione adeguata dei dati.
+- Il **RMSEA** inferiore a 0.05 (limite superiore: 0.039) suggerisce un buon adattamento.
+
+**Adattamento degli item**
+
+Il comando `itemfit()` calcola le statistiche di adattamento (fit) per ciascun item del modello 3PL, fornendo i valori di infit e outfit insieme ai relativi z-score che indicano quanto questi valori si discostano da quelli attesi secondo una distribuzione normale standardizzata.
+
+- L'infit (*Information-weighted fit*) si concentra principalmente sui rispondenti con un livello di abilità simile alla difficoltà dell'item, ed è quindi particolarmente sensibile alle discrepanze nella "zona di interesse" dell'item, dove la probabilità di risposta corretta si aggira intorno al 50%. 
+- L'outfit (*Outlier-sensitive fit*) invece considera tutti i rispondenti, inclusi quelli con abilità molto diverse dalla difficoltà dell'item, risultando più sensibile a risposte inaspettate o estreme.
+
+Per entrambe le statistiche, valori compresi tra 0.7 e 1.3 indicano un buon adattamento dell'item al modello. Valori inferiori a 0.7 suggeriscono che l'item è troppo prevedibile o ridondante, mentre valori superiori a 1.3 indicano la presenza di risposte inaspettate. Per quanto riguarda gli z-score, valori con modulo inferiore a 2 sono considerati accettabili, mentre valori superiori potrebbero indicare problemi di adattamento.
+
+```{r}
+itemfit(mirt_3pl, "infit", method = "ML") # infit and outfit stats
+```
+
+Dall'analisi dei risultati emerge che la maggior parte degli item mostra un buon adattamento al modello. In particolare, l'item I1 presenta valori ottimali sia per outfit (1.005) che per infit (0.983), con z-score molto contenuti (0.084 e -0.273 rispettivamente). Anche gli item I3, I6, I14, I18 e I21 mostrano valori di adattamento soddisfacenti, rientrando negli intervalli di accettabilità sia per le statistiche di fit che per gli z-score.
+
+Tuttavia, alcuni item presentano aspetti critici che meritano attenzione. L'item I11 mostra un outfit elevato (1.462) con uno z-score significativo (2.383), suggerendo la presenza di risposte anomale da parte di soggetti con livelli di abilità distanti dalla difficoltà dell'item. L'item I17, pur avendo valori di fit accettabili (outfit = 0.784, infit = 0.807), presenta uno z-score problematico per l'infit (-2.709), indicando possibili discrepanze significative per i rispondenti con abilità vicine alla difficoltà dell'item.
+
+Un caso particolare è rappresentato dall'item I19, che mostra un outfit inferiore alla soglia minima (0.590) e uno z-score dell'infit significativo (-2.165). Questi valori potrebbero indicare che l'item è troppo prevedibile o eccessivamente facile rispetto al livello atteso dal modello.
+
+Nel complesso, sebbene la maggior parte degli item mostri un adattamento soddisfacente, potrebbe essere opportuno rivedere gli item I11, I17 e I19 per migliorare la qualità complessiva dello strumento di misura.
+
+:::
+
+## Invarianza di Gruppo nella Item Response Theory
+
+L'invarianza di gruppo dei parametri degli item rappresenta una delle caratteristiche più importanti della IRT. Questo principio afferma che le proprietà misurate di un item - come la sua difficoltà, discriminazione e probabilità di indovinare la risposta corretta - sono caratteristiche intrinseche dell'item stesso e rimangono stabili indipendentemente dalla popolazione di riferimento.
+
+Per comprendere meglio questo concetto, consideriamo un esempio concreto. Immaginiamo di somministrare lo stesso test a due gruppi distinti di esaminandi:
+
+- il primo gruppo è composto da individui con abilità relativamente bassa, con punteggi che variano tra -3 e -1 sulla scala di abilità (con una media di -2);
+- il secondo gruppo invece include individui con abilità più elevata, con punteggi tra +1 e +3 (media +2).
+
+Quando analizziamo le risposte utilizzando il metodo della massima verosimiglianza, osserviamo un fenomeno notevole: per ogni item, otteniamo gli stessi parametri indipendentemente dal gruppo analizzato. Per esempio, se per un determinato item otteniamo un parametro di discriminazione a = 1.27 e un parametro di difficoltà b = 0.39 analizzando l'intero campione, ritroveremo sostanzialmente gli stessi valori anche analizzando separatamente il gruppo con abilità bassa o quello con abilità alta.
+
+Questo risultato ha implicazioni pratiche molto importanti. Significa che:
+
+1. le caratteristiche dell'item rimangono stabili anche quando il test viene somministrato a popolazioni diverse;
+2. possiamo confrontare in modo valido le prestazioni di gruppi diversi sullo stesso item;
+3. le stime dei parametri dell'item sono robuste e generalizzabili;
+4. la calibrazione degli item può essere effettuata su un campione e poi applicata con fiducia a popolazioni diverse.
+
+L'invarianza di gruppo rappresenta quindi una proprietà fondamentale che distingue i modelli IRT dai modelli classici della teoria dei test, permettendo confronti più equi e interpretazioni più affidabili dei risultati dei test tra diverse popolazioni.
+
+Questa proprietà è particolarmente utile in contesti pratici, come quando si devono confrontare gruppi culturali diversi, classi scolastiche di diverso livello, o quando si vuole verificare se un test funziona allo stesso modo per popolazioni diverse. L'invarianza garantisce che le differenze osservate riflettano reali differenze nelle abilità misurate, piuttosto che artefatti dovuti alle caratteristiche del campione utilizzato per la calibrazione.
+
+::: {#exr-}
+
+Questo esercizio utilizza una simulazione in R per dimostrare visivamente il principio di invarianza dei parametri degli item nella IRT. La funzione `groupinv()` simula le risposte di due gruppi distinti di esaminandi e visualizza le loro curve caratteristiche dell'item (ICC).
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+groupinv <- function(mdl, t1l, t1u, t2l, t2u) {
+    if (missing(t1l)) t1l <- -3
+    if (missing(t1u)) t1u <- -1
+    if (missing(t2l)) t2l <- 1
+    if (missing(t2u)) t2u <- 3
+    theta <- seq(-3, 3, .1875)
+    f <- rep(21, length(theta))
+    wb <- round(runif(1, -3, 3), 2)
+    wa <- round(runif(1, 0.2, 2.8), 2)
+    wc <- round(runif(1, 0, .35), 2)
+    if (mdl == 1 | mdl == 2) {
+        wc <- 0
+    }
+    if (mdl == 1) {
+        wa <- 1
+    }
+    for (g in 1:length(theta)) {
+        P <- wc + (1 - wc) / (1 + exp(-wa * (theta - wb)))
+    }
+    p <- rbinom(length(theta), f, P) / f
+    lowerg1 <- 0
+    for (g in 1:length(theta)) {
+        if (theta[g] <= t1l) {
+            lowerg1 <- lowerg1 + 1
+        }
+    }
+    upperg1 <- 0
+    for (g in 1:length(theta)) {
+        if (theta[g] <= t1u) {
+            upperg1 <- upperg1 + 1
+        }
+    }
+    theta1 <- theta[lowerg1:upperg1]
+    p1 <- p[lowerg1:upperg1]
+    lowerg2 <- 0
+    for (g in 1:length(theta)) {
+        if (theta[g] <= t2l) {
+            lowerg2 <- lowerg2 + 1
+        }
+    }
+    upperg2 <- 0
+    for (g in 1:length(theta)) {
+        if (theta[g] <= t2u) {
+            upperg2 <- upperg2 + 1
+        }
+    }
+    theta2 <- theta[lowerg2:upperg2]
+    p2 <- p[lowerg2:upperg2]
+    theta12 <- c(theta1, theta2)
+    p12 <- c(p1, p2)
+    par(lab = c(7, 5, 3))
+    plot(theta12, p12,
+        xlim = c(-3, 3), ylim = c(0, 1),
+        xlab = "Ability", ylab = "Probability of Correct Response"
+    )
+    if (mdl == 1) {
+        maintext <- paste("Pooled Groups", "\n", "b=", wb)
+    }
+    if (mdl == 2) {
+        maintext <- paste("Pooled Groups", "\n", "a=", wa, "b=", wb)
+    }
+    if (mdl == 3) {
+        maintext <- paste(
+            "Pooled Groups", "\n",
+            "a=", wa, "b=", wb, "c=", wc
+        )
+    }
+    par(new = "T")
+    plot(theta, P,
+        xlim = c(-3, 3), ylim = c(0, 1), type = "l",
+        xlab = "", ylab = "", main = maintext
+    )
+}
+
+set.seed(1)
+groupinv(1, -3, -1, 1, 3)
+```
+
+Nel grafico risultante, osserviamo due segmenti di punti che rappresentano le risposte dei due gruppi. La linea continua mostra la curva ICC stimata utilizzando i dati di entrambi i gruppi. Il fatto che questa curva si adatti bene ai punti di entrambi i gruppi, nonostante la loro diversa distribuzione di abilità, dimostra visivamente il principio di invarianza: i parametri dell'item rimangono stabili indipendentemente dal gruppo considerato.
+
+Questa visualizzazione è particolarmente efficace perché:
+
+1. mostra chiaramente la separazione tra i due gruppi di abilità;
+2. permette di verificare che la stessa curva ICC si adatta bene a entrambi i gruppi;
+3. conferma che le stime dei parametri (riportate nel titolo del grafico) sono valide per l'intero range di abilità.
+
+L'esercizio fornisce quindi una dimostrazione empirica dell'invarianza di gruppo, una delle proprietà fondamentali che rendono la IRT uno strumento robusto per la misurazione psicometrica.
+
+:::
+
+### Confronto con la Teoria Classica dei Test
+
+La differenza più notevole tra IRT e CTT riguarda proprio il modo in cui viene trattata l'invarianza dei parametri degli item rispetto ai gruppi esaminati. Questo aspetto emerge chiaramente analizzando come le due teorie definiscono e misurano la difficoltà degli item.
+
+Nella CTT, la difficoltà di un item è definita come la proporzione di risposte corrette nel campione. Questa definizione rende il parametro di difficoltà intrinsecamente dipendente dalla popolazione esaminata: lo stesso item mostrerà una "difficoltà" diversa se somministrato a gruppi con differenti livelli di abilità. Per esempio, se somministriamo un test a due classi di livello diverso, nella CTT otterremo due stime di difficoltà diverse per lo stesso item, rendendo problematico qualsiasi confronto diretto tra i gruppi.
+
+L'IRT risolve questa limitazione fondamentale introducendo parametri che sono teoricamente invarianti rispetto alla popolazione. Il parametro di difficoltà ($\beta$) in particolare rappresenta una proprietà intrinseca dell'item che rimane costante indipendentemente dal gruppo esaminato. Questo significa che, a differenza della CTT, l'IRT può fornire stime comparabili della difficoltà dell'item anche quando viene somministrato a popolazioni con distribuzioni di abilità molto diverse.
+
+L'invarianza nella IRT si manifesta nella curva caratteristica dell'item (ICC): la relazione tra abilità e probabilità di risposta corretta mantiene la stessa forma matematica indipendentemente dal gruppo considerato (come abbiamo osservato nell'esempio precedente). Questa proprietà ha importanti implicazioni pratiche:
+
+- possiamo stimare i parametri dell'item utilizzando qualsiasi sottogruppo della popolazione e ottenere risultati coerenti;
+- è possibile confrontare direttamente le prestazioni di gruppi diversi sullo stesso item;
+- la calibrazione degli item può essere effettuata su un campione e poi applicata con fiducia ad altri gruppi.
+
+Tuttavia, è importante notare che mentre nella CTT la dipendenza dalla popolazione è una limitazione intrinseca del modello, nell'IRT l'invarianza è una proprietà teorica che nella pratica può essere influenzata da vari fattori. Le stime empiriche dei parametri possono mostrare alcune variazioni dovute all'errore campionario, e l'invarianza è garantita solo quando l'item misura effettivamente lo stesso costrutto in tutti i gruppi considerati.
+
+Questa differenza fondamentale tra CTT e IRT nell'approccio all'invarianza di gruppo rende l'IRT particolarmente adatta per applicazioni che richiedono confronti affidabili tra popolazioni diverse, come nel testing adattivo, negli studi longitudinali e nelle comparazioni tra gruppi culturali diversi.
+
+## Riflessioni Conclusive 
+
+In questo capitolo, abbiamo esplorato la progressione dei modelli IRT, partendo dal modello di Rasch fino al più flessibile modello 3PL. Ogni modello offre un equilibrio unico tra semplicità e adattabilità, consentendo di rispondere a esigenze diverse nell’ambito della misurazione psicometrica. 
+
+- Il **modello di Rasch**, con i suoi vincoli rigorosi, si distingue per la sua capacità di fornire misurazioni oggettive e stabili, risultando particolarmente utile nella costruzione di strumenti di misurazione.
+- Il **modello 1PL** mantiene la semplicità del modello di Rasch ma introduce una maggiore flessibilità consentendo di variare il parametro di discriminazione a livello teorico.
+- Il **modello 2PL** aggiunge un ulteriore livello di complessità, permettendo a ogni item di avere una discriminazione specifica, migliorando l’adattamento ai dati reali.
+- Il **modello 3PL** completa questa progressione introducendo il parametro di guessing, necessario per tenere conto delle risposte corrette casuali, tipiche nei test a scelta multipla.
+
+Questa evoluzione riflette l’importanza di adattare il modello alle caratteristiche dei dati e alle finalità dell’analisi. Abbiamo anche sottolineato l'importanza dell’**invarianza di gruppo**, una proprietà chiave che consente confronti equi tra popolazioni diverse, distinguendo l’IRT dalla Teoria Classica dei Test (CTT).
+
+In definitiva, la scelta del modello dipende dall’obiettivo specifico dello studio e dalla complessità dei dati osservati. Il modello di Rasch offre rigore e semplicità, mentre i modelli 2PL e 3PL offrono flessibilità e precisione. Questa progressione dimostra la versatilità della IRT come framework per la misurazione psicometrica, supportando applicazioni che spaziano dalla ricerca accademica allo sviluppo di test standardizzati.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+

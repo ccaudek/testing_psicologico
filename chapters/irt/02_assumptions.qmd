@@ -1,0 +1,247 @@
+# Assunzioni e Proprietà del Modello di Rasch {#sec-irt-assumptions}
+
+
+::: callout-important
+## In questo capitolo apprenderai come:
+
+- Identificare le proprietà fondamentali del modello di Rasch e il loro ruolo nella misurazione psicometrica.  
+- Comprendere il concetto di *statistica sufficiente* e il suo utilizzo per stimare abilità e difficoltà nel modello di Rasch.  
+- Esaminare le assunzioni chiave del modello di Rasch, tra cui unidimensionalità, monotonicità e indipendenza locale, e il loro impatto sulla validità del modello.  
+- Analizzare il livello di misurazione dei punteggi ottenuti con il modello di Rasch e il significato della scala di intervallo.  
+- Approfondire il principio di *oggettività specifica* e il suo ruolo nel garantire confronti equi tra individui e item.  
+- Riconoscere le limitazioni del modello e le situazioni in cui potrebbe essere necessario ricorrere a estensioni multidimensionali o modelli alternativi.  
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo 8, *Item Response Theory*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
+
+
+## Introduzione
+
+Questo capitolo esamina le proprietà distintive del modello di Rasch, che lo rendono uno strumento fondamentale nella misurazione psicometrica. Tra queste proprietà, l'**oggettività specifica** consente di confrontare abilità individuali e difficoltà degli item in modo indipendente dal campione e dalla selezione degli item, garantendo misurazioni stabili e affidabili. Inoltre, il modello sfrutta il concetto di **statistiche sufficienti**, che permettono di stimare abilità e difficoltà utilizzando informazioni aggregate, riducendo la necessità di analizzare ogni singola risposta. Un altro aspetto cruciale è la rappresentazione dei punteggi su una **scala di intervallo**, che consente confronti significativi tra le differenze di abilità e difficoltà, pur richiedendo convenzioni per definire il punto zero e l’unità di misura.
+
+In questo capitolo analizzeremo come le tre assunzioni fondamentali del modello di Rasch — **unidimensionalità**, **monotonicità** e **indipendenza locale** — diano origine alle sue proprietà distintive. Approfondiremo l’applicazione del modello nella progettazione di test psicometrici equi e accurati, evidenziandone i punti di forza e discutendo le situazioni in cui le sue limitazioni rendono necessario il ricorso a estensioni multidimensionali o modelli alternativi.
+
+## Statistiche Sufficienti
+
+Iniziamo a chiarire il concetto di "statistica sufficiente". Una **statistica** è una funzione dei dati osservati, utilizzata per riassumere caratteristiche rilevanti di un insieme di dati. Ad esempio, la media campionaria è una statistica comunemente calcolata come:
+
+$$ \bar{x} = \frac{1}{P} \sum_{p=1}^{P} x_p, $$
+
+dove $\bar{x}$ rappresenta la media dei valori $x_p$ osservati per $P$ individui. Questa statistica è spesso impiegata per stimare il valore atteso di una popolazione, in quanto fornisce una sintesi delle informazioni relative alla media del campione.
+
+Oltre alla media campionaria, è possibile definire altre statistiche. Ad esempio, si potrebbe calcolare la media di un sottoinsieme di valori del campione, come:
+
+$$ x^* = \frac{1}{3} (x_1 + x_3 + x_5). $$
+
+Sebbene $x^*$ sia un valido stimatore, risulta generalmente meno efficace di $\bar{x}$ perché utilizza solo una parte del campione (escludendo, ad esempio, $x_2, x_4$, ecc.), riducendo la quantità di informazioni sfruttate.
+
+Il concetto di **statistica sufficiente** si applica quando una statistica, come $\bar{x}$, contiene tutte le informazioni necessarie per stimare il parametro di interesse (ad esempio, la media della popolazione) che sono presenti nei dati campionari. In altre parole, una statistica sufficiente cattura completamente l'informazione sui parametri senza richiedere ulteriori dettagli dai dati individuali.
+
+Le statistiche sufficienti sono particolarmente utili nelle analisi inferenziali perché, una volta calcolate, rendono superflua la conoscenza dei dati grezzi ai fini della stima del parametro.
+
+### Applicazioni nel Modello di Rasch
+
+Il modello di Rasch permette di identificare **statistiche sufficienti** per i principali parametri:
+
+1. **Statistica sufficiente per $\theta_p$ (abilità della persona)**:  
+   Per il parametro di abilità $\theta_p$ di una persona $p$, la statistica sufficiente è il punteggio totale $r_p$, calcolato sommando tutte le risposte corrette fornite dalla persona ai diversi item. Questo punteggio sintetizza l'informazione fondamentale sull'abilità di $p$, senza richiedere un'analisi dettagliata delle singole risposte.
+
+2. **Statistica sufficiente per $\beta_i$ (difficoltà dell'item)**:  
+   Per il parametro di difficoltà di un item $\beta_i$, la statistica sufficiente è il numero totale di risposte corrette $c_i$ fornite da tutte le persone per quell’item. Questo valore concentra l'informazione necessaria per descrivere la difficoltà dell'item.
+
+La probabilità che una persona $p$ risponda correttamente all’item $i$ è definita da una funzione logistica che dipende dalla differenza tra abilità e difficoltà:
+
+$$ 
+P(Y_{pi} = 1 \mid \theta_p, \beta_i) = \frac{e^{\theta_p - \beta_i}}{1 + e^{\theta_p - \beta_i}}.
+$$
+
+In questo schema:
+
+- Il punteggio totale $r_p$ e il numero totale di risposte corrette $c_i$ sono statistiche sufficienti, poiché contengono tutte le informazioni utili per stimare i parametri $\theta_p$ e $\beta_i$.  
+- La **indipendenza condizionale** delle risposte, dato $\theta_p$ o $\beta_i$, permette di sintetizzare i dati attraverso i punteggi totali senza perdere informazioni rilevanti per l'inferenza.
+
+Questa caratteristica del modello di Rasch facilita l'analisi statistica, poiché consente di stimare i parametri senza dover considerare l'intera matrice delle risposte individuali. Inoltre, l'uso di statistiche sufficienti migliora l'efficienza computazionale e rende i risultati più facilmente interpretabili.
+
+## Assunzioni del Modello di Rasch
+
+Il modello di Rasch si basa su tre fondamentali assunzioni che ne garantiscono la validità e l'applicabilità: unidimensionalità, monotonicità e indipendenza locale.
+
+### Unidimensionalità nel Modello di Rasch
+
+L’assunzione di **unidimensionalità** è centrale nel modello di Rasch e implica che le risposte agli item di un test siano determinate prevalentemente da un unico tratto latente o dimensione. Questo tratto, definito come la dimensione target del test, ordina le persone secondo le loro abilità, escludendo l’influenza significativa di altre caratteristiche. In altre parole, un test unidimensionale misura esclusivamente una specifica abilità o attributo.
+
+Ad esempio, un test di matematica ideale dovrebbe valutare unicamente la competenza matematica. Al contrario, test complessi come il SAT, che valutano sia abilità matematiche che verbali, non possono essere considerati unidimensionali perché ogni sezione misura una dimensione distinta.
+
+#### Unidimensionalità e Funzionamento Ideale
+
+Un test unidimensionale ben progettato assegna a ciascun partecipante un unico valore di abilità, riflettendo esclusivamente la competenza nella dimensione target. Tuttavia, se più dimensioni latenti influenzano le risposte, si possono verificare problematiche come il **Funzionamento Differenziale degli Item (DIF)**. Il DIF emerge quando la difficoltà di specifici item varia tra gruppi di candidati non per differenze nella dimensione target, ma per l’influenza di dimensioni secondarie.
+
+Ad esempio, in un test di matematica, la competenza linguistica potrebbe rappresentare una dimensione secondaria che influenza le risposte. Se un gruppo di candidati ha abilità linguistiche significativamente diverse rispetto a un altro, alcuni item potrebbero risultare più facili o difficili in modo sistematico, distorcendo così i risultati del test. Questo evidenzia un problema di parzialità, poiché il test non misura equamente la competenza matematica per tutti i partecipanti.
+
+#### Identificazione del DIF e Multidimensionalità
+
+Per rilevare il DIF e verificare l’unidimensionalità, si utilizzano test statistici specifici che esplorano la possibile influenza di dimensioni non previste dal modello. La presenza di DIF o di influenze multidimensionali può compromettere la validità del test, portando a valutazioni ingiuste o inaffidabili.
+
+Molti costrutti psicologici, tuttavia, sono intrinsecamente multidimensionali. Ad esempio, il modello dell’intelligenza proposto da Carroll (1993) descrive una struttura gerarchica che comprende dimensioni come l’intelligenza fluida e cristallizzata, dimostrando la complessità di tali costrutti.
+
+#### Estensioni del Modello di Rasch per Multidimensionalità
+
+Il modello di Rasch classico si basa sull’unidimensionalità, limitandosi alla misurazione di un’unica abilità. Tuttavia, per affrontare la complessità dei costrutti psicologici, sono state sviluppate estensioni multidimensionali del modello di Rasch. Queste versioni permettono di valutare simultaneamente più dimensioni, offrendo una rappresentazione più accurata e completa delle abilità o caratteristiche misurate.
+
+Le estensioni multidimensionali consentono di:
+
+- **Isolare dimensioni distinte**: Identificare e misurare separatamente tratti diversi influenti sulle risposte.
+- **Gestire costrutti complessi**: Analizzare costrutti psicologici multidimensionali come l’intelligenza o la personalità.
+- **Migliorare l’equità del test**: Ridurre la parzialità e il DIF, garantendo una valutazione più giusta per tutti i partecipanti.
+
+In conclusione, l’unidimensionalità è un pilastro fondamentale per il modello di Rasch classico, cruciale per garantire la validità e l’affidabilità dei test psicometrici. Tuttavia, la realtà dei costrutti psicologici richiede spesso un approccio più flessibile che consideri la loro natura multidimensionale. Le estensioni multidimensionali del modello di Rasch rappresentano una risposta essenziale a questa sfida, migliorando la precisione delle misurazioni e l’equità delle valutazioni in contesti complessi.
+
+### Monotonicità
+
+L'assunzione di monotonicità stabilisce che con l'incremento del tratto latente ($\theta$), aumenta anche la probabilità di una risposta corretta. Ciò si allinea con l'intuizione generale nella misurazione: individui con un livello più elevato del tratto latente tendono a ottenere punteggi migliori nei test.
+
+### Indipendenza Locale nel Modello di Rasch
+
+L'indipendenza locale è un'assunzione fondamentale nel modello di Rasch, secondo cui, una volta controllato il tratto latente (ad esempio, l'abilità di una persona), le risposte a due item distinti devono essere indipendenti. In altre parole, eventuali correlazioni tra risposte a diversi item sono interamente attribuibili al tratto latente, senza che una risposta influenzi o sia influenzata da un'altra.
+
+#### Il Concetto di Indipendenza Stocastica
+
+In statistica, l'indipendenza stocastica implica che la probabilità di un evento non dipenda dall'esito di un altro. Questo principio semplifica il calcolo delle probabilità congiunte. Ad esempio, nel caso di due lanci di una moneta equilibrata, la probabilità di ottenere "testa" in entrambi i lanci si calcola come il prodotto delle probabilità individuali:
+
+$$ 
+\text{Pr}(\text{testa, testa}) = \text{Pr}(\text{testa}) \times \text{Pr}(\text{testa}) = 0.5 \times 0.5 = 0.25.
+$$
+
+Nel modello di Rasch, questo principio si traduce nell'indipendenza condizionale delle risposte agli item, dato il parametro di abilità $\theta_p$.
+
+#### Applicazione dell'Indipendenza Locale nel Modello di Rasch
+
+L'indipendenza locale consente di calcolare la probabilità congiunta delle risposte a un test come il prodotto delle probabilità individuali. Per due item $i$ e $j$, la probabilità congiunta delle risposte è data da:
+
+$$ 
+\text{Pr}(U_{pi} = u_{pi}, U_{pj} = u_{pj} \mid \theta_p, \beta_i, \beta_j) = \text{Pr}(U_{pi} = u_{pi} \mid \theta_p, \beta_i) \times \text{Pr}(U_{pj} = u_{pj} \mid \theta_p, \beta_j). 
+$$
+
+Generalizzando a un test con $I$ item, possiamo rappresentare la probabilità congiunta come:
+
+$$ 
+\text{Pr}(U_{p\cdot} = u_{p\cdot} \mid \theta_p, \beta) = \prod_{i=1}^{I} \text{Pr}(U_{pi} = u_{pi} \mid \theta_p, \beta_i), 
+$$
+
+dove $\beta = (\beta_1, \dots, \beta_I)$ rappresenta il vettore dei parametri di difficoltà degli item e $U_{p\cdot}$ è il vettore delle risposte della persona $p$. Questa formulazione semplifica notevolmente i calcoli e l'analisi statistica.
+
+
+#### Limitazioni dell'Indipendenza Locale
+
+Nonostante la sua utilità, l'assunzione di indipendenza locale può essere violata in alcune situazioni, come:
+
+- **Test di matematica**: La soluzione di un problema può dipendere dalla comprensione di item precedenti.
+- **Testlet**: Gruppi di item che condividono un tema comune possono introdurre correlazioni tra le risposte.
+
+In questi casi, le risposte non sono condizionatamente indipendenti, e l'applicazione del modello di Rasch può risultare inappropriata. Tali situazioni richiedono modelli alternativi, come quelli che incorporano dipendenze strutturali tra item.
+
+In conclusione, l'indipendenza locale è una proprietà chiave che consente al modello di Rasch di calcolare in modo efficiente le probabilità congiunte delle risposte e di eseguire inferenze robuste. Tuttavia, è fondamentale valutare attentamente il contesto del test per verificare se questa assunzione sia valida. Nei casi in cui l'indipendenza locale non è rispettata, l'adozione di modelli più complessi può essere necessaria per garantire una valutazione accurata e priva di bias. 
+
+## Scala di Misurazione nel Modello di Rasch
+
+Esaminiamo ora livello di misurazione dei punteggi ottenuti mediante il modello di Rash. Un aspetto cruciale è che i parametri del modello, come l’abilità delle persone ($\theta_p$) e la difficoltà degli item ($\beta_i$), sono rappresentati su una **scala di intervallo**. Questo livello di misurazione consente di confrontare differenze tra abilità e difficoltà, ma non definisce un punto zero assoluto né un'unità di misura intrinseca.
+
+### Misurazione su una Scala di Intervallo
+
+Nel modello di Rasch, i punteggi ottenuti non sono meri numeri ordinali (che stabiliscono solo un ordine), ma rappresentano intervalli misurabili. Questo significa che:
+
+- Le differenze tra abilità o difficoltà hanno un significato costante e interpretabile.
+- Tuttavia, la scala non ha un punto zero assoluto; il valore "zero" è arbitrario e dipende dalla convenzione adottata.
+
+Un’analogia utile è il confronto con le scale di temperatura in gradi Celsius o Fahrenheit: mentre le differenze (ad esempio, 10°C contro 20°C) hanno un significato consistente, lo zero non rappresenta un’assenza di temperatura, ma è definito convenzionalmente.
+
+### Trasformazioni e Ricalibrazione della Scala
+
+Le misure nel modello di Rasch possono essere trasformate senza alterare le probabilità di risposta corrette:
+
+1. **Traslazione**: Le abilità e le difficoltà possono essere traslate sottraendo un valore costante ($b$):
+   $$
+   \theta_p' = \theta_p - b, \quad \beta_i' = \beta_i - b.
+   $$
+   Questa operazione mantiene invariata la funzione logistica che definisce le probabilità di risposta corretta.
+
+2. **Riscalatura**: La scala può essere modificata mediante una moltiplicazione o divisione per un fattore costante ($a$):
+   $$
+   \theta_p'' = \frac{\theta_p}{a}, \quad \beta_i'' = \frac{\beta_i}{a}.
+   $$
+   Anche in questo caso, le probabilità restano invariate se la funzione logistica è adattata al nuovo fattore di scala.
+
+Queste trasformazioni mostrano che la scala è relativa: ciò che conta non è il valore assoluto delle misure, ma le differenze e il rapporto tra i parametri.
+
+### Implicazioni per la Misurazione
+
+Poiché i parametri del modello di Rasch sono su una scala di intervallo, è necessario stabilire convenzioni per definire un punto zero e un'unità di misura. Comunemente, si adottano le seguenti strategie:
+
+- **Fissare un riferimento**: Ad esempio, assegnare la difficoltà di un item a zero.
+- **Normalizzazione**: Imporre che la somma delle difficoltà degli item o delle abilità dei partecipanti sia pari a zero.
+- **Standardizzazione della pendenza**: Impostare la scala della funzione logistica a 1, garantendo una coerenza nelle unità di misura.
+
+Queste scelte non influenzano la validità delle misure, ma permettono di ancorare i parametri a una scala interpretabile.
+
+In conclusione, il modello di Rasch fornisce misurazioni robuste su una scala di intervallo, permettendo analisi precise delle differenze tra abilità e difficoltà. Tuttavia, la mancanza di un punto zero intrinseco e di un’unità di misura assoluta richiede la definizione di convenzioni per la calibratura della scala. Questo aspetto, sebbene tecnico, è cruciale per garantire la coerenza e l’interpretabilità dei risultati ottenuti nei contesti psicometrici. 
+
+## Oggettività Specifica 
+
+L'**oggettività specifica** è uno dei principi cardine del modello di Rasch e garantisce che i confronti tra individui siano equi e indipendenti dagli item specifici utilizzati nel test. Questo concetto assicura che le differenze tra le abilità delle persone si riflettano in modo coerente, senza essere influenzate da caratteristiche particolari degli item.
+
+L’oggettività specifica implica che:
+
+1. **Confronti tra individui**: Se una persona ha una probabilità maggiore di rispondere correttamente rispetto a un’altra, questa superiorità si manifesta uniformemente su tutti gli item.
+2. **Confronti tra item**: Se un item è più facile per una persona, sarà più facile per chiunque altro, indipendentemente dalle abilità specifiche.
+
+In altre parole, il modello di Rasch garantisce che le probabilità di risposta corretta dipendano solo dalla differenza tra l’abilità della persona ($\theta_p$) e la difficoltà dell’item ($\beta_i$), preservando la coerenza nei confronti.
+
+### Verifica dell'Oggettività Specifica
+
+Un indicatore chiave dell'oggettività specifica è rappresentato dalle **Curve di Caratteristica dell'Item (ICC)**. Nel modello di Rasch, le ICC per diversi item non si incrociano: ciò indica che la relazione tra abilità e probabilità di risposta corretta rimane consistente per tutti gli item, rispettando l’oggettività specifica.
+
+L’oggettività specifica può essere descritta algebricamente attraverso i rapporti di probabilità. Per due persone $p$ e $q$ e un item $i$, sia $P_{pi}$ la probabilità che la persona $p$ risponda correttamente all’item $i$. L’oggettività specifica richiede che il rapporto di probabilità tra le due persone sia costante per tutti gli item:
+
+$$
+\frac{P_{pi}}{P_{qi}} = \frac{P_{pj}}{P_{qj}}, \quad \forall i, j.
+$$
+
+Questo implica che:
+
+$$
+P_{pi} \cdot P_{qj} = P_{pj} \cdot P_{qi}.
+$$
+
+Tale proprietà garantisce che le differenze tra individui siano indipendenti dagli specifici item somministrati.
+
+Consideriamo il seguente esempio pratico. Supponiamo che Marco e Cora affrontino un test composto da venti item. Se le probabilità di rispondere correttamente al primo item sono 20% per Marco e 80% per Cora, il rapporto tra le loro probabilità (4:1) deve rimanere lo stesso per tutti gli altri item del test. Questo equilibrio assicura che il confronto tra Marco e Cora non dipenda dagli item specifici ma esclusivamente dalle loro abilità relative.
+
+### Limitazioni e Considerazioni
+
+Sebbene l’oggettività specifica sia una proprietà potente, essa è soggetta a limitazioni:
+
+- **Dipendenza dal contesto**: La trasposizione di un test tra gruppi con caratteristiche culturali o professionali diverse (es. banchieri e ingegneri) potrebbe invalidare l’oggettività specifica se gli item vengono interpretati in modi differenti.
+- **Necessità di verifica empirica**: L’oggettività specifica deve essere testata con i dati per confermare che le proprietà del modello siano rispettate nel contesto specifico.
+
+Rasch stesso sottolineava l'importanza di validare questa proprietà ogni volta che si raccolgono nuovi dati.
+
+In conclusione, l'oggettività specifica rappresenta il cuore del modello di Rasch, garantendo confronti equi e coerenti tra individui e item. Tuttavia, non è una proprietà intrinseca e universale, ma un'ipotesi di lavoro che deve essere verificata empiricamente in ogni applicazione. Questo principio, se rispettato, assicura che i test psicometrici siano strumenti affidabili per misurare abilità e caratteristiche, indipendentemente dal contesto o dagli item utilizzati.
+
+## Riflessioni Conclusive
+
+Il modello di Rasch rappresenta un approccio rigoroso alla misurazione psicometrica, basato su tre assunzioni fondamentali: **unidimensionalità**, **monotonicità** e **indipendenza locale**. Queste assunzioni costituiscono il fondamento del modello, garantendone validità e applicabilità. Tuttavia, la loro violazione può richiedere l'adozione di metodologie più avanzate o modelli alternativi per affrontare la complessità dei dati. In tali situazioni, un'analisi più approfondita dei dati o l'impiego di strumenti statistici sofisticati diventa indispensabile.
+
+Uno degli aspetti distintivi del modello di Rasch è il principio di **oggettività specifica**, che consente di stimare la difficoltà degli item in modo indipendente dalle abilità dei partecipanti. Questo è reso possibile dall’uso della **stima di massima verosimiglianza condizionale**, che isola la difficoltà degli item basandosi unicamente sulle risposte specifiche a ciascun item, senza essere influenzata dal livello complessivo di abilità del campione. 
+
+L'oggettività specifica assicura che i parametri di difficoltà degli item siano stabili e affidabili, indipendentemente dalla composizione del campione. Questo è analogo al concetto di **invarianza** in regressione lineare, dove i parametri della retta di regressione, come pendenza e intercetta, rimangono invariati rispetto al campione utilizzato per l’analisi. Nel modello di Rasch, l'invarianza dei parametri garantisce che la difficoltà degli item resti costante, anche quando i partecipanti hanno livelli di abilità diversi.
+
+Un aspetto particolarmente vantaggioso del modello di Rasch è che l'oggettività specifica elimina la necessità di utilizzare campioni normati o rappresentativi per calibrare gli item. Qualsiasi gruppo di partecipanti, purché presenti una sufficiente varietà nelle risposte, può essere impiegato per stimare i parametri di difficoltà. Questo contrasta con i metodi tradizionali, che spesso richiedono campioni rappresentativi per sviluppare tabelle normative basate su percentuali di risposte corrette.
+
+Il modello di Rasch offre un framework solido e trasparente per la misurazione psicometrica, distinguendosi per la precisione e la generalizzabilità delle sue stime. Tuttavia, il rispetto delle sue assunzioni fondamentali è cruciale per garantire risultati accurati ed equi. Verificare l’unidimensionalità, la monotonicità e l’indipendenza locale è essenziale per evitare bias e preservare l’integrità delle misurazioni.
+
+In conclusione, il modello di Rasch si configura come uno strumento potente per sviluppare e validare strumenti di misura, combinando semplicità teorica con robustezza operativa. La sua capacità di produrre risultati indipendenti dalle caratteristiche del campione lo rende una scelta ideale per molte applicazioni psicometriche, purché le sue assunzioni siano rigorosamente testate e rispettate.
+
