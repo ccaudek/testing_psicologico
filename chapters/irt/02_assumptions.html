@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Corrado Caudek">
+
+<title>69&nbsp; Assunzioni e Proprietà del Modello di Rasch – Testing Psicologico</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../chapters/irt/04_estimation.html" rel="next">
+<link href="../../chapters/irt/01_rasch_model.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2363a7b1713459e3bb7e05f1febbb7c9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-6160eebdccf729e88acfdd1d92726e70.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-62e4b2809dfb41b5160f340e7c383cce.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-d5b1b7f210f9f8712579e048ed54cd39.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+<script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "clean"
+}
+</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_rasch_model.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/02_assumptions.html"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Attiva/disattiva la barra laterale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Ricerca" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Testing Psicologico</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ccaudek/testing_psicologico/" title="Eseguire il codice" class="quarto-navigation-tool px-1" aria-label="Eseguire il codice"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Attiva/disattiva la modalità oscura"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Ricerca"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Benvenuti</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../prefazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prefazione</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Calendario</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../cal_testing_psic_2025.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Calendario Didattico e Programma del Corso</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Punteggi e scale</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/01_scores_scales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Punteggi e scale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E1_likert.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E2_optimal_scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E3_thurstone.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/02_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sviluppo dello strumento</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/03_equating.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Equating nei Test Psicologici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/measurement/E4_norming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">CTT</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/01_ctt_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Fondamenti teorici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/02_ctt_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">L’affidabilità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/03_ctt_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Metodi di stima dell’affidabilità</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/04_err_std_mis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">L’errore standard della misurazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/05_err_std_stima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">La stima del punteggio vero</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/ctt/06_ctt_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Applicazioni della CTT</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Giudici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/01_multilevel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Modelli multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/02_interrater_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">L’affidabilità tra giudici</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/raters/E1_irr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Validità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/01_validity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">La validità del test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/validity/02_other_variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Relazioni test-criterio</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Generalizzabilità</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/gtheory/01_gtheory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Teoria della generalizzabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Items</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/01_item_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Lo sviluppo degli item</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/items/02_item_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Analisi degli item</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Analisi dei percorsi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/01_path_analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Analisi dei percorsi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/path_analysis/02_clement_2022.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Riparazione affettiva post-infedeltà</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Networks</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/networks/01_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Network psicologici</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">PCA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/pca/01_linear_algebra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Elementi di algebra lineare</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/pca/02_pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Analisi delle componenti principali</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false">
+ <span class="menu-text">FA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/01_intro_fa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Introduzione all’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/02_analisi_fattoriale_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Il modello unifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/03_analisi_fattoriale_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Il modello statistico dell’analisi fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/04_analisi_fattoriale_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Il modello multifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/05_factor_scores.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">I punteggi fattoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/06_constraints_on_parms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Attendibilità e modello fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/fa/07_total_score.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Punteggio totale e modello fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Costruzione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/01_val_matrici.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Valutazione della matrice di correlazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/02_estrazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">L’estrazione dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/03_numero_fattori.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Il numero dei fattori</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/04_rotazione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">La rotazione fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/extraction/05_val_soluzione.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Valutare e rifinire la soluzione fattoriale</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">CFA</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/01_cfa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Analisti Fattoriale Confermativa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/02_meanstructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">La struttura delle medie</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/03_cat_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Dati non gaussiani e categoriali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/04_mmm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">CFA per matrici multi-tratto multi-metodo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/05_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Modello bifattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/06_efa_lavaan.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Exploratory Structural Equation Modeling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/07_fa_in_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Strategia Integrata per un’Analisi Fattoriale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/cfa/E_02_bifactor.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false">
+ <span class="menu-text">SEM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/01_sem_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Introduzione ai Modelli SEM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/02_data_preparation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Preparazione dei Dati</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/03_gof.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Test del Modello e Indicizzazione</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/04_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/05_cfa_mod_comp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">CFA: confronto tra modelli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/06_refine_solution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">La revisione del modello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/07_group_invariance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Invarianza di misura</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/08_multilevel_sem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Modelli di Equazioni Strutturali Multilivello</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/09_structural_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Modelli di Regressione Strutturale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/10_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Dati mancanti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/11_small_samples.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Modellizzazione SEM in Piccoli Campioni</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/12_temp_reliability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Affidabilità longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/13_esem.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Exploratory structural equation modelling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/14_sem_power.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Dimensione Campionaria e Analisi della Potenza</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/15_prior_pred_mod_check.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Prior Predictive Model Checking</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mokken</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/01_logistic_regr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Modello di Regressione Logistica</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/sem/E_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">✏️ Esercizi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/02_core_issues.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Analisi della Scala di Mokken</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/mokken/03_applications.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Applicazione Pratica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="true">
+ <span class="menu-text">IRT</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="true" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/01_rasch_model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/02_assumptions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/04_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Stima</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/05_1pl_2pl_3pl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Modelli 1PL, 2PL e 3PL</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/irt/06_implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Implementazione</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false">
+ <span class="menu-text">LGM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-17" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/01_lgm_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/02_lgm_prelims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Considerazioni Preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/06_lgm_mixed.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">LGM e modelli misti</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/03_time_effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Dati longitudinali</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/05_intro_panel.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">77</span>&nbsp; <span class="chapter-title">Specificare e Interpretare un Modello Longitudinale</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/07_growth_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">78</span>&nbsp; <span class="chapter-title">Curve di crescita latente</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/08_growth_cont.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">79</span>&nbsp; <span class="chapter-title">Il tempo su una metrica continua</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/09_time_inv_cov.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">80</span>&nbsp; <span class="chapter-title">Covariate indipendenti dal tempo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/10_growth_groups.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">81</span>&nbsp; <span class="chapter-title">Modelli di crescita latenti a gruppi multipli</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/lgm/11_lgm_wais.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">82</span>&nbsp; <span class="chapter-title">Lo Sviluppo dell’Intelligenza</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false">
+ <span class="menu-text">Predizione</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-18" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-18" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/prediction/01_prediction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">83</span>&nbsp; <span class="chapter-title">Predizione</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../99-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bibliografia</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendici</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-19" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-19" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a1_intro_r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linguaggio R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a2_sums.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Simbolo di somma</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/a3_calculus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Per liberarvi dai terrori preliminari</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false">
+ <span class="menu-text">Soluzioni degli esercizi</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-20" role="navigation" aria-expanded="false" aria-label="Attiva/disattiva sezione">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-20" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../chapters/appendix/solutions_probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Probabilità</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Indice</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">69.1</span> Introduzione</a></li>
+  <li><a href="#statistiche-sufficienti" id="toc-statistiche-sufficienti" class="nav-link" data-scroll-target="#statistiche-sufficienti"><span class="header-section-number">69.2</span> Statistiche Sufficienti</a>
+  <ul>
+  <li><a href="#applicazioni-nel-modello-di-rasch" id="toc-applicazioni-nel-modello-di-rasch" class="nav-link" data-scroll-target="#applicazioni-nel-modello-di-rasch"><span class="header-section-number">69.2.1</span> Applicazioni nel Modello di Rasch</a></li>
+  </ul></li>
+  <li><a href="#assunzioni-del-modello-di-rasch" id="toc-assunzioni-del-modello-di-rasch" class="nav-link" data-scroll-target="#assunzioni-del-modello-di-rasch"><span class="header-section-number">69.3</span> Assunzioni del Modello di Rasch</a>
+  <ul>
+  <li><a href="#unidimensionalità-nel-modello-di-rasch" id="toc-unidimensionalità-nel-modello-di-rasch" class="nav-link" data-scroll-target="#unidimensionalità-nel-modello-di-rasch"><span class="header-section-number">69.3.1</span> Unidimensionalità nel Modello di Rasch</a>
+  <ul>
+  <li><a href="#unidimensionalità-e-funzionamento-ideale" id="toc-unidimensionalità-e-funzionamento-ideale" class="nav-link" data-scroll-target="#unidimensionalità-e-funzionamento-ideale"><span class="header-section-number">69.3.1.1</span> Unidimensionalità e Funzionamento Ideale</a></li>
+  <li><a href="#identificazione-del-dif-e-multidimensionalità" id="toc-identificazione-del-dif-e-multidimensionalità" class="nav-link" data-scroll-target="#identificazione-del-dif-e-multidimensionalità"><span class="header-section-number">69.3.1.2</span> Identificazione del DIF e Multidimensionalità</a></li>
+  <li><a href="#estensioni-del-modello-di-rasch-per-multidimensionalità" id="toc-estensioni-del-modello-di-rasch-per-multidimensionalità" class="nav-link" data-scroll-target="#estensioni-del-modello-di-rasch-per-multidimensionalità"><span class="header-section-number">69.3.1.3</span> Estensioni del Modello di Rasch per Multidimensionalità</a></li>
+  </ul></li>
+  <li><a href="#monotonicità" id="toc-monotonicità" class="nav-link" data-scroll-target="#monotonicità"><span class="header-section-number">69.3.2</span> Monotonicità</a></li>
+  <li><a href="#indipendenza-locale-nel-modello-di-rasch" id="toc-indipendenza-locale-nel-modello-di-rasch" class="nav-link" data-scroll-target="#indipendenza-locale-nel-modello-di-rasch"><span class="header-section-number">69.3.3</span> Indipendenza Locale nel Modello di Rasch</a>
+  <ul>
+  <li><a href="#il-concetto-di-indipendenza-stocastica" id="toc-il-concetto-di-indipendenza-stocastica" class="nav-link" data-scroll-target="#il-concetto-di-indipendenza-stocastica"><span class="header-section-number">69.3.3.1</span> Il Concetto di Indipendenza Stocastica</a></li>
+  <li><a href="#applicazione-dellindipendenza-locale-nel-modello-di-rasch" id="toc-applicazione-dellindipendenza-locale-nel-modello-di-rasch" class="nav-link" data-scroll-target="#applicazione-dellindipendenza-locale-nel-modello-di-rasch"><span class="header-section-number">69.3.3.2</span> Applicazione dell’Indipendenza Locale nel Modello di Rasch</a></li>
+  <li><a href="#limitazioni-dellindipendenza-locale" id="toc-limitazioni-dellindipendenza-locale" class="nav-link" data-scroll-target="#limitazioni-dellindipendenza-locale"><span class="header-section-number">69.3.3.3</span> Limitazioni dell’Indipendenza Locale</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#scala-di-misurazione-nel-modello-di-rasch" id="toc-scala-di-misurazione-nel-modello-di-rasch" class="nav-link" data-scroll-target="#scala-di-misurazione-nel-modello-di-rasch"><span class="header-section-number">69.4</span> Scala di Misurazione nel Modello di Rasch</a>
+  <ul>
+  <li><a href="#misurazione-su-una-scala-di-intervallo" id="toc-misurazione-su-una-scala-di-intervallo" class="nav-link" data-scroll-target="#misurazione-su-una-scala-di-intervallo"><span class="header-section-number">69.4.1</span> Misurazione su una Scala di Intervallo</a></li>
+  <li><a href="#trasformazioni-e-ricalibrazione-della-scala" id="toc-trasformazioni-e-ricalibrazione-della-scala" class="nav-link" data-scroll-target="#trasformazioni-e-ricalibrazione-della-scala"><span class="header-section-number">69.4.2</span> Trasformazioni e Ricalibrazione della Scala</a></li>
+  <li><a href="#implicazioni-per-la-misurazione" id="toc-implicazioni-per-la-misurazione" class="nav-link" data-scroll-target="#implicazioni-per-la-misurazione"><span class="header-section-number">69.4.3</span> Implicazioni per la Misurazione</a></li>
+  </ul></li>
+  <li><a href="#oggettività-specifica" id="toc-oggettività-specifica" class="nav-link" data-scroll-target="#oggettività-specifica"><span class="header-section-number">69.5</span> Oggettività Specifica</a>
+  <ul>
+  <li><a href="#verifica-delloggettività-specifica" id="toc-verifica-delloggettività-specifica" class="nav-link" data-scroll-target="#verifica-delloggettività-specifica"><span class="header-section-number">69.5.1</span> Verifica dell’Oggettività Specifica</a></li>
+  <li><a href="#limitazioni-e-considerazioni" id="toc-limitazioni-e-considerazioni" class="nav-link" data-scroll-target="#limitazioni-e-considerazioni"><span class="header-section-number">69.5.2</span> Limitazioni e Considerazioni</a></li>
+  </ul></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">69.6</span> Riflessioni Conclusive</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../chapters/irt/01_rasch_model.html">IRT</a></li><li class="breadcrumb-item"><a href="../../chapters/irt/02_assumptions.html"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-irt-assumptions" class="quarto-section-identifier"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Assunzioni e Proprietà del Modello di Rasch</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+In questo capitolo apprenderai come:
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Identificare le proprietà fondamentali del modello di Rasch e il loro ruolo nella misurazione psicometrica.<br>
+</li>
+<li>Comprendere il concetto di <em>statistica sufficiente</em> e il suo utilizzo per stimare abilità e difficoltà nel modello di Rasch.<br>
+</li>
+<li>Esaminare le assunzioni chiave del modello di Rasch, tra cui unidimensionalità, monotonicità e indipendenza locale, e il loro impatto sulla validità del modello.<br>
+</li>
+<li>Analizzare il livello di misurazione dei punteggi ottenuti con il modello di Rasch e il significato della scala di intervallo.<br>
+</li>
+<li>Approfondire il principio di <em>oggettività specifica</em> e il suo ruolo nel garantire confronti equi tra individui e item.<br>
+</li>
+<li>Riconoscere le limitazioni del modello e le situazioni in cui potrebbe essere necessario ricorrere a estensioni multidimensionali o modelli alternativi.<br>
+</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Prerequisiti
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Leggere il capitolo 8, <em>Item Response Theory</em>, del testo <em>Principles of psychological assessment</em> di <span class="citation" data-cites="petersen2024principles">Petersen (<a href="../../99-references.html#ref-petersen2024principles" role="doc-biblioref">2024</a>)</span>.</li>
+</ul>
+</div>
+</div>
+<section id="introduzione" class="level2" data-number="69.1">
+<h2 data-number="69.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">69.1</span> Introduzione</h2>
+<p>Questo capitolo esamina le proprietà distintive del modello di Rasch, che lo rendono uno strumento fondamentale nella misurazione psicometrica. Tra queste proprietà, l’<strong>oggettività specifica</strong> consente di confrontare abilità individuali e difficoltà degli item in modo indipendente dal campione e dalla selezione degli item, garantendo misurazioni stabili e affidabili. Inoltre, il modello sfrutta il concetto di <strong>statistiche sufficienti</strong>, che permettono di stimare abilità e difficoltà utilizzando informazioni aggregate, riducendo la necessità di analizzare ogni singola risposta. Un altro aspetto cruciale è la rappresentazione dei punteggi su una <strong>scala di intervallo</strong>, che consente confronti significativi tra le differenze di abilità e difficoltà, pur richiedendo convenzioni per definire il punto zero e l’unità di misura.</p>
+<p>In questo capitolo analizzeremo come le tre assunzioni fondamentali del modello di Rasch — <strong>unidimensionalità</strong>, <strong>monotonicità</strong> e <strong>indipendenza locale</strong> — diano origine alle sue proprietà distintive. Approfondiremo l’applicazione del modello nella progettazione di test psicometrici equi e accurati, evidenziandone i punti di forza e discutendo le situazioni in cui le sue limitazioni rendono necessario il ricorso a estensioni multidimensionali o modelli alternativi.</p>
+</section>
+<section id="statistiche-sufficienti" class="level2" data-number="69.2">
+<h2 data-number="69.2" class="anchored" data-anchor-id="statistiche-sufficienti"><span class="header-section-number">69.2</span> Statistiche Sufficienti</h2>
+<p>Iniziamo a chiarire il concetto di “statistica sufficiente”. Una <strong>statistica</strong> è una funzione dei dati osservati, utilizzata per riassumere caratteristiche rilevanti di un insieme di dati. Ad esempio, la media campionaria è una statistica comunemente calcolata come:</p>
+<p><span class="math display">\[ \bar{x} = \frac{1}{P} \sum_{p=1}^{P} x_p, \]</span></p>
+<p>dove <span class="math inline">\(\bar{x}\)</span> rappresenta la media dei valori <span class="math inline">\(x_p\)</span> osservati per <span class="math inline">\(P\)</span> individui. Questa statistica è spesso impiegata per stimare il valore atteso di una popolazione, in quanto fornisce una sintesi delle informazioni relative alla media del campione.</p>
+<p>Oltre alla media campionaria, è possibile definire altre statistiche. Ad esempio, si potrebbe calcolare la media di un sottoinsieme di valori del campione, come:</p>
+<p><span class="math display">\[ x^* = \frac{1}{3} (x_1 + x_3 + x_5). \]</span></p>
+<p>Sebbene <span class="math inline">\(x^*\)</span> sia un valido stimatore, risulta generalmente meno efficace di <span class="math inline">\(\bar{x}\)</span> perché utilizza solo una parte del campione (escludendo, ad esempio, <span class="math inline">\(x_2, x_4\)</span>, ecc.), riducendo la quantità di informazioni sfruttate.</p>
+<p>Il concetto di <strong>statistica sufficiente</strong> si applica quando una statistica, come <span class="math inline">\(\bar{x}\)</span>, contiene tutte le informazioni necessarie per stimare il parametro di interesse (ad esempio, la media della popolazione) che sono presenti nei dati campionari. In altre parole, una statistica sufficiente cattura completamente l’informazione sui parametri senza richiedere ulteriori dettagli dai dati individuali.</p>
+<p>Le statistiche sufficienti sono particolarmente utili nelle analisi inferenziali perché, una volta calcolate, rendono superflua la conoscenza dei dati grezzi ai fini della stima del parametro.</p>
+<section id="applicazioni-nel-modello-di-rasch" class="level3" data-number="69.2.1">
+<h3 data-number="69.2.1" class="anchored" data-anchor-id="applicazioni-nel-modello-di-rasch"><span class="header-section-number">69.2.1</span> Applicazioni nel Modello di Rasch</h3>
+<p>Il modello di Rasch permette di identificare <strong>statistiche sufficienti</strong> per i principali parametri:</p>
+<ol type="1">
+<li><p><strong>Statistica sufficiente per <span class="math inline">\(\theta_p\)</span> (abilità della persona)</strong>:<br>
+Per il parametro di abilità <span class="math inline">\(\theta_p\)</span> di una persona <span class="math inline">\(p\)</span>, la statistica sufficiente è il punteggio totale <span class="math inline">\(r_p\)</span>, calcolato sommando tutte le risposte corrette fornite dalla persona ai diversi item. Questo punteggio sintetizza l’informazione fondamentale sull’abilità di <span class="math inline">\(p\)</span>, senza richiedere un’analisi dettagliata delle singole risposte.</p></li>
+<li><p><strong>Statistica sufficiente per <span class="math inline">\(\beta_i\)</span> (difficoltà dell’item)</strong>:<br>
+Per il parametro di difficoltà di un item <span class="math inline">\(\beta_i\)</span>, la statistica sufficiente è il numero totale di risposte corrette <span class="math inline">\(c_i\)</span> fornite da tutte le persone per quell’item. Questo valore concentra l’informazione necessaria per descrivere la difficoltà dell’item.</p></li>
+</ol>
+<p>La probabilità che una persona <span class="math inline">\(p\)</span> risponda correttamente all’item <span class="math inline">\(i\)</span> è definita da una funzione logistica che dipende dalla differenza tra abilità e difficoltà:</p>
+<p><span class="math display">\[
+P(Y_{pi} = 1 \mid \theta_p, \beta_i) = \frac{e^{\theta_p - \beta_i}}{1 + e^{\theta_p - \beta_i}}.
+\]</span></p>
+<p>In questo schema:</p>
+<ul>
+<li>Il punteggio totale <span class="math inline">\(r_p\)</span> e il numero totale di risposte corrette <span class="math inline">\(c_i\)</span> sono statistiche sufficienti, poiché contengono tutte le informazioni utili per stimare i parametri <span class="math inline">\(\theta_p\)</span> e <span class="math inline">\(\beta_i\)</span>.<br>
+</li>
+<li>La <strong>indipendenza condizionale</strong> delle risposte, dato <span class="math inline">\(\theta_p\)</span> o <span class="math inline">\(\beta_i\)</span>, permette di sintetizzare i dati attraverso i punteggi totali senza perdere informazioni rilevanti per l’inferenza.</li>
+</ul>
+<p>Questa caratteristica del modello di Rasch facilita l’analisi statistica, poiché consente di stimare i parametri senza dover considerare l’intera matrice delle risposte individuali. Inoltre, l’uso di statistiche sufficienti migliora l’efficienza computazionale e rende i risultati più facilmente interpretabili.</p>
+</section>
+</section>
+<section id="assunzioni-del-modello-di-rasch" class="level2" data-number="69.3">
+<h2 data-number="69.3" class="anchored" data-anchor-id="assunzioni-del-modello-di-rasch"><span class="header-section-number">69.3</span> Assunzioni del Modello di Rasch</h2>
+<p>Il modello di Rasch si basa su tre fondamentali assunzioni che ne garantiscono la validità e l’applicabilità: unidimensionalità, monotonicità e indipendenza locale.</p>
+<section id="unidimensionalità-nel-modello-di-rasch" class="level3" data-number="69.3.1">
+<h3 data-number="69.3.1" class="anchored" data-anchor-id="unidimensionalità-nel-modello-di-rasch"><span class="header-section-number">69.3.1</span> Unidimensionalità nel Modello di Rasch</h3>
+<p>L’assunzione di <strong>unidimensionalità</strong> è centrale nel modello di Rasch e implica che le risposte agli item di un test siano determinate prevalentemente da un unico tratto latente o dimensione. Questo tratto, definito come la dimensione target del test, ordina le persone secondo le loro abilità, escludendo l’influenza significativa di altre caratteristiche. In altre parole, un test unidimensionale misura esclusivamente una specifica abilità o attributo.</p>
+<p>Ad esempio, un test di matematica ideale dovrebbe valutare unicamente la competenza matematica. Al contrario, test complessi come il SAT, che valutano sia abilità matematiche che verbali, non possono essere considerati unidimensionali perché ogni sezione misura una dimensione distinta.</p>
+<section id="unidimensionalità-e-funzionamento-ideale" class="level4" data-number="69.3.1.1">
+<h4 data-number="69.3.1.1" class="anchored" data-anchor-id="unidimensionalità-e-funzionamento-ideale"><span class="header-section-number">69.3.1.1</span> Unidimensionalità e Funzionamento Ideale</h4>
+<p>Un test unidimensionale ben progettato assegna a ciascun partecipante un unico valore di abilità, riflettendo esclusivamente la competenza nella dimensione target. Tuttavia, se più dimensioni latenti influenzano le risposte, si possono verificare problematiche come il <strong>Funzionamento Differenziale degli Item (DIF)</strong>. Il DIF emerge quando la difficoltà di specifici item varia tra gruppi di candidati non per differenze nella dimensione target, ma per l’influenza di dimensioni secondarie.</p>
+<p>Ad esempio, in un test di matematica, la competenza linguistica potrebbe rappresentare una dimensione secondaria che influenza le risposte. Se un gruppo di candidati ha abilità linguistiche significativamente diverse rispetto a un altro, alcuni item potrebbero risultare più facili o difficili in modo sistematico, distorcendo così i risultati del test. Questo evidenzia un problema di parzialità, poiché il test non misura equamente la competenza matematica per tutti i partecipanti.</p>
+</section>
+<section id="identificazione-del-dif-e-multidimensionalità" class="level4" data-number="69.3.1.2">
+<h4 data-number="69.3.1.2" class="anchored" data-anchor-id="identificazione-del-dif-e-multidimensionalità"><span class="header-section-number">69.3.1.2</span> Identificazione del DIF e Multidimensionalità</h4>
+<p>Per rilevare il DIF e verificare l’unidimensionalità, si utilizzano test statistici specifici che esplorano la possibile influenza di dimensioni non previste dal modello. La presenza di DIF o di influenze multidimensionali può compromettere la validità del test, portando a valutazioni ingiuste o inaffidabili.</p>
+<p>Molti costrutti psicologici, tuttavia, sono intrinsecamente multidimensionali. Ad esempio, il modello dell’intelligenza proposto da Carroll (1993) descrive una struttura gerarchica che comprende dimensioni come l’intelligenza fluida e cristallizzata, dimostrando la complessità di tali costrutti.</p>
+</section>
+<section id="estensioni-del-modello-di-rasch-per-multidimensionalità" class="level4" data-number="69.3.1.3">
+<h4 data-number="69.3.1.3" class="anchored" data-anchor-id="estensioni-del-modello-di-rasch-per-multidimensionalità"><span class="header-section-number">69.3.1.3</span> Estensioni del Modello di Rasch per Multidimensionalità</h4>
+<p>Il modello di Rasch classico si basa sull’unidimensionalità, limitandosi alla misurazione di un’unica abilità. Tuttavia, per affrontare la complessità dei costrutti psicologici, sono state sviluppate estensioni multidimensionali del modello di Rasch. Queste versioni permettono di valutare simultaneamente più dimensioni, offrendo una rappresentazione più accurata e completa delle abilità o caratteristiche misurate.</p>
+<p>Le estensioni multidimensionali consentono di:</p>
+<ul>
+<li><strong>Isolare dimensioni distinte</strong>: Identificare e misurare separatamente tratti diversi influenti sulle risposte.</li>
+<li><strong>Gestire costrutti complessi</strong>: Analizzare costrutti psicologici multidimensionali come l’intelligenza o la personalità.</li>
+<li><strong>Migliorare l’equità del test</strong>: Ridurre la parzialità e il DIF, garantendo una valutazione più giusta per tutti i partecipanti.</li>
+</ul>
+<p>In conclusione, l’unidimensionalità è un pilastro fondamentale per il modello di Rasch classico, cruciale per garantire la validità e l’affidabilità dei test psicometrici. Tuttavia, la realtà dei costrutti psicologici richiede spesso un approccio più flessibile che consideri la loro natura multidimensionale. Le estensioni multidimensionali del modello di Rasch rappresentano una risposta essenziale a questa sfida, migliorando la precisione delle misurazioni e l’equità delle valutazioni in contesti complessi.</p>
+</section>
+</section>
+<section id="monotonicità" class="level3" data-number="69.3.2">
+<h3 data-number="69.3.2" class="anchored" data-anchor-id="monotonicità"><span class="header-section-number">69.3.2</span> Monotonicità</h3>
+<p>L’assunzione di monotonicità stabilisce che con l’incremento del tratto latente (<span class="math inline">\(\theta\)</span>), aumenta anche la probabilità di una risposta corretta. Ciò si allinea con l’intuizione generale nella misurazione: individui con un livello più elevato del tratto latente tendono a ottenere punteggi migliori nei test.</p>
+</section>
+<section id="indipendenza-locale-nel-modello-di-rasch" class="level3" data-number="69.3.3">
+<h3 data-number="69.3.3" class="anchored" data-anchor-id="indipendenza-locale-nel-modello-di-rasch"><span class="header-section-number">69.3.3</span> Indipendenza Locale nel Modello di Rasch</h3>
+<p>L’indipendenza locale è un’assunzione fondamentale nel modello di Rasch, secondo cui, una volta controllato il tratto latente (ad esempio, l’abilità di una persona), le risposte a due item distinti devono essere indipendenti. In altre parole, eventuali correlazioni tra risposte a diversi item sono interamente attribuibili al tratto latente, senza che una risposta influenzi o sia influenzata da un’altra.</p>
+<section id="il-concetto-di-indipendenza-stocastica" class="level4" data-number="69.3.3.1">
+<h4 data-number="69.3.3.1" class="anchored" data-anchor-id="il-concetto-di-indipendenza-stocastica"><span class="header-section-number">69.3.3.1</span> Il Concetto di Indipendenza Stocastica</h4>
+<p>In statistica, l’indipendenza stocastica implica che la probabilità di un evento non dipenda dall’esito di un altro. Questo principio semplifica il calcolo delle probabilità congiunte. Ad esempio, nel caso di due lanci di una moneta equilibrata, la probabilità di ottenere “testa” in entrambi i lanci si calcola come il prodotto delle probabilità individuali:</p>
+<p><span class="math display">\[
+\text{Pr}(\text{testa, testa}) = \text{Pr}(\text{testa}) \times \text{Pr}(\text{testa}) = 0.5 \times 0.5 = 0.25.
+\]</span></p>
+<p>Nel modello di Rasch, questo principio si traduce nell’indipendenza condizionale delle risposte agli item, dato il parametro di abilità <span class="math inline">\(\theta_p\)</span>.</p>
+</section>
+<section id="applicazione-dellindipendenza-locale-nel-modello-di-rasch" class="level4" data-number="69.3.3.2">
+<h4 data-number="69.3.3.2" class="anchored" data-anchor-id="applicazione-dellindipendenza-locale-nel-modello-di-rasch"><span class="header-section-number">69.3.3.2</span> Applicazione dell’Indipendenza Locale nel Modello di Rasch</h4>
+<p>L’indipendenza locale consente di calcolare la probabilità congiunta delle risposte a un test come il prodotto delle probabilità individuali. Per due item <span class="math inline">\(i\)</span> e <span class="math inline">\(j\)</span>, la probabilità congiunta delle risposte è data da:</p>
+<p><span class="math display">\[
+\text{Pr}(U_{pi} = u_{pi}, U_{pj} = u_{pj} \mid \theta_p, \beta_i, \beta_j) = \text{Pr}(U_{pi} = u_{pi} \mid \theta_p, \beta_i) \times \text{Pr}(U_{pj} = u_{pj} \mid \theta_p, \beta_j).
+\]</span></p>
+<p>Generalizzando a un test con <span class="math inline">\(I\)</span> item, possiamo rappresentare la probabilità congiunta come:</p>
+<p><span class="math display">\[
+\text{Pr}(U_{p\cdot} = u_{p\cdot} \mid \theta_p, \beta) = \prod_{i=1}^{I} \text{Pr}(U_{pi} = u_{pi} \mid \theta_p, \beta_i),
+\]</span></p>
+<p>dove <span class="math inline">\(\beta = (\beta_1, \dots, \beta_I)\)</span> rappresenta il vettore dei parametri di difficoltà degli item e <span class="math inline">\(U_{p\cdot}\)</span> è il vettore delle risposte della persona <span class="math inline">\(p\)</span>. Questa formulazione semplifica notevolmente i calcoli e l’analisi statistica.</p>
+</section>
+<section id="limitazioni-dellindipendenza-locale" class="level4" data-number="69.3.3.3">
+<h4 data-number="69.3.3.3" class="anchored" data-anchor-id="limitazioni-dellindipendenza-locale"><span class="header-section-number">69.3.3.3</span> Limitazioni dell’Indipendenza Locale</h4>
+<p>Nonostante la sua utilità, l’assunzione di indipendenza locale può essere violata in alcune situazioni, come:</p>
+<ul>
+<li><strong>Test di matematica</strong>: La soluzione di un problema può dipendere dalla comprensione di item precedenti.</li>
+<li><strong>Testlet</strong>: Gruppi di item che condividono un tema comune possono introdurre correlazioni tra le risposte.</li>
+</ul>
+<p>In questi casi, le risposte non sono condizionatamente indipendenti, e l’applicazione del modello di Rasch può risultare inappropriata. Tali situazioni richiedono modelli alternativi, come quelli che incorporano dipendenze strutturali tra item.</p>
+<p>In conclusione, l’indipendenza locale è una proprietà chiave che consente al modello di Rasch di calcolare in modo efficiente le probabilità congiunte delle risposte e di eseguire inferenze robuste. Tuttavia, è fondamentale valutare attentamente il contesto del test per verificare se questa assunzione sia valida. Nei casi in cui l’indipendenza locale non è rispettata, l’adozione di modelli più complessi può essere necessaria per garantire una valutazione accurata e priva di bias.</p>
+</section>
+</section>
+</section>
+<section id="scala-di-misurazione-nel-modello-di-rasch" class="level2" data-number="69.4">
+<h2 data-number="69.4" class="anchored" data-anchor-id="scala-di-misurazione-nel-modello-di-rasch"><span class="header-section-number">69.4</span> Scala di Misurazione nel Modello di Rasch</h2>
+<p>Esaminiamo ora livello di misurazione dei punteggi ottenuti mediante il modello di Rash. Un aspetto cruciale è che i parametri del modello, come l’abilità delle persone (<span class="math inline">\(\theta_p\)</span>) e la difficoltà degli item (<span class="math inline">\(\beta_i\)</span>), sono rappresentati su una <strong>scala di intervallo</strong>. Questo livello di misurazione consente di confrontare differenze tra abilità e difficoltà, ma non definisce un punto zero assoluto né un’unità di misura intrinseca.</p>
+<section id="misurazione-su-una-scala-di-intervallo" class="level3" data-number="69.4.1">
+<h3 data-number="69.4.1" class="anchored" data-anchor-id="misurazione-su-una-scala-di-intervallo"><span class="header-section-number">69.4.1</span> Misurazione su una Scala di Intervallo</h3>
+<p>Nel modello di Rasch, i punteggi ottenuti non sono meri numeri ordinali (che stabiliscono solo un ordine), ma rappresentano intervalli misurabili. Questo significa che:</p>
+<ul>
+<li>Le differenze tra abilità o difficoltà hanno un significato costante e interpretabile.</li>
+<li>Tuttavia, la scala non ha un punto zero assoluto; il valore “zero” è arbitrario e dipende dalla convenzione adottata.</li>
+</ul>
+<p>Un’analogia utile è il confronto con le scale di temperatura in gradi Celsius o Fahrenheit: mentre le differenze (ad esempio, 10°C contro 20°C) hanno un significato consistente, lo zero non rappresenta un’assenza di temperatura, ma è definito convenzionalmente.</p>
+</section>
+<section id="trasformazioni-e-ricalibrazione-della-scala" class="level3" data-number="69.4.2">
+<h3 data-number="69.4.2" class="anchored" data-anchor-id="trasformazioni-e-ricalibrazione-della-scala"><span class="header-section-number">69.4.2</span> Trasformazioni e Ricalibrazione della Scala</h3>
+<p>Le misure nel modello di Rasch possono essere trasformate senza alterare le probabilità di risposta corrette:</p>
+<ol type="1">
+<li><p><strong>Traslazione</strong>: Le abilità e le difficoltà possono essere traslate sottraendo un valore costante (<span class="math inline">\(b\)</span>): <span class="math display">\[
+\theta_p' = \theta_p - b, \quad \beta_i' = \beta_i - b.
+\]</span> Questa operazione mantiene invariata la funzione logistica che definisce le probabilità di risposta corretta.</p></li>
+<li><p><strong>Riscalatura</strong>: La scala può essere modificata mediante una moltiplicazione o divisione per un fattore costante (<span class="math inline">\(a\)</span>): <span class="math display">\[
+\theta_p'' = \frac{\theta_p}{a}, \quad \beta_i'' = \frac{\beta_i}{a}.
+\]</span> Anche in questo caso, le probabilità restano invariate se la funzione logistica è adattata al nuovo fattore di scala.</p></li>
+</ol>
+<p>Queste trasformazioni mostrano che la scala è relativa: ciò che conta non è il valore assoluto delle misure, ma le differenze e il rapporto tra i parametri.</p>
+</section>
+<section id="implicazioni-per-la-misurazione" class="level3" data-number="69.4.3">
+<h3 data-number="69.4.3" class="anchored" data-anchor-id="implicazioni-per-la-misurazione"><span class="header-section-number">69.4.3</span> Implicazioni per la Misurazione</h3>
+<p>Poiché i parametri del modello di Rasch sono su una scala di intervallo, è necessario stabilire convenzioni per definire un punto zero e un’unità di misura. Comunemente, si adottano le seguenti strategie:</p>
+<ul>
+<li><strong>Fissare un riferimento</strong>: Ad esempio, assegnare la difficoltà di un item a zero.</li>
+<li><strong>Normalizzazione</strong>: Imporre che la somma delle difficoltà degli item o delle abilità dei partecipanti sia pari a zero.</li>
+<li><strong>Standardizzazione della pendenza</strong>: Impostare la scala della funzione logistica a 1, garantendo una coerenza nelle unità di misura.</li>
+</ul>
+<p>Queste scelte non influenzano la validità delle misure, ma permettono di ancorare i parametri a una scala interpretabile.</p>
+<p>In conclusione, il modello di Rasch fornisce misurazioni robuste su una scala di intervallo, permettendo analisi precise delle differenze tra abilità e difficoltà. Tuttavia, la mancanza di un punto zero intrinseco e di un’unità di misura assoluta richiede la definizione di convenzioni per la calibratura della scala. Questo aspetto, sebbene tecnico, è cruciale per garantire la coerenza e l’interpretabilità dei risultati ottenuti nei contesti psicometrici.</p>
+</section>
+</section>
+<section id="oggettività-specifica" class="level2" data-number="69.5">
+<h2 data-number="69.5" class="anchored" data-anchor-id="oggettività-specifica"><span class="header-section-number">69.5</span> Oggettività Specifica</h2>
+<p>L’<strong>oggettività specifica</strong> è uno dei principi cardine del modello di Rasch e garantisce che i confronti tra individui siano equi e indipendenti dagli item specifici utilizzati nel test. Questo concetto assicura che le differenze tra le abilità delle persone si riflettano in modo coerente, senza essere influenzate da caratteristiche particolari degli item.</p>
+<p>L’oggettività specifica implica che:</p>
+<ol type="1">
+<li><strong>Confronti tra individui</strong>: Se una persona ha una probabilità maggiore di rispondere correttamente rispetto a un’altra, questa superiorità si manifesta uniformemente su tutti gli item.</li>
+<li><strong>Confronti tra item</strong>: Se un item è più facile per una persona, sarà più facile per chiunque altro, indipendentemente dalle abilità specifiche.</li>
+</ol>
+<p>In altre parole, il modello di Rasch garantisce che le probabilità di risposta corretta dipendano solo dalla differenza tra l’abilità della persona (<span class="math inline">\(\theta_p\)</span>) e la difficoltà dell’item (<span class="math inline">\(\beta_i\)</span>), preservando la coerenza nei confronti.</p>
+<section id="verifica-delloggettività-specifica" class="level3" data-number="69.5.1">
+<h3 data-number="69.5.1" class="anchored" data-anchor-id="verifica-delloggettività-specifica"><span class="header-section-number">69.5.1</span> Verifica dell’Oggettività Specifica</h3>
+<p>Un indicatore chiave dell’oggettività specifica è rappresentato dalle <strong>Curve di Caratteristica dell’Item (ICC)</strong>. Nel modello di Rasch, le ICC per diversi item non si incrociano: ciò indica che la relazione tra abilità e probabilità di risposta corretta rimane consistente per tutti gli item, rispettando l’oggettività specifica.</p>
+<p>L’oggettività specifica può essere descritta algebricamente attraverso i rapporti di probabilità. Per due persone <span class="math inline">\(p\)</span> e <span class="math inline">\(q\)</span> e un item <span class="math inline">\(i\)</span>, sia <span class="math inline">\(P_{pi}\)</span> la probabilità che la persona <span class="math inline">\(p\)</span> risponda correttamente all’item <span class="math inline">\(i\)</span>. L’oggettività specifica richiede che il rapporto di probabilità tra le due persone sia costante per tutti gli item:</p>
+<p><span class="math display">\[
+\frac{P_{pi}}{P_{qi}} = \frac{P_{pj}}{P_{qj}}, \quad \forall i, j.
+\]</span></p>
+<p>Questo implica che:</p>
+<p><span class="math display">\[
+P_{pi} \cdot P_{qj} = P_{pj} \cdot P_{qi}.
+\]</span></p>
+<p>Tale proprietà garantisce che le differenze tra individui siano indipendenti dagli specifici item somministrati.</p>
+<p>Consideriamo il seguente esempio pratico. Supponiamo che Marco e Cora affrontino un test composto da venti item. Se le probabilità di rispondere correttamente al primo item sono 20% per Marco e 80% per Cora, il rapporto tra le loro probabilità (4:1) deve rimanere lo stesso per tutti gli altri item del test. Questo equilibrio assicura che il confronto tra Marco e Cora non dipenda dagli item specifici ma esclusivamente dalle loro abilità relative.</p>
+</section>
+<section id="limitazioni-e-considerazioni" class="level3" data-number="69.5.2">
+<h3 data-number="69.5.2" class="anchored" data-anchor-id="limitazioni-e-considerazioni"><span class="header-section-number">69.5.2</span> Limitazioni e Considerazioni</h3>
+<p>Sebbene l’oggettività specifica sia una proprietà potente, essa è soggetta a limitazioni:</p>
+<ul>
+<li><strong>Dipendenza dal contesto</strong>: La trasposizione di un test tra gruppi con caratteristiche culturali o professionali diverse (es. banchieri e ingegneri) potrebbe invalidare l’oggettività specifica se gli item vengono interpretati in modi differenti.</li>
+<li><strong>Necessità di verifica empirica</strong>: L’oggettività specifica deve essere testata con i dati per confermare che le proprietà del modello siano rispettate nel contesto specifico.</li>
+</ul>
+<p>Rasch stesso sottolineava l’importanza di validare questa proprietà ogni volta che si raccolgono nuovi dati.</p>
+<p>In conclusione, l’oggettività specifica rappresenta il cuore del modello di Rasch, garantendo confronti equi e coerenti tra individui e item. Tuttavia, non è una proprietà intrinseca e universale, ma un’ipotesi di lavoro che deve essere verificata empiricamente in ogni applicazione. Questo principio, se rispettato, assicura che i test psicometrici siano strumenti affidabili per misurare abilità e caratteristiche, indipendentemente dal contesto o dagli item utilizzati.</p>
+</section>
+</section>
+<section id="riflessioni-conclusive" class="level2" data-number="69.6">
+<h2 data-number="69.6" class="anchored" data-anchor-id="riflessioni-conclusive"><span class="header-section-number">69.6</span> Riflessioni Conclusive</h2>
+<p>Il modello di Rasch rappresenta un approccio rigoroso alla misurazione psicometrica, basato su tre assunzioni fondamentali: <strong>unidimensionalità</strong>, <strong>monotonicità</strong> e <strong>indipendenza locale</strong>. Queste assunzioni costituiscono il fondamento del modello, garantendone validità e applicabilità. Tuttavia, la loro violazione può richiedere l’adozione di metodologie più avanzate o modelli alternativi per affrontare la complessità dei dati. In tali situazioni, un’analisi più approfondita dei dati o l’impiego di strumenti statistici sofisticati diventa indispensabile.</p>
+<p>Uno degli aspetti distintivi del modello di Rasch è il principio di <strong>oggettività specifica</strong>, che consente di stimare la difficoltà degli item in modo indipendente dalle abilità dei partecipanti. Questo è reso possibile dall’uso della <strong>stima di massima verosimiglianza condizionale</strong>, che isola la difficoltà degli item basandosi unicamente sulle risposte specifiche a ciascun item, senza essere influenzata dal livello complessivo di abilità del campione.</p>
+<p>L’oggettività specifica assicura che i parametri di difficoltà degli item siano stabili e affidabili, indipendentemente dalla composizione del campione. Questo è analogo al concetto di <strong>invarianza</strong> in regressione lineare, dove i parametri della retta di regressione, come pendenza e intercetta, rimangono invariati rispetto al campione utilizzato per l’analisi. Nel modello di Rasch, l’invarianza dei parametri garantisce che la difficoltà degli item resti costante, anche quando i partecipanti hanno livelli di abilità diversi.</p>
+<p>Un aspetto particolarmente vantaggioso del modello di Rasch è che l’oggettività specifica elimina la necessità di utilizzare campioni normati o rappresentativi per calibrare gli item. Qualsiasi gruppo di partecipanti, purché presenti una sufficiente varietà nelle risposte, può essere impiegato per stimare i parametri di difficoltà. Questo contrasta con i metodi tradizionali, che spesso richiedono campioni rappresentativi per sviluppare tabelle normative basate su percentuali di risposte corrette.</p>
+<p>Il modello di Rasch offre un framework solido e trasparente per la misurazione psicometrica, distinguendosi per la precisione e la generalizzabilità delle sue stime. Tuttavia, il rispetto delle sue assunzioni fondamentali è cruciale per garantire risultati accurati ed equi. Verificare l’unidimensionalità, la monotonicità e l’indipendenza locale è essenziale per evitare bias e preservare l’integrità delle misurazioni.</p>
+<p>In conclusione, il modello di Rasch si configura come uno strumento potente per sviluppare e validare strumenti di misura, combinando semplicità teorica con robustezza operativa. La sua capacità di produrre risultati indipendenti dalle caratteristiche del campione lo rende una scelta ideale per molte applicazioni psicometriche, purché le sue assunzioni siano rigorosamente testate e rispettate.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-petersen2024principles" class="csl-entry" role="listitem">
+Petersen, I. T. (2024). <em>Principles of psychological assessment: With applied examples in R</em>. CRC Press.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/ccaudek\.github\.io\/testing_psicologico\/intro\.html");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../chapters/irt/01_rasch_model.html" class="pagination-link" aria-label="Modello di Rasch">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Modello di Rasch</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../chapters/irt/04_estimation.html" class="pagination-link" aria-label="Stima">
+        <span class="nav-page-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Stima</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><strong>Testing Psicologico</strong> è una dispensa scritta da Corrado Caudek.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Realizzato con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

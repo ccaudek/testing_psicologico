@@ -994,7 +994,14 @@ window.Quarto = {
   <li><a href="#calcolo-dellicc-1" id="toc-calcolo-dellicc-1" class="nav-link" data-scroll-target="#calcolo-dellicc-1"><span class="header-section-number">15.4.6</span> Calcolo dell’ICC</a></li>
   </ul>
 </li>
-  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">15.5</span> Riflessioni Conclusive</a></li>
+  <li>
+<a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">15.5</span> Riflessioni Conclusive</a>
+  <ul>
+<li><a href="#relazione-tra-icc-e-r%C2%B2" id="toc-relazione-tra-icc-e-r²" class="nav-link" data-scroll-target="#relazione-tra-icc-e-r%C2%B2"><span class="header-section-number">15.5.1</span> Relazione tra ICC e R²</a></li>
+  <li><a href="#icc-aggiustato-e-non-aggiustato" id="toc-icc-aggiustato-e-non-aggiustato" class="nav-link" data-scroll-target="#icc-aggiustato-e-non-aggiustato"><span class="header-section-number">15.5.2</span> ICC Aggiustato e Non Aggiustato</a></li>
+  <li><a href="#conclusione" id="toc-conclusione" class="nav-link" data-scroll-target="#conclusione"><span class="header-section-number">15.5.3</span> Conclusione</a></li>
+  </ul>
+</li>
   <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">15.6</span> Session Info</a></li>
   </ul></nav>
     </div>
@@ -1159,78 +1166,56 @@ Preparazione del Notebook
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">slp_2rater</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">slp14</span> <span class="op">==</span> <span class="va">slp15</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><br>
-Per rendere il criterio di concordanza più flessibile, si può applicare un arrotondamento ai punteggi: dividendo ciascun punteggio per 10 e arrotondando al numero intero più vicino, anche valori leggermente diversi possono essere considerati concordanti. Ad esempio, valutazioni come 75 e 78, dopo essere state divise per 10 e arrotondate, diventano entrambe 8. Questo metodo amplia il criterio di accordo, riconoscendo che piccole discrepanze potrebbero essere irrilevanti nella pratica.</p>
+<p>Per rendere il criterio di concordanza più flessibile tra i valutatori, viene applicato un arrotondamento ai punteggi dividendo ciascun punteggio per 10 e arrotondando al numero intero più vicino. Questo permette di considerare concordanti anche valutazioni leggermente diverse tra loro. Ad esempio, valutazioni come 75 e 78, dopo essere state divise per 10 e arrotondate, diventano entrambe 8.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_2round</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">slp_2rater</span> <span class="op">/</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">slp_2round</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    slp14 slp15</span></span>
-<span><span class="co">#&gt; 1     10    10</span></span>
-<span><span class="co">#&gt; 2      0     1</span></span>
-<span><span class="co">#&gt; 3      7     7</span></span>
-<span><span class="co">#&gt; 4      6    10</span></span>
-<span><span class="co">#&gt; 5      5     6</span></span>
-<span><span class="co">#&gt; 6      7    10</span></span>
-<span><span class="co">#&gt; 7      8     9</span></span>
-<span><span class="co">#&gt; 8      8     9</span></span>
-<span><span class="co">#&gt; 9      9     8</span></span>
-<span><span class="co">#&gt; 10    10    10</span></span>
-<span><span class="co">#&gt; 11    10     7</span></span>
-<span><span class="co">#&gt; 12    10    10</span></span>
-<span><span class="co">#&gt; 13     6     5</span></span>
-<span><span class="co">#&gt; 14    10    10</span></span>
-<span><span class="co">#&gt; 15     6    10</span></span>
-<span><span class="co">#&gt; 16    10    10</span></span>
-<span><span class="co">#&gt; 17    10    10</span></span>
-<span><span class="co">#&gt; 18     9    10</span></span>
-<span><span class="co">#&gt; 19     9    10</span></span>
-<span><span class="co">#&gt; 20    10    10</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Arrotondamento delle valutazioni</span></span>
+<span><span class="va">slp14_round</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">slp_2rater</span><span class="op">$</span><span class="va">slp14</span> <span class="op">/</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">slp15_round</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">slp_2rater</span><span class="op">$</span><span class="va">slp15</span> <span class="op">/</span> <span class="fl">10</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_2round</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">slp_2round</span>, FUN <span class="op">=</span> <span class="va">factor</span>, levels <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co"># Contingency table</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">slp_2round</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      slp15</span></span>
-<span><span class="co">#&gt; slp14 0 1 2 3 4 5 6 7 8 9 10</span></span>
-<span><span class="co">#&gt;    0  0 1 0 0 0 0 0 0 0 0  0</span></span>
-<span><span class="co">#&gt;    1  0 0 0 0 0 0 0 0 0 0  0</span></span>
-<span><span class="co">#&gt;    2  0 0 0 0 0 0 0 0 0 0  0</span></span>
-<span><span class="co">#&gt;    3  0 0 0 0 0 0 0 0 0 0  0</span></span>
-<span><span class="co">#&gt;    4  0 0 0 0 0 0 0 0 0 0  0</span></span>
-<span><span class="co">#&gt;    5  0 0 0 0 0 0 1 0 0 0  0</span></span>
-<span><span class="co">#&gt;    6  0 0 0 0 0 1 0 0 0 0  2</span></span>
-<span><span class="co">#&gt;    7  0 0 0 0 0 0 0 1 0 0  1</span></span>
-<span><span class="co">#&gt;    8  0 0 0 0 0 0 0 0 0 2  0</span></span>
-<span><span class="co">#&gt;    9  0 0 0 0 0 0 0 0 1 0  2</span></span>
-<span><span class="co">#&gt;    10 0 0 0 0 0 0 0 1 0 0  7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><br>
-Il codice precedente fa uso di due funzioni principali: <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> e <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>. Esso opera su una lista o su un dataframe chiamato <code>slp_2round</code>, applicando una trasformazione ai dati e successivamente creando una tabella di contingenza.</p>
+<p>Il codice opera in tre passaggi principali:</p>
 <ol type="1">
-<li><code>slp_2round &lt;- lapply(slp_2round, FUN = factor, levels = 0:10)</code></li>
+<li><p>Prima effettua l’arrotondamento delle valutazioni dei due valutatori (<code>slp14_round</code> e <code>slp15_round</code>), dividendo per 10 e arrotondando all’intero più vicino.</p></li>
+<li><p>Successivamente crea una tabella di contingenza usando la funzione <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>, che mostra la distribuzione delle valutazioni arrotondate tra i due valutatori. Questa tabella permette di visualizzare facilmente dove c’è maggiore accordo.</p></li>
 </ol>
-<ul>
-<li><p><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>: questa funzione appartiene alla famiglia delle funzioni “*apply” in R, che sono utilizzate per applicare una funzione a ciascun elemento di una lista o di un vettore. <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> restituisce sempre una lista come risultato, mantenendo la lunghezza dell’input originale.</p></li>
-<li><p><code>slp_2round</code>: è la lista o il dataframe su cui si sta operando. Il codice modifica questa variabile, sostituendola con il risultato dell’applicazione di <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>.</p></li>
-<li><p><code>FUN = factor</code>: specifica che la funzione da applicare a ciascun elemento di <code>slp_2round</code> è <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code>. La funzione <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> è utilizzata per codificare un vettore come un fattore, che è utile in R per rappresentare dati categorici.</p></li>
-<li><p><code>levels = 0:10</code>: indica i livelli del fattore, che in questo caso sono i numeri da 0 a 10. Questo parametro assicura che i fattori creati abbiano esattamente questi livelli, anche se alcuni di essi non appaiono nei dati. Questo è particolarmente utile per garantire la coerenza dei livelli dei fattori attraverso vari elementi di <code>slp_2round</code>, soprattutto se si intende confrontarli o combinarli in seguito.</p></li>
-</ul>
-<ol start="2" type="1">
-<li><code>table(slp_2round)</code></li>
-</ol>
-<ul>
-<li>
-<code><a href="https://rdrr.io/r/base/table.html">table()</a></code>: questa funzione crea una tabella di contingenza dai dati forniti. Una tabella di contingenza è un tipo di tabella in formato matriciale che conta la frequenza di combinazioni specifiche di valori all’interno di una o più variabili categoriche.</li>
-</ul>
-<p>Dopo l’applicazione di <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>, <code>slp_2round</code> diventa una lista di elementi, ciascuno dei quali è un fattore con livelli da 0 a 10. Quando si passa questa lista modificata alla funzione <code><a href="https://rdrr.io/r/base/table.html">table()</a></code>, viene generata una tabella di contingenza. Questa tabella riassume le frequenze dei vari livelli dei fattori attraverso gli elementi della lista <code>slp_2round</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">slp_2round</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">slp14</span> <span class="op">==</span> <span class="va">slp15</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">p0</span></span>
-<span><span class="co">#&gt; [1] 0.4</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creazione della tabella di contingenza</span></span>
+<span><span class="va">agreement_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">slp14_round</span>, <span class="va">slp15_round</span><span class="op">)</span></span>
+<span><span class="va">agreement_table</span></span>
+<span><span class="co">#&gt;            slp15_round</span></span>
+<span><span class="co">#&gt; slp14_round 1 5 6 7 8 9 10</span></span>
+<span><span class="co">#&gt;          0  1 0 0 0 0 0  0</span></span>
+<span><span class="co">#&gt;          5  0 0 1 0 0 0  0</span></span>
+<span><span class="co">#&gt;          6  0 1 0 0 0 0  2</span></span>
+<span><span class="co">#&gt;          7  0 0 0 1 0 0  1</span></span>
+<span><span class="co">#&gt;          8  0 0 0 0 0 2  0</span></span>
+<span><span class="co">#&gt;          9  0 0 0 0 1 0  2</span></span>
+<span><span class="co">#&gt;          10 0 0 0 1 0 0  7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><br>
-Qui, l’arrotondamento serve a ridurre la specificità delle valutazioni, permettendo un confronto più più flessibile tra le valutazioni dei due giudici​​. Questo approccio riflette una visione più tollerante dell’accordo, riconoscendo che piccole discrepanze nelle valutazioni potrebbero non essere rilevanti in un contesto pratico.</p>
-<p>Nel contesto specifico descritto, l’arrotondamento implica dividere le valutazioni per 10 e poi arrotondarle al numero intero più vicino. Questo processo rende i valori leggermente diversi equivalenti. Ad esempio, se un giudice assegna una valutazione di 75 e l’altro assegna 78, dividendo per 10 otteniamo 7.5 e 7.8; arrotondando, entrambi i valori diventano 8. Così, valutazioni originalmente diverse vengono arrotondate allo stesso numero intero, permettendo un accordo più ampio tra i giudici. Questo metodo riconosce l’accordo anche in presenza di piccole variazioni nelle valutazioni, riflettendo una visione più flessibile dell’accordo tra i giudici.</p>
+<ol start="3" type="1">
+<li>Infine calcola la proporzione di accordo utilizzando la funzione <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code> che confronta le valutazioni arrotondate dei due valutatori.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo della proporzione di accordo</span></span>
+<span><span class="va">agreement_proportion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">slp14_round</span> <span class="op">==</span> <span class="va">slp15_round</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Visualizzazione dei risultati</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">agreement_table</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            slp15_round</span></span>
+<span><span class="co">#&gt; slp14_round 1 5 6 7 8 9 10</span></span>
+<span><span class="co">#&gt;          0  1 0 0 0 0 0  0</span></span>
+<span><span class="co">#&gt;          5  0 0 1 0 0 0  0</span></span>
+<span><span class="co">#&gt;          6  0 1 0 0 0 0  2</span></span>
+<span><span class="co">#&gt;          7  0 0 0 1 0 0  1</span></span>
+<span><span class="co">#&gt;          8  0 0 0 0 0 2  0</span></span>
+<span><span class="co">#&gt;          9  0 0 0 0 1 0  2</span></span>
+<span><span class="co">#&gt;          10 0 0 0 1 0 0  7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Proporzione di accordo:"</span>, <span class="va">agreement_proportion</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Proporzione di accordo: 0.4"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Questo approccio riflette una visione più tollerante dell’accordo tra valutatori, riconoscendo che piccole differenze nelle valutazioni (come tra 75 e 78) potrebbero non essere rilevanti in un contesto pratico. L’arrotondamento permette infatti di catturare l’essenza del giudizio piuttosto che concentrarsi su piccole discrepanze numeriche.</p>
+<p>La proporzione finale di accordo che otteniamo rappresenta quindi la percentuale di casi in cui i due valutatori hanno fornito valutazioni che, una volta arrotondate, risultano equivalenti. Questo metodo fornisce una misura più realistica dell’accordo effettivo tra i valutatori, specialmente in contesti dove non è necessaria una precisione estrema nelle valutazioni.</p>
 </section><section id="kappa-di-cohen" class="level3" data-number="15.3.2"><h3 data-number="15.3.2" class="anchored" data-anchor-id="kappa-di-cohen">
 <span class="header-section-number">15.3.2</span> Kappa di Cohen</h3>
 <p>L’indice di concordanza Kappa di Cohen è una misura più robusta dell’accordo tra i giudici, poiché tiene conto della concordanza casuale. A differenza dell’accordo nominale, che considera solo la frequenza delle concordanze perfette, Kappa di Cohen corregge per l’accordo che potrebbe verificarsi per puro caso.</p>
@@ -1256,25 +1241,34 @@ p_c = \frac{{\sum (\text{Riga i-esima del totale}) \times (\text{Colonna i-esima
 \]</span></p>
 <p>In altre parole, <span class="math inline">\(p_c\)</span> è il rapporto atteso di concordanza tra gli osservatori nel caso in cui le loro valutazioni siano indipendenti.</p>
 <p>Un valore di Kappa vicino a 1 indica un’alta concordanza corretta per l’accordo casuale, mentre un valore vicino a 0 suggerisce che l’accordo non è superiore a quello casuale. Un valore negativo indica una concordanza peggiore di quella casuale.</p>
-<p>Ad esempio, calcolando il Kappa per due giudici che valutano lo stesso campione, possiamo ottenere una misura di concordanza che tiene conto della probabilità di accordo fortuito.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_2tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">slp_2round</span><span class="op">)</span></span>
-<span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">slp_2tab</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">slp_2tab</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">slp_2tab</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
-<span><span class="op">(</span><span class="va">kappa</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p0</span> <span class="op">-</span> <span class="va">pc</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pc</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.167</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creazione della tabella di contingenza con le valutazioni arrotondate</span></span>
+<span><span class="va">agreement_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">slp14_round</span>, <span class="va">slp15_round</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calcolo di p0 (proporzione di accordo osservato)</span></span>
+<span><span class="va">p0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">slp14_round</span> <span class="op">==</span> <span class="va">slp15_round</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calcolo di pc (proporzione di accordo atteso per caso)</span></span>
+<span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="va">agreement_table</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">agreement_table</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">agreement_table</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span></span>
+<span></span>
+<span><span class="co"># Calcolo del Kappa di Cohen</span></span>
+<span><span class="va">kappa</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p0</span> <span class="op">-</span> <span class="va">pc</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Visualizzazione dei risultati</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Kappa di Cohen:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">kappa</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Kappa di Cohen: 0.164"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><br>
-Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o poche categorie, creando una distribuzione non uniforme, come nell’esempio fornito.</p>
+<p>Tuttavia, è importante notare che Kappa può risultare basso quando i giudizi si concentrano su una o poche categorie, creando una distribuzione non uniforme, come nell’esempio fornito. Questo può accadere perché, nonostante ci possa essere un buon accordo effettivo tra i valutatori, la correzione per l’accordo casuale risulta particolarmente severa quando le valutazioni non sono distribuite uniformemente tra tutte le categorie possibili.</p>
 </section></section><section id="giudici-multipli" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="giudici-multipli">
 <span class="header-section-number">15.4</span> Giudici multipli</h2>
 <section id="coefficiente-alpha" class="level3" data-number="15.4.1"><h3 data-number="15.4.1" class="anchored" data-anchor-id="coefficiente-alpha">
 <span class="header-section-number">15.4.1</span> Coefficiente <span class="math inline">\(\alpha\)</span>
 </h3>
-<p>Il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach è comunemente utilizzato per misurare l’affidabilità interna di un test, cioè la coerenza con cui gli item all’interno del test misurano un costrutto comune. Tuttavia, può essere utilizzato anche per valutare l’affidabilità tra giudici in uno studio in cui più valutatori assegnano punteggi o giudizi a una serie di item.</p>
-<p>Nel contesto dell’affidabilità tra giudici, il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach misura quanto consistentemente i diversi giudici valutano gli stessi item. Un valore di <span class="math inline">\(\alpha\)</span> vicino a 1 indica un alto livello di consistenza (o affidabilità) tra i giudici, suggerendo che stanno valutando gli item in modo simile. Un valore più basso indica una minore coerenza nelle valutazioni tra i giudici.</p>
-<p>Per calcolare il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach in questo contesto, si considerano i punteggi assegnati da ciascun giudice a ciascun item come se fossero item individuali di un test. Quindi, si applica la formula standard del coefficiente <span class="math inline">\(\alpha\)</span> per valutare la coerenza interna di questi “item” (in questo caso, le valutazioni dei giudici).</p>
+<p>Il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach è comunemente utilizzato per misurare l’affidabilità interna di un test, cioè la coerenza con cui gli item all’interno del test misurano un costrutto comune. Nel nostro caso, lo utilizziamo per valutare l’affidabilità tra giudici, misurando quanto consistentemente i diversi valutatori assegnano punteggi agli stessi item.</p>
+<p>Nel contesto dell’affidabilità tra giudici, il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach misura quanto consistentemente i diversi giudici valutano gli stessi item. Un valore di <span class="math inline">\(\alpha\)</span> vicino a 1 indica un alto livello di consistenza (o affidabilità) tra i giudici, suggerendo che stanno valutando gli item in modo simile. Un valore più basso indica una minore coerenza nelle valutazioni.</p>
+<p>Per calcolare il coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach, consideriamo i punteggi assegnati da ciascun giudice come se fossero item individuali di un test. Quindi, applichiamo la formula standard del coefficiente <span class="math inline">\(\alpha\)</span> per valutare la coerenza interna di queste valutazioni.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">psych</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/psych/man/alpha.html">alpha</a></span><span class="op">(</span><span class="va">slp_vas_wide</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">psych</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/psych/man/alpha.html">alpha</a></span><span class="op">(</span><span class="va">slp_vas_wide</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Reliability analysis   </span></span>
 <span><span class="co">#&gt; Call: psych::alpha(x = slp_vas_wide[-1])</span></span>
@@ -1335,12 +1329,16 @@ Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o po
 <span><span class="co">#&gt; slp8  20  0.86  0.87  0.87   0.86   53 31</span></span>
 <span><span class="co">#&gt; slp9  19  0.89  0.90  0.90   0.90   58 23</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Nell’esempio in discussione, il valore del coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach è 0.98. Questo indica un’altissima affidabilità interna, suggerendo che i giudici coinvolti nello studio hanno fornito delle valutazioni molto consistenti tra loro. Un valore così elevato di <span class="math inline">\(\alpha\)</span> è raro e suggerisce che ci sia un’alta coerenza nelle valutazioni tra i giudici. In termini pratici, questo significa che si può avere un’elevata fiducia nel fatto che le valutazioni fornite dai diversi giudici siano intercambiabili e riflettano in modo affidabile la “Percentuale di Intelligibilità del Discorso” che viene valutata.</p>
-</section><section id="coefficiente-di-correlazione-intraclasse" class="level3" data-number="15.4.2"><h3 data-number="15.4.2" class="anchored" data-anchor-id="coefficiente-di-correlazione-intraclasse">
+<p>I risultati mostrano un coefficiente <span class="math inline">\(\alpha\)</span> di Cronbach molto alto. Questo indica un’eccellente affidabilità tra i valutatori, suggerendo che hanno fornito valutazioni molto consistenti tra loro. Un valore così elevato di <span class="math inline">\(\alpha\)</span> è notevole e indica che:</p>
+<ul>
+<li>i valutatori hanno applicato criteri di valutazione molto simili;</li>
+<li>la “Percentuale di Intelligibilità del Discorso” è stata valutata in modo coerente e affidabile;</li>
+<li>le valutazioni dei diversi giudici possono essere considerate sostanzialmente intercambiabili.</li>
+</ul></section><section id="coefficiente-di-correlazione-intraclasse" class="level3" data-number="15.4.2"><h3 data-number="15.4.2" class="anchored" data-anchor-id="coefficiente-di-correlazione-intraclasse">
 <span class="header-section-number">15.4.2</span> Coefficiente di correlazione intraclasse</h3>
 <p>Il <em>Coefficiente di Correlazione Intraclasse</em> (ICC) quantifica il grado di somiglianza tra le unità all’interno dello stesso gruppo. A differenza della maggior parte delle altre misure di correlazione, l’ICC viene impiegato con dati organizzati in gruppi anziché con coppie di osservazioni. Questo lo rende particolarmente idoneo per valutare la concordanza tra giudici che stanno valutando lo stesso insieme di individui o item.</p>
 <p>L’ICC si basa sul framework del modello a effetti misti. Questi modelli statistici consentono di analizzare le variazioni dei punteggi sia all’interno dei gruppi (ovvero le differenze tra le osservazioni all’interno dello stesso gruppo) che tra i gruppi (ovvero le differenze tra i gruppi stessi). Pertanto, l’ICC tiene conto di due fonti di varianza: la varianza all’interno dei gruppi (varianza delle valutazioni dei giudici all’interno dello stesso gruppo) e la varianza tra i gruppi (varianza delle valutazioni dei giudici tra gruppi diversi). Inoltre, viene considerato l’errore casuale presente nelle valutazioni.</p>
-<p>In sintesi, l’ICC valuta la consistenza delle misurazioni quando queste vengono effettuate da diversi osservatori su un insieme di soggetti o item. Un valore elevato di ICC segnala una forte concordanza tra le valutazioni degli osservatori, indicando che le misurazioni sono affidabili e riproducibili. Al contrario, un ICC basso riflette una discrepanza significativa tra gli osservatori, suggerendo che le valutazioni sono meno consistenti.</p>
+<p>In sintesi, l’ICC valuta la consistenza delle misurazioni quando queste vengono effettuate da diversi osservatori su un insieme di soggetti o item. Un valore elevato di ICC segnala una forte concordanza tra le valutazioni degli osservatori, indicando che le misurazioni sono affidabili e riproducibili. Al contrario, un ICC basso riflette una discrepanza rilevante tra gli osservatori, suggerendo che le valutazioni sono meno consistenti.</p>
 <section id="calcolo-dellicc" class="level4" data-number="15.4.2.1"><h4 data-number="15.4.2.1" class="anchored" data-anchor-id="calcolo-dellicc">
 <span class="header-section-number">15.4.2.1</span> Calcolo dell’ICC</h4>
 <p>Il calcolo dell’ICC si basa su un modello ad effetti misti, in cui i giudici (o osservatori) sono considerati come variabili indipendenti e i punteggi assegnati costituiscono la variabile dipendente. Questo modello permette di scomporre e quantificare le diverse fonti di variazione nei dati, tra cui:</p>
@@ -1382,7 +1380,7 @@ Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o po
 <span class="header-section-number">15.4.3</span> ANOVA ad una via per disegni nidificati</h3>
 <p>Consideriamo il caso in cui i dati rappresentano da due valutazioni assegnate a ciascuna persona da giudici diversi.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_vas_nested</span> <span class="op">&lt;-</span> <span class="va">slp_dat</span> <span class="op">|&gt;</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_vas_nested</span> <span class="op">&lt;-</span> <span class="va">slp_dat</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>SpeakerID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">Speaker</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="co"># Select only 10 speakers</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">SpeakerID</span> <span class="op">&lt;=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -1404,7 +1402,7 @@ Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o po
 </div>
 <p>Verifichiamo che ogni giudice abbia fornito due giudizi per soggetto:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_vas_nested</span> <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">slp_vas_nested</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">Speaker</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>Count <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 10 × 2</span></span>
@@ -1420,14 +1418,14 @@ Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o po
 </div>
 <p>Ci sono 20 giudici:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">slp_vas_nested</span><span class="op">$</span><span class="va">Speaker</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">slp_vas_nested</span><span class="op">$</span><span class="va">Speaker</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 20</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In questo studio, analizziamo dati costituiti da due valutazioni fornite a ciascun individuo da giudici diversi. Il nostro obiettivo è identificare e separare due principali fonti di variazione: le differenze tra i giudici e le variazioni casuali all’interno delle valutazioni di ciascun giudice.</p>
 <p>La sfida risiede nel distinguere queste fonti di variazione, essenziale per determinare la proporzione di variabilità nei punteggi attribuibile a reali differenze tra i giudici, rispetto a quella derivante da errori casuali. Per affrontare questo problema, applichiamo un’analisi della varianza a effetti casuali (Random-Effects ANOVA), utilizzando il modello lineare misto implementato attraverso la funzione <code>lmer()</code> di R. Questa metodologia ci permette di stimare separatamente la varianza dovuta alle differenze tra i giudici e quella associata all’errore casuale.</p>
 <p>Implementiamo il modello <code>lmer(slp_VAS ~ 1 + (1 | Speaker), data = slp_vas_nested)</code>, dove il termine <code>Speaker</code> rappresenta i giudici. Attraverso questo modello, trattiamo le intercette associate a ciascun giudice come effetti casuali, consentendoci di catturare le specifiche variazioni tra i giudici al di là delle fluttuazioni casuali.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu">lmer</span><span class="op">(</span><span class="va">slp_VAS</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Speaker</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">slp_vas_nested</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu">lmer</span><span class="op">(</span><span class="va">slp_VAS</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Speaker</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">slp_vas_nested</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: slp_VAS ~ 1 + (1 | Speaker)</span></span>
@@ -1449,10 +1447,14 @@ Tuttavia, Kappa può risultare basso quando i giudizi si concentrano su una o po
 <span><span class="co">#&gt;             Estimate Std. Error t value</span></span>
 <span><span class="co">#&gt; (Intercept)    53.61       8.63    6.21</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Dall’analisi emergono due componenti principali di varianza: - La varianza attribuibile a differenze intrinseche tra i soggetti valutati (<code>slpID</code>), che riflette la variabilità naturale tra gli individui. - La varianza attribuibile ai giudici (<code>Speaker</code>), che misura l’estensione del bias sistematico, ossia la tendenza di alcuni giudici a fornire valutazioni sistematicamente più alte o più basse rispetto ad altri.</p>
+<p>Dall’analisi emergono due componenti principali di varianza:</p>
+<ul>
+<li>La varianza attribuibile a differenze intrinseche tra i soggetti valutati (<code>slpID</code>), che riflette la variabilità naturale tra gli individui.</li>
+<li>La varianza attribuibile ai giudici (<code>Speaker</code>), che misura l’estensione del bias sistematico, ossia la tendenza di alcuni giudici a fornire valutazioni sistematicamente più alte o più basse rispetto ad altri.</li>
+</ul>
 <p>In aggiunta, abbiamo la varianza residua, che include l’errore di misurazione e altre fonti di variabilità non spiegate dal modello.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">VarCorr</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">VarCorr</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">vc_m1</span></span>
 <span><span class="co">#&gt;        grp        var1 var2 vcov sdcor</span></span>
 <span><span class="co">#&gt; 1  Speaker (Intercept) &lt;NA&gt;  309  17.6</span></span>
@@ -1466,12 +1468,12 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E}.
 \]</span></p>
 <p>Nella formula, l’ICC misura la proporzione della varianza totale del punteggio <code>slp_VAS</code> che è attribuibile alla variazione tra i gruppi dei giudici (Speaker) rispetto alla variazione residua o errore.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.274</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Utilizziamo la funzione <code>icc()</code> del pacchetto <code>performance</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/icc.html">icc</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/icc.html">icc</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # Intraclass Correlation Coefficient</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Adjusted ICC: 0.274</span></span>
@@ -1480,7 +1482,7 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E}.
 <p>Utilizzando il modello specificato <code>m1 &lt;- lmer(slp_VAS ~ 1 + (1 | Speaker), data = slp_vas_nested)</code>, con l’ICC calcolato tramite la formula <code>vc_m1$vcov[1] / (vc_m1$vcov[1] + vc_m1$vcov[2])</code>, è possibile fare alcune osservazioni sulle considerazioni precedenti:</p>
 <ol type="1">
 <li><p><strong>Crossed vs.&nbsp;Nested</strong>:<br>
-Il disegno sia “nested”, il che implica che diversi gruppi di giudici valutano gruppi diversi di soggetti o item. In un disegno nested, non tutti i giudici valutano tutti i soggetti, quindi l’errore riflette le differenze tra i gruppi di giudici assegnati a specifici soggetti o item. Questo approccio è adatto in situazioni dove non si può o non si vuole che tutti i giudici valutino ogni soggetto.</p></li>
+Il disegno è “nested”, il che implica che diversi gruppi di giudici valutano gruppi diversi di soggetti o item. In un disegno nested, non tutti i giudici valutano tutti i soggetti, quindi l’errore riflette le differenze tra i gruppi di giudici assegnati a specifici soggetti o item. Questo approccio è adatto in situazioni dove non si può o non si vuole che tutti i giudici valutino ogni soggetto.</p></li>
 <li><p><strong>Fixed vs.&nbsp;Random</strong>:<br>
 Nella formulazione <code>(1 | Speaker)</code>, l’effetto per “Speaker” (che identifica i giudici) è specificato come <strong>random</strong>. Ciò significa che stiamo trattando i giudici come un campione casuale di una popolazione più ampia, piuttosto che come un insieme fisso di valutatori. Di conseguenza, l’ICC calcolato qui è interpretato come una misura di affidabilità che potrebbe essere generalizzata a una popolazione di giudici simili, non limitata solo ai giudici specifici coinvolti nel campione.</p></li>
 <li><p><strong>Consistenza vs.&nbsp;Accordo Assoluto</strong>:<br>
@@ -1497,7 +1499,7 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 <p>Quindi, se l’ICC è vicino a 1, ciò indica che la maggior parte della varianza nei dati è dovuta a differenze reali tra i soggetti valutati, piuttosto che a variazioni casuali o a differenze tra i giudici. In questo modo, l’ICC fornisce un indice utile per valutare l’affidabilità delle valutazioni in studi in cui sono coinvolti giudizi o misurazioni ripetute.</p>
 <p>Nel caso presente, ogni giudice fornisce due valutazioni per ogni soggetto:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m1</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.431</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Questa seconda formula calcola l’affidabilità per la media delle valutazioni di più giudici. È pertinente quando si ha a che fare con più valutazioni per ciascun soggetto e si vuole sapere l’affidabilità della media di queste valutazioni. Questa formula differisce dalla prima perché considera la riduzione dell’errore di misurazione che si verifica quando si calcola la media di più valutazioni.</p>
@@ -1508,13 +1510,23 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 <li><p><strong>Bias dei Giudici</strong>: Questo si verifica quando i giudici hanno una tendenza costante a fornire valutazioni più alte o più basse rispetto agli altri, influenzando potenzialmente l’equità delle valutazioni.</p></li>
 <li><p><strong>Variabilità Intrinseca</strong>: Si riferisce alle differenze naturali nelle valutazioni che emergono dalle percezioni individuali o dalle interpretazioni soggettive dei giudici.</p></li>
 </ul>
-<p>In termini di <strong>Contesto di Valutazione</strong>: - Nelle analisi di <strong>Consistenza</strong>, dove l’attenzione è sull’ordine relativo delle valutazioni, il bias dei giudici non è considerato problematico poiché non altera questo ordine. - Nelle analisi di <strong>Accordo</strong>, che si concentrano sulla concordanza dei valori assoluti delle misurazioni, il bias dei giudici è trattato come una fonte di errore significativa.</p>
+<p>In termini di <strong>Contesto di Valutazione</strong>:</p>
+<ul>
+<li>Nelle analisi di <strong>Consistenza</strong>, dove l’attenzione è sull’ordine relativo delle valutazioni, il bias dei giudici non è considerato problematico poiché non altera questo ordine.</li>
+<li>Nelle analisi di <strong>Accordo</strong>, che si concentrano sulla concordanza dei valori assoluti delle misurazioni, il bias dei giudici è trattato come una fonte di errore significativa.</li>
+</ul>
 <p>L’applicazione dell’<strong>ANOVA a due vie</strong> consente di distinguere l’effetto del bias dei giudici rispetto ad altre fonti di varianza, offrendo così un’importante metodologia per valutare l’affidabilità delle valutazioni e l’impatto del bias in diversi contesti.</p>
-<p>Utilizzando <code>lmer(slp_VAS ~ 1 + (1 | Speaker) + (1 | slpID), data = slp_dat)</code>, analizziamo i dati considerando due principali fonti di variazione: - <strong>Effetti Casuali dei Giudici (<code>(1 | Speaker)</code>):</strong> Valutiamo il bias dei giudici come fonte di variazione, distinguendo tra analisi di consistenza e di accordo a seconda di come questo bias influisce sui risultati. - <strong>Variabilità Intrinseca tra i Soggetti (<code>(1 | slpID)</code>):</strong> Esploriamo le differenze naturali tra i soggetti valutati, fondamentali per comprendere la diversità delle risposte individuali.</p>
+<p>Utilizzando <code>lmer(slp_VAS ~ 1 + (1 | Speaker) + (1 | slpID), data = slp_dat)</code>, analizziamo i dati considerando due principali fonti di variazione:</p>
+<ul>
+<li>
+<strong>Effetti Casuali dei Giudici (<code>(1 | Speaker)</code>):</strong> Valutiamo il bias dei giudici come fonte di variazione, distinguendo tra analisi di consistenza e di accordo a seconda di come questo bias influisce sui risultati.</li>
+<li>
+<strong>Variabilità Intrinseca tra i Soggetti (<code>(1 | slpID)</code>):</strong> Esploriamo le differenze naturali tra i soggetti valutati, fondamentali per comprendere la diversità delle risposte individuali.</li>
+</ul>
 <p>Questo approccio ci permette di facilitare la distinzione tra l’effetto del bias dei giudici e altre fonti di varianza, fornendo una metodologia preziosa per valutare l’affidabilità delle valutazioni e l’impatto del bias in diversi contesti.</p>
 <p>Eseguiamo l’analisi con <code>lmer()</code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu">lmer</span><span class="op">(</span><span class="va">slp_VAS</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Speaker</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">slpID</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">slp_dat</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu">lmer</span><span class="op">(</span><span class="va">slp_VAS</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">Speaker</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">slpID</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">slp_dat</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Questa formula considera due principali fonti di variazione:</p>
 <ul>
@@ -1522,7 +1534,7 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 <li>Variabilità Intrinseca tra i Soggetti (<code>(1 | slpID)</code>): Esploriamo le differenze naturali tra i soggetti valutati, cruciali per comprendere la diversità delle risposte individuali.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: slp_VAS ~ 1 + (1 | Speaker) + (1 | slpID)</span></span>
 <span><span class="co">#&gt;    Data: slp_dat</span></span>
@@ -1546,7 +1558,7 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 </div>
 <p>Estraiamo le fonti di varianza:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">VarCorr</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">vc_m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">VarCorr</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">vc_m2</span></span>
 <span><span class="co">#&gt;        grp        var1 var2 vcov sdcor</span></span>
 <span><span class="co">#&gt; 1    slpID (Intercept) &lt;NA&gt;  133  11.5</span></span>
@@ -1580,12 +1592,12 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 <p>Questo calcolo assume che tutte le componenti di varianza contribuiscano al calcolo dell’ICC in modo equivalente e che l’ICC adjusted consideri la somma delle varianze tra gruppi (in questo caso, <code>slpID</code> e <code>Speaker</code>) rispetto alla varianza totale (inclusa la varianza residua).</p>
 <p>Calcoliamo ora questo valore usando R per ottenere il risultato esatto.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="op">(</span><span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">vc_m2</span><span class="op">$</span><span class="va">vcov</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.712</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Questo valore riproduce quello trovato da <code><a href="https://easystats.github.io/performance/reference/icc.html">performance::icc()</a></code>:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/icc.html">icc</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/icc.html">icc</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # Intraclass Correlation Coefficient</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Adjusted ICC: 0.712</span></span>
@@ -1602,23 +1614,59 @@ ICC = \frac{\sigma^2_{\text{giudici}}} {\sigma^2_{\text{giudici}} + \sigma^2_E /
 <p>In sintesi, un ICC di 0.7115643 indica un’alta affidabilità nelle misure all’interno dei gruppi definiti nel tuo modello, suggerendo che le variazioni osservate sono significativamente influenzate dalle differenze tra i gruppi piuttosto che dalla varianza casuale o dall’errore di misurazione.</p>
 </section></section><section id="riflessioni-conclusive" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="riflessioni-conclusive">
 <span class="header-section-number">15.5</span> Riflessioni Conclusive</h2>
-<p>L’<em>Intraclass Correlation Coefficient</em> (ICC) può essere interpretato come “la proporzione di varianza spiegata dalla struttura di raggruppamento nella popolazione”. Questa struttura di raggruppamento implica che le misurazioni siano organizzate in gruppi (ad esempio, i punteggi di un test in una scuola possono essere raggruppati per classe, se ci sono più classi e a ciascuna è stato somministrato lo stesso test), e l’ICC indica quanto fortemente le misurazioni nello stesso gruppo si assomiglino. Questo indice varia da 0, se il raggruppamento non trasmette alcuna informazione, a 1, se tutte le osservazioni in un gruppo sono identiche (Gelman e Hill, 2007, p.&nbsp;258). In altre parole, l’ICC - a volte concettualizzato come ripetibilità della misurazione - “può anche essere interpretato come la correlazione attesa tra due unità estratte casualmente che si trovano nello stesso gruppo” (Hox 2010), sebbene questa definizione potrebbe non applicarsi a modelli misti con strutture di effetti casuali più complesse. L’ICC può aiutare a determinare se un modello misto è necessario: un ICC pari a zero (o molto vicino a zero) significa che le osservazioni all’interno dei cluster non sono più simili tra loro rispetto a osservazioni di cluster diversi, e quindi considerarlo come un fattore casuale potrebbe non essere necessario.</p>
+<p>L’<em>Intraclass Correlation Coefficient</em> (ICC) misura la proporzione di varianza spiegata dalla struttura di raggruppamento in una popolazione. In altre parole, rappresenta il grado di somiglianza tra le misurazioni appartenenti allo stesso gruppo. Ad esempio, in un contesto scolastico, i punteggi di un test somministrato in diverse classi possono essere raggruppati per classe, e l’ICC indicherà quanto i punteggi all’interno della stessa classe siano simili. Questo coefficiente varia tra 0 e 1:</p>
 <ul>
 <li>
-<em>Alto ICC</em> significa che i dati sono altamente raggruppati, il che significa che i risultati dipendono fortemente dai gruppi a cui appartengono le osservazioni.</li>
+<strong>ICC pari a 0</strong>: il raggruppamento non fornisce alcuna informazione aggiuntiva, e le misurazioni nei gruppi sono indipendenti.</li>
 <li>
-<em>Basso ICC</em> significa che i dati non sono altamente (o per niente) raggruppati, il che significa che i risultati non dipendono molto (o per niente) dai gruppi a cui appartengono le osservazioni.</li>
+<strong>ICC pari a 1</strong>: tutte le osservazioni all’interno di un gruppo sono identiche.</li>
 </ul>
-<p><strong>Differenza con R^2</strong></p>
-<p>Il coefficiente di determinazione R^2 quantifica la proporzione di varianza spiegata da un modello statistico, ma la sua definizione in modelli misti è complessa (da qui l’esistenza di diversi metodi per calcolare un’approssimazione). L’ICC è associato a R^2 poiché entrambi sono rapporti di componenti di varianza. Più precisamente, R^2 rappresenta la proporzione della varianza spiegata (del modello completo), mentre l’ICC è la proporzione della varianza spiegata attribuibile agli effetti casuali.</p>
-<p><strong>Calcolo</strong></p>
-<p>L’ICC viene calcolato dividendo la varianza degli effetti casuali, σ^2_i, per la varianza totale, cioè la somma della varianza degli effetti casuali e della varianza residua, σ^2_ε.</p>
-<p><strong>ICC aggiustato e non aggiustato</strong></p>
-<p>La funzione <code>icc()</code> calcola un ICC aggiustato e uno non aggiustato, che tengono conto di tutte le fonti di incertezza (cioè di tutti gli effetti casuali). Mentre l’ICC aggiustato si riferisce solo agli effetti casuali, l’ICC non aggiustato considera anche le varianze degli effetti fissi, aggiungendo più precisamente la varianza degli effetti fissi al denominatore della formula per calcolare l’ICC (vedi Nakagawa et al.&nbsp;2017). Tipicamente, l’ICC aggiustato è di interesse quando l’analisi degli effetti casuali è di interesse. <code>icc()</code> restituisce un valore ICC anche per strutture di effetti casuali più complesse, come modelli con pendenze casuali o design nidificato (più di due livelli) ed è applicabile per modelli con distribuzioni diverse dalla gaussiana.</p>
-</section><section id="session-info" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="session-info">
+<p>Secondo Gelman e Hill (2007), l’ICC può essere interpretato come la correlazione attesa tra due unità scelte casualmente dallo stesso gruppo. Tuttavia, questa definizione può non essere applicabile in modelli misti con strutture di effetti casuali più complesse (Hox, 2010).</p>
+<p>L’ICC è particolarmente utile per valutare se un modello misto è necessario:</p>
+<ul>
+<li>
+<strong>Alto ICC</strong>: indica un forte raggruppamento nei dati; le osservazioni all’interno dei gruppi sono fortemente correlate.</li>
+<li>
+<strong>Basso ICC</strong>: suggerisce un basso livello di raggruppamento; le osservazioni all’interno e tra i gruppi sono simili.</li>
+</ul>
+<p>Un ICC vicino a zero implica che l’aggiunta di effetti casuali al modello potrebbe essere superflua, poiché i cluster non contribuiscono a spiegare la variabilità dei dati.</p>
+<section id="relazione-tra-icc-e-r²" class="level3" data-number="15.5.1"><h3 data-number="15.5.1" class="anchored" data-anchor-id="relazione-tra-icc-e-r²">
+<span class="header-section-number">15.5.1</span> Relazione tra ICC e R²</h3>
+<p>Il coefficiente di determinazione <span class="math inline">\(R^2\)</span> rappresenta la proporzione di varianza spiegata da un modello statistico complessivo. Nel caso di modelli misti, la relazione tra <span class="math inline">\(R^2\)</span> e ICC diventa evidente: entrambi derivano dal rapporto tra componenti di varianza.</p>
+<ul>
+<li>
+<span class="math inline">\(R^2\)</span>: proporzione di varianza totale spiegata dal modello completo (effetti fissi e casuali).<br>
+</li>
+<li>ICC: proporzione di varianza attribuibile esclusivamente agli effetti casuali.</li>
+</ul>
+<p>La formula dell’ICC è:</p>
+<p><span class="math display">\[
+ICC = \frac{\sigma^2_i}{\sigma^2_i + \sigma^2_\varepsilon}
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(\sigma^2_i\)</span> è la varianza degli effetti casuali.<br>
+</li>
+<li>
+<span class="math inline">\(\sigma^2_\varepsilon\)</span> è la varianza residua.</li>
+</ul></section><section id="icc-aggiustato-e-non-aggiustato" class="level3" data-number="15.5.2"><h3 data-number="15.5.2" class="anchored" data-anchor-id="icc-aggiustato-e-non-aggiustato">
+<span class="header-section-number">15.5.2</span> ICC Aggiustato e Non Aggiustato</h3>
+<p>La funzione <code>icc()</code> in R calcola sia l’ICC aggiustato che non aggiustato:</p>
+<ul>
+<li>
+<strong>ICC aggiustato</strong>: considera solo gli effetti casuali ed è utile quando l’interesse è focalizzato su questi ultimi.</li>
+<li>
+<strong>ICC non aggiustato</strong>: include anche la varianza degli effetti fissi nel denominatore, fornendo una misura più globale.</li>
+</ul>
+<p>Secondo Nakagawa et al.&nbsp;(2017), l’ICC aggiustato è spesso più rilevante in analisi che si concentrano sugli effetti casuali. La funzione <code>icc()</code> è versatile, calcolando l’ICC anche in modelli complessi, come quelli con pendenze casuali o design nidificati, e può essere applicata a modelli con distribuzioni non gaussiane.</p>
+</section><section id="conclusione" class="level3" data-number="15.5.3"><h3 data-number="15.5.3" class="anchored" data-anchor-id="conclusione">
+<span class="header-section-number">15.5.3</span> Conclusione</h3>
+<p>L’ICC è uno strumento potente per quantificare il raggruppamento nei dati e decidere se un modello misto è appropriato. Oltre alla sua interpretazione intuitiva, la sua stretta relazione con <span class="math inline">\(R^2\)</span> ne sottolinea l’importanza nell’analisi di varianza nei modelli misti. Funzioni come <code>icc()</code> offrono calcoli adattabili a una vasta gamma di contesti, rendendolo un indicatore flessibile e indispensabile per analisi avanzate.</p>
+</section></section><section id="session-info" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="session-info">
 <span class="header-section-number">15.6</span> Session Info</h2>
 <div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.2</span></span>
