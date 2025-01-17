@@ -1,25 +1,32 @@
 # Il modello multifattoriale {#sec-fa-multifactor-model}
 
-**Prerequisiti**
+::: callout-important
+## In questo capitolo imparerai a
+
+- calcolare e interpretare la correlazione parziale;
+- capire la teoria dei due fattori;
+- applicare e comprendere il metodo dell'annullamento della tetrade.
+:::
+
+::: callout-tip
+## Prerequisiti
 
 - Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
 
-**Concetti e Competenze Chiave**
-
-- Correlazione parziale
-- Teoria dei due fattori
-- Annullamento della tetrade
-
-**Preparazione del Notebook**
+::: callout-caution
+## Preparazione del Notebook
 
 ```{r}
-#| vscode: {languageId: r}
-# Carica il file _common.R per impostazioni di pacchetti e opzioni
-here::here("code", "_common.R") |> source()
+here::here("code", "_common.R") |> 
+  source()
 
-# Carica pacchetti aggiuntivi
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
 pacman::p_load(lavaan, semPlot, corrplot, tidyr, tidySEM, kableExtra)
 ```
+:::
+
 
 ## Fattori ortogonali
 
@@ -251,7 +258,6 @@ $\lambda_l \lambda_m$ nei due fattori.
 - positive emotions (E4). 
 
 ```{r}
-#| vscode: {languageId: r}
 varnames <- c("N1", "N2", "N3", "N4", "E1", "E2", "E3", "E4")
 sds <- '5.7  5.6  6.4  5.7  6.0  6.2  5.7  5.6'
 
@@ -273,7 +279,6 @@ n <- 250
 Eseguiamo l'analisi fattoriale esplorativa con il metodo della massima verosimiglianza ipotizzando due fattori comuni incorrelati:
 
 ```{r}
-#| vscode: {languageId: r}
 n_facs <- 2
 fit_efa <- factanal(
   covmat = psychot_cor_mat,
@@ -286,9 +291,8 @@ fit_efa <- factanal(
 Esaminiamo le saturazioni fattoriali:
 
 ```{r}
-#| vscode: {languageId: r}
 lambda <- fit_efa$loadings
-print(lambda)
+lambda
 ```
 
 La soluzione fattoriale conferma la presenza di due fattori: il primo fattore satura sulle scale di neutoricismo, il secono sulle scale di estroversione.
@@ -296,7 +300,6 @@ La soluzione fattoriale conferma la presenza di due fattori: il primo fattore sa
 La correlazione riprodotta $r_{12}$ è uguale a $\lambda_{11}\lambda_{21} + \lambda_{12}\lambda_{22}$ 
 
 ```{r}
-#| vscode: {languageId: r}
 lambda[1, 1] * lambda[2, 1] + lambda[1, 2] * lambda[2, 2]
 ```
 
@@ -306,9 +309,8 @@ L'intera matrice di correlazioni riprodotte è
 $\boldsymbol{\Lambda} \boldsymbol{\Lambda}^{\mathsf{T}} + \boldsymbol{\psi}$:
 
 ```{r}
-#| vscode: {languageId: r}
 Rr <- lambda %*% t(lambda) + diag(fit_efa$uniq)
-Rr %>% 
+Rr |> 
   round(3)
 ```
 
@@ -316,9 +318,7 @@ La differenza tra la matrice di correlazioni riprodotte e la matrice di
 correlazioni osservate è uguale a:
 
 ```{r}
-#| lines_to_next_cell: 0
-#| vscode: {languageId: r}
-(psychot_cor_mat - Rr) %>% 
+(psychot_cor_mat - Rr) |> 
   round(3)
 ```
 
@@ -450,33 +450,29 @@ diagonale di ordine $p$ con le unicità delle variabili.
 **Esempio.** Consideriamo nuovamente i dati esaminati negli esercizi precedenti, ma questa volta il modello consente una correlazione tra i due fattori comuni:
 
 ```{r}
-#| vscode: {languageId: r}
 efa_result <- fa(
     psychot_cor_mat, 
     nfactors = 2, 
     n.obs = n, 
     rotate = "oblimin"
 )
-print(efa_result)
+efa_result
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 fa.diagram(efa_result)
 ```
 
 Esaminiamo la matrice delle correlazioni residue:
 
 ```{r}
-#| vscode: {languageId: r}
 residuals <- residuals(efa_result)
-print(residuals)
+residuals
 ```
 
 Esaminiamo più da vicino la matrice di correlazioni riprodotta dal modello, nel caso di fattori obliqui. Le saturazioni fattoriali sono:
 
 ```{r}
-#| vscode: {languageId: r}
 # Estrai i carichi fattoriali (saturazioni fattoriali)
 lambda <- efa_result$loadings
 
@@ -487,24 +483,22 @@ rownames(lambda) <- c("N1", "N2", "N3", "N4", "E1", "E2", "E3", "E4")
 colnames(lambda) <- c("Factor1", "Factor2")
 
 # Stampa la matrice dei carichi
-print(lambda)
+lambda
 ```
 
 La matrice di intercorrelazoni fattoriali è
 
 ```{r}
-#| vscode: {languageId: r}
 # Estrai la matrice delle intercorrelazioni fattoriali
 Phi <- efa_result$Phi
 
 # Stampa la matrice delle intercorrelazioni
-print(Phi)
+Phi
 ```
 
 Le varianze residue sono:
 
 ```{r}
-#| vscode: {languageId: r}
 # Estrai le varianze residue
 Psi <- diag(efa_result$uniquenesses)
 
@@ -521,7 +515,6 @@ $$
 In $\textsf{R}$ scriviamo:
 
 ```{r}
-#| vscode: {languageId: r}
 R_hat <- lambda %*% Phi %*% t(lambda) + Psi
 R_hat |> 
   round(2)
@@ -530,7 +523,6 @@ R_hat |>
 Le correlazioni residue sono:
 
 ```{r}
-#| vscode: {languageId: r}
 psychot_cor_mat - R_hat |>
   round(2)
 ```
@@ -538,7 +530,6 @@ psychot_cor_mat - R_hat |>
 Per fare un esempio relativo alla correlazione tra due indicatori, calcoliamo la correlazione predetta dal modello tra le variabili $Y_1$ e $Y_2$:
 
 ```{r}
-#| vscode: {languageId: r}
 lambda[1, 1] * lambda[2, 1] + lambda[1, 2] * lambda[2, 2] +
   lambda[1, 1] * lambda[2, 2] * Phi[1, 2] + 
   lambda[1, 2] * lambda[2, 1] * Phi[1, 2] 
@@ -548,18 +539,14 @@ Questo valore si avvicina al valore contenuto dell'elemento (1, 2) della
 matrice di correlazioni osservate:
 
 ```{r}
-#| vscode: {languageId: r}
 psychot_cor_mat[1, 2]
 ```
 
-Usando questa procedura possiamo riprodurre tutti gli elementi della matrice di correlazione osservata tramite i parametri stimati dal modello EFA replicando così il risultato che si trova con $
-\boldsymbol{\Sigma} =\boldsymbol{\Lambda} \boldsymbol{\Phi} \boldsymbol{\Lambda}^{\mathsf{T}} + \boldsymbol{\Psi}. 
-$
+Usando questa procedura possiamo riprodurre tutti gli elementi della matrice di correlazione osservata tramite i parametri stimati dal modello EFA replicando così il risultato che si trova con $\boldsymbol{\Sigma} =\boldsymbol{\Lambda} \boldsymbol{\Phi} \boldsymbol{\Lambda}^{\mathsf{T}} + \boldsymbol{\Psi}$. 
 
 ## Session Info
 
 ```{r}
-#| vscode: {languageId: r}
 sessionInfo()
 ```
 

@@ -1,135 +1,134 @@
 # Predizione {#sec-prediction-roc}
 
-**Prerequisiti**
+::: callout-important
+## In questo capitolo imparerai a
+
+- conoscere le problematiche di base della predizione statistica;
+- calcolare e interpretare la curva ROC e la statistica AUC.
+:::
+
+::: callout-tip
+## Prerequisiti
 
 - Leggere il capitolo 9 *Prediction* del testo di @petersen2024principles.
+:::
 
-**Concetti e Competenze Chiave**
-
-**Preparazione del Notebook**
+::: callout-caution
+## Preparazione del Notebook
 
 ```{r}
-#| vscode: {languageId: r}
-here::here("code", "_common.R") |> source()
+here::here("code", "_common.R") |> 
+  source()
 
 # Load packages
 if (!requireNamespace("pacman")) install.packages("pacman")
 pacman::p_load(
     petersenlab, magrittr, viridis, pROC, ROCR, rms, ResourceSelection,
-    PredictABEL, gridExtra, grid, ggpubr, msir, car, ggrepel, MOTE,
+    gridExtra, grid, ggpubr, msir, car, ggrepel, MOTE,
     tinytex
 )
 ```
+:::
+
 
 ## Introduzione
 
-Le predizioni possono essere di vario tipo. Alcune riguardano dati categoriali, mentre altre si basano su dati continui. Per i dati categoriali, possiamo valutare le predizioni utilizzando una tabella 2 $\times$ 2, nota come matrice di confusione, o con modelli di regressione logistica. Invece, per i dati continui, possiamo utilizzare la regressione multipla o varianti come il modello a equazioni strutturali o i modelli misti.
+Le predizioni rappresentano un aspetto cruciale in numerosi ambiti. Possono riguardare sia dati categoriali, valutabili attraverso strumenti come matrici di confusione e modelli di regressione logistica, sia dati continui, analizzabili tramite regressioni multiple o modelli più complessi come quelli misti o a equazioni strutturali.
 
-## Calcolo della probabilità di HIV dato un test positivo
+Il capitolo si concentra sulla valutazione delle predizioni in contesti categoriali, approfondendo l’utilizzo della curva ROC e dell’AUC (Area Under the Curve) per misurare la qualità dei modelli predittivi.
 
-Analizziamo un esempio pratico per stimare la probabilità di avere l'HIV, partendo da un test positivo, utilizzando le seguenti informazioni tratte da @petersen2024principles:
+## Probabilità di una condizione medica
 
-- **Tasso di base dell'HIV (P(HIV))**: 0.3% (0.003). Questa è la probabilità che una persona nella popolazione generale abbia l'HIV.
-- **Sensibilità del test (P(Test+ \mid  HIV))**: 95% (0.95). È la probabilità che il test risulti positivo quando la persona ha l'HIV.
-- **Specificità del test (P(Test- \mid  ¬HIV))**: 99.28% (0.9928). È la probabilità che il test risulti negativo quando la persona non ha l'HIV.
+Un esempio classico, discusso da @petersen2024principles, illustra il problema di calcolare la probabilità di avere l’HIV ($P(HIV \mid Test+)$) partendo da un risultato positivo a un test diagnostico. Le informazioni di base sono:
 
-Per calcolare la probabilità di avere l'HIV dato un test positivo $P(HIV \mid  Test+)$, utilizziamo il teorema di Bayes:
+- **Tasso di base dell’HIV** ($P(HIV)$): 0.3% (0.003), ovvero la probabilità che una persona nella popolazione generale abbia l’HIV.
+- **Sensibilità del test** ($P(Test+ \mid HIV)$): 95% (0.95), ovvero la probabilità che il test sia positivo quando la persona ha l’HIV.
+- **Specificità del test** ($P(Test- \mid \neg HIV)$): 99.28% (0.9928), ovvero la probabilità che il test sia negativo quando la persona non ha l’HIV.
 
-$$
-P(HIV \mid  Test+) = \frac{P(Test+ \mid  HIV) \times P(HIV)}{P(Test+)}.
-$$
-
-Il denominatore rappresenta la probabilità complessiva di ottenere un test positivo e include sia i **veri positivi** che i **falsi positivi**:
+Utilizziamo il **teorema di Bayes** per calcolare $P(HIV \mid Test+)$:
 
 $$
-P(Test+) = P(Test+ \mid  HIV) \times P(HIV) + P(Test+ \mid  \neg HIV) \times P(\neg HIV),
+P(HIV \mid Test+) = \frac{P(Test+ \mid HIV) \cdot P(HIV)}{P(Test+)},
 $$
 
-dove:
+dove il denominatore $P(Test+)$ rappresenta la probabilità complessiva di un test positivo, somma di:
 
-- $P(Test+ \mid  \neg HIV) = 1 - P(Test- \mid  \neg HIV) = 1 - 0.9928 = 0.0072$ (tasso di falsi positivi),
-- $P(\neg HIV) = 1 - P(HIV) = 1 - 0.003 = 0.997$.
+- **Veri positivi**: $P(Test+ \mid HIV) \cdot P(HIV)$,
+- **Falsi positivi**: $P(Test+ \mid \neg HIV) \cdot P(\neg HIV)$.
 
-Sostituendo i valori:
-
-$$
-P(Test+) = (0.95 \times 0.003) + (0.0072 \times 0.997) \approx 0.010027.
-$$
-
-Ora possiamo calcolare la probabilità di avere l'HIV dato un test positivo:
+Con $P(Test+ \mid \neg HIV) = 1 - P(Test- \mid \neg HIV) = 1 - 0.9928 = 0.0072$, e $P(\neg HIV) = 1 - P(HIV) = 0.997$, possiamo calcolare:
 
 $$
-P(HIV \mid  Test+) = \frac{0.95 \times 0.003}{0.010027} \approx 0.2844 \quad \text{(28.44\%)}.
+P(Test+) = (0.95 \cdot 0.003) + (0.0072 \cdot 0.997) \approx 0.010027.
 $$
 
-Quindi, per un test con le caratteristiche descritte, un risultato positivo indica una probabilità di avere l'HIV pari al 28.44%.
-
-
-## Calcolo della probabilità di un secondo test positivo
-
-Dopo un primo test positivo, la probabilità di avere l'HIV è aumentata al 28.44%. Ora consideriamo la probabilità di ottenere un **secondo test positivo** e calcoliamo la probabilità aggiornata di avere l'HIV dopo due test positivi consecutivi.
-
-La probabilità di un secondo test positivo si calcola considerando due scenari:
-
-1. **La persona ha l'HIV**:
-   - Probabilità di avere l'HIV dopo il primo test: $P(HIV \mid  Test+) = 0.2844$,
-   - Probabilità che il test sia positivo: $P(Test+ \mid  HIV) = 0.95$.
-
-2. **La persona non ha l'HIV**:
-   - Probabilità di non avere l'HIV dopo il primo test: $P(\neg HIV \mid  Test+) = 1 - P(HIV \mid  Test+) = 0.7156$,
-   - Probabilità che il test sia positivo: $P(Test+ \mid  \neg HIV) = 0.0072$.
-
-Utilizziamo la formula della probabilità totale:
+Inserendo i valori nella formula di Bayes:
 
 $$
-P(\text{Secondo Test+}) = P(Test+ \mid  HIV) \times P(HIV \mid  Test+) \\
-+ P(Test+ \mid  \neg HIV) \times P(\neg HIV \mid  Test+).
+P(HIV \mid Test+) = \frac{0.95 \cdot 0.003}{0.010027} \approx 0.2844 \quad (28.44\%).
+$$
+
+Un primo test positivo aumenta quindi la probabilità di avere l’HIV al **28.44%**.
+
+Dopo un primo test positivo, la probabilità di avere l’HIV è aumentata al 28.44%. Consideriamo ora l’effetto di un **secondo test positivo** e calcoliamo la probabilità aggiornata di avere l’HIV.
+
+La probabilità di ottenere un secondo test positivo ($P(\text{Secondo Test+})$) si calcola considerando due scenari:
+
+1. **La persona ha l’HIV**:
+   - Probabilità: $P(HIV \mid Test+) = 0.2844$,
+   - Sensibilità del test: $P(Test+ \mid HIV) = 0.95$.
+
+2. **La persona non ha l’HIV**:
+   - Probabilità: $P(\neg HIV \mid Test+) = 1 - P(HIV \mid Test+) = 0.7156$,
+   - Tasso di falsi positivi: $P(Test+ \mid \neg HIV) = 0.0072$.
+
+La probabilità totale è data da:
+
+$$
+P(\text{Secondo Test+}) = P(Test+ \mid HIV) \cdot P(HIV \mid Test+) + P(Test+ \mid \neg HIV) \cdot P(\neg HIV \mid Test+).
 $$
 
 Sostituendo i valori:
 
 $$
-P(\text{Secondo Test+}) = (0.95 \times 0.2844) + (0.0072 \times 0.7156) \approx 0.2753.
+P(\text{Secondo Test+}) = (0.95 \cdot 0.2844) + (0.0072 \cdot 0.7156) \approx 0.2753.
 $$
 
-Applichiamo nuovamente il teorema di Bayes per aggiornare la probabilità:
+Aggiorniamo la probabilità di avere l’HIV dopo un secondo test positivo usando nuovamente il teorema di Bayes:
 
 $$
-P(HIV \mid  \text{Secondo Test+}) = \frac{P(Test+ \mid  HIV) \times P(HIV \mid  Test+)}{P(\text{Secondo Test+})}.
+P(HIV \mid \text{Secondo Test+}) = \frac{P(Test+ \mid HIV) \cdot P(HIV \mid Test+)}{P(\text{Secondo Test+})}.
 $$
 
 Sostituendo i valori:
 
 $$
-P(HIV \mid  \text{Secondo Test+}) = \frac{0.95 \times 0.2844}{0.2753} \approx 0.981 \quad \text{(98.1\%)}.
+P(HIV \mid \text{Secondo Test+}) = \frac{0.95 \cdot 0.2844}{0.2753} \approx 0.981 \quad (98.1\%).
 $$
 
-In conclusione, 
+L'esempio presentato da @petersen2024principles è rilevante per il problema generale della predizione, in quanto illustra come il ragionamento bayesiano consenta di integrare informazioni iniziali e successive per migliorare la precisione delle stime. In particolare, i risultati evidenziano tre aspetti fondamentali:
 
-1. **Probabilità iniziale**: La probabilità iniziale di avere l'HIV nella popolazione è molto bassa (0.3%).
-2. **Primo test positivo**: Un primo test positivo aumenta la probabilità al 28.44%.
-3. **Secondo test positivo**: Un secondo test positivo porta la probabilità al 98.1%.
+1. **Tasso di base come punto di partenza cruciale**: La probabilità iniziale (prior) di avere l'HIV, pari allo 0.3%, sottolinea quanto sia importante considerare il contesto epidemiologico e demografico nella fase iniziale della predizione. Questo valore guida l'intero processo di aggiornamento e mostra che una condizione rara richiede prove forti per modificarne la probabilità.
 
-Questi risultati dimostrano:
+2. **Aggiornamento incrementale delle probabilità**: Il passaggio da una probabilità del 28.44% dopo un primo test positivo a una probabilità del 98.1% dopo un secondo test positivo evidenzia la potenza del teorema di Bayes nel combinare evidenze successive. Ogni risultato positivo aggiunge informazioni che riducono l'incertezza iniziale, migliorando progressivamente la qualità della predizione.
 
-- L'importanza di considerare la prevalenza (tasso di base) nella popolazione.
-- Come il teorema di Bayes consenta di aggiornare progressivamente le probabilità sulla base di nuove evidenze.
-- L’efficacia dei test ripetuti per aumentare la precisione diagnostica.
+3. **Valore aggiunto dei test ripetuti**: L'analisi dimostra che l'efficacia diagnostica cresce con l'accumularsi di evidenze. Test ripetuti consentono di discriminare meglio tra casi veri positivi e falsi positivi, fornendo stime più affidabili e utili per decisioni cliniche.
 
-L'analisi evidenzia come un approccio bayesiano possa ridurre notevolmente l'incertezza iniziale, fornendo stime più accurate della probabilità di una condizione medica.
+Questi risultati mettono in luce l'importanza del ragionamento bayesiano non solo per valutare la probabilità di una condizione medica, ma anche per affrontare una vasta gamma di problemi di predizione in cui l'incertezza iniziale può essere ridotta integrando dati nuovi. L'approccio evidenzia come sia possibile arrivare a conclusioni robuste anche in contesti caratterizzati da bassi tassi di base e test diagnostici non perfetti.
 
-### Accuratezza delle Predizioni: Versione Migliorata
 
-Dopo l’introduzione sull’uso del teorema di Bayes per la predizione, @petersen2024principles affronta il tema delle predizioni con una tabella 2 × 2. Per spiegare questo caso, l’autore presenta un esempio adattato da Meehl & Rosen (1955).
+## Accuratezza delle Predizioni
+
+Dopo l’introduzione sull’uso del teorema di Bayes per la predizione, @petersen2024principles affronta il tema delle predizioni con una tabella 2 × 2. Per spiegare questo caso, @petersen2024principles presenta un esempio adattato da Meehl & Rosen (1955).
 
 Immaginiamo che l’esercito americano utilizzi un test per escludere i candidati con basse probabilità di completare l’addestramento di base. Per analizzare l’accuratezza delle predizioni effettuate, possiamo utilizzare una **matrice di confusione**, che confronta le predizioni del test con i risultati reali.
 
 | **Decisione (Predizione)** | **Adattamento Effettivo (Scarso)** | **Adattamento Effettivo (Buono)** | **Totale Predetto** | **Rapporto di Selezione (SR)** |
 |----------------------------|-----------------------------------|-----------------------------------|---------------------|-------------------------------|
-| **Escludere**             | TP = 86 (0,043)                  | FP = 422 (0,211)                 | 508                 | SR = 0,254                   |
-| **Trattenere**            | FN = 14 (0,007)                  | TN = 1.478 (0,739)               | 1.492               | 1 − SR = 0,746               |
-| **Totale Effettivo**      | 100                              | 1.900                            | N = 2.000           |                               |
-| **Tasso di Base (BR)**    | BR = 0,05                        | 1 − BR = 0,95                    |                     |                               |
+| **Escludere**             | TP = 86 (0.043)                  | FP = 422 (0.211)                 | 508                 | SR = 0.254                   |
+| **Trattenere**            | FN = 14 (0.007)                  | TN = 1.478 (0.739)               | 1,492               | 1 − SR = 0.746               |
+| **Totale Effettivo**      | 100                              | 1,900                            | N = 2,000           |                               |
+| **Tasso di Base (BR)**    | BR = 0.05                        | 1 − BR = 0.95                    |                     |                               |
 
 ### La Matrice di Confusione
 
@@ -183,12 +182,12 @@ Quando il **tasso di base** è molto basso (come in questo caso, BR = 0.05), l�
 | **Decisione (Predizione)** | **Adattamento Effettivo (Scarso)** | **Adattamento Effettivo (Buono)** | **Totale Predetto** |
 |----------------------------|-----------------------------------|-----------------------------------|---------------------|
 | **Escludere**             | TP = 0                            | FP = 0                           | 0                   |
-| **Trattenere**            | FN = 100                          | TN = 1.900                       | 2.000               |
-| **Totale Effettivo**      | 100                              | 1.900                            | N = 2.000           |
+| **Trattenere**            | FN = 100                          | TN = 1,900                       | 2,000               |
+| **Totale Effettivo**      | 100                              | 1,900                            | N = 2,000           |
 
 In questo caso, l’accuratezza complessiva sarebbe:
 $$
-P(\text{Accuratezza}) = \frac{TP + TN}{N} = \frac{0 + 1.900}{2.000} = 95\%.
+P(\text{Accuratezza}) = \frac{TP + TN}{N} = \frac{0 + 1900}{2000} = 95\%.
 $$
 
 Questo esempio evidenzia che un’elevata accuratezza complessiva non garantisce un buon modello, specialmente quando il tasso di base è sbilanciato.
@@ -257,17 +256,16 @@ Queste metriche, che si possono calcolare dalla *matrice di confusione*, ci aiut
 
 Ogni misura è espressa come una proporzione, variando da 0 a 1, dove valori più alti indicano una maggiore accuratezza per ciascun aspetto specifico. Usando queste metriche otteniamo un quadro dettagliato dell’efficacia dello strumento a un determinato cutoff.
 
-### Interpretazione delle Metriche
-
 In questo caso, il nostro strumento mostra:
-- **Alta sensibilità** (0,86): è efficace nel rilevare chi ha la condizione.
-- **Bassa specificità** (0,78): classifica erroneamente come positivi molti casi che non hanno la condizione.
-- **Basso PPV** (0,17): la maggior parte dei casi classificati come positivi sono in realtà negativi, indicando una frequenza elevata di falsi positivi.
-- **Alto NPV** (0,99): quasi tutti i casi classificati come negativi non hanno la condizione.
+
+- **Alta sensibilità** (0.86): è efficace nel rilevare chi ha la condizione.
+- **Bassa specificità** (0.78): classifica erroneamente come positivi molti casi che non hanno la condizione.
+- **Basso PPV** (0.17): la maggior parte dei casi classificati come positivi sono in realtà negativi, indicando una frequenza elevata di falsi positivi.
+- **Alto NPV** (0.99): quasi tutti i casi classificati come negativi non hanno la condizione.
 
 Quindi, pur avendo una buona capacità di rilevare i positivi (alta sensibilità), il modello è meno efficace nel limitare i falsi positivi (basso PPV). Questo potrebbe essere accettabile se l’obiettivo è identificare tutti i potenziali casi positivi, anche a costo di includere molti falsi positivi, ma potrebbe non essere ideale se il costo degli errori di falsa positività è elevato.
 
-## Alcune Stime di Accuratezza Dipendono dal Cutoff
+## Stime di Accuratezza e Cutoff
 
 Sensibilità, specificità, PPV e NPV variano in base al cutoff (ovvero, la soglia) per la classificazione. Consideriamo il seguente esempio. Degli alieni visitano la Terra e sviluppano un test per determinare se una bacca è commestibile o non commestibile.
 
@@ -301,27 +299,29 @@ density_data <- bind_rows(hist_edible, hist_inedible)
 density_data$type <- factor(density_data$type, levels = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN"))
 ```
 
-La Figura successiva mostra le distribuzioni dei punteggi in base al tipo di bacca. Si può notare come ci sono due distribuzioni distinte, ma con una certa sovrapposizione. Pertanto, qualsiasi cutoff selezionato comporterà almeno alcune classificazioni errate. L'entità della sovrapposizione delle distribuzioni riflette la quantità di errore di misurazione dello strumento rispetto alla caratteristica di interesse.
+La figura successiva mostra le distribuzioni dei punteggi in base al tipo di bacca. Si può notare come ci sono due distribuzioni distinte, ma con una certa sovrapposizione. Pertanto, qualsiasi cutoff selezionato comporterà almeno alcune classificazioni errate. L'entità della sovrapposizione delle distribuzioni riflette la quantità di errore di misurazione dello strumento rispetto alla caratteristica di interesse.
 
 ```{r}
-#| vscode: {languageId: r}
 ggplot(data = edibleData, aes(x = score, ymin = 0, fill = type)) +
     geom_density(alpha = .5) +
-    scale_fill_manual(name = "Tipo di Bacca", values = c(viridis(2)[1], viridis(2)[2])) +
+    scale_fill_manual(
+      name = "Tipo di Bacca", values = c(viridis(2)[1], viridis(2)[2])
+    ) +
     scale_y_continuous(name = "Frequenza") 
 ```
 
-La Figura successiva mostra le distribuzioni dei punteggi in base al tipo di bacca con un cutoff. La linea rossa indica il cutoff: il livello al di sopra del quale le bacche vengono classificate come non commestibili. Ci sono errori su entrambi i lati del cutoff. Sotto il cutoff, ci sono dei falsi negativi (blu): bacche non commestibili erroneamente classificate come commestibili. Sopra il cutoff, ci sono dei falsi positivi (verde): bacche commestibili erroneamente classificate come non commestibili. I costi dei falsi negativi potrebbero includere malattia o morte derivanti dal consumo di bacche non commestibili, mentre i costi dei falsi positivi potrebbero includere maggiore tempo per trovare cibo, insufficienza di cibo e fame.
+La figura successiva mostra le distribuzioni dei punteggi in base al tipo di bacca con un cutoff. La linea rossa indica il cutoff: il livello al di sopra del quale le bacche vengono classificate come non commestibili. Ci sono errori su entrambi i lati del cutoff. Sotto il cutoff, ci sono dei falsi negativi (blu): bacche non commestibili erroneamente classificate come commestibili. Sopra il cutoff, ci sono dei falsi positivi (verde): bacche commestibili erroneamente classificate come non commestibili. I costi dei falsi negativi potrebbero includere malattia o morte derivanti dal consumo di bacche non commestibili, mentre i costi dei falsi positivi potrebbero includere maggiore tempo per trovare cibo, insufficienza di cibo e fame.
 
 ```{r}
-#| vscode: {languageId: r}
 ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
     geom_ribbon(alpha = 1) +
     scale_fill_manual(
         name = "Tipo di Bacca",
         values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
         breaks = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN"),
-        labels = c("Commestibile: TN", "Non Commestibile: TP", "Commestibile: FP", "Non Commestibile: FN")
+        labels = c(
+          "Commestibile: TN", "Non Commestibile: TP", 
+          "Commestibile: FP", "Non Commestibile: FN")
     ) +
     geom_line(aes(y = y)) +
     geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
@@ -332,7 +332,6 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 A seconda dei nostri obiettivi di valutazione, potremmo voler usare un diverso rapporto di selezione modificando il cutoff. La Figura  mostra le distribuzioni dei punteggi quando si aumenta il cutoff. Ora ci sono più falsi negativi (blu) e meno falsi positivi (verde). Se alziamo il cutoff per essere più conservativi, il numero di falsi negativi aumenta, mentre il numero di falsi positivi diminuisce. Di conseguenza, aumentando il cutoff, la sensibilità e il valore predittivo negativo (NPV) diminuiscono, mentre la specificità e il valore predittivo positivo (PPV) aumentano. Un cutoff più alto potrebbe essere ottimale se i costi dei falsi positivi sono considerati superiori a quelli dei falsi negativi. Ad esempio, se gli alieni non possono rischiare di mangiare bacche non commestibili perché sono fatali, e ci sono abbastanza bacche commestibili per nutrire la colonia aliena.
 
 ```{r}
-#| vscode: {languageId: r}
 # Raise the cutoff
 cutoff <- 85
 
@@ -342,7 +341,9 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
         name = "Tipo di Bacca",
         values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
         breaks = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN"),
-        labels = c("Commestibile: TN", "Non Commestibile: TP", "Commestibile: FP", "Non Commestibile: FN")
+        labels = c(
+          "Commestibile: TN", "Non Commestibile: TP", 
+          "Commestibile: FP", "Non Commestibile: FN")
     ) +
     geom_line(aes(y = y)) +
     geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
@@ -357,7 +358,6 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
 In alternativa, possiamo abbassare il cutoff per essere più liberali. La Figura seguente mostra le distribuzioni dei punteggi quando abbassiamo il cutoff. Ora ci sono meno falsi negativi (blu) e più falsi positivi (verde). Abbassando il cutoff, la sensibilità e il NPV aumentano, mentre la specificità e il PPV diminuiscono. Un cutoff più basso potrebbe essere ottimale se i costi dei falsi negativi sono considerati superiori a quelli dei falsi positivi. Ad esempio, se gli alieni non possono rischiare di perdere bacche commestibili perché sono scarse, e mangiare bacche non commestibili comporta solo disagi temporanei.
 
 ```{r}
-#| vscode: {languageId: r}
 # Lower the cutoff
 cutoff <- 65
 
@@ -367,7 +367,9 @@ ggplot(data = density_data, aes(x = x, ymin = 0, ymax = y, fill = type)) +
         name = "Tipo di Bacca",
         values = c(viridis(4)[4], viridis(4)[1], viridis(4)[3], viridis(4)[2]),
         breaks = c("edible_TN", "inedible_TP", "edible_FP", "inedible_FN"),
-        labels = c("Commestibile: TN", "Non Commestibile: TP", "Commestibile: FP", "Non Commestibile: FN")
+        labels = c(
+          "Commestibile: TN", "Non Commestibile: TP", 
+          "Commestibile: FP", "Non Commestibile: FN")
     ) +
     geom_line(aes(y = y)) +
     geom_vline(xintercept = cutoff, color = "red", linewidth = 2) +
@@ -383,460 +385,108 @@ In sintesi, sensibilità e specificità variano in base al cutoff utilizzato per
 
 ## Teoria della Detezione del Segnale
 
-La *teoria della detezione del segnale* (Signal Detection Theory, SDT) è una teoria probabilistica utilizzata per il rilevamento di uno stimolo (segnale) all'interno di un insieme di stimoli che include anche stimoli non target (rumore). La SDT è nata durante lo sviluppo del radar (**RA**dio **D**etection **A**nd **R**anging) e del sonar (**SO**und **N**avigation **A**nd **R**anging) durante la Seconda Guerra Mondiale, basandosi su ricerche in ambito sensoriale-percettivo. Il settore militare desiderava determinare quali oggetti rilevati da radar/sonar fossero effettivamente aerei o sottomarini nemici, e quali fossero solo rumore (ad esempio, oggetti diversi nell'ambiente).
+La *teoria della detezione del segnale* (Signal Detection Theory, SDT) è un approccio probabilistico che descrive la capacità di rilevare uno stimolo target (segnale) in mezzo a stimoli non target (rumore). Sviluppata durante la Seconda Guerra Mondiale per migliorare le prestazioni di radar e sonar, distingue tra due concetti fondamentali: **sensibilità** e **bias**.
 
-La SDT ha permesso di valutare il numero di errori commessi dagli operatori (cioè, quanto fossero precisi) e di scomporre tali errori in diverse categorie. La teoria distingue tra *sensibilità* e *bias*. Nella SDT, la *sensibilità* (o discriminabilità) è la capacità di un test di distinguere tra uno stimolo target e stimoli non target, ossia quanto bene il test riesca a rilevare il segnale tra i rumori. Il *bias* rappresenta invece la tendenza del test a sovrastimare o sottostimare la probabilità di un evento target rispetto al tasso reale di occorrenza di tale evento.
+- **Sensibilità**: misura la capacità di distinguere tra segnale e rumore.
+- **Bias**: rappresenta la tendenza a sovrastimare o sottostimare la probabilità di un segnale.
 
-Alcuni operatori radar/sonar non erano molto sensibili alla differenza tra segnale e rumore, a causa di fattori come l'età o la capacità di distinguere sottili variazioni di segnale. Gli individui con bassa sensibilità, che quindi non riuscivano a distinguere efficacemente tra segnale e rumore, venivano esclusi, poiché la sensibilità era considerata una competenza che difficilmente si può insegnare. Altri operatori, pur avendo una buona sensibilità, mostravano bias sistematici o scarsa *calibrazione*, cioè commettevano errori sistematici nel giudicare i segnali, ad esempio sovra-rifiutando o sotto-rifiutando il target. 
+Originariamente utilizzata per selezionare e addestrare operatori radar, la SDT trova oggi applicazione in vari campi, come la medicina (es. rilevamento di tumori) e la psicologia. In quest'ultima, è stata utilizzata per studiare percezioni sociali, evidenziando differenze sistematiche nella sensibilità e nel bias.
 
-Sovra-rifiutare significa produrre molti *falsi negativi* (cioè, giudicare un segnale sicuro quando in realtà non lo è), mentre sotto-rifiutare genera molti *falsi positivi* (cioè, giudicare un segnale come pericoloso quando in realtà non lo è). Un operatore con buona sensibilità ma bias sistematico veniva considerato più facile da addestrare rispetto a chi aveva una bassa sensibilità. Gli operatori radar e sonar venivano quindi selezionati in base alla loro sensibilità nel distinguere tra segnale e rumore, e poi addestrati per migliorare la calibrazione e ridurre il bias sistematico, evitando così di sovra- o sotto-rifiutare gli stimoli.
+Le principali metriche della SDT includono **$d'$** per la sensibilità e **$\beta$**, **$c$**, e **$b$** per il bias, utili per quantificare precisione e tendenze decisionali.
 
-Anche se la SDT è stata sviluppata inizialmente durante la Seconda Guerra Mondiale, oggi ha un ruolo importante in molti ambiti della scienza e della medicina. Un esempio in medicina è il rilevamento di tumori nella radiologia. La SDT è fondamentale anche in psicologia, specialmente nella psicologia cognitiva. Ad esempio, ricerche sulla percezione sociale hanno dimostrato che gli uomini tendono a mostrare una scarsa sensibilità nel distinguere le manifestazioni di interesse sessuale nelle donne, confondendo la cordialità con l'interesse sessuale. Inoltre, gli uomini tendono ad avere un bias sistematico, sovrastimando l'interesse sessuale delle donne nei loro confronti, mostrando così una soglia troppo bassa nel giudicare tali segnali.
+## Curva ROC (Receiver Operating Characteristic)
 
-Le metriche SDT di sensibilità includono [$d'$](#dPrimeSDT) (d-prime), [$A$](#aSDT) (o $A'$), e l'area sotto la curva ROC (Receiver Operating Characteristic). Le metriche di bias includono [$\beta$](#betaSDT), [$c$](#cSDT) e [$b$](#bSDT).
+La curva ROC è un grafico che rappresenta la capacità di un test o modello di discriminare tra due classi (es. positivi e negativi). È costruita tracciando il **tasso di veri positivi (sensibilità)** sull'asse y e il **tasso di falsi positivi (1-specificità)** sull'asse x, per ogni possibile valore di cutoff.
 
-### Curva ROC (Receiver Operating Characteristic)
+- **Interpretazione della curva**:
+  - Una curva che si avvicina al lato superiore sinistro del grafico rappresenta un test con alta sensibilità e specificità.
+  - Una curva vicino alla diagonale indica una discriminazione casuale, non utile per classificare.
 
-L'asse delle x della curva ROC rappresenta il tasso di falsi allarmi o tasso di falsi positivi ($1 -$ specificità). L'asse delle y rappresenta il tasso di successi o tasso di veri positivi (sensibilità). La curva ROC traccia la combinazione tra sensibilità e specificità per ogni possibile valore di cutoff.
+- **Generazione della curva**:
+  1. Calcola la sensibilità e 1-specificità per vari valori di cutoff.
+  2. Traccia i punti corrispondenti sul grafico e collegali per formare la curva.
 
-Iniziamo con un cutoff pari a zero (in alto a destra sulla curva ROC). In questo caso, la sensibilità è pari a 1.0 e la specificità è 0, e il punto corrispondente viene tracciato sulla curva. Con un cutoff di zero, il test decide di agire su ogni stimolo (quindi il test è estremamente liberale). Aumentiamo progressivamente il cutoff e tracciamo la sensibilità e la specificità a ogni valore di cutoff. All'aumentare del cutoff, la sensibilità diminuisce e la specificità aumenta.
-
-Terminiamo con il valore di cutoff più alto possibile, dove la sensibilità è pari a 0 e la specificità è 1.0 (in altre parole, il test non agisce mai; quindi è il massimo della conservatività). Ogni punto sulla curva ROC corrisponde a una coppia di tasso di successi (sensibilità) e tasso di falsi allarmi (falsi positivi) risultante da uno specifico valore di cutoff. Dopodiché, possiamo collegare i punti con delle linee o curve per ottenere la curva ROC.
-
-La Figura seguente mostra un esempio empirico di curva ROC, dove le linee connettono i tassi di successi e di falsi allarmi.
-
-```{r}
-#| vscode: {languageId: r}
-plot(roc(aSAH$outcome, aSAH$s100b), legacy.axes = TRUE, print.auc = TRUE)
-```
-
-Creiamo ora una curva ROC lisciata, dove viene tracciata una curva continua e adattata per connettere i tassi di successi e di falsi allarmi.
+Esaminiamo un esempio in R utilizzando il pacchetto `pROC`:
 
 ```{r}
-#| vscode: {languageId: r}
-plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE)
-```
-
-### Area Sotto la Curva ROC (AUC)
-
-Le metodologie ROC possono essere utilizzate per confrontare e calcolare il potere discriminativo degli strumenti di misurazione, senza essere influenzati da fattori come il *selection ratio*, il *base rate* e i costi e benefici associati. L'analisi ROC fornisce un indice quantitativo di quanto bene uno strumento possa prevedere un segnale di interesse o discriminare tra segnali diversi. Questo approccio ci aiuta a capire con quale frequenza la nostra valutazione è corretta.
-
-Se scegliamo casualmente due osservazioni, e una è corretta mentre l'altra è sbagliata, la precisione sarebbe del 50%, ma questo rifletterebbe una risposta casuale, quindi inutile. L'area geometrica sotto la curva ROC riflette l'accuratezza discriminativa della misura. Questo indice è noto come AUC (Area Under the Curve) della curva ROC. AUC quantifica il potere discriminativo di un test. Più precisamente, AUC rappresenta la probabilità che, selezionando casualmente un target e un non-target, il test classifichi correttamente il target come tale. I valori dell'AUC variano da 0.0 a 1.0, dove 0.5 rappresenta la precisione casuale, come indicato dalla linea diagonale nella curva ROC. Un test è utile nella misura in cui la sua curva ROC si trova sopra la linea diagonale, indicando che la sua accuratezza discriminativa è superiore al caso.
-
-```{r}
-#| vscode: {languageId: r}
-plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, auc.polygon = TRUE)
-```
-
-```{r}
-#| vscode: {languageId: r}
-# Simulazione dei dati per AUC
-simulateDataFromAUC <- function(auc, n) {
-    t <- sqrt(log(1 / (1 - auc)**2))
-    z <- t - ((2.515517 + 0.802853 * t + 0.0103328 * t**2) / (1 + 1.432788 * t + 0.189269 * t**2 + 0.001308 * t**3))
-    d <- z * sqrt(2)
-
-    x <- c(rnorm(n / 2, mean = 0), rnorm(n / 2, mean = d))
-    y <- c(rep(0, n / 2), rep(1, n / 2))
-
-    data <- data.frame(x = x, y = y)
-
-    return(data)
-}
-
-set.seed(52242)
-
-auc60 <- simulateDataFromAUC(.60, 50000)
-auc70 <- simulateDataFromAUC(.70, 50000)
-auc80 <- simulateDataFromAUC(.80, 50000)
-auc90 <- simulateDataFromAUC(.90, 50000)
-auc95 <- simulateDataFromAUC(.95, 50000)
-auc99 <- simulateDataFromAUC(.99, 50000)
-
-plot(roc(y ~ x, auc60, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .52, print.auc.y = .61, print.auc.pattern = "%.2f")
-plot(roc(y ~ x, auc70, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .6, print.auc.y = .67, print.auc.pattern = "%.2f", add = TRUE)
-plot(roc(y ~ x, auc80, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .695, print.auc.y = .735, print.auc.pattern = "%.2f", add = TRUE)
-plot(roc(y ~ x, auc90, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .805, print.auc.y = .815, print.auc.pattern = "%.2f", add = TRUE)
-plot(roc(y ~ x, auc95, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .875, print.auc.y = .865, print.auc.pattern = "%.2f", add = TRUE)
-plot(roc(y ~ x, auc99, smooth = TRUE), legacy.axes = TRUE, print.auc = TRUE, print.auc.x = .94, print.auc.y = .94, print.auc.pattern = "%.2f", add = TRUE)
-```
-
-Ad esempio, se l'AUC è pari a 0.75, ciò significa che il punteggio complessivo di un individuo che possiede la caratteristica in questione sarà più alto nel 75% dei casi rispetto a quello di un individuo che non la possiede. In termini più semplici, l'AUC fornisce la probabilità che lo strumento classifichi correttamente, se scegliamo casualmente un esito positivo e uno negativo.
-
-L'AUC è un indice più robusto rispetto alla percentuale di accuratezza perché la percentuale di accuratezza può essere influenzata da fattori come il base rate. L'AUC misura quanto un test è migliore del caso nel discriminare tra esiti diversi. Inoltre, è utile come indicatore generale di accuratezza discriminativa, poiché mostra quanto un test sia accurato su tutti i possibili cutoff.
-
-Anche se conoscere l'accuratezza del test a ogni cutoff può essere utile per selezionare il cutoff ottimale, nella realtà non siamo interessati a tutti i possibili cutoff, poiché non tutti gli errori hanno lo stesso costo.
-
-Iniziare {#gettingStarted-prediction}
-
-Caricare le Librerie {#loadLibraries-prediction}
-
-Preparare i Dati {#prepareData-prediction}
-Caricamento dei Dati {#loadData-prediction}
-
-Il dataset aSAH del pacchetto pROC contiene i punteggi dei test (s100b) e gli esiti clinici (outcome) di pazienti.
-
-```{r}
-#| vscode: {languageId: r}
+# Dati di esempio
 data(aSAH)
-mydataSDT <- aSAH
-```
 
-Per garantire la riproducibilità, imposto il seed qui sotto. L'utilizzo dello stesso seed garantirà gli stessi risultati ogni volta. Non c'è nulla di speciale in questo seed specifico.
-
-```{r}
-#| vscode: {languageId: r}
-set.seed(52242)
-
-mydataSDT$testScore <- mydataSDT$s100b
-mydataSDT <- mydataSDT %>%
-    mutate(testScoreSimple = ntile(testScore, 10))
-
-mydataSDT$predictedProbability <-
-    (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) /
-        (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
-mydataSDT$continuousOutcome <- mydataSDT$testScore +
-    rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
-mydataSDT$disorder <- NA
-mydataSDT$disorder[mydataSDT$outcome == "Good"] <- 0
-mydataSDT$disorder[mydataSDT$outcome == "Poor"] <- 1
-```
-
-La curva ROC (Receiver Operating Characteristic) mostra la combinazione tra il tasso di successo (o sensibilità) e il tasso di falsi allarmi ($1 - \text{specificità}$) per ogni possibile soglia di cutoff. La curva dimostra come, all'aumentare della soglia (diventando più conservativa), la sensibilità diminuisce e la specificità aumenta, e viceversa.
-
-Le curve ROC possono essere generate utilizzando il pacchetto pROC, e gli esempi mostrano che la misura ha un'accuratezza moderata—è più accurata del caso, ma c'è margine di miglioramento.
-
-Curva ROC Empirica {#empiricalROC}
-Il codice per generare una curva ROC empirica è mostrato qui sotto, e il grafico è visibile in Figura @ref(fig
-
-```{r}
-#| vscode: {languageId: r}
-rocCurve <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = FALSE)
+# Generazione della curva ROC
+rocCurve <- roc(aSAH$outcome, aSAH$s100b)
 ```
 
 ```{r}
-#| vscode: {languageId: r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+# Visualizzazione della curva
 plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
 ```
 
-Una curva ROC empirica con i cutoff sovrapposti è mostrata 
+## AUC (Area Under the Curve)
+
+L'AUC è l'area sotto la curva ROC e fornisce una misura sintetica della capacità discriminativa del test.
+
+- **Interpretazione dell'AUC**:
+  - **0.5**: Discriminazione casuale (linea diagonale).
+  - **0.7–0.8**: Discriminazione accettabile.
+  - **0.8–0.9**: Buona discriminazione.
+  - **>0.9**: Eccellente discriminazione.
+
+- **Significato dell'AUC**:
+  - Rappresenta la probabilità che, selezionando casualmente un esito positivo e uno negativo, il test classifichi correttamente l’esito positivo.
+  - Ad esempio, un’AUC di 0.75 significa che il test classifica correttamente il 75% delle coppie positivo-negativo.
+
+Esempio in R per una curva ROC lisciata e AUC:
 
 ```{r}
-#| vscode: {languageId: r}
-pred <- prediction(
-    na.omit(mydataSDT[, c("testScoreSimple", "disorder")])$testScoreSimple,
-    na.omit(mydataSDT[, c("testScoreSimple", "disorder")])$disorder
-)
-perf <- performance(pred, "tpr", "fpr")
-plot(perf, print.cutoffs.at = 1:11, text.adj = c(1, -1), ylim = c(0, 1.05))
-abline(coef = c(0, 1))
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+# Curva ROC lisciata
+plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), 
+     legacy.axes = TRUE, print.auc = TRUE)
 ```
 
-Curva ROC Liscia si ottiene nel modo seguente.
+**Vantaggi dell'analisi ROC e AUC**
+
+1. **Indipendenza dal cutoff**: La curva ROC consente di valutare un test senza fissare una soglia specifica.
+2. **Robustezza**: L’AUC è meno influenzata da fattori come il tasso di base nella popolazione o lo sbilanciamento tra classi.
+3. **Comparabilità**: Permette di confrontare l’efficacia di diversi test o modelli.
+
+## Riflessioni Conclusive
+
+La curva ROC (*Receiver Operating Characteristic*) e l’AUC (*Area Under the Curve*) rappresentano strumenti tra i più efficaci per valutare l’accuratezza predittiva di modelli e test diagnostici. La loro forza risiede nella capacità di fornire una valutazione complessiva della discriminabilità del modello, tenendo conto dei bias introdotti da tassi di base e dalla scelta delle soglie decisionali.
+
+La curva ROC traccia la relazione tra il tasso di veri positivi (*True Positive Rate*, o sensibilità) e il tasso di falsi positivi (*False Positive Rate*, o 1-specificità) per ogni possibile valore di cutoff. Questo approccio consente di:
+
+- **Visualizzare le prestazioni complessive**: La curva illustra come varia il compromesso tra sensibilità e specificità al variare della soglia, rendendo evidente il trade-off tra errori di tipo I (falsi positivi) ed errori di tipo II (falsi negativi).
+- **Superare la limitazione di un singolo cutoff**: Piuttosto che valutare il modello su una soglia arbitraria, la curva ROC considera tutte le possibili soglie, offrendo un quadro più completo.
+
+L’AUC, o area sotto la curva ROC, sintetizza la capacità del modello di distinguere tra classi in un singolo valore. Un’AUC pari a 1 indica una classificazione perfetta, mentre un valore di 0.5 rappresenta un modello che non ha capacità discriminativa migliore di una scelta casuale. Le caratteristiche principali dell’AUC includono:
+
+- **Indipendenza dai tassi di base**: L’AUC misura la capacità discriminativa del modello senza essere influenzata dalla prevalenza delle classi, rendendola particolarmente utile in contesti con distribuzioni sbilanciate.
+- **Comparabilità**: L’AUC consente di confrontare modelli diversi in modo standardizzato, indipendentemente dalla soglia di classificazione scelta.
+
+Un aspetto critico nella valutazione di modelli predittivi è che i tassi di base (la proporzione della classe positiva nella popolazione) possono influenzare fortemente le metriche di performance, come accuratezza e precisione. La curva ROC e l’AUC affrontano questo problema:
+
+- **Separazione tra sensibilità e bias**: La curva ROC evidenzia le capacità discriminative indipendentemente dal bias introdotto da tassi di base o scelte di cutoff.
+- **Supporto alla scelta del cutoff ottimale**: Valutando il compromesso tra veri positivi e falsi positivi per ogni soglia, è possibile identificare il punto che bilancia meglio sensibilità e specificità in base ai costi associati agli errori.
+
+Strumenti come ROC e AUC sono particolarmente utili in campi come la psicologia, la medicina e l’intelligenza artificiale, dove:
+
+- **Errori hanno costi variabili**: Ad esempio, nel rilevamento di malattie, un falso negativo può essere più grave di un falso positivo. La curva ROC aiuta a scegliere soglie che minimizzano l’impatto di tali errori.
+- **Gestione di distribuzioni sbilanciate**: In scenari dove la classe positiva è rara (es. diagnosi di malattie gravi), l’AUC permette di valutare le prestazioni senza essere distorto dalla prevalenza.
+
+In conclusione, la curva ROC e l’AUC offrono una rappresentazione completa della capacità predittiva di un modello, permettendo di considerare molteplici cutoff e di ridurre l’influenza di bias legati ai tassi di base. Questo approccio consente decisioni informate su soglie ottimali, rendendoli strumenti indispensabili in ogni analisi che coinvolga la predizione e la classificazione.
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered} 
 
 ```{r}
-#| vscode: {languageId: r}
-rocCurveSmooth <- roc(data = mydataSDT, response = disorder, predictor = testScore, smooth = TRUE)
-plot(rocCurveSmooth, legacy.axes = TRUE, print.auc = TRUE)
+sessionInfo()
 ```
 
-Statistica di Youden J {#youdenJ}
-La soglia della statistica di Youden J è il punto in cui il test ha la massima combinazione (somma) di sensibilità e specificità: $\text{max}(\text{sensitivity} + \text{specificity} - 1)$.
-
-```{r}
-#| vscode: {languageId: r}
-youdenJ <- coords(rocCurve, x = "best", best.method = "youden")
-youdenJthreshold <- youdenJ$threshold
-youdenJspecificity <- youdenJ$specificity
-youdenJsensitivity <- youdenJ$sensitivity
-
-youdenJ
-```
-
-Per questo test, la soglia ottimale secondo la statistica di Youden J è $r youdenJthreshold$, con una sensibilità di $r youdenJsensitivity$ e una specificità di $r youdenJspecificity$.
-
-Punto più vicino alla parte in alto a sinistra della curva ROC {#topLeftROC}
-Il punto più vicino alla parte superiore sinistra della curva ROC, dove sensibilità e specificità sono perfette, è dato da: $\text{min}[(1 - \text{sensitivity})^2 + (1 - \text{specificity})^2]$.
-
-```{r}
-#| vscode: {languageId: r}
-closestTopLeft <- coords(rocCurve, x = "best", best.method = "closest.topleft")
-closestTopLeftthreshold <- closestTopLeft$threshold
-closestTopLeftspecificity <- closestTopLeft$specificity
-closestTopLeftsensitivity <- closestTopLeft$sensitivity
-
-closestTopLeft
-```
-
-Per questo test, la combinazione di sensibilità e specificità è ottimale alla soglia di $r closestTopLeftthreshold$, con una sensibilità di $r closestTopLeftsensitivity$ e una specificità di $r closestTopLeftspecificity$.
-
-## Accuratezza della Predizione attraverso i Cutoff {#predictionAccuracy}
-
-Esistono due dimensioni principali dell'accuratezza: (1) la *discriminazione* (ad esempio, [sensibilità](#sensitivity), [specificità](#specificity), [area sotto la curva ROC](#auc)) e (2) la *calibrazione*. Alcuni indici generali di accuratezza combinano la discriminazione e la calibrazione.
-
-Il pacchetto [`petersenlab`](https://github.com/DevPsyLab/petersenlab) include la funzione `accuracyOverall()`, che stima l'accuratezza della predizione su tutti i cutoff.\index{petersenlab package}\index{cutoff}
-
-Ecco un esempio di codice che utilizza questa funzione:
-
-```{r}
-#| vscode: {languageId: r}
-accuracyOverall(
-    predicted = mydataSDT$testScore,
-    actual = mydataSDT$disorder
-) %>%
-    t() %>%
-    round(., 2)
-
-accuracyOverall(
-    predicted = mydataSDT$testScore,
-    actual = mydataSDT$disorder,
-    dropUndefined = TRUE
-) %>%
-    t() %>%
-    round(., 2)
-```
-
-In questo esempio, la funzione `accuracyOverall()` calcola l'accuratezza complessiva della predizione su tutta la gamma di cutoff disponibili, fornendo una sintesi del grado di accuratezza globale del modello.
-
-## Calibrazione {#calibration}
-
-Quando si tratta di un risultato categorico, la calibrazione è il grado in cui una stima probabilistica di un evento riflette la reale probabilità sottostante di quell'evento.\index{calibration}  
-Quando si tratta di un risultato continuo, la calibrazione indica quanto i valori previsti siano vicini ai valori effettivi osservati.\index{calibration}  
-L'importanza di esaminare la calibrazione, oltre alla *discriminazione*, è descritta da Lindhiem (2020).\index{calibration}\index{discrimination}
-
-La calibrazione è diventata centrale nella valutazione dell'accuratezza delle previsioni meteorologiche.\index{calibration}  
-Ad esempio, nei giorni in cui un meteorologo prevede il 60% di possibilità di pioggia, dovrebbe effettivamente piovere circa il 60% delle volte.  
-Grazie ai progressi nella comprensione scientifica dei sistemi meteorologici, le previsioni della pioggia sono diventate più accurate.  
-Le previsioni della National Weather Service, per esempio, sono ben calibrate.  
-Tuttavia, le previsioni di pioggia fatte da meteorologi televisivi locali possono essere esagerate per aumentare l'audience (Silver, 2012).  
-Curiosamente, alcune previsioni di pioggia di The Weather Channel risultano miscalibrate in certe condizioni (Bickel, 2008).  
-Ad esempio, nei giorni in cui viene prevista una probabilità di pioggia del 20%, la probabilità reale è in realtà intorno al 5%.  
-Questa miscalibrazione è deliberata, poiché le persone tendono a essere più arrabbiate se viene detto loro che non pioverà e invece piove (falsi negativi) rispetto al contrario (falsi positivi).\index{calibration}\index{false negative}\index{false positive}  
-Come osserva Silver (2012), "Se piove quando non dovrebbe, le persone si arrabbiano con il meteorologo, mentre una giornata inaspettatamente soleggiata è vista come un bonus fortuito."
-
-La calibrazione non è importante solo per le previsioni meteorologiche, ma anche per la valutazione psicologica.  
-Esistono diversi metodi per esaminare la calibrazione, come i *Brier Scores*, il test di Hosmer-Lemeshow, lo *z* di Spiegelhalter e la differenza media tra i valori previsti e osservati a diversi intervalli di soglie, rappresentata graficamente tramite un *calibration plot*.
-
-### Calibration Plot {#calibrationPlot}
-
-Un *calibration plot* può aiutare a individuare la miscalibrazione.  
-Questo grafico rappresenta la probabilità prevista di un evento sull'asse x e la probabilità effettiva osservata sull'asse y.  
-Le previsioni sono suddivise in gruppi (spesso 10).  
-La linea diagonale rappresenta previsioni perfettamente calibrate.  
-Quando le previsioni si discostano da questa linea, indicano miscalibrazione.  
-Esistono quattro pattern generali di miscalibrazione: *overextremity*, *underextremity*, *overprediction*, e *underprediction*.
-
-- *Overextremity* si verifica quando le probabilità previste sono troppo vicine agli estremi (zero o uno).  
-- *Underextremity* accade quando le probabilità previste sono troppo lontane dagli estremi.  
-- *Overprediction* si ha quando le probabilità previste sono costantemente maggiori di quelle osservate.  
-- *Underprediction* si ha quando le probabilità previste sono costantemente minori di quelle osservate.
-
-Per generare un *calibration plot*, possiamo utilizzare il pacchetto `PredictABEL`. Di seguito è riportato un esempio di codice in R per creare questo grafico:
-
-```{r}
-#| vscode: {languageId: r}
-data(aSAH)
-mydataSDT <- aSAH
-
-set.seed(52242)
-
-mydataSDT$testScore <- mydataSDT$s100b
-mydataSDT <- mydataSDT %>%
-    mutate(testScoreSimple = ntile(testScore, 10))
-
-mydataSDT$predictedProbability <-
-    (mydataSDT$s100b - min(mydataSDT$s100b, na.rm = TRUE)) /
-        (max(mydataSDT$s100b, na.rm = TRUE) - min(mydataSDT$s100b, na.rm = TRUE))
-mydataSDT$continuousOutcome <- mydataSDT$testScore +
-    rnorm(nrow(mydataSDT), mean = 0.20, sd = 0.20)
-mydataSDT$disorder <- NA
-mydataSDT$disorder[mydataSDT$outcome == "Good"] <- 0
-mydataSDT$disorder[mydataSDT$outcome == "Poor"] <- 1
-
-colNumberOutcome <- which(names(mydataSDT) == "disorder")
-myDataNoMissing <- na.omit(mydataSDT)
-```
-
-```{r}
-#| vscode: {languageId: r}
-plotCalibration(
-    data = na.omit(myDataNoMissing),
-    cOutcome = colNumberOutcome,
-    predRisk = myDataNoMissing$predictedProbability,
-    groups = 10
-)
-```
-
-Questo *calibration plot* mostra che le probabilità previste erano consistentemente inferiori a quelle effettive osservate, suggerendo un problema di *underprediction*. Per correggere questa miscalibrazione, le probabilità previste dovrebbero essere aumentate affinché risultino coerenti con quelle osservate.
-
-#### Brier Scores {#brierScores}
-
-#### Brier Scores {#brierScores}
-
-I punteggi di Brier (*Brier scores*) offrono una misura di accuratezza per le previsioni probabilistiche, valutando quanto le probabilità previste si avvicinino ai risultati reali. Questo punteggio è calcolato come la media dei quadrati delle differenze tra le probabilità previste e i risultati osservati, permettendo di valutare la qualità delle previsioni considerando sia errori di sovrastima che di sottostima.
-
-Un punteggio di Brier basso indica una migliore calibrazione delle previsioni, con un valore di 0 che rappresenta una previsione perfettamente calibrata (cioè, le probabilità previste coincidono esattamente con i risultati osservati). Valori più vicini a 1 indicano invece una calibrazione peggiore, suggerendo che le previsioni si discostano ampiamente dai risultati effettivi.
-
-Il pacchetto `rms` di R può essere utilizzato per calcolare i punteggi di Brier, come mostrato nell'esempio seguente:
-
-```{r}
-#| vscode: {languageId: r}
-val.prob(
-    mydataSDT$predictedProbability,
-    mydataSDT$disorder,
-    pl = FALSE
-)["Brier"]
-```
-
-In sintesi, il punteggio di Brier rappresenta una misura sintetica della precisione e della calibrazione di un modello predittivo: quanto più è basso, tanto maggiore è la capacità del modello di riflettere accuratamente le probabilità reali.
-
-## Matrice di Confusione 
-
-Una matrice di confusione (detta anche tabella 2x2 di accuratezza, tabella di cross-tabulation o tabella di contingenza) è una matrice utilizzata per i dati categoriali che mostra l'esito predetto su una dimensione e l'esito reale (la verità) sull'altra. Se le predizioni e gli esiti sono dicotomici, la matrice di confusione è una matrice 2x2 con due righe e due colonne che rappresentano le quattro possibili combinazioni previste-reali (i cosiddetti outcome decisionali). In questo caso, la matrice di confusione fornisce un conteggio tabellare dei casi corretti (true positives e true negatives) rispetto agli errori (false positives e false negatives).
-
-Conteggio Assoluto {#confusionMatrix-number}
-
-È possibile visualizzare i dati di una matrice di confusione utilizzando il seguente codice:
-
-```{r}
-#| vscode: {languageId: r}
-cutoff <- 0.205
-
-mydataSDT$diagnosis <- NA
-mydataSDT$diagnosis[mydataSDT$testScore < cutoff] <- 0
-mydataSDT$diagnosis[mydataSDT$testScore >= cutoff] <- 1
-
-mydataSDT$diagnosisFactor <- factor(
-    mydataSDT$diagnosis,
-    levels = c(1, 0),
-    labels = c("Decision: Diagnosis", "Decision: No Diagnosis")
-)
-
-mydataSDT$disorderFactor <- factor(
-    mydataSDT$disorder,
-    levels = c(1, 0),
-    labels = c("Truth: Disorder", "Truth: No Disorder")
-)
-
-table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)
-```
-
-Conteggio con Margini Aggiunti {#confusionMatrix-numberMargins}
-
-Per aggiungere i margini ai conteggi assoluti:
-
-```{r}
-#| vscode: {languageId: r}
-addmargins(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor))
-```
-
-Per calcolare le proporzioni:
-
-```{r}
-#| vscode: {languageId: r}
-prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor))
-```
-
-Aggiungi i margini alle proporzioni:
-
-```{r}
-#| vscode: {languageId: r}
-addmargins(prop.table(table(mydataSDT$diagnosisFactor, mydataSDT$disorderFactor)))
-```
-
-### True Positives (TP) {#truePositive}
-
-I *true positives* (TP) sono i casi in cui una classificazione positiva (ad esempio, la presenza di un disturbo) è corretta, ovvero il test indica che la classificazione è presente, e lo è davvero. Più alto è il numero di *true positives* rispetto alla dimensione del campione, maggiore è l'accuratezza. La formula per calcolare i *true positives* è:
-
-$$
-TP = BR \times SR \times N
-$$
-
-Ecco come calcolare i true positives in R:
-
-```{r}
-#| vscode: {languageId: r}
-TPvalue <- length(which(
-    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 1
-))
-
-TPvalue
-```
-
-### True Negatives (TN) {#trueNegative}
-
-I *true negatives* (TN) sono i casi in cui una classificazione negativa (assenza di disturbo) è corretta, ovvero il test indica che la classificazione non è presente e questa effettivamente non è presente. La formula per calcolare i *true negatives* è:
-
-$$
-TN = (1 - BR) \times (1 - SR) \times N
-$$
-
-Per calcolare i true negatives in R:
-
-```{r}
-#| vscode: {languageId: r}
-TNvalue <- length(which(
-    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 0
-))
-
-TNvalue
-```
-
-### False Positives (FP) {#falsePositive}
-
-I *false positives* (FP) sono i casi in cui una classificazione positiva è errata, ovvero il test indica la presenza di un disturbo che in realtà non è presente. Valori più bassi di *false positives* riflettono una maggiore accuratezza. La formula per calcolare i *false positives* è:
-
-$$
-FP = (1 - BR) \times SR \times N
-$$
-
-Ecco come calcolare i false positives in R:
-
-```{r}
-#| vscode: {languageId: r}
-FPvalue <- length(which(
-    mydataSDT$diagnosis == 1 & mydataSDT$disorder == 0
-))
-
-FPvalue
-```
-
-### False Negatives (FN) {#falseNegative}
-
-I *false negatives* (FN) sono i casi in cui una classificazione negativa è errata, ovvero il test indica l'assenza di un disturbo che in realtà è presente. Valori più bassi di *false negatives* riflettono una maggiore accuratezza. La formula per calcolare i *false negatives* è:
-
-$$
-FN = BR \times (1 - SR) \times N
-$$
-
-Per calcolare i false negatives in R:
-
-```{r}
-#| vscode: {languageId: r}
-FNvalue <- length(which(
-    mydataSDT$diagnosis == 0 & mydataSDT$disorder == 1
-))
-
-FNvalue
-```
-
-### Dimensione del Campione (*N*) {#sampleSize-prediction}
-
-La dimensione del campione può essere calcolata sommando il numero di TP, TN, FP e FN:
-
-```{r}
-#| vscode: {languageId: r}
-sampleSize <- function(TP, TN, FP, FN) {
-    value <- TP + TN + FP + FN
-
-    return(value)
-}
-
-sampleSize(
-    TP = TPvalue,
-    TN = TNvalue,
-    FP = FPvalue,
-    FN = FNvalue
-)
-```
 

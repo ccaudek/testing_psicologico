@@ -1,0 +1,276 @@
+# Relazioni test-criterio {#sec-validity-rel-test-criterion}
+
+::: callout-important
+## In questo capitolo imparerai a
+
+- valutare l'accuratezza della classificazione di un test calcolando il punteggio AUC.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Prediction* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(readxl, haven, ROCit, psych, modelsummary)
+```
+:::
+
+
+## Introduzione
+
+In questo capitolo, approfondiamo un aspetto specifico della validità già discusso: la relazione tra test e criterio. Per analizzare questo concetto in maniera sistematica, utilizzeremo un approccio quantitativo basato sulla regressione logistica. Questo strumento permette di valutare in modo dettagliato e rigoroso come i punteggi di un test siano correlati o predittivi rispetto a un criterio esterno specifico. Tale analisi offre una comprensione più completa della validità di uno strumento psicometrico, evidenziandone l’utilità pratica e teorica.
+
+In particolare, ci concentreremo sulla capacità dei test di predire o differenziare fenomeni specifici attraverso la Relazione Test-Criterio. L’uso della regressione logistica consente di identificare le relazioni chiave tra le variabili e di quantificare il grado di validità di un test in contesti applicativi, fornendo così uno strumento fondamentale per la valutazione della qualità psicometrica.
+
+## Categorie di Evidenze Basate su Relazioni con Altre Variabili
+
+In psicometria, diverse categorie di evidenze vengono utilizzate per valutare le relazioni tra i punteggi dei test e altre variabili. Tra le principali troviamo:
+
+1. **Relazioni Test-Criterio**  
+   Queste analisi si concentrano sull’utilizzo dei punteggi di un test per prevedere il rendimento o lo stato attuale in ambiti specifici, come il successo accademico o lavorativo.
+
+2. **Differenze tra Gruppi**  
+   Si valuta se i punteggi dei test mostrano differenze tra gruppi definiti da criteri specifici, ad esempio tra individui con e senza una diagnosi clinica.
+
+3. **Prove di Convergenza e Discriminazione**  
+   Si esplora se i punteggi di un test sono correlati con altri test che misurano costrutti simili (validità convergente) e se sono meno correlati con test che misurano costrutti diversi (validità discriminante).
+
+Un elemento cruciale nelle analisi basate sulle relazioni test-criterio è la selezione di un criterio appropriato e l'adozione di metodi quantitativi per esaminare questa relazione. Quando il criterio è di natura categorica, come il superamento o il fallimento di un esame, la **regressione logistica** rappresenta una tecnica essenziale.
+
+## Regressione Logistica
+
+La regressione logistica è un metodo statistico utilizzato per analizzare la relazione tra una variabile dipendente binaria e una o più variabili indipendenti. Essa stima la probabilità che un’osservazione appartenga a una determinata categoria della variabile dipendente, sulla base dei valori delle variabili esplicative.
+
+### Modellazione della Relazione
+
+Consideriamo una variabile dipendente $Y_i$, che per ogni osservazione $i$ ($i = 1, \dots, n$) assume due modalità, ad esempio *successo* e *insuccesso*. Ogni osservazione è associata a un vettore di variabili esplicative ($x_1, \dots, x_p$); per semplicità, analizziamo il caso con una singola variabile indipendente.
+
+Il logaritmo del rapporto di probabilità (*odds*) tra successo e insuccesso è modellato come funzione lineare del predittore:
+
+$$
+\eta_i = \logit(\pi_i) = \alpha + \beta x_i,
+$$
+
+dove $\pi_i = Pr(Y=1 | X=x_i)$ rappresenta la probabilità che l’evento $Y = 1$ si verifichi, dato il valore della variabile indipendente $x_i$.
+
+### Distribuzione e Funzione di Collegamento
+
+Nel caso di osservazioni indipendenti, si assume che $Y_i$ segua una distribuzione binomiale:
+
+$$
+Y_i \sim Bin(n_i, \pi_i),
+$$
+
+dove $n_i$ rappresenta il numero di prove per ciascun valore $x_i$ (pari a 1 per dati individuali). La funzione di collegamento (*link function*) stabilisce la relazione tra il predittore lineare $\eta_i$ e la probabilità $\pi_i$:
+
+$$
+\pi_i = \frac{e^{\alpha + \beta x_i}}{1 + e^{\alpha + \beta x_i}}.
+$$
+
+### Applicazioni in Psicometria
+
+Nel contesto dei test psicometrici, la regressione logistica è utilizzata per determinare quanto i punteggi di un test predicano un risultato categorico. Ad esempio, possiamo valutare la probabilità che studenti con determinati punteggi in un test di ammissione universitario abbiano successo accademico nel primo anno.
+
+Questa tecnica consente di:
+
+- **Quantificare la validità predittiva** di uno strumento di misura.  
+- **Identificare soglie critiche** nei punteggi che separano categorie di interesse.  
+- **Fornire interpretazioni robuste** sull’efficacia del test in contesti pratici.
+
+In sintesi, la regressione logistica rappresenta un potente strumento per esplorare la relazione tra punteggi di un test e criteri esterni, permettendo analisi precise e approfondite. Nel nostro esempio, studiare la probabilità di successo accademico in funzione dei punteggi di un test offre insight pratici e migliora l’affidabilità dell’interpretazione dei risultati psicometrici.
+
+## Un Esempio Pratico
+
+Per illustrare l'applicazione pratica della regressione logistica nella validazione di test psicometrici, analizziamo i dati dello studio [*Pitfalls When Using Area Under the Curve to Evaluate Item Content for Early Screening Tests for Autism*](https://journals.sagepub.com/doi/10.1177/07342829211067128) di Lucas, Brewer e Young (2022).
+
+Il campione raccolto da Nah et al. (2018) comprende 270 bambini di età compresa tra 12 e 36 mesi (M = 25.4, SD = 7.0). Secondo la diagnosi clinica effettuata basandosi sui criteri del DSM-5, 106 bambini erano stati diagnosticati con ASD (*Autism Spectrum Disorder*, disturbo dello spettro autistico), 86 mostravano uno sviluppo non tipico (non-TD), e 78 erano in sviluppo tipico (TD). Per semplicità, considereremo solo i gruppi ASD e non-TD.
+
+Il test in esame è l'*Autism Detection in Early Childhood* (ADEC), una checklist comportamentale composta da 16 item, progettata per rilevare comportamenti pre-verbali predittivi dell'autismo nei bambini sotto i tre anni (Young, 2007).
+
+### Preparazione dei Dati
+
+Iniziamo importando e pre-elaborando i dati. Li scarichiamo da una fonte pubblica, ricodificando le diagnosi per includere solo i gruppi ASD e non-TD.
+
+```{r}
+# Scaricamento e caricamento dei dati
+tmp_path <- tempfile(fileext = "xlsx")
+download.file("https://osf.io/download/tsm7x/", destfile = tmp_path)
+dat1 <- readxl::read_xlsx(tmp_path, na = "NA")
+
+# Ricodifica delle diagnosi
+dat1$asd <- recode(
+    dat1$`Diagnosis(1=Non-typically developing; 2=ASD; 3=Neurotypical)`,
+    `1` = "Non-TD",
+    `2` = "ASD",
+    `3` = "TD"
+)
+# Filtraggio per escludere il gruppo TD
+dat1_sub <- filter(dat1, asd != "TD")
+```
+
+Calcoliamo il punteggio totale ADEC per ogni bambino, trattando i valori mancanti in due modi: lasciandoli come `NA` o considerandoli come 0.
+
+```{r}
+# Punteggio totale ADEC
+dat1_sub$ADEC <- rowSums(dplyr::select(dat1_sub, ADEC_I01:ADEC_I16), na.rm = FALSE)
+dat1_sub$ADEC_rm_na <- rowSums(dplyr::select(dat1_sub, ADEC_I01:ADEC_I16), na.rm = TRUE)
+```
+
+### Modello di Regressione Logistica
+
+Vogliamo analizzare come il punteggio totale ADEC sia associato alla probabilità di diagnosi di ASD. Per fare ciò, trasformiamo la variabile diagnostica in un formato binario: 1 per ASD e 0 per non-TD.
+
+```{r}
+# Codifica binaria della diagnosi
+dat1_sub$y <- ifelse(dat1_sub$asd == "ASD", 1, 0)
+```
+
+Applichiamo la regressione logistica con la funzione `glm()`.
+
+```{r}
+# Rimuovi righe con valori mancanti nei predittori
+dat1_sub <- na.omit(dat1_sub)
+
+# Modello di regressione logistica
+fm <- glm(y ~ ADEC, family = binomial(link = "logit"), data = dat1_sub)
+summary(fm)
+```
+
+### Interpretazione e Visualizzazione
+
+Costruiamo un grafico che mostra la probabilità stimata di diagnosi di ASD in funzione del punteggio totale ADEC.
+
+```{r}
+# Probabilità predette
+predictions <- predict(fm, type = "response")
+plot_data <- data.frame(ADEC = dat1_sub$ADEC, Prob_Y_1 = predictions)
+```
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+# Grafico
+ggplot(plot_data, aes(x = ADEC, y = Prob_Y_1)) +
+    geom_line() +
+    geom_point() +
+    xlab("Punteggio Totale ADEC") +
+    ylab("Probabilità di ASD") +
+    ggtitle("Probabilità di ASD in funzione del punteggio ADEC")
+```
+
+
+Il grafico evidenzia una relazione sigmoidale: per punteggi ADEC bassi, la probabilità di ASD è bassa; aumenta gradualmente con l’aumentare del punteggio.
+
+### Valutazione dell'Accuratezza del Modello
+
+Per valutare la capacità del modello di distinguere tra ASD e non-TD, utilizziamo una curva ROC (*Receiver Operating Characteristic*) e calcoliamo l'area sotto la curva (AUC).
+
+```{r}
+# Calcolo della sensibilità e specificità
+compute_sens <- function(cut) {
+  tp <- sum(dat1_sub$ADEC >= cut & dat1_sub$y == 1)
+  fn <- sum(dat1_sub$ADEC < cut & dat1_sub$y == 1)
+  tp / (tp + fn)
+}
+
+compute_spec <- function(cut) {
+  tn <- sum(dat1_sub$ADEC < cut & dat1_sub$y == 0)
+  fp <- sum(dat1_sub$ADEC >= cut & dat1_sub$y == 0)
+  tn / (tn + fp)
+}
+
+cuts <- seq(min(dat1_sub$ADEC, na.rm = TRUE), max(dat1_sub$ADEC, na.rm = TRUE), length.out = 100)
+sens <- sapply(cuts, compute_sens)
+spec <- sapply(cuts, compute_spec)
+
+# Curva ROC
+roc_data <- data.frame(Sensitivity = sens, Specificity = spec)
+```
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+ggplot(roc_data, aes(x = 1 - Specificity, y = Sensitivity)) +
+    geom_line() +
+    xlab("1 - Specificità") +
+    ylab("Sensibilità") +
+    ggtitle("Curva ROC")
+```
+
+Calcoliamo l’AUC come misura aggregata della capacità discriminativa del modello.
+
+```{r}
+# Calcolo AUC
+auc <- sum(diff(1 - spec) * (sens[-1] + sens[-length(sens)]) / 2)
+auc
+```
+
+In conclusione, l’AUC calcolata è pari a 0.92, indicando un’eccellente capacità predittiva del test ADEC nel discriminare tra bambini con ASD e non-TD. Questo risultato supporta la validità del test come strumento diagnostico precoce per identificare bambini a rischio di sviluppare un disturbo dello spettro autistico, sottolineandone l’utilità per interventi tempestivi e mirati.
+
+## Utilizzo del Pacchetto ROCit
+
+Il pacchetto **ROCit** offre un modo semplice ed efficace per calcolare e visualizzare la curva ROC, consentendo di ottenere gli stessi risultati presentati precedentemente con maggiore praticità. Questo pacchetto integra funzionalità per calcolare l'AUC e i relativi intervalli di confidenza, utili per una valutazione approfondita delle prestazioni del modello.
+
+Ecco un esempio di utilizzo con il punteggio totale ADEC:
+
+```{r}
+# Creazione della curva ROC
+roc_adec <- rocit(score = dat1_sub$ADEC, class = dat1_sub$asd == "ASD")
+```
+
+```{r}
+#| fig-asp: 1
+#| fig-width: 6
+#| fig-height: 6
+#| 
+# Visualizzazione della curva ROC
+plot(roc_adec)
+```
+
+È possibile ottenere un riepilogo dettagliato dei risultati:
+
+```{r}
+# Riepilogo dei risultati della curva ROC
+summary(roc_adec)
+```
+
+E calcolare gli intervalli di confidenza per l'AUC:
+
+```{r}
+# Calcolo degli intervalli di confidenza per l'AUC
+ciAUC(roc_adec)
+```
+
+L'utilizzo di **ROCit** semplifica il processo di analisi ROC, offrendo funzioni dedicate per la visualizzazione grafica, il calcolo dell'AUC e l'interpretazione dei risultati. Inoltre, la possibilità di includere intervalli di confidenza migliora la robustezza delle conclusioni, fornendo un quadro più chiaro della capacità predittiva del test.
+
+## Riflessioni Conclusive
+
+Questo capitolo ha illustrato l'importanza della regressione logistica e del calcolo della curva ROC, con particolare attenzione all'Area Under the Curve (AUC), come strumenti fondamentali per valutare la validità di criterio di un test psicometrico. In particolare:
+
+- **Regressione logistica**: Consente di modellare la relazione tra i punteggi di un test e la probabilità di appartenenza a un gruppo diagnostico, fornendo stime precise e interpretabili.  
+- **Curva ROC e AUC**: Valutano la capacità discriminativa del test, permettendo di identificare il trade-off tra sensibilità e specificità in base ai diversi punti di taglio.
+
+Questi strumenti offrono una base solida per l'applicazione pratica del test, garantendo una valutazione accurata della validità di criterio. L'adozione di tecniche statistiche robuste contribuisce a migliorare la qualità delle diagnosi, a supportare decisioni informate e a ottimizzare l'efficacia degli interventi mirati.
+
+In conclusione, la corretta valutazione della validità di criterio è essenziale per garantire risultati affidabili e utili sia nella pratica clinica che nella ricerca. L'analisi presentata in questo capitolo dimostra come l'integrazione di approcci statistici avanzati possa rafforzare la fiducia nell'uso di test psicometrici per la classificazione diagnostica e la progettazione di interventi personalizzati.
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered} 
+
+```{r}
+sessionInfo()
+```
+
