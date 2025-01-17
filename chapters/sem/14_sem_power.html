@@ -1036,8 +1036,8 @@ window.Quarto = {
 </div>
 <p><strong>Prerequisiti</strong></p>
 <ul>
-<li>Leggere l’articolo <em>Estimating statistical power for structural equation models in developmental cognitive science: A tutorial in R</em> di <span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="../../99-references.html#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span>.</li>
-<li>Leggere il capitolo 12 <em>Sample Size Determination and Power Analysis</em> del testo <em>Structural Equation Modeling Using R/SAS: A Step-by-step Approach with Real Data Analysis</em> <span class="citation" data-cites="chen2023structural">(<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">Chen &amp; Yung, 2023</a>)</span>.</li>
+<li>Leggere l’articolo <em>Estimating statistical power for structural equation models in developmental cognitive science: A tutorial in R</em> di <span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span>.</li>
+<li>Leggere il capitolo 12 <em>Sample Size Determination and Power Analysis</em> del testo <em>Structural Equation Modeling Using R/SAS: A Step-by-step Approach with Real Data Analysis</em> <span class="citation" data-cites="chen2023structural">(<a href="#ref-chen2023structural" role="doc-biblioref">Chen &amp; Yung, 2023</a>)</span>.</li>
 </ul>
 <p><strong>Concetti e Competenze Chiave</strong></p>
 <ul>
@@ -1058,14 +1058,14 @@ window.Quarto = {
 </div>
 <section id="introduzione" class="level2" data-number="60.1">
 <h2 data-number="60.1" class="anchored" data-anchor-id="introduzione"><span class="header-section-number">60.1</span> Introduzione</h2>
-<p><span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="../../99-references.html#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span> osservano che, nell’ultimo decennio, la questione della bassa potenza statistica e delle sue conseguenze sull’interpretazione dei risultati scientifici ha attirato un’attenzione crescente nella ricerca psicologica. La <strong>potenza statistica</strong> rappresenta la capacità di rilevare effetti reali, ovvero la probabilità di individuare correttamente un effetto quando è effettivamente presente. Questo valore dipende strettamente dalla dimensione campionaria, dall’entità dell’effetto che si intende rilevare e dall’affidabilità delle misurazioni.</p>
+<p><span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span> osservano che, nell’ultimo decennio, la questione della bassa potenza statistica e delle sue conseguenze sull’interpretazione dei risultati scientifici ha attirato un’attenzione crescente nella ricerca psicologica. La <strong>potenza statistica</strong> rappresenta la capacità di rilevare effetti reali, ovvero la probabilità di individuare correttamente un effetto quando è effettivamente presente. Questo valore dipende strettamente dalla dimensione campionaria, dall’entità dell’effetto che si intende rilevare e dall’affidabilità delle misurazioni.</p>
 <p>La bassa potenza rappresenta un problema in quanto può limitare l’utilità scientifica dei risultati; inoltre, anche se si rilevano effetti significativi, questi potrebbero non riflettere associazioni reali. Per garantire che gli studi empirici siano adeguatamente progettati per rilevare gli effetti nei campioni esaminati, è cruciale calcolare in anticipo la potenza e stabilire la dimensione campionaria necessaria, evitando studi sotto-dimensionati.</p>
 <p>In genere, in psicologia, si considera adeguata una potenza intorno a 0.80, anche se alcuni autori suggeriscono di puntare a valori più elevati, come 0.95, per bilanciare meglio gli errori di tipo I e tipo II.</p>
 <p>Diversi autori hanno proposto regole pratiche per stabilire la dimensione campionaria nei modelli SEM, come un numero minimo di osservazioni o un rapporto tra osservazioni e parametri da stimare. Tuttavia, queste regole empiriche possono essere fuorvianti, poiché la potenza nei SEM dipende anche da fattori quali l’entità dei carichi fattoriali e la complessità del modello. Inoltre, la dimensione campionaria necessaria dipende dalla specifica domanda di ricerca.</p>
 </section>
 <section id="obiettivi-principali-dei-modelli-sem" class="level2" data-number="60.2">
 <h2 data-number="60.2" class="anchored" data-anchor-id="obiettivi-principali-dei-modelli-sem"><span class="header-section-number">60.2</span> Obiettivi Principali dei Modelli SEM</h2>
-<p><span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="../../99-references.html#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span> fanno notare che i due obiettivi principali dei SEM sono:</p>
+<p><span class="citation" data-cites="buchberger2024estimating">Buchberger et al. (<a href="#ref-buchberger2024estimating" role="doc-biblioref">2024</a>)</span> fanno notare che i due obiettivi principali dei SEM sono:</p>
 <ol type="1">
 <li><strong>Rilevare un effetto specifico</strong>, come determinare se la correlazione tra due fattori latenti è diversa da zero.</li>
 <li><strong>Confrontare modelli</strong>, verificando quale tra due o più modelli spiega meglio i dati.</li>
@@ -1077,7 +1077,7 @@ window.Quarto = {
 </section>
 <section id="dimensione-campionaria-per-confronti-tra-gruppi" class="level2" data-number="60.3">
 <h2 data-number="60.3" class="anchored" data-anchor-id="dimensione-campionaria-per-confronti-tra-gruppi"><span class="header-section-number">60.3</span> Dimensione Campionaria per Confronti tra Gruppi</h2>
-<p>Per introdurre il metodo della simulazione Monte Carlo applicato all’analisi di potenza nei modelli SEM, seguiremo il tutorial di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>. Prima di esplorare l’uso della simulazione Monte Carlo per stimare la potenza in contesti SEM, è utile applicare questo metodo a un caso più semplice: il calcolo della dimensione campionaria necessaria per rilevare una differenza clinicamente rilevante tra due gruppi. Questo esempio introduttivo aiuterà a chiarire il funzionamento della simulazione Monte Carlo. Successivamente, applicheremo lo stesso approccio alla determinazione della potenza per i modelli SEM, un caso più complesso che richiede tecniche avanzate di simulazione per stimare accuratamente la potenza.</p>
+<p>Per introdurre il metodo della simulazione Monte Carlo applicato all’analisi di potenza nei modelli SEM, seguiremo il tutorial di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>. Prima di esplorare l’uso della simulazione Monte Carlo per stimare la potenza in contesti SEM, è utile applicare questo metodo a un caso più semplice: il calcolo della dimensione campionaria necessaria per rilevare una differenza clinicamente rilevante tra due gruppi. Questo esempio introduttivo aiuterà a chiarire il funzionamento della simulazione Monte Carlo. Successivamente, applicheremo lo stesso approccio alla determinazione della potenza per i modelli SEM, un caso più complesso che richiede tecniche avanzate di simulazione per stimare accuratamente la potenza.</p>
 <section id="formula-per-la-dimensione-campionaria-per-gruppo" class="level3" data-number="60.3.1">
 <h3 data-number="60.3.1" class="anchored" data-anchor-id="formula-per-la-dimensione-campionaria-per-gruppo"><span class="header-section-number">60.3.1</span> Formula per la Dimensione Campionaria per Gruppo</h3>
 <p>La formula per determinare la dimensione campionaria per ciascun gruppo, per rilevare una differenza clinicamente significativa tra due gruppi, è:</p>
@@ -1352,9 +1352,9 @@ In questo contesto, il coefficiente <span class="math inline">\(r = 0.2\)</span>
 </section>
 <section id="analisi-di-potenza-nei-modelli-sem" class="level2" data-number="60.6">
 <h2 data-number="60.6" class="anchored" data-anchor-id="analisi-di-potenza-nei-modelli-sem"><span class="header-section-number">60.6</span> Analisi di Potenza nei Modelli SEM</h2>
-<p>Dopo aver compreso l’approccio MCSB e la sua implementazione in <strong>simsem</strong>, possiamo ora illustrare come calcolare la potenza per modelli di equazioni strutturali (SEM) generali. Un esempio è offerto da <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, che utilizzano un modello di crescita latente (LGC) per analizzare i dati di <span class="citation" data-cites="byrne2013structural">Byrne (<a href="../../99-references.html#ref-byrne2013structural" role="doc-biblioref">2013</a>)</span>.</p>
+<p>Dopo aver compreso l’approccio MCSB e la sua implementazione in <strong>simsem</strong>, possiamo ora illustrare come calcolare la potenza per modelli di equazioni strutturali (SEM) generali. Un esempio è offerto da <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, che utilizzano un modello di crescita latente (LGC) per analizzare i dati di <span class="citation" data-cites="byrne2013structural">Byrne (<a href="#ref-byrne2013structural" role="doc-biblioref">2013</a>)</span>.</p>
 <div class="data">
-<p>Il dataset raccoglie i dati longitudinali raccolti da 405 donne di Hong Kong, sottoposte a valutazione post-chirurgica per il tumore al seno <span class="citation" data-cites="byrne2013structural">(<a href="../../99-references.html#ref-byrne2013structural" role="doc-biblioref">Byrne, 2013</a>)</span>.</p>
+<p>Il dataset raccoglie i dati longitudinali raccolti da 405 donne di Hong Kong, sottoposte a valutazione post-chirurgica per il tumore al seno <span class="citation" data-cites="byrne2013structural">(<a href="#ref-byrne2013structural" role="doc-biblioref">Byrne, 2013</a>)</span>.</p>
 </div>
 <p>I dati, disponibili nel file <code>hkcancer_red2.dat</code>, includono 10 variabili:</p>
 <ul>
@@ -1368,7 +1368,7 @@ In questo contesto, il coefficiente <span class="math inline">\(r = 0.2\)</span>
 <section id="modello-di-crescita-latente-lgc" class="level3" data-number="60.6.1">
 <h3 data-number="60.6.1" class="anchored" data-anchor-id="modello-di-crescita-latente-lgc"><span class="header-section-number">60.6.1</span> Modello di Crescita Latente (LGC)</h3>
 <p>Il modello di crescita latente consente di modellare le traiettorie di crescita nel tempo e di confrontare differenze tra gruppi (ad esempio, tra gruppi di età o di intervento). Questo modello permette di analizzare sia le variazioni intra-individuali che quelle inter-individuali nel contesto delle traiettorie longitudinali. Nel caso del dataset sul tumore al seno, possiamo modellare sia il cambiamento longitudinale dello stato d’animo (MOOD) che dell’adattamento sociale (SOCADJ) lungo un periodo di 8 mesi, includendo le variazioni tra le partecipanti nelle loro traiettorie.</p>
-<p><span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> affrontano la questione della determinazione della dimensione campionaria necessaria per rilevare un effetto significativo su “MOOD” con una potenza statistica pari a 0.80.</p>
+<p><span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> affrontano la questione della determinazione della dimensione campionaria necessaria per rilevare un effetto significativo su “MOOD” con una potenza statistica pari a 0.80.</p>
 </section>
 <section id="calcolo-della-dimensione-campionaria" class="level3" data-number="60.6.2">
 <h3 data-number="60.6.2" class="anchored" data-anchor-id="calcolo-della-dimensione-campionaria"><span class="header-section-number">60.6.2</span> Calcolo della Dimensione Campionaria</h3>
@@ -1751,7 +1751,7 @@ Variances:
 </div>
 </div>
 </div>
-<p>Una volta ottenute le stime dei parametri del modello, possiamo utilizzarle per costruire la componente di generazione dei dati come segue (nel codice seguente, utilizzo i valori usati da <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> per riprodurre il loro risultato).</p>
+<p>Una volta ottenute le stime dei parametri del modello, possiamo utilizzarle per costruire la componente di generazione dei dati come segue (nel codice seguente, utilizzo i valori usati da <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> per riprodurre il loro risultato).</p>
 <div id="cell-30" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dat.mod4MOOD <span class="ot">&lt;-</span> <span class="st">"</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">    # Intercept and Slope with MOOD</span></span>
@@ -1776,7 +1776,7 @@ Variances:
 <span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="st">    SurgTx ~~ 0.25*SurgTx</span></span>
 <span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Possiamo ora usare la funzione <code>sim()</code> di <code>simsem</code>. Seguendo il tutorial di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, fissiamo la dimensione campionaria complesiva a <code>n = 405</code>:</p>
+<p>Possiamo ora usare la funzione <code>sim()</code> di <code>simsem</code>. Seguendo il tutorial di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, fissiamo la dimensione campionaria complesiva a <code>n = 405</code>:</p>
 <div id="cell-32" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>simOut1 <span class="ot">&lt;-</span> <span class="fu">sim</span>(</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">nRep =</span> <span class="dv">1000</span>, </span>
@@ -1861,7 +1861,7 @@ Number of nonconverged replications:
 </div>
 <p>Possiamo osservare che la potenza associata al parametro <span class="math inline">\(a\)</span> (cioè, l’effetto dell’intervento chirurgico) è 0.287, il che non sorprende, dato che sapevamo già che questo parametro non è statisticamente significativo con la dimensione campionaria attuale di 405.</p>
 <p>La domanda successiva è quindi quale dimensione campionaria sia necessaria per ottenere una potenza pari a 0.80. A questo fine, è necessario applicare l’approccio MCSB per una serie di dimensioni campionarie, in modo da calcolare le rispettive potenze.</p>
-<p><span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> costruiscono una curva che mostra la relazione tra dimensione campionaria e potenza, così da identificare la dimensione campionaria necessaria per raggiungere una potenza di 0.80. Per questo scopo, <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> utilizzano <code>n = rep(seq(400, 2000, by = 200), 500)</code>, per eseguire l’MCSB su una sequenza di dimensioni campionarie da 400 a 2000, con incrementi di 200 (ovvero: 400, 600, 800, 1000, 1200, 1400, 1600, 1800, e 2000), ciascuna delle quali sarà utilizzata per 500 simulazioni.</p>
+<p><span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> costruiscono una curva che mostra la relazione tra dimensione campionaria e potenza, così da identificare la dimensione campionaria necessaria per raggiungere una potenza di 0.80. Per questo scopo, <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span> utilizzano <code>n = rep(seq(400, 2000, by = 200), 500)</code>, per eseguire l’MCSB su una sequenza di dimensioni campionarie da 400 a 2000, con incrementi di 200 (ovvero: 400, 600, 800, 1000, 1200, 1400, 1600, 1800, e 2000), ciascuna delle quali sarà utilizzata per 500 simulazioni.</p>
 <div id="cell-35" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulation for sequential sample size</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>simAll <span class="ot">&lt;-</span> <span class="fu">sim</span>(</span>
@@ -1956,7 +1956,7 @@ iMOOD~~iMOOD sMOOD~~sMOOD iMOOD~~sMOOD      iMOOD~1      sMOOD~1
          Inf          748         1161          Inf           NA </code></pre>
 </div>
 </div>
-<p>Pertanto, in base alla simulazione di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="../../99-references.html#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, sarebbe necessaria una dimensione campionaria di 1710 per ottenere una potenza di 0.80.</p>
+<p>Pertanto, in base alla simulazione di <span class="citation" data-cites="chen2023structural">Chen &amp; Yung (<a href="#ref-chen2023structural" role="doc-biblioref">2023</a>)</span>, sarebbe necessaria una dimensione campionaria di 1710 per ottenere una potenza di 0.80.</p>
 <p>Questo risultato può essere mostrato graficamente nella figura seguente. In questa figura, la linea tratteggiata orizzontale indica la potenza a 0.80, mentre la linea con la freccia che va da questa linea orizzontale a <span class="math inline">\(N\)</span> = 1710 indica la dimensione campionaria determinata dalla curva di potenza.</p>
 <div id="cell-40" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Call plotPower to plot the power to sample size</span></span>
@@ -2068,7 +2068,7 @@ loaded via a namespace (and not attached):
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-buchberger2024estimating" class="csl-entry" role="listitem">
 Buchberger, E. S., Ngo, C. T., Peikert, A., Brandmaier, A. M., &amp; Werkle-Bergner, M. (2024). Estimating statistical power for structural equation models in developmental cognitive science: A tutorial in R: Power simulation for SEMs. <em>Behavior Research Methods</em>, 1–18.
 </div>
