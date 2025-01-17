@@ -69,11 +69,12 @@ Per una matrice di covarianza di ordine $ p $, il numero di unità di informazio
 4. In modelli a più fattori, si raccomanda un minimo di tre indicatori per ogni variabile latente.
 
 Un modello è:
-- *Non identificato* se $ dof < 0 $.
-- *Appena identificato* o "saturo" se $ dof = 0 $.
-- *Sovra-identificato* se $ dof > 0 $.
 
-È importante notare che un'analisi fattoriale con solo due indicatori per un fattore non è possibile, poiché ci sono meno unità di informazione rispetto ai parametri da stimare. Un modello con tre indicatori e un fattore è "appena identificato", senza gradi di libertà per valutare la bontà dell'adattamento. Per modelli ad un solo fattore comune latente, è quindi necessario disporre di almeno quattro indicatori.
+- *Non identificato* se $dof < 0$.
+- *Appena identificato* o "saturo" se $dof = 0$.
+- *Sovra-identificato* se $dof > 0$.
+
+È importante notare che un'analisi fattoriale con solo due indicatori per un fattore non è possibile, poiché ci sono meno unità di informazione rispetto ai parametri da stimare. Un modello con tre indicatori e un fattore è "appena identificato", senza gradi di libertà per valutare la bontà dell'adattamento. Per modelli ad un solo fattore comune latente, è quindi necessario disporre di almeno **quattro indicatori**.
 
 ## Funzione di Discrepanza e Valutazione della Bontà di Adattamento
 
@@ -185,7 +186,9 @@ In conclusione, data la mancanza di una solida giustificazione statistica o logi
 
 Nell'ambito dell'analisi di massima verosimiglianza (ML), sia l'approccio ML standard che quello robusto forniscono le stesse stime dei parametri. Tuttavia, il ML robusto differisce nell'introduzione di chi quadrati scalati ($\chi^2$ scalati) e di errori standard robusti, i quali sono adattati per controbilanciare gli effetti della non normalità dei dati. 
 
-Un metodo pionieristico sviluppato da Satorra e Bentler, che si basa sull'utilizzo di dati completi, calcola il chi quadrato scalato ($\chi_{SB}$) applicando un fattore di correzione di scala, indicato con $c$, al valore del chi quadrato non scalato del modello ($\chi_{ML}$). Questo fattore di scala $c$ è determinato dalla curtosi multivariata media osservata nei dati grezzi. La formula specifica per il calcolo di $\chi_{SB}$ è:
+### Chi Quadrato Scalato di Satorra-Bentler
+
+Un metodo sviluppato da Satorra e Bentler, che si basa sull'utilizzo di dati completi, calcola il chi quadrato scalato ($\chi_{SB}$) applicando un fattore di correzione di scala, indicato con $c$, al valore del chi quadrato non scalato del modello ($\chi_{ML}$). Questo fattore di scala $c$ è determinato dalla curtosi multivariata media osservata nei dati grezzi. La formula specifica per il calcolo di $\chi_{SB}$ è:
 
 $$
 \chi_{SB} = \frac{\chi_{ML}}{c}.
@@ -193,30 +196,44 @@ $$
 
 Questa formula evidenzia come il chi quadrato scalato di Satorra-Bentler modifica il chi quadrato tradizionale per tenere conto della curtosi nei dati, fornendo così una misura più affidabile della bontà di adattamento del modello in presenza di distribuzioni non normali.
 
-Quando si utilizza il Chi Quadrato Scalato di Satorra-Bentler ($\chi_{SB}$), è importante comprendere come esso si comporti in campioni casuali. Le distribuzioni di $\chi_{SB}$ tendono ad avvicinarsi alle distribuzioni chi quadrato centrali, ma con una caratteristica fondamentale: le loro medie sono asintoticamente corrette. Questo significa che, su larga scala, $\chi_{SB}$ fornisce una stima media accurata della discrepanza tra i dati osservati e quelli previsti dal modello, correggendo per eventuali distorsioni causate dalla non normalità dei dati.
+Le distribuzioni di $\chi_{SB}$ tendono ad avvicinarsi alle distribuzioni chi quadrato centrali, ma con una caratteristica fondamentale: le loro medie sono asintoticamente corrette. Questo significa che, su larga scala, $\chi_{SB}$ fornisce una stima media accurata della discrepanza tra i dati osservati e quelli previsti dal modello, correggendo per eventuali distorsioni causate dalla non normalità dei dati.
+
+### Chi Quadrato Scalato di Asparouhov e Muthén
 
 Un altro tipo di chi quadrato, sviluppato da Asparouhov e Muthén, non si basa sul $\chi_{ML}$ standard. Invece, nei campioni di grandi dimensioni, il loro chi quadrato scalato corrisponde alla statistica T2* di Yuan e Bentler. Questa versione del chi quadrato è particolarmente adatta per gestire dati non normali o con valori mancanti. I gradi di libertà, sia per $\chi_{SB}$ che per T2*, sono rappresentati da dfM, indicando la flessibilità del modello in termini di numero di parametri stimabili.
 
+### Altri Chi Quadrato Corretti
+
 Al di là di questi, esistono chi quadrati che sono corretti sia per la media che per la varianza. Questi chi quadrati utilizzano fattori di scala diversi e, in genere, seguono distribuzioni chi quadrato centrali con medie e varianze che sono corrette in modo asintotico. Sebbene questi metodi richiedano maggiori risorse computazionali rispetto ai metodi che correggono solo per la media, tendono ad essere più precisi, specialmente in campioni di grandi dimensioni. Questa precisione aggiuntiva è particolarmente utile quando si affrontano set di dati complessi o di ampie dimensioni, permettendo una stima più accurata della bontà di adattamento del modello.
 
-Per quanto riguarda il software `lavaan`, ci sono diverse opzioni per il metodo ML robusto:
+### Metodi Robusti con `lavaan`
 
-1. "MLM" per dati completi, genera un chi quadrato scalato per la media di Satorra-Bentler.
-2. "MLR" per dati completi o incompleti, produce un chi quadrato corretto per la media basato sulla statistica T2* di Yuan-Bentler.
-3. "MLMV" per dati completi, calcola un chi quadrato scalato corretto per media e varianza.
-4. "MLMVS" genera un chi quadrato corretto per media e varianza con una correzione per l'eteroschedasticità di Satterthwaite.
+Il pacchetto `lavaan` offre diverse opzioni per implementare metodi robusti di stima basati sulla massima verosimiglianza (ML). Questi metodi sono particolarmente utili in presenza di deviazioni dalle assunzioni di normalità multivariata. Ecco le principali opzioni disponibili:
 
-Nel contesto dei metodi ML robusti utilizzati nel software lavaan, la "matrice di informazione" è un concetto fondamentale che incide sul calcolo degli errori standard. La matrice di informazione, in statistica, è una matrice che contiene informazioni sulla varianza e covarianza dei parametri stimati di un modello. Viene utilizzata per calcolare gli errori standard delle stime dei parametri, che sono essenziali per testare l'ipotesi statistica e per la costruzione di intervalli di confidenza.
+1. **MLM**: Utilizzato per dati completi, calcola un chi-quadrato scalato secondo il metodo di Satorra-Bentler basato sulla media.
+2. **MLR**: Applicabile sia a dati completi che incompleti, genera un chi-quadrato corretto per la media basato sulla statistica T2* di Yuan-Bentler. È particolarmente indicato per analisi con dati mancanti.
+3. **MLMV**: Per dati completi, produce un chi-quadrato scalato corretto per la media e la varianza.
+4. **MLMVS**: Adatto a dati completi, utilizza una correzione per eteroschedasticità basata sul metodo di Satterthwaite, calcolando un chi-quadrato corretto per media e varianza.
 
-Nel software `lavaan`, la matrice di informazione può essere di due tipi:
+#### La Matrice di Informazione in `lavaan`
 
-1. **Matrice di Informazione Attesa**: Questa è la matrice predefinita utilizzata da lavaan per calcolare gli errori standard nei metodi ML robusti. La matrice di informazione attesa si basa sulle aspettative teoriche della varianza e covarianza dei parametri stimati, derivanti dal modello e dall'insieme dei dati.
+Un concetto centrale per i metodi ML robusti è la **matrice di informazione**, utilizzata per stimare gli errori standard dei parametri. Questa matrice rappresenta la varianza e la covarianza dei parametri stimati ed è cruciale per testare ipotesi e costruire intervalli di credibilità o confidenza. In `lavaan`, la matrice di informazione può essere calcolata in due modi:
 
-2. **Matrice di Informazione Osservata**: Quando si hanno dati mancanti, lavaan passa all'utilizzo della matrice di informazione osservata. Questa matrice utilizza i dati effettivamente osservati per calcolare la varianza e la covarianza dei parametri stimati. Essa può fornire stime più accurate degli errori standard in presenza di dati mancanti.
+1. **Matrice di Informazione Attesa**: È l'opzione predefinita per il calcolo degli errori standard. Questa matrice si basa sulle aspettative teoriche delle varianze e covarianze dei parametri stimati, derivate dal modello e dai dati. È generalmente utilizzata in condizioni di dati completi e normali.
 
-Gli utenti di `lavaan` hanno la possibilità di specificare se utilizzare la matrice di informazione attesa anche in presenza di dati incompleti, in base alle esigenze specifiche della loro analisi. 
+2. **Matrice di Informazione Osservata**: Viene impiegata quando sono presenti dati mancanti. In questo caso, le varianze e covarianze vengono calcolate utilizzando i dati effettivamente osservati. Questo approccio può fornire stime degli errori standard più affidabili in presenza di incompletezza nei dati.
 
-È importante per i ricercatori utilizzare questi strumenti in modo etico e metodologicamente corretto. Evitare di selezionare in modo opportunistico le combinazioni di chi quadrati scalati e errori standard robusti che sembrano meglio supportare le ipotesi, e dichiarare chiaramente qualsiasi variabilità nei risultati dovuta alla scelta del metodo di calcolo, è cruciale per mantenere l'integrità e l'affidabilità della ricerca.
+Gli utenti possono scegliere esplicitamente quale matrice utilizzare, ad esempio forzando l'uso della matrice attesa anche con dati incompleti, in base alle esigenze specifiche della loro analisi.
+
+#### Considerazioni Etiche e Metodologiche
+
+È essenziale utilizzare questi strumenti in modo rigoroso e trasparente. Selezionare metodi o combinazioni di chi-quadrati scalati ed errori standard robusti solo per ottenere risultati che meglio supportano le proprie ipotesi compromette l'integrità della ricerca. Per questo motivo, i ricercatori dovrebbero:
+
+- Dichiarare chiaramente i metodi utilizzati, incluso il tipo di matrice di informazione scelta.
+- Segnalare eventuali variazioni nei risultati legate alla scelta del metodo.
+- Garantire che le analisi siano guidate da principi metodologici, non da convenienze interpretative.
+
+Queste buone pratiche sono fondamentali per mantenere l’affidabilità e la credibilità delle analisi svolte.
 
 ## Indicizzazione dell'Adattamento del Modello
 
@@ -345,49 +362,78 @@ Secondo quanto osservato da Kenny (2020), si possono trarre due conclusioni impo
 1. Il Comparative Fit Index (CFI) e il TLI sono entrambi influenzati dall'entità delle correlazioni tra le variabili misurate. Ciò significa che valori medi di correlazione più elevati risultano in valori più alti sia per il CFI che per il TLI, e il contrario è vero per correlazioni medie più basse.
 2. I valori del CFI e del TLI mostrano una forte correlazione tra loro. Di conseguenza, è consigliabile riportare solo uno dei due indici per evitare ripetizioni e per mantenere la chiarezza del report. La scelta tra CFI e TLI dovrebbe basarsi su criteri specifici relativi al contesto e agli obiettivi dello studio in questione.
 
-## Misure di adeguamento assoluto
+
+## Misure di Adeguamento Assoluto
 
 ### Root Mean Square Error of Approximation (RMSEA)
 
-L'Errore Quadratico Medio di Approssimazione (RMSEA) è un indicatore che misura quanto bene un modello statistico si adatta ai dati. A differenza di altri indici come il CFI o il TLI, che confrontano il modello con un modello di base, l'RMSEA valuta l'adattamento del modello in maniera assoluta.
+L'Errore Quadratico Medio di Approssimazione (RMSEA) misura quanto bene un modello statistico si adatta ai dati osservati, valutando l'adattamento in termini assoluti, piuttosto che confrontarlo con un modello di riferimento (come fanno indici quali CFI e TLI). 
 
-Il calcolo dell'RMSEA si basa sull'utilizzo del chi quadrato ($\chi^2$), che quantifica la discrepanza tra le covarianze osservate nei dati e quelle stimate dal modello. Questa discrepanza, che indichiamo con $\delta$, è la differenza tra il valore del chi quadrato e i gradi di libertà (df) del modello: $\delta = \chi^2 - df$. Un valore di $\delta$ più alto indica una maggiore discrepanza e quindi un peggior adattamento del modello ai dati.
-
-La formula dell'RMSEA è la seguente:
+Il calcolo del RMSEA si basa sul chi-quadrato ($\chi^2$), che rappresenta la discrepanza tra la matrice di covarianza osservata e quella stimata dal modello. La discrepanza, indicata con $\delta$, è definita come:
 
 $$
-RMSEA = \sqrt{\frac{\max(0, \delta)}{df \cdot (n-1)}},
+\delta = \chi^2 - df,
 $$
 
-dove $n$ è il numero di osservazioni nel campione. L'RMSEA stima l'errore nell'approssimare la matrice di correlazione (o covarianza) osservata con quella derivante dal modello. Fornisce un'indicazione sulla qualità dell'adattamento del modello alla popolazione, considerando i gradi di libertà e la parsimonia del modello.
+dove $df$ rappresenta i gradi di libertà del modello. Valori più alti di $\delta$ indicano una maggiore discrepanza, ossia un peggior adattamento del modello ai dati.
 
-Assumendo che i dati seguano una distribuzione normale multivariata, che il modello sia corretto, e che il campione sia ampio e casuale, il chi quadrato del modello ($\chi^2_{ML}$) segue una distribuzione chi quadrato con gradi di libertà $dfM$. Se il modello non è corretto, il chi quadrato segue una distribuzione non centrale $\chi^2(dfM, \delta)$, dove $\delta$ rappresenta il grado di discrepanza tra modello e dati. Se $\delta = 0$, il modello è perfetto; se $\delta > 0$, il modello non è adeguato.
-
-Il parametro di non centralità normalizzato ($\delta_{nor}$), meno sensibile alla dimensione del campione, si calcola così:
+La formula generale per il calcolo del RMSEA è:
 
 $$
-\delta_{nor} = \max(0, \chi^2_{ML} - dfM).
+\text{RMSEA} = \sqrt{\frac{\max(0, \delta)}{df \cdot (n - 1)}},
 $$
 
-Questo parametro fa parte di una funzione che stima gli errori di approssimazione, ossia la discrepanza tra le matrici di covarianza del campione e della popolazione quando il modello è applicato alla matrice di popolazione.
+dove $n$ è il numero di osservazioni nel campione. Questo indice riflette l'errore di approssimazione del modello rispetto alla matrice di covarianza della popolazione, tenendo conto della parsimonia del modello (ossia del numero di gradi di libertà).
 
-Il valore finale dell'RMSEA, indicato come $eˆ$ (epsilon minuscolo), si ottiene dalla formula:
+### Distribuzione del Chi-Quadrato e Non Centralità
+
+Assumendo che:
+
+- i dati seguano una distribuzione normale multivariata;
+- il modello sia corretto;
+- il campione sia grande e casuale;
+
+il chi-quadrato del modello ($\chi^2_{\text{ML}}$) segue una distribuzione $\chi^2$ con $df_M$ gradi di libertà. Tuttavia, se il modello non è corretto, il chi-quadrato segue una distribuzione non centrale $\chi^2(df_M, \lambda)$, dove $\lambda$ rappresenta il parametro di non centralità, che indica il grado di discrepanza tra il modello e i dati.
+
+Il parametro di non centralità normalizzato è definito come:
 
 $$
-eˆ = \sqrt{\frac{\delta_{nor}}{dfM (N - 1)}}
+\delta_{\text{norm}} = \max(0, \chi^2_{\text{ML}} - df_M).
 $$
 
-Sebbene la stima di $eˆ$ non sia imparziale a causa della restrizione $eˆ ≥ 0$, è considerata una buona approssimazione. Browne e Cudeck (1993) suggerirono che un valore di $eˆ ≤ 0.05$ indichi un buon adattamento del modello, ma ricerche successive hanno evidenziato che non esiste una soglia universale precisa. È quindi raccomandato valutare anche il limite superiore dell'intervallo di confidenza di $eˆ$ (indicato come $eˆU$) per una valutazione più accurata dell'adattamento del modello.
+Questo valore è utilizzato per stimare la discrepanza tra la matrice di covarianza osservata e quella della popolazione sotto il modello.
 
-Altre caratteristiche del RMSEA sono riassunte di seguito:
+### Formula Finale del RMSEA
 
-1. L'interpretazione di $eˆ$, $eˆL$ e $eˆU$ in relazione a soglie fisse è generalmente appropriata in grandi campioni con modelli ben specificati; in modelli più piccoli o con errori di specificazione significativi, questa interpretazione può richiedere maggiore cautela.
+Il valore finale del RMSEA, indicato spesso con $\epsilon$, è calcolato come:
 
-2. Studi di simulazione hanno rilevato che l'RMSEA tende a imporre una penalità più severa per la complessità su modelli più piccoli con poche variabili. Ciò è dovuto al fatto che i modelli più piccoli tendono ad avere meno gradi di libertà, mentre i modelli più grandi hanno più "spazio" per valori di dfM più alti.
+$$
+\epsilon = \sqrt{\frac{\delta_{\text{norm}}}{df_M \cdot (n - 1)}}.
+$$
 
-3. Studi di simulazione hanno valutato le prestazioni di forme robuste dell'RMSEA corrette per la non normalità, una delle quali è basata sul chi quadrato scalato di Satorra-Bentler. Questa versione robusta corretta per la popolazione dell'RMSEA generalmente supera la versione non corretta, che tende ad essere sovrastimata in condizioni di non normalità.
+Sebbene $\epsilon$ possa essere una stima distorta a causa della restrizione $\epsilon \geq 0$, rappresenta una buona approssimazione dell'errore. 
 
-4. Sono stati sviluppati metodi per stimare la potenza statistica delle varie ipotesi nulle basate sull'RMSEA, così come metodi per generare le dimensioni minime del campione richieste per ottenere livelli target di potenza statistica. 
+### Soglie Interpretative
+
+Browne e Cudeck (1993) suggerirono che:
+
+- $\epsilon \leq 0.05$ indica un buon adattamento del modello;
+- $0.05 < \epsilon \leq 0.08$ rappresenta un adattamento accettabile;
+- $\epsilon > 0.10$ segnala un cattivo adattamento.
+
+Tuttavia, queste soglie non sono universali, e si consiglia di valutare anche il limite superiore dell'intervallo di confidenza di $\epsilon$ (indicato come $\epsilon_U$) per un'interpretazione più accurata.
+
+### Considerazioni e Versioni Robuste
+
+1. **Interpretazione:** L'interpretazione di $\epsilon$, $\epsilon_L$ (limite inferiore) e $\epsilon_U$ (limite superiore) è appropriata in campioni ampi e con modelli ben specificati. In campioni piccoli o con errori di specificazione significativi, è necessaria maggiore cautela.
+
+2. **Penalità per Modelli Complessi:** Studi di simulazione indicano che il RMSEA tende a penalizzare maggiormente i modelli con pochi gradi di libertà (ad esempio, modelli con poche variabili).
+
+3. **Versioni Robuste:** Versioni robuste del RMSEA, come quella basata sul chi-quadrato scalato di Satorra-Bentler, correggono gli effetti della non normalità e tendono a essere più accurate rispetto alla versione standard, che può sovrastimare l'indice in condizioni di non normalità.
+
+4. **Potenza Statistica:** Esistono metodi per calcolare la potenza statistica associata a ipotesi nulle basate sul RMSEA e per stimare la dimensione minima del campione necessaria a raggiungere determinati livelli di potenza.
+
+Concludendo, il RMSEA è uno strumento potente per valutare l'adattamento assoluto di un modello, ma il suo utilizzo richiede attenzione alle specifiche del modello, alla qualità dei dati e al contesto dell'analisi.
 
 ### Root Mean Square Residual (RMRS)
 

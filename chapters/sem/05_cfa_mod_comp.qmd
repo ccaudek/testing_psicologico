@@ -1,0 +1,245 @@
+# CFA: confronto tra modelli {#sec-sem-model-comparison-cfa}
+
+::: callout-important
+## In questo capitolo imparerai a:
+
+- effettuare il confronto tra diversi modelli di CFA.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Structural Equation Modeling* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, semPlot)
+```
+:::
+
+
+## Introduzione
+
+In un modello CFA, i parametri  possono essere stimati senza vincoli, possono essere fissi o possono essre stimati sulla base di alcuni vincoli. Un parametro libero è sconosciuto e il ricercatore consente all'algoritmo di stima di trovare il suo valore ottimale che, insime agli altri parametri del modello, riduce al minimo le differenze tra le matrici di varianze-covarianze osservate e quelle predette dal modello. Un parametro fisso è pre-specificato dal ricercatore ad un valore specifico, più comunemente 1.0 (ad esempio, per definire la metrica di una variabile latente) o 0 (ad esempio, l'assenza di saturazionoi fattoriali o di covarianze di errore). Come per un parametro libero, anche un parametro vincolato è sconosciuto; tuttavia, un tale parametro non può assumere un valore qualsiasi, ma deve rispettare le restrizioni su suoi valori che il ricercatore ha imposto. I vincoli più comuni sono i vincoli di uguaglianza, in cui i parametri non standardizzati devono assumere valori uguali (ad esempio, in diversi gruppi).
+
+Consideriamo un esempio discusso da @brown2015confirmatory. Viene qui esaminato un set di dati in cui le prime tre misure osservate (X1, X2, X3) sono indicatori di un costrutto latente corrispondente alla Memoria uditiva e il secondo insieme di misure (X4, X5, X6) sono indicatori di un altro costrutto latente, Memoria visiva. Le tre misure usate quali indicatori del costrutto di memoria uditiva sono: 
+
+- X1 = memoria logica, 
+- X2 = associazione verbale a coppie, 
+- X3 = liste di parole; 
+
+le tre misure usate come indicatori del costrutto di memoria visiva sono: 
+
+- X4 = immagini di facce, 
+- X5 = foto di famiglia, 
+- X6 = generiche riproduzioni visive. 
+
+I dati sono i seguenti:
+
+```{r}
+sds <- '2.610  2.660  2.590  1.940  2.030  2.050'
+
+cors <-'
+  1.000
+  0.661  1.000
+  0.630  0.643  1.000
+  0.270  0.300  0.268  1.000
+  0.297  0.265  0.225  0.805  1.000
+  0.290  0.287  0.248  0.796  0.779  1.000'
+
+covs <- getCov(cors, sds = sds, names = paste("x", 1:6, sep = ""))
+print(covs)
+```
+
+Adattiamo i cinque modelli discussi da @brown2015confirmatory.
+
+## Modello congenerico 
+
+```{r}
+model.congeneric <- '
+  auditorymemory =~ x1 + x2 + x3
+  visualmemory   =~ x4 + x5 + x6
+'
+```
+
+```{r}
+fit.congeneric <- cfa(
+  model.congeneric, 
+  sample.cov = covs, 
+  sample.nobs = 200, 
+  std.lv = TRUE
+)
+```
+
+L'output si ottiene con:
+
+```{r}
+summary(
+  fit.congeneric, 
+  fit.measures = TRUE, 
+  standardized = TRUE, 
+  rsquare = TRUE
+)
+```
+
+Il diagramma di percorso del modello è il seguente.
+
+```{r}
+semPaths(
+  fit.congeneric,
+  "std",
+  posCol = c("black"),
+  edge.label.cex = 1.2,
+  sizeMan = 7,
+  edge.width = 0.4, # Set a fixed width for all arrows
+  fade = FALSE # Disable fading of the arrows
+)
+```
+
+## Modello tau-equivalente
+
+Solo memoria auditiva:
+
+```{r}
+model.tau.a <- '
+  auditorymemory =~ x1 + v1*x1 + v1*x2 + v1*x3
+  visualmemory   =~ x4 + x5 + x6
+'
+```
+
+```{r}
+fit.tau.a <- cfa(
+  model.tau.a, 
+  sample.cov = covs, 
+  sample.nobs = 200, 
+  std.lv = TRUE
+)
+```
+
+Memoria auditiva e visiva:
+
+```{r}
+model.tau.av <- '
+  auditorymemory =~ NA*x1 + v1*x1 + v1*x2 + v1*x3
+  visualmemory   =~ NA*x4 + v2*x4 + v2*x5 + v2*x6
+'
+```
+
+```{r}
+fit.tau.av <- cfa(
+  model.tau.av, 
+  sample.cov = covs, 
+  sample.nobs = 200, 
+  std.lv = TRUE
+)
+```
+
+```{r}
+semPaths(
+  fit.tau.av,
+  "std",
+  posCol = c("black"),
+  edge.label.cex = 1.2,
+  sizeMan = 7,
+  edge.width = 0.4, # Set a fixed width for all arrows
+  fade = FALSE # Disable fading of the arrows
+)
+```
+
+## Modello parallelo
+
+Solo memoria auditiva:
+
+```{r}
+model.parallel.a <- '
+  auditorymemory =~ x1 + v1*x1 + v1*x2 + v1*x3
+  visualmemory   =~ x4 + v2*x4 + v2*x5 + v2*x6
+  x1 ~~ v3 * x1
+  x2 ~~ v3 * x2
+  x3 ~~ v3 * x3
+'
+```
+
+```{r}
+fit.parallel.a <- cfa(
+  model.parallel.a, 
+  sample.cov = covs, 
+  sample.nobs = 200, 
+  std.lv = TRUE
+)
+```
+
+Memoria auditiva e visiva:
+
+```{r}
+model.parallel.av <- '
+  auditorymemory =~ x1 + v1*x1 + v1*x2 + v1*x3
+  visualmemory   =~ x4 + v2*x4 + v2*x5 + v2*x6
+  x1 ~~ v3 * x1
+  x2 ~~ v3 * x2
+  x3 ~~ v3 * x3
+ 
+  x4 ~~ v4 * x4
+  x5 ~~ v4 * x5
+  x6 ~~ v4 * x6
+'
+```
+
+```{r}
+fit.parallel.av <- cfa(
+  model.parallel.av, 
+  sample.cov = covs, 
+  sample.nobs = 200, 
+  std.lv = TRUE
+)
+```
+
+```{r}
+semPaths(
+    fit.parallel.av,
+    "std",
+    posCol = c("black"),
+    edge.label.cex = 1.2,
+    sizeMan = 7,
+    edge.width = 0.4, # Set a fixed width for all arrows
+    fade = FALSE # Disable fading of the arrows
+)
+```
+
+## Il test del $\chi^2$
+
+Il confronto tra modelli nidificati procede attraverso il test $\chi^2$. Tale test si basa su una proprietà delle variabili casuali distribuite come $\chi^2$: la differenza tra due v.c. $X_1$ e $X_2$ che seguono la distribuzione $\chi^2$, rispettivamente con $\nu_1$ e $\nu_2$, con $\nu_1 > \nu_2$, è una variabile causale che segue la distribuzione $\chi^2$ con gradi di libertà pari a $\nu_1 - \nu_2$.
+
+Un modello nidificato è un modello che impone dei vincoli sui parametri del modello di partenza. L'imposizione di vincoli sui parametri ha la conseguenza che vi sarà un numero minore di parametri da stimare. Il confronto tra i modelli si esegue valutando in maniera relativa la bontà di adattamento di ciascun modello per mezzo della statistica chi-quadrato. La statistica così calcolata avrà un numero di gradi di libertà uguale alla differenza tra i gradi di libertà dei due modelli. 
+
+Nel caso dell'esempio in dicussione, abbiamo
+
+```{r}
+out = anova(
+  fit.congeneric, 
+  fit.tau.a, 
+  fit.tau.av, 
+  fit.parallel.a, 
+  fit.parallel.av, 
+  test = "chisq"
+)
+print(out)
+```
+
+I test precedenti indicano come non vi sia una perdita di adattamento passando dal modello congenerico al modello più restrittivo (ovvero, il modello parallelo per entrambi i fattori). Per questi dati, dunque, può essere adottato il modello più semplice, cioè il modello parallelo.
+
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered}
+
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,363 @@
+# Modelli di Regressione Strutturale {#sec-sem-struct-regr}
+
+
+::: callout-important
+## In questo capitolo imparerai a:
+
+- implementare e interpretare i modelli di regressione strutturale.
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere il capitolo *Structural Equation Modeling* del testo di @petersen2024principles.
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, semPlot, patchwork, lme4)
+```
+:::
+
+
+## Introduzione
+
+Un modello comunemente utilizzato nell'analisi delle equazioni strutturali (SEM) è il **modello di regressione strutturale** (Sr), noto anche come modello di percorso con variabili latenti o modello LISREL completo. Questo tipo di modello combina due componenti principali:
+
+1. **Parte strutturale**: rappresenta le ipotesi sugli effetti diretti e indiretti tra le variabili latenti o osservate. Questa sezione descrive le relazioni causali tra i fattori comuni.
+2. **Parte di misurazione**: rappresenta la relazione tra i fattori latenti e i loro indicatori osservati, definendo come i fattori comuni si manifestano attraverso le variabili misurate.
+
+Il capitolo inizia affrontando la specificazione dei modelli Sr con indicatori continui, analizzando i requisiti per garantirne l’identificazione. In particolare, viene discusso come stabilire condizioni che consentano una stima coerente e interpretabile dei parametri del modello.
+
+Successivamente, vengono presentate due strategie distinte per analizzare modelli Sr completi, in cui tutte le variabili nel modello strutturale sono fattori comuni con molteplici indicatori. Queste strategie si concentrano su:
+
+- **Identificazione delle fonti di errore di specificazione**: analisi che separa la valutazione della parte di misurazione (validità degli indicatori) dall'analisi della parte strutturale (relazioni tra variabili latenti).
+- **Valutazione del modello**: tecniche per comprendere come gli errori nella parte di misurazione influenzino le inferenze strutturali.
+
+Inoltre, il capitolo esplora i modelli Sr parziali, in cui alcune variabili nella parte strutturale del modello sono rappresentate da indicatori singoli anziché da fattori comuni con molteplici indicatori. Viene illustrato un metodo specifico per gestire questo tipo di indicatori, permettendo di controllare esplicitamente gli errori di misurazione associati senza influire negativamente sull'adattamento globale del modello.
+
+Il capitolo evidenzia l'importanza di distinguere chiaramente tra le componenti di misurazione e strutturali nei modelli Sr. Questo approccio non solo migliora la comprensione delle relazioni tra variabili latenti, ma aiuta anche a mitigare il rischio di errori di specificazione, aumentando l'affidabilità dei risultati ottenuti dall’analisi SEM.
+
+## Modello di Regressione Strutturale Completo
+
+Nella @fig-kline_15_1 (a) è rappresentato un modello di percorso con variabili manifeste. Viene assunto che la variabile esogena X1 sia misurata senza errore, sebbene questa assunzione sia spesso violata nella pratica. Le variabili endogene nel modello, come Y1 e Y4, possono avere errori casuali che si manifestano nelle loro perturbazioni.
+
+::: {#fig-kline_15_1}
+![](../../figures/kline_15_1.png){width="80%"}
+
+Esempi di un modello di percorso con variabili manifeste (a) e di un corrispondente modello di regressione strutturale completo con indicatori multipli per ogni fattore comune nella parte strutturale (b) [Figura tratta da @kline2023principles].
+:::
+
+
+La @fig-kline_15_1 (b) illustra un modello di Regressione Strutturale (SR) completo, che integra sia componenti strutturali sia di misurazione. In questo modello SR, a differenza del modello di percorso, ciascun indicatore (X1, Y1, Y4) è definito come uno tra numerosi indicatori associati a un fattore comune. Di conseguenza, tutte le variabili osservabili in questa figura includono termini di errore.
+
+Nella parte strutturale del modello, presentata nella @fig-kline_15_1 (b), si osserva la rappresentazione degli stessi schemi di effetti causali diretti e indiretti trovati nel modello di percorso [mostrato nella @fig-kline_15_1 (a)], ma applicati ai fattori comuni.
+
+Per quanto riguarda l'analisi delle medie, le osservazioni e i parametri nei modelli SR sono trattati allo stesso modo di quelli nei modelli di percorso e nei modelli di Analisi Fattoriale Confermativa (CFA), conformemente alle regole precedentemente stabilite. 
+
+L'identificazione di un modello SR completo avviene quando sia la sua componente di misurazione, riformulata come un modello CFA, sia la parte strutturale risultano identificate. La regola di identificazione in due fasi implica che, per determinare se un modello SR completo sia identificato, è necessario esaminare separatamente ciascuna delle sue parti, ovvero quelle di misurazione e strutturale.
+
+## Modellazione in Due Fasi
+
+Immaginiamo che un ricercatore abbia definito un modello di Regressione Strutturale (SR) completo, come mostrato nella @fig-kline_15_1(a). Dopo aver raccolto i dati, il ricercatore adotta un approccio monofase per analizzare il modello, eseguendo una stima simultanea delle componenti di misurazione e strutturali. Tuttavia, i risultati rivelano che il modello non si adatta bene ai dati. Ciò solleva interrogativi sulla localizzazione del problema: è nella parte di misurazione, nella parte strutturale, o in entrambe? Identificare la fonte del problema con precisione può essere complesso usando un approccio monofase.
+
+::: {#fig-kline_15_2}
+![](../../figures/kline_15_2.png){width="80%"}
+
+Valutazione della regola in due fasi per l'identificazione di un modello di regressione strutturale completo presentato con simbolismo grafico compatto per i termini di errore degli indicatori nella parte di misurazione e le perturbazioni nella parte strutturale [Figura tratta da @kline2023principles].
+:::
+
+La modellazione in due fasi, proposta da Anderson e Gerbing (1988), affronta questa difficoltà separando l'analisi in due momenti distinti. 
+
+Nel primo passaggio, il modello SR viene riformulato in un modello CFA per testare esclusivamente le relazioni tra i costrutti latenti e i loro indicatori. Un cattivo adattamento del modello CFA indica problemi nelle ipotesi sulla misurazione (ad esempio, carichi fattoriali errati o struttura del modello incoerente). Solo se il modello CFA è valido si passa al secondo passaggio, in cui vengono analizzate le relazioni strutturali tra i costrutti latenti. In questa fase, si confrontano il modello SR originale e varianti alternative per identificare la struttura più adatta.
+
+### Limiti e Sfide della Modellazione in Due Fasi
+
+La modellazione in due fasi presenta alcuni limiti. Il processo richiede numerose decisioni, come la riformulazione dei modelli CFA e SR, che possono generare un "giardino dei sentieri che si biforcano", aumentando il rischio di interpretazioni errate. Inoltre, test ripetuti sullo stesso dataset possono portare a risultati influenzati da variazioni casuali.
+
+Un altro problema riguarda i modelli equivalenti. Ad esempio, un modello CFA e un modello SR con una parte strutturale appena identificata possono risultare indistinguibili statisticamente. In questi casi, la scelta tra i modelli deve basarsi su criteri teorici o sul design dello studio.
+
+Infine, se i carichi fattoriali cambiano tra modelli strutturali differenti, ciò indica che il modello di misurazione non è stabile, complicando ulteriormente l’interpretazione.
+
+### Considerazioni Finali
+
+La modellazione in due fasi offre un metodo utile per diagnosticare e risolvere problemi nei modelli SR, ma va utilizzata con attenzione. Le statistiche di adattamento, come il chi-quadro, il CFI o il RMSEA, sono spesso più sensibili alla parte di misurazione rispetto a quella strutturale. Inoltre, soglie standard per questi indici non sono sempre applicabili universalmente, e l'interpretazione dipende dal tipo di modello e dai dati.
+
+L'approccio bifase permette di isolare e analizzare separatamente i problemi nelle componenti di misurazione e strutturali, ma richiede un’analisi teoricamente solida per evitare di incorrere in errori metodologici o interpretativi.
+
+## Una Applicazione Concreta
+
+La @fig-kline-15-3 illustra un modello SR (Regressione Strutturale) iniziale che esplora il rendimento scolastico e l'adattamento in aula di studenti di età media corrispondente ai gradi 7-8. Il modello considera l'influenza dell'abilità cognitiva generale e del livello di rischio di disturbi psicopatologici. Uno degli indicatori di rischio deriva dalla diagnosi di disturbi psichiatrici maggiori nei genitori, mentre il secondo è basato sul livello socio-economico (SES) della famiglia, con punteggi più alti che indicano un SES inferiore. Le abilità cognitive sono valutate tramite i punteggi in ragionamento verbale, analisi visivo-spaziale e memoria, ottenuti da un test di QI somministrato individualmente.
+
+::: {#fig-kline-15-3}
+![](../../figures/kline_15_3.png){width="80%"}
+
+Modello iniziale completo di regressione strutturale del rendimento scolastico e dell'adattamento in classe come funzione dell'abilità cognitiva e del rischio di psicopatologia [Figura tratta da @kline2023principles].
+:::
+
+
+Il modello comprende due fattori endogeni: il rendimento scolastico, valutato attraverso test standardizzati di lettura, aritmetica e ortografia, e l'adattamento in classe, misurato con tre indicatori forniti dagli insegnanti riguardo alla motivazione, stabilità emotiva e qualità delle relazioni sociali degli studenti. In questo modello strutturale, sia il rendimento scolastico sia l'adattamento in classe sono influenzati dall'abilità cognitiva e dal rischio, ma non vi è un effetto diretto o una covarianza delle perturbazioni tra questi due fattori endogeni, indicando che eventuali associazioni tra di essi sono attribuibili alle loro cause comuni, i fattori esogeni.
+
+```{r}
+# input the correlations in lower diagnonal form
+worlandLower.cor <- "
+1.00
+ .70 1.00
+ .65  .60 1.00
+ .55  .50  .45 1.00
+ .50  .45  .40  .70 1.00
+ .35  .35  .30  .55  .50 1.00
+ .30  .30  .30  .50  .45  .44 1.00
+ .25  .20  .22  .41  .28  .34  .40 1.00
+ .35  .32  .32  .48  .45  .42  .60  .45 1.00
+-.25 -.24 -.22 -.21 -.18 -.15 -.15 -.12 -.17 1.00
+-.22 -.26 -.30 -.25 -.22 -.18 -.17 -.14 -.20  .42 1.00 "
+
+# name the variables and convert to full correlation matrix
+worland.cor <- lavaan::getCov(worlandLower.cor, names = c(
+    "verbal", "visual",
+    "memory", "read", "math", "spell", "motive", "harmony", "stable", "parent", "ses"
+))
+
+# add the standard deviations and convert to covariances
+worland.cov <- lavaan::cor2cov(worland.cor,
+    sds = c(
+        13.75, 14.80, 12.60, 14.90, 15.25, 13.85, 9.50, 11.10, 8.70,
+        12.00, 8.50
+    )
+)
+```
+
+**Primo Passaggio nella modellazione in due fasi per un modello SR completo di rendimento scolastico e adattamento in classe**
+
+```{r}
+# 4-factor CFA
+worlandCFA.model <- "
+    Cognitive =~ verbal + visual + memory
+    Achieve =~ read + math + spell
+    Adjust =~ motive + harmony + stable
+    Risk =~ parent + ses 
+ "
+```
+
+```{r}
+#| vscode: {languageId: r}
+worlandCFA <- lavaan::cfa(worlandCFA.model,
+    sample.cov = worland.cov,
+    sample.nobs = 158
+)
+```
+
+```{r}
+semPlot::semPaths(worlandCFA,
+    what = "col", whatLabels = "par", style = "mx", 
+    layout = "tree2", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 8, sizeMan2 = 5
+)
+```
+
+```{r}
+fitMeasures(worlandCFA, c("chisq", "df", "cfi", "tli", "rmsea", "srmr")) |> print()
+```
+
+```{r}
+# predicted correlation matrix for factors
+lavaan::lavInspect(worlandCFA, "cor.lv") |> print()
+```
+
+```{r}
+lavaan::residuals(worlandCFA, type = "standardized.mplus") |> print()
+```
+
+```{r}
+lavaan::residuals(worlandCFA, type = "cor.bollen") |> print()
+```
+
+```{r}
+# calculate factor reliability coefficients (semTools)
+semTools::reliability(worlandCFA) |> print()
+```
+
+**Secondo Passaggio nella modellazione in due fasi per un modello SR completo di rendimento scolastico e adattamento in classe**
+
+I risultati del Passaggio 1 del metodo in due fasi, che si concentrava sul modello di misurazione, consentono di procedere all'analisi del modello SR originale, che prevede cinque percorsi nella @fig-kline-15-3, nel Passaggio 2 del metodo. Anche questa seconda analisi ha portato a una soluzione ammissibile. 
+
+```{r}
+# step 2a
+# 4-factor SR model with 5 paths among factors
+
+# by default, lavaan frees the disturbance covariance
+# between a pair of outcomes in a structural model
+# when there is no direct effect between them
+# thus, this parameter is explicitly fixed to zero
+# in this analysis
+
+worlandSRa_model <- "
+    # measurement part
+    Cognitive =~ verbal + visual + memory
+    Achieve =~ read + math + spell
+    Adjust =~ motive + harmony + stable
+    Risk =~ parent + ses
+    # structural part (5 paths)
+    Achieve ~ Cognitive + Risk
+    Adjust ~ Cognitive + Risk
+    # constrain disturbance covariance to zero
+    Adjust ~~ 0*Achieve 
+"
+```
+
+```{r}
+worlandSRa <- lavaan::sem(worlandSRa_model,
+    sample.cov = worland.cov,
+    sample.nobs = 158
+)
+```
+
+```{r}
+semPaths(
+    worlandSRa,
+    "std",
+    posCol = c("black"),
+    edge.label.cex = 1.2,
+    sizeMan = 7,
+    edge.width = 0.4, # Set a fixed width for all arrows
+    fade = FALSE # Disable fading of the arrows
+)
+```
+
+```{r}
+fitMeasures(worlandSRa, c("chisq", "df", "cfi", "tli", "rmsea", "srmr")) |> print()
+```
+
+```{r}
+lavaan::residuals(worlandSRa, type = "standardized.mplus") |> print()
+```
+
+```{r}
+lavaan::residuals(worlandSRa, type = "cor.bollen") |> print()
+```
+
+Sebbene gli indici di fit siano buoni, l'adattamento locale del modello con cinque percorsi tra i fattori è scarso. Ad esempio, i residui standardizzati per diverse coppie di indicatori dei fattori di rendimento e adattamento hanno spesso un valore maggiore di 2: 
+
+- Lettura, Motivazione, 3.466 
+- Ortografia, Motivazione,  3.348 
+- Lettura, Armonia, 2.903
+
+Basandosi su tutti questi risultati relativi all'adattamento globale e locale, il modello SR iniziale nella @fig-kline-15-3 con cinque percorsi tra i fattori è rifiutato. 
+
+Esaminiamo i *modification indices*.
+
+```{r}
+modificationIndices(worlandSRa, sort = TRUE, minimum.value = 5)
+```
+
+I risultati dei *modification indices* mostrano che l'assenza di un percorso tra i fattori di rendimento e adattamento nella @fig-kline-15-3 è chiaramente incoerente con i dati. Per aggiungere una covariazione tra i fattori di rendimento e adattamento abbiamo due opzioni: o aggiungere un effetto diretto tra i fattori o permettere alle loro perturbazioni di covariare. Ma sarebbe difficile giustificare un effetto diretto rispetto all'altro: scarse abilità scolastiche potrebbero peggiorare l'adattamento in classe tanto quanto i problemi comportamentali a scuola potrebbero influire negativamente sul rendimento. La specificazione di una causalità reciproca tra 
+Rendimento e Adattamento renderebbe il modello strutturale non ricorsivo, ma il modello non sarebbe identificato senza imporre vincoli irrealistici. Riformuliamo dunque il modello della fig-kline-15-3 permettendo alle perturbazioni tra i fattori di rendimento e adattamento di covariare. 
+
+```{r}
+# step 2b
+# 4-factor SR model with 6 paths among factors
+# this model is equivalent to the basic 4-factor
+# CFA measurement model analyzed in step 1
+
+worlandSRb_model <- "
+    # measurement part
+    Cognitive =~ verbal + visual + memory
+    Achieve =~ read + math + spell
+    Adjust =~ motive + harmony + stable
+    Risk =~ parent + ses
+    # structural part (6 paths)
+    Achieve ~ Cognitive + Risk
+    Adjust ~ Cognitive + Risk
+    Adjust ~~ Achieve 
+"
+```
+
+```{r}
+worlandSRb <- lavaan::sem(worlandSRb_model,
+    sample.cov = worland.cov,
+    sample.nobs = 158
+)
+```
+
+```{r}
+semPlot::semPaths(worlandSRb,
+    what = "col", whatLabels = "par", style = "mx", 
+    layout = "tree2", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 8, sizeMan2 = 5
+)
+```
+
+```{r}
+parameterEstimates(worlandSRb) |> print()
+```
+
+```{r}
+fitMeasures(worlandSRb, c("chisq", "df", "cfi", "tli", "rmsea", "srmr")) |> print()
+```
+
+```{r}
+# predicted correlation matrix for factors
+lavaan::lavInspect(worlandSRb, "cor.lv") |> print()
+```
+
+```{r}
+lavaan::residuals(worlandSRb, type = "standardized.mplus") |> print()
+```
+
+```{r}
+lavaan::residuals(worlandSRb, type = "cor.bollen") |> print()
+```
+
+Confrontiamo i due modelli con il test del rapporto di verosimiglianza.
+
+```{r}
+lavTestLRT(worlandSRa, worlandSRb)
+```
+
+L'adattamento del modello SR con 5 percorsi tra i fattori è significativamente peggiore rispetto a quello del modello CFA con 6 percorsi. Gli indici di fit del modello con 6 percorsi sono buoni così come il suo adattamento locale.
+
+```{r}
+# standardized estimates with standard errors
+lavaan::standardizedSolution(worlandSRb) |> print()
+```
+
+La correlazione stimata tra i fattori esogeni abilità cognitiva e rischio, –.459, è sensata: è negativa (più alto il rischio, minore l'abilità cognitiva). Questa correlazione non è prossima a -1.0, il che suggerisce che i due fattori sono distinti e non quasi identici, confermando così l'ipotesi di validità discriminante.
+
+Analizzando gli impatti specifici, un incremento di un punto nel fattore cognitivo (misurato come varianza comune del ragionamento verbale) prevede un aumento di .719 punti nel rendimento scolastico (misurato come varianza comune dell'abilità di lettura), tenendo conto del fattore di rischio. In termini standardizzati, un aumento di una deviazione standard nell'abilità cognitiva si traduce in un aumento di .657 deviazioni standard nel rendimento scolastico, sempre controllando per il rischio.
+
+L'influenza del rischio sul rendimento scolastico è meno marcata: un incremento di un punto nel rischio (misurato come varianza comune del disturbo genitoriale) prevede una diminuzione di .175 punti nel rendimento scolastico. Standardizzando, un aumento di una deviazione standard nel rischio si associa a una diminuzione di .100 deviazioni standard nel rendimento, controllando per l'abilità cognitiva.
+
+La correlazione di perturbazione di .643 misura la relazione tra il rendimento scolastico e l'adattamento in classe, dopo aver escluso l'influenza di altri fattori noti, in questo caso l'abilità cognitiva e il rischio di psicopatologia. In termini più semplici, la correlazione di perturbazione ci dice quanto sono correlati il rendimento scolastico e l'adattamento in classe quando si tiene conto (o si "controlla") dell'effetto dell'abilità cognitiva e del rischio. Un valore di .643 indica una correlazione moderatamente forte, suggerendo che quando il rendimento scolastico di uno studente migliora (o peggiora), anche il suo adattamento in classe tende a migliorare (o peggiorare) in modo simile, indipendentemente dal suo livello di abilità cognitiva o dal grado di rischio di psicopatologia.
+
+La presenza di questa correlazione parziale sostanziale implica che ci sono fattori non misurati nel modello che influenzano sia il rendimento scolastico sia l'adattamento in classe. Questi fattori non misurati potrebbero includere variabili come il sostegno familiare, la qualità dell'insegnamento, fattori ambientali o personalità dello studente. Importante è che questi fattori non misurati sono distinti sia dall'abilità cognitiva dello studente sia dal suo rischio di psicopatologia. In conclusione, il valore di .643 non solo mette in luce l'interdipendenza tra rendimento scolastico e adattamento in classe, ma suggerisce anche l'esistenza di altre variabili influenti che non sono state direttamente misurate o incluse nel modello. Questa informazione può essere preziosa per indirizzare ulteriori ricerche o interventi educativi.
+
+## Strategie Avanzate di Modellazione per i Modelli di Regressione Strutturale
+
+Oltre all'approccio tradizionale di modellazione in due fasi, esiste un metodo più complesso a quattro fasi per analizzare i modelli SR completi. Questa strategia, introdotta da Mulaik e Millsap nel 2000, amplia la modellazione bifase aggiungendo ulteriori analisi esplorative che possono portare a conclusioni più definitive in una serie più estesa di studi. Questo metodo prevede che ogni fattore comune abbia almeno quattro indicatori, numero ritenuto sufficiente per testare l'unidimensionalità con il test dell'annullamento della tetrade. I quattro indicatori rappresentano anche il numero minimo perché un modello CFA a singolo fattore sia considerato sovraidentificato. Il ricercatore testa quindi una serie di almeno quattro modelli gerarchicamente correlati, seguendo questi passaggi:
+
+1. **Primo Passaggio**: Il modello iniziale meno restrittivo è un modello EFA, dove ogni indicatore satura su tutti i fattori. Il numero di fattori è lo stesso dei modelli analizzati nei passaggi successivi. Questo modello viene analizzato con lo stesso metodo di stima utilizzato nei passaggi successivi, ad esempio il metodo ML per indicatori continui e normalmente distribuiti. Alternativamente, si possono usare tecniche come ESEM o E/CFA al posto dell'EFA. Questo passaggio serve a testare la correttezza provvisoria delle ipotesi riguardo al numero di fattori.
+
+2. **Secondo Passaggio**: Corrisponde al Primo Passaggio della modellazione bifase. Qui, si specifica un modello CFA con alcuni carichi incrociati fissati a zero, identificando gli indicatori che non dipendono da certi fattori comuni. Se l'adattamento del modello CFA è ragionevole, si può procedere al test del modello SR; in caso contrario, il modello di misurazione va rivisto.
+
+3. **Terzo Passaggio**: Si specifica il modello SR target con lo stesso schema di carichi incrociati fissati a zero del modello CFA del Secondo Passaggio. Tipicamente, la parte strutturale del modello SR include meno effetti diretti rispetto al totale delle covarianze tra fattori nel modello CFA. Se la parte strutturale del modello SR ha tanti percorsi quanti il modello CFA, i due modelli saranno equivalenti e questo passaggio può essere omesso.
+
+4. **Quarto Passaggio**: Coinvolge test su ipotesi specifiche sui parametri definiti dall'inizio del processo. Questi test possono comportare l'applicazione di vincoli zero o altri, aumentando di uno dfM. I Passaggi 3 e 4 della modellazione a quattro fasi rappresentano una precisazione delle attività generali del Secondo Passaggio della modellazione bifase.
+
+Una delle critiche alla modellazione a quattro fasi riguarda la necessità di avere almeno quattro indicatori per fattore, condizione non sempre pratica o desiderabile, specialmente quando pochi indicatori, o anche un singolo indicatore ottimale, presentano migliori caratteristiche psicometriche rispetto a quattro. Tuttavia, Mulaik e Millsap hanno osservato che avere almeno quattro indicatori può compensare, in parte, le limitazioni di un campione più piccolo incrementando dfM.
+
+Entrambi gli approcci, bifase e quattro fasi, sfruttano la variazione casuale quando i modelli vengono testati e riformulati utilizzando gli stessi dati, e sono considerati migliori della modellazione monofase, dove non esiste una distinzione tra questioni di misurazione e struttura. 
+
+## Informazioni sull'Ambiente di Sviluppo {.unnumbered}
+
+```{r}
+sessionInfo()
+```
+
