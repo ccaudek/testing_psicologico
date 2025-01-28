@@ -385,103 +385,314 @@ In sintesi, sensibilità e specificità variano in base al cutoff utilizzato per
 
 ## Teoria della Detezione del Segnale
 
-La *teoria della detezione del segnale* (Signal Detection Theory, SDT) è un approccio probabilistico che descrive la capacità di rilevare uno stimolo target (segnale) in mezzo a stimoli non target (rumore). Sviluppata durante la Seconda Guerra Mondiale per migliorare le prestazioni di radar e sonar, distingue tra due concetti fondamentali: **sensibilità** e **bias**.
+La *Teoria della Detezione del Segnale* (Signal Detection Theory, SDT) è un approccio probabilistico che descrive la capacità di rilevare uno stimolo target (segnale) in un contesto di stimoli non target (rumore). Sviluppata durante la Seconda Guerra Mondiale per ottimizzare le prestazioni di radar e sonar, questa teoria distingue tra due aspetti fondamentali: **sensibilità** e **bias**.
 
-- **Sensibilità**: misura la capacità di distinguere tra segnale e rumore.
-- **Bias**: rappresenta la tendenza a sovrastimare o sottostimare la probabilità di un segnale.
+1. **Sensibilità**  
+   La sensibilità quantifica l'abilità di discriminare tra segnale e rumore, indipendentemente dalle tendenze decisionali. È una misura della qualità del sistema di rilevamento.
 
-Originariamente utilizzata per selezionare e addestrare operatori radar, la SDT trova oggi applicazione in vari campi, come la medicina (es. rilevamento di tumori) e la psicologia. In quest'ultima, è stata utilizzata per studiare percezioni sociali, evidenziando differenze sistematiche nella sensibilità e nel bias.
+2. **Bias**  
+   Il bias riflette la tendenza dell'osservatore a rispondere in modo conservativo o liberale, cioè a sovrastimare o sottostimare la presenza del segnale, influenzando la soglia decisionale.
 
-Le principali metriche della SDT includono **$d'$** per la sensibilità e **$\beta$**, **$c$**, e **$b$** per il bias, utili per quantificare precisione e tendenze decisionali.
+Originariamente impiegata per la selezione e l'addestramento degli operatori radar, la SDT ha trovato applicazioni in numerosi settori moderni. In medicina, ad esempio, viene utilizzata per valutare la capacità di diagnosticare patologie come tumori o infezioni. In psicologia, la SDT ha contribuito a studiare processi percettivi e decisionali, come la percezione sociale, evidenziando differenze sistematiche nella sensibilità e nel bias tra individui o gruppi.
 
-## Curva ROC (Receiver Operating Characteristic)
+### Metriche Principali 
 
-La curva ROC è un grafico che rappresenta la capacità di un test o modello di discriminare tra due classi (es. positivi e negativi). È costruita tracciando il **tasso di veri positivi (sensibilità)** sull'asse y e il **tasso di falsi positivi (1-specificità)** sull'asse x, per ogni possibile valore di cutoff.
+La SDT introduce metriche specifiche per quantificare sensibilità e bias:  
 
-- **Interpretazione della curva**:
-  - Una curva che si avvicina al lato superiore sinistro del grafico rappresenta un test con alta sensibilità e specificità.
-  - Una curva vicino alla diagonale indica una discriminazione casuale, non utile per classificare.
+- **$d'$**: misura la sensibilità, rappresentando la separazione statistica tra distribuzioni di segnale e rumore.  
+- **$\beta$, $c$, $b$**: diverse misure del bias decisionale, che descrivono l'inclinazione del soggetto verso risposte più conservative o liberali.
 
-- **Generazione della curva**:
-  1. Calcola la sensibilità e 1-specificità per vari valori di cutoff.
-  2. Traccia i punti corrispondenti sul grafico e collegali per formare la curva.
 
-Esaminiamo un esempio in R utilizzando il pacchetto `pROC`:
+## Curva ROC e AUC
+
+La **curva ROC** (*Receiver Operating Characteristic*) è uno strumento essenziale per l’analisi delle prestazioni di modelli di classificazione binaria, particolarmente utile per visualizzare il compromesso tra **sensibilità** e **specificità**. Questa curva è strettamente connessa alla **Signal Detection Theory (SDT)**, che fornisce una base teorica per comprendere i processi decisionali sotto incertezza.
+
+Mentre la SDT descrive i principi fondamentali del processo decisionale, la curva ROC rappresenta un'applicazione pratica che consente di analizzare come la variazione della soglia decisionale influenzi le prestazioni del modello. Questa analisi è particolarmente utile per identificare soglie che ottimizzino il bilanciamento tra errori di classificazione (falsi positivi e falsi negativi).
+
+### Definizione e Significato
+
+La curva ROC visualizza il compromesso tra **sensibilità** (True Positive Rate, TPR) e **1-specificità** (False Positive Rate, FPR) al variare della soglia decisionale. Ogni punto della curva rappresenta una combinazione specifica di questi due indicatori.
+
+- **Sensibilità (TPR)**: proporzione di casi positivi correttamente classificati rispetto al totale dei veri positivi.
+- **1-Specificità (FPR)**: proporzione di falsi positivi rispetto al totale dei veri negativi.
+
+#### Costruzione della Curva ROC
+
+1. **Calcolo di TPR e FPR**: Si definiscono diverse soglie per il modello e, per ciascuna, si calcolano i valori di sensibilità e 1-specificità.
+2. **Grafico bidimensionale**: La sensibilità è rappresentata sull’asse y, mentre 1-specificità è riportata sull’asse x.
+3. **Interpretazione**: Una curva che si avvicina all’angolo superiore sinistro indica prestazioni elevate, con alta sensibilità e specificità. Una curva vicina alla diagonale principale rappresenta invece un modello privo di capacità discriminativa.
+
+### Area Sotto la Curva (AUC)
+
+L’**Area Under the Curve (AUC)** è una misura aggregata della capacità del modello di distinguere tra classi. È definita come l’area sotto la curva ROC e può assumere valori compresi tra 0.5 (discriminazione casuale) e 1 (classificazione perfetta).
+
+#### Interpretazione dei Valori di AUC
+
+- **AUC = 1**: Il modello distingue perfettamente tra classi positive e negative.
+- **0.9 ≤ AUC < 1**: Prestazioni eccellenti.
+- **0.75 ≤ AUC < 0.9**: Buone prestazioni.
+- **0.5 ≤ AUC < 0.75**: Prestazioni moderate.
+- **AUC = 0.5**: Nessuna capacità discriminativa (classificazione casuale).
+
+### Limiti della Curva ROC e dell'AUC
+
+Sebbene la curva ROC e l’AUC siano strumenti utili, presentano alcune limitazioni che devono essere considerate per una corretta interpretazione.
+
+#### Problema dei Base Rate
+
+I **base rate** rappresentano la prevalenza di ciascuna classe nella popolazione. In dataset sbilanciati, l’AUC può essere fuorviante, poiché misura le prestazioni globali senza distinguere tra le difficoltà nella classificazione delle diverse classi.
+
+Ad esempio, un modello potrebbe ottenere un AUC elevato classificando correttamente quasi tutti i casi della classe più frequente, trascurando però le prestazioni sulla classe meno rappresentata. Questo problema è particolarmente rilevante in applicazioni critiche, come la diagnosi di malattie rare, dove l’accuratezza della classe minoritaria è cruciale.
+
+
+### La Base Rate Fallacy e i Limiti dell'AUC
+
+La **Base Rate Fallacy** si manifesta quando i tassi di prevalenza di un evento (i cosiddetti **base rate**) vengono ignorati nell’interpretazione delle probabilità o nella valutazione delle prestazioni di un modello. Questo errore è particolarmente rilevante nei contesti in cui una delle due classi è molto meno frequente dell’altra.
+
+Ad esempio, consideriamo un test diagnostico con un’accuratezza del 90% per una malattia rara che colpisce solo l’1% della popolazione. Anche se il test sembra altamente affidabile, il numero di falsi positivi potrebbe essere molto elevato rispetto ai veri positivi, a causa della bassa prevalenza della malattia. Di conseguenza, il valore predittivo positivo (probabilità che un individuo con test positivo sia realmente malato) sarebbe molto basso, rendendo il test di scarsa utilità pratica nonostante un AUC apparentemente elevato.
+
+#### Limiti dell’AUC
+
+Pur essendo una misura aggregata utile per valutare le prestazioni complessive di un modello, l’AUC presenta alcune importanti limitazioni:
+
+1. **Insensibilità ai Base Rate**  
+   L’AUC non tiene conto della distribuzione delle classi, il che può portare a valutazioni fuorvianti in presenza di classi sbilanciate. Un modello potrebbe ottenere un AUC elevato classificando correttamente quasi tutti i casi della classe dominante, ignorando però quelli della classe meno rappresentata.
+
+2. **Mancanza di Dettagli sulle Soglie**  
+   Essendo una misura aggregata, l’AUC non fornisce informazioni sulle prestazioni del modello a una soglia decisionale specifica. Questo può rappresentare un limite pratico quando è necessario scegliere un cutoff ottimale per massimizzare le prestazioni in un determinato contesto applicativo.
+
+3. **Trattamento Simmetrico degli Errori**  
+   L’AUC considera falsi positivi e falsi negativi come equivalenti. Tuttavia, in molti contesti reali (ad esempio, in ambito medico), questi errori hanno conseguenze molto diverse, e il loro bilanciamento può essere cruciale.
+
+4. **Sovrastima delle Prestazioni in Dataset Sbilanciati**  
+   Nei dataset con classi fortemente sbilanciate, l’AUC può mascherare le difficoltà del modello nel trattare correttamente la classe meno rappresentata, portando a una sopravvalutazione delle sue prestazioni globali.
+
+In sintesi, sebbene la curva ROC e l’AUC siano strumenti fondamentali per l’analisi delle prestazioni dei modelli di classificazione, devono essere utilizzati con consapevolezza dei loro limiti. In contesti caratterizzati da **base rate sbilanciati**, è importante integrare queste metriche con altre, come i valori predittivi positivo e negativo, o analisi mirate delle soglie decisionali.
+
+Una valutazione completa delle prestazioni di un modello richiede di considerare il contesto applicativo, i costi relativi degli errori di classificazione e le implicazioni pratiche delle decisioni prese sulla base dei risultati del modello. Solo così è possibile ottimizzare il processo decisionale e garantire l’utilità del modello nelle applicazioni reali.
+
+
+### Esempio in R 
+
+In questo esempio, utilizziamo un dataset simulato che rappresenta i punteggi ottenuti da un questionario psicologico sullo stress percepito e la loro associazione con l'appartenenza a due gruppi: **basso stress** e **alto stress**.
+
+Creiamo un dataset con 200 partecipanti, suddivisi equamente tra i due gruppi:
 
 ```{r}
-# Dati di esempio
-data(aSAH)
-
-# Generazione della curva ROC
-rocCurve <- roc(aSAH$outcome, aSAH$s100b)
+# Generazione del dataset simulato
+set.seed(123)
+n <- 200
+# Creazione di variabili
+group <- factor(
+  rep(c("Basso", "Alto"), each = n / 2), 
+  levels = c("Basso", "Alto")
+)
+stress_score <- c(
+  rnorm(n / 2, mean = 50, sd = 10), # Gruppo basso stress
+  rnorm(n / 2, mean = 70, sd = 10)  # Gruppo alto stress
+)
+# Creazione del dataframe
+data_stress <- data.frame(
+  group = group,
+  stress_score = stress_score
+)
+# Visualizzazione delle prime righe
+head(data_stress)
 ```
 
+Il dataset contiene:
+
+- **`group`**: Gruppo di appartenenza (Basso o Alto stress percepito).
+- **`stress_score`**: Punteggio del questionario sullo stress percepito (variabile continua).
+
+#### Generazione della Curva ROC
+
+Utilizziamo la curva ROC per valutare la capacità del questionario di distinguere tra i due gruppi.
+
 ```{r}
-#| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Visualizzazione della curva
+# Generazione della curva ROC
+rocCurve <- roc(data_stress$group, data_stress$stress_score)
+```
+
+Visualizziamo il grafico della curva ROC e calcoliamo l’**AUC**:
+
+```{fig.asp=1}
+# Visualizzazione della curva ROC
 plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
 ```
 
-## AUC (Area Under the Curve)
+#### Calcolo di Punti sulla Curva ROC per Soglie Specifiche
 
-L'AUC è l'area sotto la curva ROC e fornisce una misura sintetica della capacità discriminativa del test.
-
-- **Interpretazione dell'AUC**:
-  - **0.5**: Discriminazione casuale (linea diagonale).
-  - **0.7–0.8**: Discriminazione accettabile.
-  - **0.8–0.9**: Buona discriminazione.
-  - **>0.9**: Eccellente discriminazione.
-
-- **Significato dell'AUC**:
-  - Rappresenta la probabilità che, selezionando casualmente un esito positivo e uno negativo, il test classifichi correttamente l’esito positivo.
-  - Ad esempio, un’AUC di 0.75 significa che il test classifica correttamente il 75% delle coppie positivo-negativo.
-
-Esempio in R per una curva ROC lisciata e AUC:
+Fissiamo una serie di soglie per classificare i partecipanti in base al punteggio di stress percepito. Classifichiamo i partecipanti come "Alto stress" se il loro punteggio è superiore o uguale alla soglia, altrimenti come "Basso stress".
 
 ```{r}
-#| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Curva ROC lisciata
-plot(roc(aSAH$outcome, aSAH$s100b, smooth = TRUE), 
-     legacy.axes = TRUE, print.auc = TRUE)
+# Definiamo diverse soglie
+thresholds <- seq(0, 100, by = 5)
+
+# Funzione per calcolare sensibilità e specificità
+calc_metrics <- function(threshold, data) {
+  # Predizione basata sulla soglia
+  predicted <- factor(
+    ifelse(data$stress_score <= threshold, "Alto", "Basso"),
+    levels = c("Alto", "Basso")
+  )
+  
+  # Gruppo osservato
+  actual <- factor(data$group, levels = c("Alto", "Basso"))
+  
+  # Matrice di confusione
+  conf_matrix <- table(Predicted = predicted, Actual = actual)
+  
+  # Estrarre metriche dalla matrice di confusione
+  TP <- conf_matrix["Alto", "Alto"]
+  FP <- conf_matrix["Alto", "Basso"]
+  TN <- conf_matrix["Basso", "Basso"]
+  FN <- conf_matrix["Basso", "Alto"]
+  
+  # Calcolo di sensibilità e specificità
+  sensitivity <- TP / (TP + FN)
+  specificity <- TN / (TN + FP)
+  
+  # Restituzione dei risultati
+  return(list(
+    threshold = threshold,
+    sensitivity = sensitivity,
+    specificity = specificity,
+    fpr = 1 - specificity
+  ))
+}
+
+# Calcolo metriche per ogni soglia
+results <- lapply(thresholds, function(t) calc_metrics(t, data_stress))
+
+# Estrazione dei valori per il plotting
+fpr_values <- sapply(results, function(x) x$fpr)
+sens_values <- sapply(results, function(x) x$sensitivity)
+
+# Invertire y per calcolare i punti richiesti
+points_inverted <- list(x = fpr_values, y = 1 - sens_values)
+
+# Visualizzazione della curva ROC
+plot(rocCurve, legacy.axes = TRUE, print.auc = TRUE)
+
+# Plot dei punti con colori appropriati
+points(points_inverted$x, points_inverted$y, col = "green", pch = 19, cex = 0.8)
+
+# Aggiunta di etichette per soglie selezionate
+selected_thresholds <- seq(0, 100, by = 20)
+for (threshold in selected_thresholds) {
+  idx <- which(thresholds == threshold)
+  if (length(idx) > 0) {
+    text(
+      points_inverted$x[idx],
+      points_inverted$y[idx],
+      labels = threshold,
+      pos = 3,
+      cex = 0.7
+    )
+  }
+}
 ```
 
-**Vantaggi dell'analisi ROC e AUC**
+La curva ROC permette di valutare l'abilità di un modello di distinguere tra due gruppi (ad esempio, "Basso stress" e "Alto stress"). Ogni punto sulla curva ROC corrisponde a una soglia specifica utilizzata per classificare i partecipanti. Per calcolare questi punti, seguiamo i seguenti passaggi:
 
-1. **Indipendenza dal cutoff**: La curva ROC consente di valutare un test senza fissare una soglia specifica.
-2. **Robustezza**: L’AUC è meno influenzata da fattori come il tasso di base nella popolazione o lo sbilanciamento tra classi.
-3. **Comparabilità**: Permette di confrontare l’efficacia di diversi test o modelli.
+**1. Definizione delle Soglie.** Le soglie sono valori specifici del punteggio continuo (`stress_score`) che separano i gruppi. Per ogni soglia:
+
+- I partecipanti con punteggio **≥ soglia** vengono classificati come "Alto stress".
+- I partecipanti con punteggio **< soglia** vengono classificati come "Basso stress".
+
+**2. Sensibilità e Specificità.** Per ogni soglia, calcoliamo due metriche fondamentali:
+
+- **Sensibilità (True Positive Rate, TPR):** proporzione di partecipanti del gruppo "Alto stress" classificati correttamente.
+- **Specificità:** proporzione di partecipanti del gruppo "Basso stress" classificati correttamente. La False Positive Rate (FPR) è complementare alla specificità: $\text{FPR} = 1 - \text{Specificità}$.
+
+**3. Logica della Funzione `calc_metrics`.** La funzione prende una soglia e il dataset come input. I passaggi principali sono:
+
+1. **Classificazione:** per ogni partecipante, confrontiamo il punteggio con la soglia per assegnare la classe predetta.
+2. **Matrice di Confusione:** costruiamo una tabella che confronta le classificazioni predette con quelle osservate per calcolare i seguenti valori:
+   - **TP (True Positives):** numero di "Alto stress" predetti correttamente.
+   - **FP (False Positives):** numero di "Basso stress" classificati erroneamente come "Alto stress".
+   - **TN (True Negatives):** numero di "Basso stress" classificati correttamente.
+   - **FN (False Negatives):** numero di "Alto stress" classificati erroneamente come "Basso stress".
+3. **Metriche:** calcoliamo sensibilità, specificità e FPR.
+
+**4. Calcolo e Visualizzazione dei Punti.** 
+
+- Per ciascuna soglia nella sequenza definita (`seq(0, 100, by = 5)`), la funzione calcola le metriche.
+- I valori di FPR (asse $x$) e sensibilità (asse $y$) vengono estratti per costruire i punti ROC.
+- La curva ROC viene tracciata utilizzando la funzione `roc`, mentre i punti calcolati manualmente vengono aggiunti al grafico per confrontarli.
+
+Questa parte del codice calcola e traccia i punti ROC per ogni soglia:
+
+```r
+# Calcolo delle metriche per ogni soglia
+results <- lapply(thresholds, function(t) calc_metrics(t, data_stress))
+
+# Estrazione di FPR e sensibilità per il plotting
+fpr_values <- sapply(results, function(x) x$fpr)
+sens_values <- sapply(results, function(x) x$sensitivity)
+
+# Visualizzazione dei punti ROC sul grafico
+points(fpr_values, 1 - sens_values, col = "green", pch = 19, cex = 0.8)
+
+# Aggiunta di etichette alle soglie selezionate
+selected_thresholds <- seq(0, 100, by = 20)
+for (threshold in selected_thresholds) {
+  idx <- which(thresholds == threshold)
+  if (length(idx) > 0) {
+    text(
+      fpr_values[idx], 
+      1 - sens_values[idx], 
+      labels = threshold, 
+      pos = 3, 
+      cex = 0.7
+    )
+  }
+}
+```
+
+1. **Inversione di $y$:** per allineare i punti calcolati alla curva ROC, si usa $1 - \text{Sensibilità}$ sull'asse $y$. Questo perché la curva ROC calcola direttamente la sensibilità, mentre i punti manuali la confrontano come $1 - \text{Specificità}$ sull'asse $x$.
+2. **Punti e Etichette:** i punti calcolati vengono evidenziati in verde e annotati con i valori delle soglie.
+
+In sintesi, il grafico finale mostra la curva ROC completa generata automaticamente e i punti calcolati manualmente. Le etichette sulle soglie forniscono informazioni su come il comportamento del modello varia al variare della soglia. Questo approccio permette di comprendere i concetti dietro la costruzione della curva ROC e come ogni soglia influenzi le metriche di classificazione.
+
+Per una rappresentazione più fluida, applichiamo una lisciatura:
+
+```{r fig.asp=1}
+# Curva ROC lisciata
+plot(
+  roc(data_stress$group, data_stress$stress_score, smooth = TRUE),
+  legacy.axes = TRUE, print.auc = TRUE
+)
+```
+
+Nel nostro esempio, il valore di **AUC ≈ 0.92** indica che il questionario sullo stress percepito ha un’ottima capacità di distinguere tra i due gruppi, essendo molto vicino al valore massimo di 1. Questo risultato evidenzia che il questionario possiede una combinazione di elevata sensibilità e specificità, rendendolo uno strumento efficace per discriminare tra persone con **basso** e **alto stress percepito**.
+
+In sintesi, l’analisi dimostra che:  
+
+- il questionario è un valido strumento diagnostico;  
+- l’approccio ROC è utile per valutare l’efficacia di un test psicologico nella distinzione tra gruppi con caratteristiche diverse, come livelli di stress, depressione o ansia.  
+
+Questo esempio illustra l’applicazione pratica della curva ROC nel contesto psicologico, sottolineando il suo valore nell’analisi dell’accuratezza di strumenti diagnostici e questionari.
 
 ## Riflessioni Conclusive
 
-La curva ROC (*Receiver Operating Characteristic*) e l’AUC (*Area Under the Curve*) rappresentano strumenti tra i più efficaci per valutare l’accuratezza predittiva di modelli e test diagnostici. La loro forza risiede nella capacità di fornire una valutazione complessiva della discriminabilità del modello, tenendo conto dei bias introdotti da tassi di base e dalla scelta delle soglie decisionali.
+L'analisi delle prestazioni dei modelli predittivi è un aspetto centrale in numerosi ambiti applicativi, dalla psicologia fino all'intelligenza artificiale. Questo capitolo ha esplorato strumenti e concetti fondamentali per valutare l'accuratezza e l'affidabilità di modelli di classificazione, sottolineando come ciascuno di essi possa contribuire a migliorare la qualità delle decisioni in condizioni di incertezza.
 
-La curva ROC traccia la relazione tra il tasso di veri positivi (*True Positive Rate*, o sensibilità) e il tasso di falsi positivi (*False Positive Rate*, o 1-specificità) per ogni possibile valore di cutoff. Questo approccio consente di:
+Uno dei temi chiave affrontati riguarda l'importanza di metriche come sensibilità, specificità, valore predittivo positivo (PPV) e valore predittivo negativo (NPV), che offrono una descrizione dettagliata delle prestazioni di un modello in relazione ai suoi errori (falsi positivi e falsi negativi). Queste metriche, derivate dalla matrice di confusione, non solo consentono di misurare l'accuratezza complessiva, ma permettono anche di adattare l'interpretazione del modello alle esigenze specifiche del contesto applicativo:
 
-- **Visualizzare le prestazioni complessive**: La curva illustra come varia il compromesso tra sensibilità e specificità al variare della soglia, rendendo evidente il trade-off tra errori di tipo I (falsi positivi) ed errori di tipo II (falsi negativi).
-- **Superare la limitazione di un singolo cutoff**: Piuttosto che valutare il modello su una soglia arbitraria, la curva ROC considera tutte le possibili soglie, offrendo un quadro più completo.
+- **Sensibilità e specificità** descrivono rispettivamente la capacità del modello di rilevare correttamente i positivi e di escludere correttamente i negativi.
+- **PPV e NPV** forniscono informazioni sulla probabilità che una predizione del modello corrisponda alla realtà, tenendo conto della prevalenza delle classi (tasso di base).
 
-L’AUC, o area sotto la curva ROC, sintetizza la capacità del modello di distinguere tra classi in un singolo valore. Un’AUC pari a 1 indica una classificazione perfetta, mentre un valore di 0.5 rappresenta un modello che non ha capacità discriminativa migliore di una scelta casuale. Le caratteristiche principali dell’AUC includono:
+La **matrice di confusione** rappresenta una base analitica essenziale, da cui derivare tassi marginali e indicatori chiave. Tuttavia, è stato evidenziato come l'accuratezza globale possa risultare fuorviante in presenza di tassi di base sbilanciati, poiché essa può essere dominata dalla classe più frequente. Per questo motivo, l'interpretazione delle prestazioni di un modello richiede sempre un'analisi approfondita, che includa sia gli errori commessi che i costi associati a tali errori.
 
-- **Indipendenza dai tassi di base**: L’AUC misura la capacità discriminativa del modello senza essere influenzata dalla prevalenza delle classi, rendendola particolarmente utile in contesti con distribuzioni sbilanciate.
-- **Comparabilità**: L’AUC consente di confrontare modelli diversi in modo standardizzato, indipendentemente dalla soglia di classificazione scelta.
+La **curva ROC** (*Receiver Operating Characteristic*) e l’**AUC** (*Area Under the Curve*) costituiscono strumenti avanzati per analizzare le prestazioni dei modelli predittivi, offrendo un quadro completo della capacità discriminativa del modello al variare delle soglie decisionali. L'AUC, in particolare, sintetizza in un singolo valore la qualità del modello, rendendo possibile il confronto tra diversi approcci anche in presenza di tassi di base molto diversi. Tuttavia, è stato sottolineato come il valore aggregato dell'AUC debba essere interpretato con cautela, in quanto non fornisce informazioni dettagliate sulle prestazioni a soglie specifiche.
 
-Un aspetto critico nella valutazione di modelli predittivi è che i tassi di base (la proporzione della classe positiva nella popolazione) possono influenzare fortemente le metriche di performance, come accuratezza e precisione. La curva ROC e l’AUC affrontano questo problema:
+Un altro tema affrontato riguarda il **teorema di Bayes**, applicato a contesti diagnostici per aggiornare la probabilità di una condizione sulla base di nuove evidenze. Questo approccio ha evidenziato l'importanza di integrare informazioni iniziali (priori) con nuove osservazioni (dati) per ridurre l'incertezza e migliorare la precisione delle stime. L'esempio del test diagnostico per l'HIV ha illustrato come l'aggiornamento progressivo delle probabilità consenta di ottenere stime più affidabili anche in contesti caratterizzati da bassi tassi di base e test diagnostici imperfetti.
 
-- **Separazione tra sensibilità e bias**: La curva ROC evidenzia le capacità discriminative indipendentemente dal bias introdotto da tassi di base o scelte di cutoff.
-- **Supporto alla scelta del cutoff ottimale**: Valutando il compromesso tra veri positivi e falsi positivi per ogni soglia, è possibile identificare il punto che bilancia meglio sensibilità e specificità in base ai costi associati agli errori.
+Infine, sono state discusse le implicazioni pratiche legate alla scelta delle soglie decisionali, al bilanciamento tra diversi tipi di errori e alla gestione delle distribuzioni sbilanciate. In particolare, è stato evidenziato come la selezione del cutoff ottimale debba essere guidata non solo dalle prestazioni globali del modello, ma anche dai costi associati agli errori di classificazione in un dato contesto.
 
-Strumenti come ROC e AUC sono particolarmente utili in campi come la psicologia, la medicina e l’intelligenza artificiale, dove:
-
-- **Errori hanno costi variabili**: Ad esempio, nel rilevamento di malattie, un falso negativo può essere più grave di un falso positivo. La curva ROC aiuta a scegliere soglie che minimizzano l’impatto di tali errori.
-- **Gestione di distribuzioni sbilanciate**: In scenari dove la classe positiva è rara (es. diagnosi di malattie gravi), l’AUC permette di valutare le prestazioni senza essere distorto dalla prevalenza.
-
-In conclusione, la curva ROC e l’AUC offrono una rappresentazione completa della capacità predittiva di un modello, permettendo di considerare molteplici cutoff e di ridurre l’influenza di bias legati ai tassi di base. Questo approccio consente decisioni informate su soglie ottimali, rendendoli strumenti indispensabili in ogni analisi che coinvolga la predizione e la classificazione.
+In sintesi, questo capitolo ha fornito una panoramica delle principali metodologie per la valutazione delle predizioni, combinando strumenti tradizionali come la matrice di confusione e il teorema di Bayes con approcci avanzati come la curva ROC e l’AUC. Questi strumenti, utilizzati in modo complementare, consentono di affrontare con rigore e flessibilità le sfide della classificazione, guidando verso decisioni informate e ottimizzate in base alle esigenze specifiche di ciascun contesto applicativo.
 
 ## Informazioni sull'Ambiente di Sviluppo {.unnumbered} 
 
