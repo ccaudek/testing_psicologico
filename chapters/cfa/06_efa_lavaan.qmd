@@ -1,0 +1,489 @@
+# Exploratory Structural Equation Modeling {#sec-cfa-esem}
+
+**Prerequisiti**
+
+**Concetti e Competenze Chiave**
+
+**Preparazione del Notebook**
+
+```{r}
+here::here("code", "_common.R") |>
+    source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(
+  lavaan, psych, BifactorIndicesCalculator, semPlot, semTools, esemComp
+)
+```
+
+## Introduzione
+
+L'*Exploratory Structural Equation Modeling* (ESEM) rappresenta un framework analitico innovativo che combina i vantaggi dell'Analisi Fattoriale Esplorativa (EFA) con il rigore della *Confirmatory Factor Analysis* (CFA). Questo approccio integrato consente di mantenere la flessibilità tipica dell'EFA, che permette di considerare le saturazioni incrociate tra i fattori, pur preservando la specificità e il controllo strutturale offerti dalla CFA. In particolare, l'ESEM si distingue per la sua capacità di bilanciare rigore metodologico e adattabilità, rendendolo adatto sia a contesti esplorativi che confermativi.
+
+Un aspetto chiave dell'ESEM è l'introduzione della *rotazione target*, una tecnica che facilita la definizione a priori dei carichi fattoriali principali, pur consentendo ai carichi incrociati di rimanere il più possibile vicini a zero, ma senza imporre vincoli rigidi. Questa caratteristica permette di applicare il modello in modo confermativo, basandosi su una struttura fattoriale predefinita, ma con una flessibilità tipicamente associata all'EFA. Di conseguenza, l'ESEM si presta efficacemente a contesti in cui è necessario convalidare ipotesi preesistenti, pur lasciando spazio all'esplorazione di relazioni inattese tra variabili.
+
+Nella tradizionale *Confirmatory Factor Analysis* (CFA), ampiamente utilizzata in ambito psicologico, la struttura fattoriale è definita a priori: si assume che ogni indicatore carichi esclusivamente sul proprio fattore latente di riferimento, con saturazioni incrociate fissate a zero. Questo approccio, sebbene metodologicamente rigoroso, presenta limitazioni significative. In particolare, i modelli CFA tendono a essere eccessivamente restrittivi, presupponendo "fattori puri" in cui ogni item contribuisce solo al proprio costrutto latente. Tuttavia, nella pratica psicologica, molti item riflettono più di un costrutto, rendendo questa assunzione spesso irrealistica. Ignorare le saturazioni incrociate può portare a una rappresentazione distorta delle relazioni tra item e fattori, con conseguenti sovrastime delle statistiche di adattamento del modello e distorsioni positive nelle correlazioni tra fattori. Studi di simulazione hanno dimostrato che anche piccole saturazioni incrociate, se non considerate, possono alterare significativamente le stime dei parametri.
+
+Un ulteriore problema della CFA riguarda gli indici di bontà di adattamento, che risultano spesso troppo rigidi per strumenti psicologici multifattoriali. Questa rigidità rende difficile ottenere un adattamento soddisfacente senza apportare modifiche sostanziali ai modelli. Tuttavia, è importante notare che modelli con indici di adattamento non ottimali possono comunque presentare saturazioni ragionevoli e alti livelli di affidabilità quando analizzati a livello di item.
+
+Proprio per superare queste limitazioni, l'ESEM si è affermato come un approccio più flessibile e robusto, in grado di cogliere la complessità delle misure psicologiche senza sacrificare il rigore metodologico. Grazie alla sua capacità di integrare i punti di forza dell'EFA e della CFA, l'ESEM offre un quadro analitico più realistico e adattabile, rendendolo uno strumento prezioso per la ricerca in ambito psicologico.
+
+## Exploratory Structural Equation Modeling
+
+L'ESEM combina elementi delle CFA e dell'Exploratory Factor Analysis (EFA) all'interno del tradizionale framework delle Equazioni Strutturali (SEM). Questo approccio rappresenta un compromesso tra la ricerca iterativa di soluzioni fattoriali ottimali, tipica dell'EFA, e la modellazione teorica restrittiva delle CFA. 
+
+L'ESEM è essenzialmente un metodo confermativo che permette anche un'esplorazione attraverso l'uso di rotazioni mirate, mantenendo la presenza di caricamenti incrociati, seppur minimizzati. All'interno dell'ESEM, il ricercatore può prevedere a priori una struttura fattoriale, similmente a quanto avviene nelle CFA, ma con una maggiore flessibilità permessa dalla possibilità di modellare saturazioni incrociate.
+
+Nell'ESEM, i fattori generali e specifici devono essere specificati come totalmente indipendenti, e le rotazioni ortogonali sono comuni nei modelli bifattoriali. I metodi di rotazione più usati nell'ESEM includono le rotazioni geomin e target, con rotazioni ortogonali adatte ai modelli più complessi.
+
+Le analisi di simulazione indicano che le correlazioni tra i fattori latenti ottenute con l'ESEM sono generalmente meno distorte e più vicine alle vere associazioni, rendendo i modelli ESEM più coerenti con le teorie sottostanti e le intenzioni degli strumenti psicometrici misurati. 
+
+Quando un modello ESEM include solo una parte di misurazione, viene definito come "analisi fattoriale esplorativa" o EFA. Se il modello include anche una parte strutturale, come regressioni tra variabili latenti, è classificato come "modello di equazioni strutturali esplorativo" o ESEM.
+
+## Un Esempio Pratico
+
+In questo esempio pratico analizzeremo nuovamente i dati di @brown2015confirmatory, ovvero otto misure di personalità raccolte su un campione di 250 pazienti che hanno concluso un programma di psicoterapia. Utilizzeremo un'analisi EFA mediante la funzione `efa()` di `lavaan`.  
+
+Gli item sono i seguenti:
+
+- anxiety (N1), 
+- hostility (N2), 
+- depression (N3), 
+- self-consciousness (N4), 
+- warmth (E1), 
+- gregariousness (E2), 
+- assertiveness (E3), 
+- positive emotions (E4). 
+
+```{r}
+varnames <- c("N1", "N2", "N3", "N4", "E1", "E2", "E3", "E4")
+sds <- "5.7  5.6  6.4  5.7  6.0  6.2  5.7  5.6"
+
+cors <- "
+ 1.000
+ 0.767  1.000
+ 0.731  0.709  1.000
+ 0.778  0.738  0.762  1.000
+-0.351  -0.302  -0.356  -0.318  1.000
+-0.316  -0.280  -0.300  -0.267  0.675  1.000
+-0.296  -0.289  -0.297  -0.296  0.634  0.651  1.000
+-0.282  -0.254  -0.292  -0.245  0.534  0.593  0.566  1.000"
+
+psychot_cor_mat <- getCov(cors, names = varnames)
+n <- 250
+```
+
+Definiamo un modello ad un solo fattore comune.
+
+```{r}
+# 1-factor model
+f1 <- '
+    efa("efa")*f1 =~ N1 + N2 + N3 + N4 + E1 + E2 + E3 + E4
+'
+```
+
+Definiamo un modello con due fattori comuni.
+
+```{r}
+# 2-factor model
+f2 <- '
+    efa("efa")*f1 +
+    efa("efa")*f2 =~ N1 + N2 + N3 + N4 + E1 + E2 + E3 + E4
+'
+```
+
+Adattiamo ai dati il modello ad un fattore comune.
+
+```{r}
+efa_f1 <-cfa(
+    model = f1,
+    sample.cov = psychot_cor_mat,
+    sample.nobs = 250,
+    rotation = "oblimin"
+)
+```
+
+```{r}
+semPlot::semPaths(
+    efa_f1,
+    what = "col", whatLabels = "no", style = "mx",
+    layout = "tree", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 5, sizeMan2 = 4
+)
+```
+
+Esaminiamo la soluzione ottenuta.
+
+```{r}
+summary(
+    efa_f1,
+    fit.measures = TRUE,
+    standardized = TRUE,
+    rsquare = TRUE
+) |> 
+    print()
+```
+
+```{r}
+standardizedSolution(efa_f1) |> print()
+```
+
+```{r}
+lavaan::residuals(efa_f1, type = "cor") |> print()
+```
+
+Adattiamo ai dati il modello a due fattori comuni.
+
+```{r}
+efa_f2 <- cfa(
+    model = f2,
+    sample.cov = psychot_cor_mat,
+    sample.nobs = 250,
+    rotation = "oblimin"
+)
+```
+
+```{r}
+semPlot::semPaths(
+    efa_f2,
+    what = "col", whatLabels = "no", style = "mx",
+    layout = "tree", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 5, sizeMan2 = 4
+)
+```
+
+Esaminiamo la soluzione ottenuta.
+
+
+```{r}
+summary(
+    efa_f2,
+    fit.measures = TRUE,
+    standardized = TRUE,
+    rsquare = TRUE
+) |> print()
+```
+
+```{r}
+standardizedSolution(efa_f2) |> print()
+```
+
+Anche se abbiamo introdotto finora soltanto la misura di bontà di adattamento del chi-quadrato, aggiungiamo qui il calcolo di altre misure di bontà di adattamento che discuteremo in seguito.
+
+```{r}
+fit_measures_robust <- c(
+    "chisq", "df", "pvalue", "cfi", "rmsea", "srmr"
+)
+```
+
+Confrontiamo le misure di bontà di adattamento del modello che ipotizza un solo fattore comune e il modello che ipotizza la presenza di due fattori comuni.
+
+```{r}
+# collect them for each model
+rbind(
+    fitmeasures(efa_f1, fit_measures_robust),
+    fitmeasures(efa_f2, fit_measures_robust)
+) |>
+    # wrangle
+    data.frame() |>
+    mutate(
+        chisq = round(chisq, digits = 0),
+        df = as.integer(df),
+        pvalue = ifelse(pvalue == 0, "< .001", pvalue)
+    ) |>
+    mutate_at(vars(cfi:srmr), ~ round(., digits = 3)) |>
+    print()
+```
+
+```{r}
+lavaan::residuals(efa_f2, type = "cor") |> print()
+```
+
+L'evidenza empirica supporta la superiorità del modello a due fattori rispetto a quello ad un solo fattore comune. In particolare, l'analisi fattoriale esplorativa svolta mediante la funzione `efa()` evidenzia la capacità del modello a due fattori di fornire una descrizione adeguata della struttura dei dati e di distinguere in modo sensato tra i due fattori ipotizzati.
+
+## ESEM-within-CFA 
+
+Un approccio alternativo per eseguire un modello ESEM è quello proposto da @marsh2014exploratory, noto come *ESEM-within-CFA*. Questo metodo prevede di eseguire prima la parte esplorativa (EFA) e poi utilizzare i risultati ottenuti come valori iniziali per un modello CFA. In pratica, si combina la flessibilità dell'EFA con il rigore della CFA, sfruttando i vantaggi di entrambi gli approcci.
+
+Per illustrare questo metodo, seguiremo il tutorial di `esemComp` e utilizzeremo il dataset di Holzinger e Swineford (1939), disponibile nel pacchetto `lavaan` di R. Questo dataset contiene i risultati di 301 bambini in test che misurano tre abilità cognitive: 
+
+- **Abilità visiva** (item x1-x3),  
+- **Abilità testuale** (item x4-x6),  
+- **Abilità di velocità** (item x7-x9).  
+
+Per iniziare, carichiamo il dataset e selezioniamo solo le colonne relative agli item di interesse. Questo ci permetterà di concentrarci sulle variabili rilevanti per l'analisi ESEM.
+
+```{r}
+#load full data
+hw_data <- lavaan::HolzingerSwineford1939
+# keep all rows and only the item-columns
+hw_data <- hw_data[, c(7:15)]
+
+#take a look
+head(hw_data)
+```
+
+### Blocchi EFA (Analisi Fattoriale Esplorativa)
+
+Per eseguire un'Analisi Fattoriale Esplorativa (EFA) con una rotazione target, prima dobbiamo specificare la matrice di rotazione target. La funzione `make_target()` semplifica questo processo. Per far funzionare questa funzione, dobbiamo indicare la corrispondenza tra i fattori e i loro principali carichi (loadings), ovvero quali elementi ci aspettiamo che abbiano un carico elevato su ciascun fattore.
+
+Questa informazione deve essere contenuta in una lista, dove il nome di ogni elemento è il nome del fattore, e il contenuto è un vettore numerico con il numero di colonna degli elementi che si riferiscono a quel fattore.
+
+Se controlliamo il dataset e i fattori, vediamo che la corrispondenza tra fattore e numero di colonna dell'elemento è piuttosto chiara in questo dataset. Le prime tre colonne si riferiscono agli elementi del primo fattore, le successive tre colonne sono gli elementi del secondo fattore, e così via. Tuttavia, **questo potrebbe non essere il caso nel tuo dataset!** Molte scale hanno elementi correlati a diversi fattori alternati, il che porta a elementi non sequenziali che si riferiscono allo stesso fattore.
+
+È importante ricordare che il numero dell'elemento per la matrice di rotazione si riferisce sempre alla posizione della colonna dell'elemento all'interno di un dataframe che contiene solo i dati degli elementi (ricorda che all'inizio di questa guida abbiamo creato un dataset separato contenente solo i dati degli elementi). Il numero più basso sarà sempre uno, e il numero più alto sarà il totale degli elementi.
+
+```{r}
+# list with mapping between factors and items
+main_loadings_list <- list(visual = c(1:3),
+                           textual = c(4:6),
+                           speed = c(7:9))
+target_rot <- make_target(nitems = 9, mainloadings = main_loadings_list)
+target_rot
+```
+
+Nella matrice di rotazione target, i valori **NA** indicano carichi (loadings) che non devono essere avvicinati a zero durante la procedura di rotazione, mentre gli zeri indicano il contrario, ovvero che quei carichi dovrebbero essere avvicinati a zero.
+
+È altresì possibile realizzare facilmente una rotazione target per un modello bifattoriale.
+
+```{r}
+bifactor_target_rot <- make_target(nitems = 9,
+                                  mainloadings = main_loadings_list,
+                                  bifactor = TRUE)
+bifactor_target_rot
+```
+
+Ora, per l'estrazione dei carichi (loadings) utilizzando la funzione **esem_efa()**, dobbiamo fornire i dati, il numero di fattori da estrarre e la matrice di rotazione target.
+
+```{r}
+# Specify the efa block.
+# Note that if we continued with the bifactor model 'nfactors' would then be specified as 4 and not 3 due to the G factor being added
+
+efa_block <- esem_efa(data = hw_data,
+                      nfactors = 3,
+                      target = target_rot)
+#> Loading required namespace: GPArotation
+efa_block
+```
+
+La funzione **esem_efa()** è in realtà un wrapper intorno alla funzione **fa()** del pacchetto *psych*, utilizzata per l'analisi fattoriale esplorativa. Tutti i controlli disponibili in **fa()** possono essere specificati per una maggiore personalizzazione della procedura di estrazione dei fattori. Assicurati sempre di fornire gli argomenti della funzione originale utilizzando la sintassi `nome = valore`. Consulta la documentazione di **fa()** per ulteriori informazioni sui controlli e sui campi presenti nell'oggetto di output.
+
+Per impostazione predefinita, viene utilizzata una rotazione obliqua come rotazione target. L'utente può scegliere di passare a una rotazione ortogonale impostando il parametro **targetAlgorithm** su `TargetT`. Un'altra opzione è quella di eliminare completamente l'utilizzo della rotazione target e optare invece per una rotazione Geomin. In questo caso, basta non specificare il parametro **target**. Un'ultima possibilità è disponibile per i modelli bifattoriali: in questo caso, basta impostare `bifactor = TRUE`. Attualmente, i modelli bifattoriali sono supportati solo con la rotazione target. 
+
+Il codice per ciascuno di questi casi è riportato di seguito (commentato).
+
+```{r}
+# geomin rotation
+esem_efa(data = hw_data,
+         nfactors = 3)
+```
+
+```{r}
+# orthogonal target rotation
+esem_efa(data = hw_data,
+         nfactors = 3,
+         target = target_rot,
+         targetAlgorithm = "TargetT")
+```
+
+```{r}
+# bifactor model
+esem_efa(data = hw_data,
+         nfactors = 4,
+         target = bifactor_target_rot,
+         SMC=FALSE,
+         bifactor = TRUE)
+```
+
+È certo utile poter eseguire queste analisi fattoriali utilizzando l'approccio ESEM (Exploratory Structural Equation Modeling), ma ciò non offre ancora la grande flessibilità ed estensibilità propria dei modelli CFA/SEM (Confirmatory Factor Analysis / Structural Equation Modeling). Per accedere a queste funzionalità, utilizzeremo successivamente l'approccio **ESEM-all'interno-del-CFA**.
+
+### ESEM-all-interno-del-CFA
+
+Una volta ottenuta un'analisi fattoriale esplorativa (EFA) realizzata con l'approccio ESEM, è sufficiente utilizzare la funzione **syntax_composer()** per "comporre" il modello ESEM-all-interno-del-CFA utilizzando la sintassi di *lavaan*. Successivamente, con la sintassi generata, possiamo eseguire il fitting del modello in *lavaan*.
+
+La funzione **syntax_composer()** richiede come primo argomento una soluzione EFA e come secondo argomento una lista denominata che indica i referenti (indicatori di riferimento) per ciascun fattore. Ogni voce della lista deve avere il formato `fattore = "nome_elemento"`. È fondamentale che questa lista rispetti lo stesso ordine in cui i fattori appaiono nella matrice dei carichi fattoriali della soluzione EFA. Di solito, questo ordine non corrisponde a quello utilizzato nella lista per creare la rotazione target, poiché nella matrice EFA i fattori sono ordinati in base alla quantità di varianza spiegata, non in base all'ordine fornito dall'utente.
+
+Per esempio, controllando i carichi fattoriali, possiamo dedurre che nell'esempio in questione l'ordine nella matrice dei carichi fattoriali è "testuale, velocità, visivo". Questo ordine non coincide con quello utilizzato in **make_target()**, dove abbiamo specificato "visivo, testuale, velocità".
+
+
+```{r}
+efa_block$loadings
+```
+
+Quando esaminiamo la matrice dei carichi fattoriali, possiamo anche scegliere qual è il miglior referente (indicatore di riferimento) per ciascun fattore. Dovrebbe sempre essere un elemento che ha un carico elevato su un fattore e basso sugli altri. Quindi, per il fattore "testuale", il referente sarà x5, per il fattore "velocità" sarà x8 e per il fattore "visivo" sarà x3. Creeremo la lista con questi elementi in quest'ordine.
+
+```{r}
+# create named character vector of referents
+hw_referents <- list(textual = "x5",
+                     speed = "x8",
+                     visual = "x3")
+```
+
+Alternativamente, è possibile utilizzare la funzione **find_referents()** per selezionare automaticamente i referenti (indicatori di riferimento). Gli input richiesti sono il risultato della funzione **esem_efa()** e un vettore di caratteri con i nomi desiderati per i fattori. Ancora una volta, i nomi devono corrispondere all'ordine in cui i fattori appaiono nella soluzione esplorativa.
+
+```{r}
+find_referents(efa_block, c("textual", "speed", "visual"))
+```
+
+Si dovrebbe notare che i referenti scelti dalla funzione non sono esattamente gli stessi di quelli selezionati manualmente esaminando i carichi fattoriali; il referente per il fattore "velocità" differisce. Ciò accade perché l'attuale implementazione della funzione **find_referents()** cerca solo l'elemento con il carico più alto per ciascun fattore, senza considerare quanto bene tale elemento carichi su altri fattori.
+
+Infine, compiliamo la sintassi per *lavaan* utilizzando la funzione **syntax_composer**:
+
+```{r}
+# compose lavaan syntax
+model_syntax <- syntax_composer(efa_object = efa_block,
+                                referents = hw_referents)
+
+# altenatively, if you plan fit the model with free factor variance parameters
+model_syntax_free_var <- syntax_composer(efa_object = efa_block,
+                                referents = hw_referents,
+                                only_fix_crossloadings = FALSE)
+
+writeLines(model_syntax)
+```
+
+Possiamo confermare che ogni fattore ha due parametri fissati (i cross-loadings dagli altri fattori) e che tutti gli altri parametri hanno i carichi dell'EFA come punti di partenza.
+
+```{r}
+cfa_fit <- lavaan::cfa(model = model_syntax, data = hw_data, std.lv =TRUE)
+lavaan::summary(cfa_fit, fit.measures = TRUE, std = TRUE)
+```
+
+Se hai bisogno di adattare un modello con varianze residue dei fattori libere, dovrai utilizzare la funzione **fit_free_factor_var_esem()**. Questa funzione è un wrapper intorno alla funzione **lavaan()**, con gli stessi parametri impostati nella funzione **cfa()**, eccetto per il fatto che le varianze dei fattori sono libere di essere stimati e i primi indicatori in ciascun fattore non vengono fissati automaticamente. Assumiamo che l'identificazione sia garantita dai referenti fissati nella sintassi del modello, il che dovrebbe essere il caso se hai impostato **only_fix_crossloadings = FALSE** durante la composizione della sintassi con **syntax_composer**.
+
+```{r}
+cfa_fit <- fit_free_factor_var_esem(model_syntax_free_var, hw_data)
+lavaan::summary(cfa_fit, fit.measures = TRUE, std = TRUE)
+```
+
+Un diagramma di percorso si ottiene con la seguente istruzione:
+
+```{r}
+semPlot::semPaths(
+    cfa_fit,
+    what = "col", whatLabels = "no", style = "mx",
+    layout = "tree", nCharNodes = 7,
+    shapeMan = "rectangle", sizeMan = 5, sizeMan2 = 4
+)
+```
+
+### Omega di McDonald  
+
+È possibile calcolare gli omega di McDonald utilizzando il modello adattato e la matrice di rotazione target. 
+
+```{r}
+omega_esem(cfa_fit, target_rot)
+```
+
+## Sintassi ESEM in `lavaan`
+
+Specifichiamo lo stesso modello descritto in precedenza con la sintassi offerta da lavaan per i modelli ESEM.
+
+```{r}
+model <- '
+    # EFA block
+    efa("efa1")*visual + 
+    efa("efa1")*textual + 
+    efa("efa1")*speed =~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+'
+```
+
+Adattiamo il modello ai dati.
+
+```{r}
+fit <- sem(
+    model = model,
+    data = hw_data,
+    rotation = "geomin",  
+    rotation.args = list(
+        rstarts = 30,          # Number of random starts for rotation
+        algorithm = "gpa",      # Generalized Procrustes Analysis
+        std.ov = TRUE           # Standardize observed variables
+    )
+)
+```
+
+Esaminiamo la soluzione ottenuta.
+
+```{r}
+summary(fit, standardized = TRUE, fit.measures = TRUE)
+```
+
+Eseguiamo un confronto tra le soluzioni fornite dai due metodi: ESEM specificato in **lavaan** vs. ESEM-within-CFA.
+
+**1. Indici di adattamento del modello**
+
+| Metrica  | ESEM  | CFA  |
+|----------|------|------|
+| **CFI**  | 0.988 | 0.988 |
+| **TLI**  | 0.963 | 0.963 |
+| **RMSEA** | 0.055 (CI: 0.017–0.089) | 0.055 (CI: 0.017–0.089) |
+| **SRMR** | 0.017 | 0.017 |
+
+**Conclusione**: entrambi i modelli mostrano un ottimo adattamento (CFI e TLI > 0.95, RMSEA accettabile).
+
+**2. Log-Likelihood e Criteri Informativi**
+
+| Metrica  | ESEM  | CFA  |
+|----------|------|------|
+| **Loglikelihood (H0)** | -3706.541 | -3706.541 |
+| **AIC** | 7479.081 | 7479.081 |
+| **BIC** | 7601.416 | 7601.416 |
+
+*Conclusione**: nessuna differenza nei criteri informativi tra i due metodi.
+
+**3. Caricamenti fattoriali**
+
+Per esempio:
+
+| Item | Caricamento ESEM | Caricamento CFA |
+|------|----------------|----------------|
+| x1 | 0.712 | 0.606 |
+| x2 | 0.628 | 0.525 |
+| x3 | 0.796 | 0.670 |
+| x4 | 0.011 | 0.032 |
+| x5 | -0.107 | -0.064 |
+
+**Osservazione**: l'ESEM permette maggior flessibilità nel gestire i caricamenti e le cross-loadings, ottenendo una separazione più chiara dei fattori.
+
+**4. Covarianze tra i fattori**
+
+| Covarianza | Stima ESEM | Stima CFA |
+|------------|-----------|-----------|
+| Visual ~ Textual | 0.373 | 0.496 |
+| Visual ~ Speed | 0.432 | 0.361 |
+
+**Osservazione**: l'ESEM stima covarianze leggermente diverse, spesso più alte, rispetto alla CFA.
+
+**5. Interpretazione dei risultati**
+
+- **ESEM**: offre una maggiore flessibilità e gestione delle cross-loadings, utile quando la struttura fattoriale non è chiara.
+- **CFA**: più rigido, adatto quando la struttura dei fattori è ben definita.
+
+In sintesi, i due metodi producono risultati simili. Tuttavia, il metodo ESEM disponibile nel pacchetto `lavaan` offre informazioni aggiuntive sulle saturazioni incrociate e sulle relazioni tra i fattori, rendendolo una scelta più solida e completa per analisi di tipo esplorativo.
+
+## Riflessioni Conclusive
+
+L'ESEM rappresenta un ponte significativo tra i modelli di misurazione tradizionali dell'Exploratory Factor Analysis (EFA) e il più esteso quadro del Confirmatory Factor Analysis/Structural Equation Modeling (CFA/SEM). Grazie a questo, l'ESEM combina i benefici dell'EFA con quelli del CFA/SEM, fornendo un approccio più flessibile e inclusivo nell'analisi dei dati. Tale integrazione ha segnato un progresso notevole nella ricerca statistica, evidenziando l'importanza dell'EFA che precedentemente era sottovalutata.
+
+L'ESEM e il quadro bifattoriale-ESEM, in particolare, offrono una rappresentazione più fedele e precisa della multidimensionalità dei costrutti psicometrici, che è spesso presente nelle misurazioni. Questo approccio riconosce e gestisce meglio la natura multidimensionale dei costrutti, a differenza dell'approccio tradizionale del CFA, che tende a sovrastimare le correlazioni tra i fattori quando non considera adeguatamente la loro natura gerarchica e interconnessa (Asparouhov et al., 2015; Morin et al., 2020).
+
+Nonostante questi vantaggi, l'ESEM presenta alcune limitazioni che devono essere considerate:
+
+1. **Complessità Computazionale**: L'ESEM può essere più complesso e richiedere maggiori risorse computazionali rispetto agli approcci tradizionali, soprattutto quando si gestiscono grandi set di dati o modelli con molti fattori.
+2. **Interpretazione dei Risultati**: A causa della sua flessibilità, l'ESEM può produrre risultati che sono più difficili da interpretare. Ad esempio, la sovrapposizione tra i fattori può complicare l'interpretazione dei costrutti.
+3. **Rischio di Overfitting**: La maggiore flessibilità dell'ESEM può anche portare a un rischio maggiore di overfitting, specialmente in campioni più piccoli o con modelli eccessivamente complessi.
+4. **Necessità di Esperienza e Conoscenza**: Per utilizzare efficacemente l'ESEM, è richiesta una comprensione approfondita della teoria sottostante e delle tecniche statistiche, che può essere una barriera per alcuni ricercatori.
+
+Nonostante queste limitazioni, si prevede che i futuri sviluppi e le applicazioni dell'ESEM conducano a soluzioni più integrate e a un consenso più ampio sulle migliori pratiche nell'utilizzo di questo potente strumento statistico. Nel @sec-sem-esem esploreremo il set-ESEM, una recente evoluzione di questa metodologia.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+## Bibliografia {.unnumbered}
+
+
