@@ -13,7 +13,8 @@ here::here("code", "_common.R") |>
 # Load packages
 if (!requireNamespace("pacman")) install.packages("pacman")
 pacman::p_load(
-  lavaan, psych, BifactorIndicesCalculator, semPlot, semTools, esemComp
+  lavaan, psych, BifactorIndicesCalculator, semPlot, semTools, 
+  esemComp, kableExtra
 )
 ```
 
@@ -412,51 +413,96 @@ summary(fit, standardized = TRUE, fit.measures = TRUE)
 
 Eseguiamo un confronto tra le soluzioni fornite dai due metodi: ESEM specificato in **lavaan** vs. ESEM-within-CFA.
 
-**1. Indici di adattamento del modello**
+```{r}
+#| echo: false
+#| 
+# Tabella 1: Indici di adattamento del modello
+indice_adattamento <- data.frame(
+  Metrica = c("CFI", "TLI", "RMSEA", "SRMR"),
+  ESEM = c(0.988, 0.963, "0.055 (CI: 0.017–0.089)", 0.017),
+  CFA = c(0.988, 0.963, "0.055 (CI: 0.017–0.089)", 0.017)
+)
 
-| Metrica  | ESEM  | CFA  |
-|----------|------|------|
-| **CFI**  | 0.988 | 0.988 |
-| **TLI**  | 0.963 | 0.963 |
-| **RMSEA** | 0.055 (CI: 0.017–0.089) | 0.055 (CI: 0.017–0.089) |
-| **SRMR** | 0.017 | 0.017 |
+indice_adattamento %>%
+  knitr::kable(
+    caption = "Indici di Adattamento del Modello",
+    align = c("c", "c", "c")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
+  column_spec(2, width = "10em") %>% 
+  column_spec(3, width = "10em")
+```
 
 **Conclusione**: entrambi i modelli mostrano un ottimo adattamento (CFI e TLI > 0.95, RMSEA accettabile).
 
-**2. Log-Likelihood e Criteri Informativi**
+```{r}
+#| echo: false
+#| 
+# Tabella 2: Log-Likelihood e Criteri Informativi
+log_likelihood <- data.frame(
+  Metrica = c("Loglikelihood (H0)", "AIC", "BIC"),
+  ESEM = c(-3706.541, 7479.081, 7601.416),
+  CFA = c(-3706.541, 7479.081, 7601.416)
+)
 
-| Metrica  | ESEM  | CFA  |
-|----------|------|------|
-| **Loglikelihood (H0)** | -3706.541 | -3706.541 |
-| **AIC** | 7479.081 | 7479.081 |
-| **BIC** | 7601.416 | 7601.416 |
+log_likelihood %>%
+  knitr::kable(
+    caption = "Log-Likelihood e Criteri Informativi",
+    align = c("c", "c", "c")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
+  column_spec(2, width = "12em") %>% 
+  column_spec(3, width = "12em")
+```
 
-*Conclusione**: nessuna differenza nei criteri informativi tra i due metodi.
+**Conclusione**: nessuna differenza nei criteri informativi tra i due metodi.
 
-**3. Caricamenti fattoriali**
+```{r}
+#| echo: false
+#| 
+# Tabella 3: Caricamenti fattoriali
+caricamenti_fattoriali <- data.frame(
+  Item = c("x1", "x2", "x3", "x4", "x5"),
+  Caricamento_ESEM = c(0.712, 0.628, 0.796, 0.011, -0.107),
+  Caricamento_CFA = c(0.606, 0.525, 0.670, 0.032, -0.064)
+)
 
-Per esempio:
-
-| Item | Caricamento ESEM | Caricamento CFA |
-|------|----------------|----------------|
-| x1 | 0.712 | 0.606 |
-| x2 | 0.628 | 0.525 |
-| x3 | 0.796 | 0.670 |
-| x4 | 0.011 | 0.032 |
-| x5 | -0.107 | -0.064 |
+caricamenti_fattoriali %>%
+  knitr::kable(
+    caption = "Caricamenti Fattoriali",
+    align = c("c", "c", "c")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
+  column_spec(2, width = "10em") %>% 
+  column_spec(3, width = "10em")
+```
 
 **Osservazione**: l'ESEM permette maggior flessibilità nel gestire i caricamenti e le cross-loadings, ottenendo una separazione più chiara dei fattori.
 
-**4. Covarianze tra i fattori**
+```{r}
+#| echo: false
+#| 
+# Tabella 4: Covarianze tra i fattori
+covarianze_fattori <- data.frame(
+  Covarianza = c("Visual ~ Textual", "Visual ~ Speed"),
+  Stima_ESEM = c(0.373, 0.432),
+  Stima_CFA = c(0.496, 0.361)
+)
 
-| Covarianza | Stima ESEM | Stima CFA |
-|------------|-----------|-----------|
-| Visual ~ Textual | 0.373 | 0.496 |
-| Visual ~ Speed | 0.432 | 0.361 |
+covarianze_fattori %>%
+  knitr::kable(
+    caption = "Covarianze tra i Fattori",
+    align = c("c", "c", "c")
+  ) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover")) %>%
+  column_spec(2, width = "10em") %>% 
+  column_spec(3, width = "10em")
+```
 
-**Osservazione**: l'ESEM stima covarianze leggermente diverse, spesso più alte, rispetto alla CFA.
+**Osservazione**: l’ESEM stima covarianze leggermente diverse, spesso più alte, rispetto alla CFA.
 
-**5. Interpretazione dei risultati**
+
+**Interpretazione dei risultati.**
 
 - **ESEM**: offre una maggiore flessibilità e gestione delle cross-loadings, utile quando la struttura fattoriale non è chiara.
 - **CFA**: più rigido, adatto quando la struttura dei fattori è ben definita.
