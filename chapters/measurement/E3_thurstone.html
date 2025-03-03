@@ -52,7 +52,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
@@ -98,7 +118,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script>
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -912,9 +957,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="#il-modello-thurstoniano" id="toc-il-modello-thurstoniano" class="nav-link" data-scroll-target="#il-modello-thurstoniano"><span class="header-section-number">4.1.1</span> Il Modello Thurstoniano</a></li>
   </ul>
 </li>
-  <li><a href="#studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" id="toc-studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" class="nav-link" data-scroll-target="#studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale"><span class="header-section-number">4.2</span> Studio sulle preferenze riguardanti le caratteristiche dell’occupazione ideale</a></li>
-  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">4.3</span> Considerazioni conclusive</a></li>
-  <li><a href="#sesssion-info" id="toc-sesssion-info" class="nav-link" data-scroll-target="#sesssion-info"><span class="header-section-number">4.4</span> Sesssion Info</a></li>
+  <li>
+<a href="#esempio" id="toc-esempio" class="nav-link" data-scroll-target="#esempio"><span class="header-section-number">4.2</span> Esempio</a>
+  <ul>
+<li><a href="#creazione-del-data-frame-delle-preferenze" id="toc-creazione-del-data-frame-delle-preferenze" class="nav-link" data-scroll-target="#creazione-del-data-frame-delle-preferenze"><span class="header-section-number">4.2.1</span> Creazione del data frame delle preferenze</a></li>
+  <li><a href="#conversione-delle-percentuali-in-z-score-qnorm" id="toc-conversione-delle-percentuali-in-z-score-qnorm" class="nav-link" data-scroll-target="#conversione-delle-percentuali-in-z-score-qnorm"><span class="header-section-number">4.2.2</span> Conversione delle percentuali in z-score (qnorm)</a></li>
+  <li><a href="#creazione-di-una-matrice-delle-preferenze-z-score-matrix" id="toc-creazione-di-una-matrice-delle-preferenze-z-score-matrix" class="nav-link" data-scroll-target="#creazione-di-una-matrice-delle-preferenze-z-score-matrix"><span class="header-section-number">4.2.3</span> Creazione di una matrice delle preferenze (z-score matrix)</a></li>
+  <li><a href="#calcolo-dei-punteggi-latenti-medi" id="toc-calcolo-dei-punteggi-latenti-medi" class="nav-link" data-scroll-target="#calcolo-dei-punteggi-latenti-medi"><span class="header-section-number">4.2.4</span> Calcolo dei punteggi latenti medi</a></li>
+  <li><a href="#creazione-del-ranking-finale" id="toc-creazione-del-ranking-finale" class="nav-link" data-scroll-target="#creazione-del-ranking-finale"><span class="header-section-number">4.2.5</span> Creazione del ranking finale</a></li>
+  <li><a href="#interpretazione" id="toc-interpretazione" class="nav-link" data-scroll-target="#interpretazione"><span class="header-section-number">4.2.6</span> Interpretazione</a></li>
+  </ul>
+</li>
+  <li><a href="#scaling-fechneriano" id="toc-scaling-fechneriano" class="nav-link" data-scroll-target="#scaling-fechneriano"><span class="header-section-number">4.3</span> Scaling Fechneriano</a></li>
+  <li><a href="#studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" id="toc-studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" class="nav-link" data-scroll-target="#studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale"><span class="header-section-number">4.4</span> Studio sulle preferenze riguardanti le caratteristiche dell’occupazione ideale</a></li>
+  <li><a href="#considerazioni-conclusive" id="toc-considerazioni-conclusive" class="nav-link" data-scroll-target="#considerazioni-conclusive"><span class="header-section-number">4.5</span> Considerazioni conclusive</a></li>
+  <li><a href="#sesssion-info" id="toc-sesssion-info" class="nav-link" data-scroll-target="#sesssion-info"><span class="header-section-number">4.6</span> Sesssion Info</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -957,86 +1014,154 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Si determinano i corrispondenti percentile (z-scores) della distribuzione cumulativa normale, che ci dicono quante deviazioni standard un valore è distante dalla media.</li>
 <li>Si calcola la media di questi z-scores per ciascun oggetto.</li>
 </ul>
-<p><strong>Esempio Pratico</strong></p>
-<p>Immaginiamo di avere tre oggetti: A, B e C. Dopo aver raccolto le preferenze, scopriamo che:</p>
+<p>Di seguito propongo un esempio più lineare e coerente dello scaling di Thurstone per tre oggetti (A, B e C), assieme a una spiegazione puntuale dei vari passaggi.</p>
+</section></section><section id="esempio" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="esempio">
+<span class="header-section-number">4.2</span> Esempio</h2>
+<p>Immaginiamo di avere tre oggetti – A, B e C – per cui abbiamo raccolto preferenze pairwise (cioè a coppie). Ipotizziamo di aver rilevato le seguenti percentuali di preferenza:</p>
 <ul>
-<li>Il 70% dei rispondenti preferisce A rispetto a B e C.</li>
-<li>Il 50% dei rispondenti preferisce B rispetto ad A, ma solo il 30% lo preferisce a C.</li>
-<li>Il 80% dei rispondenti preferisce C rispetto a B, ma solo il 50% lo preferisce ad A.</li>
+<li>
+<strong>A</strong> è preferito a <strong>B</strong> dal 70% dei rispondenti.</li>
+<li>
+<strong>A</strong> è preferito a <strong>C</strong> dall’80% dei rispondenti.</li>
+<li>
+<strong>B</strong> è preferito a <strong>C</strong> dal 60% dei rispondenti.</li>
 </ul>
-<p>Trasformando queste percentuali in z-scores, possiamo ottenere una misura della “distanza” di ciascun oggetto dalla media sulla scala latente. Mediando questi z-scores, possiamo creare un ranking discreto che riflette le preferenze medie aggregate, permettendoci di interpretare quali oggetti sono generalmente preferiti rispetto ad altri secondo il modello Thurstoniano.</p>
-<p><strong>Soluzione</strong></p>
-<p>Ecco il codice R per risolvere il problema utilizzando il modello Thurstoniano per trasformare le preferenze in z-score e calcolare il ranking latente.</p>
+<p>Quindi, se chiediamo ad un gruppo di persone di scegliere tra A e B, il 70% sceglie A, mentre se chiediamo di scegliere tra A e C, l’80% sceglie A; tra B e C, il 60% sceglie B.</p>
+<section id="creazione-del-data-frame-delle-preferenze" class="level3" data-number="4.2.1"><h3 data-number="4.2.1" class="anchored" data-anchor-id="creazione-del-data-frame-delle-preferenze">
+<span class="header-section-number">4.2.1</span> Creazione del data frame delle preferenze</h3>
+<p>In R, possiamo creare un piccolo data frame (chiamato <code>preferences</code>) che contiene queste informazioni. Ciascuna riga riporta:</p>
+<ol type="1">
+<li>La prima colonna (<code>obj1</code>): l’oggetto preferito dalla proporzione <code>p</code>.</li>
+<li>La seconda colonna (<code>obj2</code>): l’altro oggetto del confronto.</li>
+<li>La terza colonna (<code>p</code>): la proporzione di rispondenti che preferisce <code>obj1</code> rispetto a <code>obj2</code>.</li>
+</ol>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Definizione delle percentuali di preferenza</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Definiamo le preferenze pairwise</span></span>
 <span><span class="va">preferences</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  obj1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
-<span>  obj2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"B"</span>, <span class="st">"A"</span><span class="op">)</span>,</span>
-<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.70</span>, <span class="fl">0.70</span>, <span class="fl">0.50</span>, <span class="fl">0.30</span>, <span class="fl">0.80</span>, <span class="fl">0.50</span><span class="op">)</span></span>
+<span>  obj1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
+<span>  obj2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"C"</span><span class="op">)</span>,</span>
+<span>  p    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.70</span>, <span class="fl">0.80</span>, <span class="fl">0.60</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Conversione delle percentuali in z-score</span></span>
+<span><span class="va">preferences</span></span>
+<span><span class="co">#&gt;   obj1 obj2   p</span></span>
+<span><span class="co">#&gt; 1    A    B 0.7</span></span>
+<span><span class="co">#&gt; 2    A    C 0.8</span></span>
+<span><span class="co">#&gt; 3    B    C 0.6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Prima riga: “A vs.&nbsp;B, p=0.70” significa che il 70% preferisce A rispetto a B.</li>
+<li>Seconda riga: “A vs.&nbsp;C, p=0.80” significa che l’80% preferisce A rispetto a C.</li>
+<li>Terza riga: “B vs.&nbsp;C, p=0.60” significa che il 60% preferisce B rispetto a C.</li>
+</ul></section><section id="conversione-delle-percentuali-in-z-score-qnorm" class="level3" data-number="4.2.2"><h3 data-number="4.2.2" class="anchored" data-anchor-id="conversione-delle-percentuali-in-z-score-qnorm">
+<span class="header-section-number">4.2.2</span> Conversione delle percentuali in z-score (qnorm)</h3>
+<p>Il modello di Thurstone (caso V) prevede che queste proporzioni siano interpretabili come aree cumulative di una distribuzione normale standard. Se ad esempio il 70% preferisce A a B, questo 0.70 è la probabilità cumulata (fino a uno z-score positivo). Per convertire una proporzione in uno z-score, utilizziamo la funzione <code><a href="https://rdrr.io/r/stats/Normal.html">qnorm()</a></code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Aggiungiamo al data frame la colonna z, che contiene la trasformazione delle </span></span>
+<span><span class="co"># proporzioni in z-score</span></span>
 <span><span class="va">preferences</span> <span class="op">&lt;-</span> <span class="va">preferences</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">preferences</span></span>
-<span><span class="co">#&gt;   obj1 obj2   p      z</span></span>
-<span><span class="co">#&gt; 1    A    B 0.7  0.524</span></span>
-<span><span class="co">#&gt; 2    A    C 0.7  0.524</span></span>
-<span><span class="co">#&gt; 3    B    A 0.5  0.000</span></span>
-<span><span class="co">#&gt; 4    B    C 0.3 -0.524</span></span>
-<span><span class="co">#&gt; 5    C    B 0.8  0.842</span></span>
-<span><span class="co">#&gt; 6    C    A 0.5  0.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;   obj1 obj2   p     z</span></span>
+<span><span class="co">#&gt; 1    A    B 0.7 0.524</span></span>
+<span><span class="co">#&gt; 2    A    C 0.8 0.842</span></span>
+<span><span class="co">#&gt; 3    B    C 0.6 0.253</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section><section id="creazione-di-una-matrice-delle-preferenze-z-score-matrix" class="level3" data-number="4.2.3"><h3 data-number="4.2.3" class="anchored" data-anchor-id="creazione-di-una-matrice-delle-preferenze-z-score-matrix">
+<span class="header-section-number">4.2.3</span> Creazione di una matrice delle preferenze (z-score matrix)</h3>
+<p>Ora vogliamo creare una <strong>matrice</strong> (che chiameremo <code>z_matrix</code>) contenente gli z-score di tutte le coppie (A-B, A-C, B-C, e anche B-A, C-A, C-B, che saranno i corrispettivi negativi). In altre parole:</p>
+<ul>
+<li>Nelle celle della matrice in cui la riga è <code>obj1</code> e la colonna è <code>obj2</code>, mettiamo lo z-score positivo (es. 0.52 se il 70% preferisce A a B).</li>
+<li>Nella cella opposta (dove la riga è <code>obj2</code> e la colonna è <code>obj1</code>), mettiamo lo z-score negativo (es. -0.52, perché se 70% preferisce A a B, allora il 30% preferisce B a A).</li>
+</ul>
+<p>Così otteniamo un quadro simmetrico del grado di preferenza fra tutti gli oggetti.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Creazione della matrice delle preferenze</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Ricaviamo l’elenco degli oggetti presenti</span></span>
 <span><span class="va">objects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">preferences</span><span class="op">$</span><span class="va">obj1</span>, <span class="va">preferences</span><span class="op">$</span><span class="va">obj2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">objects</span></span>
-<span><span class="co">#&gt; [1] "A" "B" "C"</span></span>
 <span></span>
-<span><span class="va">z_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">objects</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">objects</span><span class="op">)</span>,</span>
+<span><span class="co"># Creiamo una matrice quadrata vuota in cui inserire gli z-score</span></span>
+<span><span class="va">z_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">0</span>, </span>
+<span>                   nrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">objects</span><span class="op">)</span>, </span>
+<span>                   ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">objects</span><span class="op">)</span>,</span>
 <span>                   dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">objects</span>, <span class="va">objects</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Popolamento della matrice</span></span>
+<span><span class="co"># Compiliamo la matrice: </span></span>
+<span><span class="co"># per ogni riga del data frame `preferences`,</span></span>
+<span><span class="co"># inseriamo lo z-score positivo nella posizione [obj1, obj2] e</span></span>
+<span><span class="co"># quello negativo nella posizione [obj2, obj1].</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">preferences</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">z_matrix</span><span class="op">[</span><span class="va">preferences</span><span class="op">$</span><span class="va">obj1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">preferences</span><span class="op">$</span><span class="va">obj2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">preferences</span><span class="op">$</span><span class="va">z</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
-<span>  <span class="va">z_matrix</span><span class="op">[</span><span class="va">preferences</span><span class="op">$</span><span class="va">obj2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">preferences</span><span class="op">$</span><span class="va">obj1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">preferences</span><span class="op">$</span><span class="va">z</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="va">riga</span>    <span class="op">&lt;-</span> <span class="va">preferences</span><span class="op">$</span><span class="va">obj1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="va">colonna</span> <span class="op">&lt;-</span> <span class="va">preferences</span><span class="op">$</span><span class="va">obj2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="va">valore</span>  <span class="op">&lt;-</span> <span class="va">preferences</span><span class="op">$</span><span class="va">z</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">z_matrix</span><span class="op">[</span><span class="va">riga</span>, <span class="va">colonna</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">valore</span></span>
+<span>  <span class="va">z_matrix</span><span class="op">[</span><span class="va">colonna</span>, <span class="va">riga</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">valore</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Calcolo dei punteggi latenti medi per ogni oggetto</span></span>
+<span><span class="va">z_matrix</span></span>
+<span><span class="co">#&gt;        A      B     C</span></span>
+<span><span class="co">#&gt; A  0.000  0.524 0.842</span></span>
+<span><span class="co">#&gt; B -0.524  0.000 0.253</span></span>
+<span><span class="co">#&gt; C -0.842 -0.253 0.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>La diagonale è 0 (ovviamente un oggetto confrontato con sé stesso non dà informazioni).</li>
+<li>L’elemento <code>[A, B]</code> è <span class="math inline">\(+0.524\)</span> (z-score corrispondente a 70%), mentre l’elemento <code>[B, A]</code> è <span class="math inline">\(-0.524\)</span>.</li>
+</ul></section><section id="calcolo-dei-punteggi-latenti-medi" class="level3" data-number="4.2.4"><h3 data-number="4.2.4" class="anchored" data-anchor-id="calcolo-dei-punteggi-latenti-medi">
+<span class="header-section-number">4.2.4</span> Calcolo dei punteggi latenti medi</h3>
+<p>Secondo il modello di Thurstone, uno dei modi più semplici per posizionare ogni oggetto sulla scala latente è calcolare, per ogni riga, la <strong>media</strong> degli z-score rispetto agli altri oggetti. L’idea è che questa media costituisca una stima della “posizione” dell’oggetto sulla scala latente di preferenza.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcoliamo la media degli z-score per ogni riga (oggetto)</span></span>
 <span><span class="va">latent_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">z_matrix</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Creazione del data frame con il ranking</span></span>
-<span><span class="va">ranking</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>  Oggetto <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">latent_scores</span><span class="op">)</span>,</span>
+<span><span class="va">latent_scores</span></span>
+<span><span class="co">#&gt;       A       B       C </span></span>
+<span><span class="co">#&gt;  0.4553 -0.0904 -0.3650</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per esempio:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.000</span>,  <span class="fl">0.524</span>, <span class="fl">0.842</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.455</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se <code>latent_scores["A"]</code> è più alto degli altri, significa che A si colloca in media “più a destra” (o più in alto) sulla scala latente rispetto a B e C (cioè, è mediamente più preferito).</p>
+</section><section id="creazione-del-ranking-finale" class="level3" data-number="4.2.5"><h3 data-number="4.2.5" class="anchored" data-anchor-id="creazione-del-ranking-finale">
+<span class="header-section-number">4.2.5</span> Creazione del ranking finale</h3>
+<p>Infine, ordiniamo gli oggetti in base a questi punteggi latenti. Il risultato è un data frame con:</p>
+<ol type="1">
+<li>Il nome dell’oggetto.</li>
+<li>Il suo punteggio latente medio.</li>
+<li>L’ordine di ranking (da più alto a più basso).</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ranking</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  Oggetto          <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">latent_scores</span><span class="op">)</span>,</span>
 <span>  Punteggio_Latente <span class="op">=</span> <span class="va">latent_scores</span></span>
 <span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">Punteggio_Latente</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>Ranking <span class="op">=</span> <span class="fu">row_number</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Stampa del ranking finale</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ranking</span><span class="op">)</span></span>
+<span><span class="va">ranking</span></span>
 <span><span class="co">#&gt;   Oggetto Punteggio_Latente Ranking</span></span>
-<span><span class="co">#&gt; C       C             0.281       1</span></span>
-<span><span class="co">#&gt; A       A             0.000       2</span></span>
-<span><span class="co">#&gt; B       B            -0.281       3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; A       A            0.4553       1</span></span>
+<span><span class="co">#&gt; B       B           -0.0904       2</span></span>
+<span><span class="co">#&gt; C       C           -0.3650       3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Spiegazione:</p>
-<ol type="1">
+</section><section id="interpretazione" class="level3" data-number="4.2.6"><h3 data-number="4.2.6" class="anchored" data-anchor-id="interpretazione">
+<span class="header-section-number">4.2.6</span> Interpretazione</h3>
+<ul>
 <li>
-<strong>Definizione delle preferenze</strong>: Creiamo un data frame con le coppie di oggetti confrontati e le percentuali di preferenza.</li>
+<strong>Oggetti con punteggi latenti più alti</strong>: sono quelli preferiti più spesso dagli intervistati.<br>
+</li>
 <li>
-<strong>Trasformazione in z-score</strong>: Convertiamo le percentuali in z-score usando <code><a href="https://rdrr.io/r/stats/Normal.html">qnorm()</a></code>.</li>
-<li>
-<strong>Creazione della matrice delle preferenze</strong>: Inizializziamo una matrice quadrata con gli oggetti e assegnamo gli z-score alle rispettive posizioni.</li>
-<li>
-<strong>Calcolo del punteggio latente</strong>: Per ogni oggetto, calcoliamo la media degli z-score rispetto agli altri oggetti.</li>
-<li>
-<strong>Creazione del ranking</strong>: Ordiniamo gli oggetti in base ai punteggi latenti.</li>
-</ol>
-<p>Il risultato mostrerà un ranking basato sulle preferenze aggregate, riflettendo l’ordine degli oggetti sulla scala latente di preferenza.</p>
-</section></section><section id="studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale">
-<span class="header-section-number">4.2</span> Studio sulle preferenze riguardanti le caratteristiche dell’occupazione ideale</h2>
+<strong>Oggetti con punteggi latenti più bassi</strong>: sono quelli meno preferiti.</li>
+</ul>
+<p>Se ad esempio <code>A</code> ha un punteggio latente di 0.5, <code>B</code> di 0.1 e <code>C</code> di -0.6, allora l’ordine di preferenza sarà A &gt; B &gt; C.</p>
+<p>In conclusione, questa è la logica di base dello <strong>Scaling di Thurstone (caso V)</strong>, che assume varianza costante degli errori di giudizio e distribuzioni normali per i punteggi latenti. Nella pratica, se si hanno molti oggetti (non solo 3), si procede alla raccolta di tutte le percentuali pairwise e poi si utilizza un procedimento analogo (eventualmente affinandolo con tecniche di stima più complesse).</p>
+</section></section><section id="scaling-fechneriano" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="scaling-fechneriano">
+<span class="header-section-number">4.3</span> Scaling Fechneriano</h2>
+<p>Un altro esempio di scaling psicologico riguarda lo scaling fechneriano. Faccio qui riferimento ad uno studio condotto un po’ di tempo fa nell’ambito delle Vision Sciences.</p>
+<p>Nello studio di <span class="citation" data-cites="domini2009intrinsic">Domini &amp; Caudek (<a href="../../99-references.html#ref-domini2009intrinsic" role="doc-biblioref">2009</a>)</span>, abbiamo utilizzato il modello <em>Intrinsic Constraints</em> per correlare la <strong>profondità visiva percepita</strong> di un oggetto tridimensionale con i principi teorici dello <strong>scaling sensoriale Fechneriano</strong>. Quest’ultimo, basato sulle teorie psicofisiche di Fechner, prevede la costruzione di una scala psicofisica per attributi sensoriali mediante l’<strong>integrazione cumulativa di incrementi psicometrici</strong>, in particolare delle <em>Just Noticeable Differences</em> (JNDs). L’obiettivo della ricerca era progettare stimoli visivi caratterizzati da diversi indizi di profondità (stereopsi, parallasse di movimento, ecc.) in modo da indurre una <strong>percezione soggettiva equivalente della profondità 3D</strong>. Secondo questa logica, oggetti definiti da cue visivi distinti dovrebbero risultare percettivamente equiparabili in termini di profondità qualora fossero associati a un <strong>numero identico di JNDs</strong>. In altre parole, l’uniformità percettiva emerge quando gli stimoli, pur differendo negli indizi di profondità, raggiungono la stessa soglia di discriminabilità psicofisica.</p>
+</section><section id="studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="studio-sulle-preferenze-riguardanti-le-caratteristiche-delloccupazione-ideale">
+<span class="header-section-number">4.4</span> Studio sulle preferenze riguardanti le caratteristiche dell’occupazione ideale</h2>
 <p>I dati utilizzati in questo studio sono stati raccolti nell’ambito di una ricerca sulla motivazione lavorativa condotta da Ilke Inceoglu. Nel corso di questa indagine, 1079 partecipanti sono stati invitati a classificare nove aspetti lavorativi in base all’importanza che desideravano che fossero presenti nella loro occupazione ideale:</p>
 <ol type="1">
 <li>Ambiente di Supporto (Supporto)</li>
@@ -1049,9 +1174,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Ambiente Competitivo (Competizione)</li>
 <li>Ambiente Piacevole e Sicuro (Sicurezza)</li>
 </ol>
+<p>L’obiettivo è identificare la struttura latente delle preferenze attraverso il modello di scaling di Thurstone (Caso V), tecnica psicometrica classica per l’analisi delle preferenze comparative.</p>
 <p>Un punteggio di 1 attribuito a qualsiasi aspetto lavorativo indica che tale aspetto era il più importante per quel partecipante, mentre un punteggio di 9 indica che era il meno importante.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">JobFeatures</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"../../data/JobFeatures.txt"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">JobFeatures</span> <span class="op">&lt;-</span> <span class="fu">rio</span><span class="fu">::</span><span class="fu"><a href="http://gesistsa.github.io/rio/reference/import.html">import</a></span><span class="op">(</span><span class="st">"../../data/JobFeatures.txt"</span><span class="op">)</span></span>
 <span><span class="fu">glimpse</span><span class="op">(</span><span class="va">JobFeatures</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1,079</span></span>
 <span><span class="co">#&gt; Columns: 9</span></span>
@@ -1067,7 +1193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Consideriamo i dati del primo rispondente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">JobFeatures</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">JobFeatures</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;   Support Challenge Career Ethics Autonomy Development Interaction</span></span>
 <span><span class="co">#&gt; 1       8         3      4      5        2           6           1</span></span>
 <span><span class="co">#&gt;   Competition Safety</span></span>
@@ -1076,11 +1202,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Questo rispondente ha risposto assegnando la caratteristica più importante dell’impego a “Interaction”, seguita da “Autonomy”. L’ultima preferenza è “Safety”.</p>
 <p>Eseguiamo lo scaling di Thurstone usando la funzione <code>thurstone</code> del pacchetto psych:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span> <span class="op">&lt;-</span> <span class="fu">psych</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/psych/man/thurstone.html">thurstone</a></span><span class="op">(</span><span class="va">JobFeatures</span>, ranks <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span> <span class="op">&lt;-</span> <span class="fu">psych</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/psych/man/thurstone.html">thurstone</a></span><span class="op">(</span><span class="va">JobFeatures</span>, ranks <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Gli attributi dell’oggetto <code>scaling</code> prodotto da <code><a href="https://rdrr.io/pkg/psych/man/thurstone.html">thurstone()</a></code> possono essere elencati nel modo seguente.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html">attributes</a></span><span class="op">(</span><span class="va">scaling</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $names</span></span>
 <span><span class="co">#&gt; [1] "scale"    "GF"       "choice"   "residual" "Call"    </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1090,13 +1216,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I risultati dello scaling si ottengono nel modo seguente. Sono elencati nell’ordine fornito sopra, ovvero Support, Challenge, Career, Ethics, Autonomy, Development, Interaction, Competition e Safety.</p>
 <p>Una media alta indica che i partecipanti attribuiscono un alto valore a questo aspetto lavorativo rispetto agli altri. Tuttavia, poiché le preferenze sono sempre relative, è impossibile identificare in maniera univoca tutte le medie. Pertanto, una delle medie deve essere fissata a un valore arbitrario. È consuetudine fissare la media dell’aspetto meno preferito a 0. Quindi, tutte le altre medie sono positive.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">scale</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">scale</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.97 0.93 0.91 0.92 0.60 1.04 0.63 0.00 0.23</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La media più bassa (0.0) corrisponde all’8° aspetto, Competizione, mentre la media più alta (1.04) corrisponde al 6° aspetto, Sviluppo. Ciò significa che l’ambiente competitivo era il meno desiderato, mentre le opportunità di sviluppo personale erano le più desiderate dalle persone nel loro lavoro ideale. Gli altri aspetti sono stati valutati come aventi un’importanza relativa intermedia a queste due, con Sicurezza che ha una media bassa (0.23) - appena superiore a 0 per la Competizione, mentre Supporto, Sfida, Carriera ed Etica hanno medie simili (intorno a 0.9). Autonomia e Interazione hanno medie moderate simili intorno a 0.6.</p>
 <p>L’istruzione seguente produce una matrice 9x9 contenente le proporzioni dei partecipanti nel campione che hanno preferito l’aspetto nella colonna rispetto all’aspetto nella riga. Nella matrice risultante, le righe e le colonne seguono l’ordine delle variabili nel file originale.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">choice</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">choice</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]</span></span>
 <span><span class="co">#&gt;  [1,] 0.50 0.47 0.47 0.47 0.36 0.51 0.36 0.20 0.23</span></span>
@@ -1111,14 +1237,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Il valore maggiore è</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">scaling</span><span class="op">$</span><span class="va">choice</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">scaling</span><span class="op">$</span><span class="va">choice</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.853</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Questo valore, 0.8526, rappresenta la proporzione di partecipanti che hanno preferito l’8° aspetto, Competizione, al 6° aspetto, Sviluppo, ed è il valore più grande nella matrice precedente: questa coppia di caratteristiche ha la preferenza più decisa per un aspetto rispetto all’altro.</p>
 <p>La preferenza più decisa in termini di proporzioni di persone che scelgono un aspetto rispetto all’altro deve avere la maggiore distanza/differenza sulla scala delle preferenze soggettive (il 6° aspetto, Sviluppo, deve avere una preferenza percepita media molto più alta dell’8° aspetto, Competizione). Questo risultato è effettivamente in linea con i risultati per le medie di utilità, dove la media dello Sviluppo è la più alta con un valore di 1.04 e la Competizione è la più bassa con un valore di 0.</p>
 <p>Consideriamo i residui del modello:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">residual</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">residual</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9]</span></span>
 <span><span class="co">#&gt;  [1,]  0.00  0.01  0.00  0.01 -0.01  0.02  0.01 -0.04  0.01</span></span>
@@ -1134,22 +1260,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>L’istruzione precedente produce una matrice 9x9 contenente le differenze tra le proporzioni osservate (la matrice delle scelte) e le proporzioni attese (proporzioni che preferiscono l’aspetto nella riga rispetto all’aspetto nella colonna, che sarebbe atteso in base alle distribuzioni normali standard delle preferenze soggettive intorno alle medie scalate come sopra). Gli scarti tra i valori attesi e quelli osservati sono il modo più diretto di misurare se un modello (in questo caso, il modello proposto da Thurstone) “si adatta” ai dati osservati. Gli scarti piccoli (vicini allo zero) indicano che ci sono piccole discrepanze tra le scelte osservate e le scelte previste dal modello; il che significa che il modello che abbiamo adottato è piuttosto buono.</p>
 <p>Infine, esaminiamo un indice di bontà di adattamento:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">GF</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scaling</span><span class="op">$</span><span class="va">GF</span></span>
 <span><span class="co">#&gt; [1] 0.999</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il valore GF (Goodness of Fit) viene calcolato come 1 meno la somma dei residui al quadrato divisi per i valori osservati al quadrato. Quando i residui sono quasi zero, i loro rapporti al quadrato rispetto alle proporzioni osservate dovrebbero anch’essi avvicinarsi a zero. Di conseguenza, l’indice di bontà di adattamento di un modello ben adattato dovrebbe essere vicino a 1.</p>
 <p>Nella nostra analisi, tutti i residui sono notevolmente piccoli, indicando una stretta corrispondenza tra le scelte osservate (proporzioni di preferenze per una caratteristica rispetto a un’altra). Questo allineamento preciso si riflette nell’indice GF, che è quasi 1, suggerendo che il modello di Thurstone cattura adeguatamente le proprietà dei dati relativi alle caratteristiche dell’occupazione ideale.</p>
-</section><section id="considerazioni-conclusive" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="considerazioni-conclusive">
-<span class="header-section-number">4.3</span> Considerazioni conclusive</h2>
+</section><section id="considerazioni-conclusive" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="considerazioni-conclusive">
+<span class="header-section-number">4.5</span> Considerazioni conclusive</h2>
 <p>Questa metodologia, introdotta da Louis Leon Thurstone negli anni ’20, rappresenta una delle forme più semplici e intuitive di scaling, dove per “scaling” si intende il processo di costruzione di un ordinamento di valori lungo un continuum psicologico. Lo scaling thurstoniano si basa sulla premessa che sia possibile ordinare stimoli o concetti secondo il grado in cui incarnano una certa proprietà psicologica, creando così una scala di misura che riflette le percezioni, le attitudini o i giudizi degli individui.</p>
 <p>Uno degli aspetti centrali dello scaling di Thurstone, in particolare il caso V della sua legge del giudizio comparativo, è l’assunzione che le distribuzioni di ranking degli stimoli abbiano varianze uguali. Questa ipotesi, pur facilitando la modellizzazione matematica e l’interpretazione dei dati, è stata oggetto di critiche poiché difficilmente riscontrabile nella pratica. Le varianze possono differire significativamente tra gli stimoli a seconda della coerenza dei giudizi degli individui e della natura degli stimoli stessi. Questa limitazione ha stimolato lo sviluppo e l’adozione di metodi alternativi più flessibili per affrontare la complessità dello scaling psicologico.</p>
 <p>Un’ulteriore criticità metodologica, spesso poco discussa, riguarda la falsificazione della coerenza interna del modello. Ad esempio, nello scaling di Mokken si assume la monotonicità, ovvero che la probabilità di una risposta positiva a un item aumenti monotonamente con l’aumentare del livello del tratto psicologico misurato. Tale assunzione può essere esplicitamente verificata sui dati empirici, e quando viene violata indica un problema di validità interna della scala. Lo scaling di Thurstone, tuttavia, non prevede procedure sistematiche o strumenti consolidati per testare esplicitamente e falsificare la validità interna del modello. In altre parole, se gli individui forniscono risposte non coerenti con l’assunzione di uguale varianza o di un unico continuum psicologico comune, il modello thurstoniano stesso non offre criteri chiari per identificare e gestire tali violazioni. Questa assenza di procedure di falsificazione interna rappresenta uno dei limiti più significativi del modello di Thurstone.</p>
 <p>Nel panorama contemporaneo, l’approccio più diffuso e metodologicamente avanzato per lo scaling psicologico deriva dalla Teoria della Risposta all’Item (IRT). L’IRT supera alcune delle limitazioni intrinseche allo scaling thurstoniano offrendo un quadro teorico e metodologico che considera la probabilità di una certa risposta a un item in funzione delle caratteristiche dell’item stesso e del livello dell’attributo psicologico del rispondente. Questo approccio permette di gestire in modo più efficace la varianza tra gli stimoli, di testare esplicitamente assunzioni chiave (come la monotonicità e l’indipendenza locale) e di fornire stime più accurate delle proprietà psicometriche degli item e delle caratteristiche degli individui.</p>
 <p>In conclusione, mentre lo scaling thurstoniano ha rappresentato un passo fondamentale nello sviluppo degli strumenti di misurazione in psicologia, l’evoluzione metodologica e teorica ha portato a preferire approcci basati sull’IRT. Questo non diminuisce il valore storico e didattico dello scaling di Thurstone, che continua a essere un esempio introduttivo prezioso per comprendere i concetti fondamentali dello scaling psicologico. Tuttavia, è nell’ambito della IRT che attualmente si trovano le soluzioni più robuste e sofisticate per affrontare le sfide della misurazione psicologica, guidando la ricerca e l’applicazione pratica nel campo della psicometria contemporanea.</p>
-</section><section id="sesssion-info" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="sesssion-info">
-<span class="header-section-number">4.4</span> Sesssion Info</h2>
+</section><section id="sesssion-info" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="sesssion-info">
+<span class="header-section-number">4.6</span> Sesssion Info</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
@@ -1218,6 +1344,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-domini2009intrinsic" class="csl-entry" role="listitem">
+Domini, F., &amp; Caudek, C. (2009). The intrinsic constraint model and Fechnerian sensory scaling. <em>Journal of Vision</em>, <em>9</em>(2), 25–25.
+</div>
+</div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
