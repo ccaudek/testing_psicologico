@@ -1,0 +1,173 @@
+# ✏️ Esercizi
+
+## Ottimizzazione dello scoring dei dati di questionari ordinali
+
+Nell'Esercizio precedente, abbiamo calcolato i punteggi del **Strength and Difficulties Questionnaire (SDQ)** utilizzando il cosiddetto approccio della **"scalatura Likert"**. In questo metodo, alle categorie di risposta "Non vero", "Parzialmente vero" e "Assolutamente vero" sono stati assegnati interi consecutivi, rispettivamente 0-1-2. Sebbene questo assegnamento rifletta apparentemente un grado crescente di accordo nelle opzioni di risposta, la scelta degli interi è stata arbitraria: non vi era un motivo particolare per assegnare 0-1-2 anziché, ad esempio, 1-2-3. Questo tipo di assegnazione arbitraria dei punteggi agli item è comunemente chiamato **"misurazione per decreto"** (*measurement by fiat*). 
+
+In questo secondo esercizio, cercheremo di individuare punteggi "ottimali" per le risposte ordinali al SDQ. Per "ottimali" intendiamo che i punteggi assegnati non siano semplicemente arbitrari, ma rappresentino la "migliore" scelta possibile in base a un determinato criterio statistico.
+
+Esistono diversi modi per "ottimizzare" i punteggi degli item. In questo caso, ci concentreremo sulla massimizzazione del rapporto tra la varianza del punteggio totale e la somma delle varianze dei punteggi degli item. In psicometria, soddisfare questo criterio significa massimizzare la somma delle correlazioni tra gli item e, di conseguenza, migliorare la **consistenza interna** del test, misurata, ad esempio, dall'**alfa di Cronbach**.
+
+Questo approccio consente di definire punteggi più informativi, che riflettono meglio la coerenza tra le risposte degli item e il punteggio totale del test, migliorando la qualità psicometrica della scala.
+
+Per fare un esempio, useremo di nuovo gli item della scala  **Sintomi Emotivi**. Utilizzeremo il pacchetto **`aspect`**, che semplifica l'ottimizzazione della scalatura grazie a una gamma di opzioni utili e a funzioni grafiche integrate. 
+
+```{r}
+source("../../code/_common.R")
+library("aspect")
+```
+
+Importiamo i dati del *Strengths and Difficulties Questionnaire* (SDQ).
+
+```{r}
+load("../../data/data_sdq/SDQ.RData")
+```
+
+```{r}
+glimpse(SDQ)
+```
+
+Per analizzare solo gli item che misurano i Sintomi Emotivi, è conveniente creare un nuovo data frame.
+
+```{r}
+items_emotion <- c("somatic", "worries", "unhappy", "clingy", "afraid")
+sdq_emo <- SDQ[, items_emotion]
+sdq_emo |>
+    head()
+```
+
+Affrontiamo il problema dei dati mancanti come discusso in precedenza.
+
+```{r}
+sdq_emo <- sdq_emo %>%
+    mutate_at(
+      vars(somatic:afraid), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)
+      ) |> 
+  round()
+```
+
+Esaminiamo le modalità di ciascun item:
+
+```{r}
+emotional_symptoms <- c("somatic", "worries", "unhappy", "clingy", "afraid")
+result <- lapply(emotional_symptoms, function(x) sort(unique(sdq_emo[[x]])))
+result |> 
+  print()
+```
+
+Trasformiamo il data frame in una matrice.
+
+```{r}
+M <- sdq_emo |> 
+  as.matrix()
+```
+
+Implementiamo lo scaling ottimale con la funzione `corAspect()`.
+
+```{r}
+opt <- corAspect(M, aspect = "aspectSum", level = "ordinal")
+```
+
+Parametri principali della funzione:
+
+1. **`data`**  
+   Questo argomento rappresenta il data frame che contiene i dati da analizzare. Nel nostro caso, si tratta degli item relativi alla scala che stiamo studiando (ad esempio, quelli che misurano i **Sintomi Emotivi**).
+
+2. **`aspect`**  
+   Questo parametro specifica il criterio da ottimizzare. Per impostazione predefinita, `aspect="aspectSum"` massimizza la somma delle correlazioni tra gli item. Questo criterio è utile per migliorare la consistenza interna della scala, ad esempio incrementando l'alfa di Cronbach. Nel nostro caso, utilizziamo questa impostazione predefinita.
+
+3. **`level`**  
+   Questo argomento definisce il livello di misura delle variabili analizzate:  
+   - **`nominal`** (impostazione predefinita): suppone che le variabili rappresentino categorie nominali. In questo caso, non vi sono restrizioni sui punteggi risultanti.  
+   - **`ordinal`**: richiede che l’ordine dei punteggi venga preservato.  
+   - **`numerical`**: oltre a preservare l’ordine, richiede che le distanze tra i punteggi siano uguali.  
+Nel caso delle categorie di risposta del **SDQ** ("non vero", "parzialmente vero", "assolutamente vero"), queste riflettono chiaramente un ordine crescente di accordo. Vogliamo preservare questo ordine durante l'ottimizzazione, quindi impostiamo `level="ordinal"`.
+
+Esaminiamo il risultato ottenuto.
+
+```{r}
+attributes(opt) 
+```
+
+```{r}
+summary(opt)
+```
+
+1. **Punteggi ottimali per ogni item:**  
+   La funzione calcola i punteggi "ottimali" per ogni item, ovvero valori che massimizzano la somma delle correlazioni tra gli item. Questo migliora la coerenza interna della scala.  
+
+2. **Preservazione dell'ordine delle risposte:**  
+   Utilizzando `level="ordinal"`, i punteggi ottimizzati mantengono l'ordine crescente delle categorie di risposta, come ad esempio:
+   
+   - "non vero" < "parzialmente vero" < "assolutamente vero". 
+   
+   Ciò assicura che la struttura ordinata delle risposte venga rispettata.
+
+3. **Correlazioni e punteggi trasformati:**  
+   L'output include:  
+   
+   - La **matrice di correlazione** dei punteggi trasformati, ovvero le correlazioni tra gli item dopo la scalatura ottimale.  
+   - Le correlazioni possono essere confrontate con quelle calcolate sulle variabili originali utilizzando la funzione `cor(items)`.  
+
+4. **Autovalori della matrice di correlazione:**  
+   L'output mostra anche gli **autovalori** della matrice di correlazione, che rappresentano le varianze delle componenti principali (da un'Analisi delle Componenti Principali, PCA).  
+   
+   - Gli autovalori sono utili per determinare il numero di dimensioni misurate dal set di item.  
+   - Ad esempio, se il primo autovalore è notevolmente più grande degli altri, e ciò suggerisce che gli item misurano una sola dimensione, come ci si aspettava.
+
+5. **Punteggi delle categorie:**  
+   La funzione mostra i **punteggi assegnati a ciascuna categoria di risposta** dopo la scalatura ottimale. Ad esempio, per l’item *somatic*, i risultati potrebbero indicare: 
+   
+   - "non vero" → -0.886  
+   - "parzialmente vero" → 0.584  
+   - "assolutamente vero" → 2.045  
+
+   Questi punteggi sono scelti in modo da:
+   
+   - Avere una media pari a 0 nel campione analizzato.  
+   - Massimizzare le correlazioni tra gli item, migliorando la coerenza interna della scala.
+
+6. **Grafici delle trasformazioni:**  
+   Il pacchetto **`aspect`** offre grafici utili che mostrano visivamente l’assegnazione dei punteggi alle categorie. Questi grafici aiutano a interpretare il risultato della scalatura ottimale in modo intuitivo.
+
+Questo approccio offre un metodo rigoroso per ottimizzare la misurazione degli item, migliorando la qualità psicometrica della scala e assicurando che l'interpretazione delle risposte rifletta al meglio la coerenza interna del test.
+
+I punteggi ottenuti si ottengono nel modo seguente:
+
+```{r}
+opt$scoremat
+```
+
+Esaminiamo la relazione tra lo scoring basato sul metodo Likert con lo scoring ottimale.
+
+```{r}
+plot(opt$scoremat[, 1], sdq_emo$somatic)
+```
+
+```{r}
+plot(opt$scoremat[, 4], sdq_emo$clingy)
+```
+
+```{r}
+plot(opt$scoremat[, 3], sdq_emo$unhappy)
+```
+
+```{r}
+plot(opt$scoremat[, 2], sdq_emo$worries)
+```
+
+```{r}
+plot(opt$scoremat[, 5], sdq_emo$afraid)
+```
+
+Guardando ai grafici ottenuti, si può notare che 1) i punteggi per le categorie successive aumentano quasi linearmente; 2) le categorie sono approssimativamente equidistanti. Concludiamo che per la valutazione degli item ordinali nella scala dei Sintomi Emotivi del SDQ, la scala Likert è appropriata, e l'ottimizzazione della scala rispetto alla semplice scala Likert di base produce cambiamenti minimi. Per altri dati, comunque, la situazione potrebbe essere molto diversa.
+
+In conclusione, l'ottimizzazione dello scoring dei dati di questionari ordinali offre un metodo rigoroso per ottimizzare la misurazione degli item, migliorando la qualità psicometrica della scala e assicurando che l'interpretazione delle risposte rifletta al meglio la coerenza interna del test.
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+

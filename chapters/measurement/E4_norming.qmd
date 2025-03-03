@@ -1,0 +1,225 @@
+# ✏️ Esercizi
+
+```{r}
+source("../../code/_common.R")
+
+suppressPackageStartupMessages({
+    library("rio")
+    library("psych")
+    library("here")
+    library("gamlss")
+    library("gamlss.add")
+})
+```
+
+## Normazione Basata sulla Regressione: Metodi Avanzati per l'Interpretazione dei Test Psicometrici
+
+La **normazione basata sulla regressione** rappresenta un metodo statistico avanzato utilizzato per trasformare i punteggi grezzi di un test in punteggi standardizzati, consentendo un confronto equo tra individui di diverse età o caratteristiche demografiche. Questo approccio supera i limiti delle metodologie tradizionali, che tipicamente si basano su fasce di età discrete e tabelle di conversione statiche, introducendo modelli di regressione che descrivono in modo continuo la relazione tra i punteggi grezzi e le variabili predittive, come l'età. 
+
+Tale metodologia risulta particolarmente preziosa nell'ambito dei test psicometrici e delle valutazioni cognitive, dove le performance possono variare significativamente in funzione dello sviluppo cognitivo o di altri fattori demografici rilevanti.
+
+## Principio Fondamentale e Vantaggi
+
+Nei test di valutazione cognitiva, come quelli che misurano il ragionamento verbale, l'intelligenza o la memoria, si osserva naturalmente una variazione dei punteggi grezzi in relazione all'età. Ad esempio, un bambino di 7 anni tipicamente ottiene un punteggio inferiore rispetto a un adolescente di 15 anni in molti test cognitivi, senza che questo indichi necessariamente una performance deficitaria, ma piuttosto una normale differenza nello sviluppo cognitivo atteso per quelle fasce d'età.
+
+La normazione basata sulla regressione presenta diversi vantaggi rispetto ai metodi tradizionali:
+
+1. **Continuità**: Evita i "salti" artificiali nei punteggi normativi che possono verificarsi al passaggio tra fasce d'età discrete.
+2. **Precisione**: Produce stime più accurate dei punteggi normativi, specialmente per età ai confini delle fasce tradizionali.
+3. **Efficienza statistica**: Utilizza in modo più efficiente tutti i dati disponibili nel campione normativo.
+4. **Flessibilità**: Può incorporare facilmente più variabili predittive oltre all'età (es. genere, livello di istruzione).
+5. **Adattabilità**: Può modellare relazioni non lineari complesse tra età e performance.
+
+## Applicazione della Normazione con il Test IDS-2
+
+### Descrizione dello Strumento
+
+Il **test IDS-2** (*Intelligence and Development Scales, 2a Edizione*) è una batteria completa che valuta lo sviluppo cognitivo e le competenze evolutive in soggetti dai 5 ai 20 anni. Questo strumento, ampiamente utilizzato in ambito clinico ed educativo, permette di ottenere un profilo dettagliato delle abilità del soggetto in diverse aree funzionali.
+
+Nell'esempio che segue, analizziamo i dati relativi al **Sottotest 14** (*Denominare Contrari*), che fa parte della scala di Ragionamento Verbale e misura specificamente:
+
+- **Competenza lessicale**: L'ampiezza e la profondità del vocabolario posseduto
+- **Flessibilità cognitiva**: La capacità di identificare relazioni semantiche opposte
+- **Velocità di elaborazione semantica**: L'efficienza nell'accesso al lessico mentale
+
+### Dataset e Preparazione dei Dati
+
+Il dataset `IDS2_sample` contiene dati di un campione normativo con le seguenti variabili principali:
+
+- `age`: Età dei partecipanti (espressa in mesi)
+- `y14`: Punteggio grezzo ottenuto nel sottotest "Denominare Contrari"
+
+```{r}
+# Caricamento dati
+IDS2_sample <- read.table(
+    here::here("data", "IDS2_sample.txt"),
+    header = TRUE
+    )
+
+# Anteprima dati
+head(IDS2_sample)
+```
+
+Per migliorare la stabilità numerica nei calcoli statistici successivi, aggiungiamo una costante infinitesimale ai punteggi per eliminare eventuali valori zero che potrebbero creare problemi in alcune trasformazioni matematiche:
+
+```{r}
+IDS2_sample$y14_a <- IDS2_sample$y14 + 0.0001
+```
+
+## Modellazione Statistica Avanzata con il BCPE
+
+Il modello **Box-Cox Power Exponential (BCPE)** rappresenta una scelta particolarmente avanzata per la normazione basata sulla regressione, poiché permette di modellare simultaneamente quattro parametri fondamentali della distribuzione dei punteggi:
+
+- **Tendenza centrale (μ)**: Il valore medio o mediano dei punteggi grezzi in funzione dell'età
+- **Dispersione (σ)**: La variabilità dei punteggi attorno alla tendenza centrale
+- **Asimmetria (ν)**: Il grado di simmetria/asimmetria nella distribuzione dei punteggi
+- **Curtosi (τ)**: La forma delle code della distribuzione (più o meno pesanti rispetto alla distribuzione normale)
+
+L'implementazione del modello utilizza **P-splines** (spline penalizzate), che garantiscono che la relazione tra punteggio grezzo ed età sia modellata in modo flessibile e adattativo, senza imporre forme funzionali rigide. Questo è particolarmente importante quando la relazione tra età e performance non segue un semplice andamento lineare, come spesso accade nei test cognitivi.
+
+Il modello viene implementato utilizzando la libreria `gamlss` in R:
+
+```{r}
+BCPE_mod_sp <- gamlss(
+    y14_a ~ pbm(age, method = "GAIC", k = log(nrow(IDS2_sample)), inter = 5, mono = "up"),
+    sigma.formula = ~ pb(age, method = "GAIC", k = log(nrow(IDS2_sample)), inter = 5),
+    nu.formula = ~1,
+    tau.formula = ~1,
+    family = BCPE,
+    data = IDS2_sample,
+    method = RS(1000)
+)
+```
+
+### Elementi Chiave del Modello
+
+- `pbm(age, ..., mono = "up")`: Utilizza P-splines monotone crescenti per modellare la tendenza centrale, riflettendo l'aspettativa che le prestazioni cognitive mediamente aumentino con l'età.
+- `pb(age, ...)`: Utilizza P-splines standard (non monotone) per modellare la dispersione, permettendo variazioni nella variabilità dei punteggi durante lo sviluppo.
+- `method = "GAIC", k = log(nrow(IDS2_sample))`: Utilizza il criterio GAIC (Generalized Akaike Information Criterion) per selezionare automaticamente il grado ottimale di smoothing nelle splines.
+- `inter = 5`: Specifica il numero di intervalli per le splines, bilanciando flessibilità e parsimonia.
+- `nu.formula = ~1, tau.formula = ~1`: Modella asimmetria e curtosi come costanti indipendenti dall'età, semplificando il modello.
+
+## Visualizzazione e Interpretazione delle Curve Centili
+
+La funzione `centiles.fan` di `gamlss` consente di visualizzare graficamente la distribuzione dei punteggi normati in funzione dell'età, fornendo un potente strumento per l'interpretazione dei risultati:
+
+```{r fig.asp=1}
+centiles.fan(
+    BCPE_mod_sp,
+    xvar = IDS2_sample$age,
+    points = TRUE,
+    colors = "gray",
+    col = "black",
+    pch = 16,
+    ylab = "Punteggio grezzo",
+    xlab = "Età in mesi"
+)
+```
+
+### Interpretazione delle Curve Centili
+
+Le curve centili rappresentano visivamente la distribuzione condizionata dei punteggi a ogni età:
+
+- **50° percentile (curva mediana)**: Rappresenta il valore mediano previsto per una data età. Un bambino che ottiene un punteggio su questa curva ha una performance esattamente nella media rispetto ai suoi coetanei.
+- **10°-90° percentile**: Delimita l'intervallo in cui ricade l'80% centrale dei punteggi. Punteggi all'interno di questo intervallo sono considerati nella norma.
+- **2°-98° percentile**: Delimita una fascia di valori più ampia che include il 96% dei soggetti. Punteggi al di fuori di questo intervallo meritano particolare attenzione.
+- **<2° o >98° percentile**: Valori estremamente bassi o alti che possono indicare significative deviazioni dalla norma e giustificare approfondimenti diagnostici.
+
+## Calcolo dei Punteggi Normati Individuali
+
+Per determinare il punteggio normato di un individuo, dobbiamo stabilire la sua posizione relativa rispetto alla distribuzione condizionata dei punteggi per la sua specifica età. Questo processo avviene in due fasi principali:
+
+### 1. Calcolo del Percentile Individuale
+
+Prima calcoliamo il percentile corrispondente al punteggio grezzo dell'individuo, data la sua età:
+
+```{r}
+CDF_sample <- pBCPE(
+    IDS2_sample$y14_a,
+    mu = BCPE_mod_sp$mu.fv,
+    sigma = BCPE_mod_sp$sigma.fv,
+    nu = BCPE_mod_sp$nu.fv,
+    tau = BCPE_mod_sp$tau.fv,
+    lower.tail = TRUE
+)
+```
+
+In questo passaggio, `pBCPE` calcola la funzione di distribuzione cumulativa del modello BCPE, restituendo la probabilità che un soggetto con una data età ottenga un punteggio inferiore o uguale al punteggio osservato. Questo valore rappresenta il percentile del soggetto nella distribuzione.
+
+### 2. Conversione in Punteggi Z
+
+Successivamente, convertiamo i percentili in punteggi Z utilizzando l'inversa della distribuzione normale standard:
+
+```{r}
+IDS2_sample$z_score <- qnorm(CDF_sample)
+```
+
+Il **punteggio Z** (o punteggio standard) rappresenta la distanza del punteggio individuale dalla media della popolazione di riferimento (per quella specifica età), espressa in unità di deviazione standard. L'interpretazione dei punteggi Z è la seguente:
+
+- **Z = 0**: Performance esattamente nella media
+- **Z = +1**: Performance superiore di una deviazione standard rispetto alla media
+- **Z = -1**: Performance inferiore di una deviazione standard rispetto alla media
+- **Z ≥ +2**: Performance significativamente superiore alla media (circa top 2.5%)
+- **Z ≤ -2**: Performance significativamente inferiore alla media (circa bottom 2.5%)
+
+### Esempio Concreto
+
+Per illustrare il processo con un esempio concreto:
+
+- Supponiamo che un bambino di 96 mesi (8 anni) ottenga un punteggio grezzo di 12 nel sottotest "Denominare Contrari"
+- Dalle curve centili, determiniamo che per questa età il punteggio mediano atteso è circa 11
+- Applicando il modello BCPE, calcoliamo che questo punteggio corrisponde al 65° percentile
+- Convertendo in punteggio Z, otteniamo Z = 0.39
+- Interpretiamo: il bambino ha una performance leggermente sopra la media rispetto ai coetanei, ma ben all'interno del range normale
+
+## Rappresentazione Grafica della Relazione tra Punteggi Grezzi e Normati
+
+Per comprendere meglio la relazione tra i punteggi grezzi originali e i punteggi Z derivati, possiamo visualizzare questa relazione graficamente:
+
+```{r fig.asp=1}
+plot(IDS2_sample$y14, IDS2_sample$z_score,
+     xlab = "Punteggio Grezzo",
+     ylab = "Punteggio Normato (Z-score)",
+     main = "Relazione tra Punteggi Grezzi e Punteggi Normati",
+     pch = 16, col = "blue")
+
+# Aggiungere una linea di tendenza
+abline(lm(z_score ~ y14, data = IDS2_sample), col = "red", lwd = 2)
+```
+
+Questa visualizzazione mostra chiaramente che:
+
+1. La relazione tra punteggi grezzi e Z-score non è perfettamente lineare
+2. Lo stesso punteggio grezzo può corrispondere a diversi Z-score a seconda dell'età del soggetto
+3. La dispersione attorno alla linea di tendenza illustra l'effetto della correzione per età
+
+## Estensioni e Considerazioni Avanzate
+
+Il modello BCPE presentato può essere ulteriormente esteso per incorporare altre variabili predittive rilevanti oltre all'età, come:
+
+- **Genere**: Se esistono differenze sistematiche tra maschi e femmine
+- **Livello di istruzione**: Per tenere conto del background educativo
+- **Background socioeconomico**: Per controlli demografici più completi
+- **Bilinguismo**: Per considerare l'influenza di specifiche caratteristiche linguistiche
+
+Inoltre, è possibile implementare modelli ancora più flessibili utilizzando:
+
+- **Reti neurali**: Per catturare relazioni non parametriche complesse
+- **Modelli bayesiani**: Per incorporare conoscenze a priori e quantificare l'incertezza nelle stime
+- **Analisi longitudinali**: Per tracciare lo sviluppo individuale nel tempo
+
+## Conclusione
+
+La normazione basata sulla regressione, specialmente quando implementata attraverso modelli avanzati come il BCPE con P-splines, offre un approccio statisticamente robusto e clinicamente rilevante per l'interpretazione dei test psicometrici. Rispetto ai metodi tradizionali basati su tabelle normative discrete, questo approccio garantisce:
+
+1. **Maggiore precisione**: Stime più accurate dei valori normativi a tutte le età
+2. **Continuità**: Eliminazione degli artefatti ai confini delle fasce d'età
+3. **Flessibilità**: Capacità di modellare relazioni complesse e non lineari tra età e performance
+4. **Efficienza statistica**: Utilizzo ottimale dei dati disponibili nel campione normativo
+
+L'implementazione di questi metodi avanzati di normazione permette ai clinici e ai ricercatori di ottenere valutazioni più precise e affidabili, migliorando sia l'accuratezza diagnostica che l'utilità dei test psicometrici nella pratica professionale e nella ricerca.
+
+```{r}
+sessionInfo()
+```
+

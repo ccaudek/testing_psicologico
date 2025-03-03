@@ -1,0 +1,215 @@
+# ✏ Esercizi
+
+**Prerequisiti**
+
+**Concetti e Competenze Chiave**
+
+**Preparazione del Notebook**
+
+```{r}
+#| vscode: {languageId: r}
+source("../../code/_common.R")
+```
+
+## Manipolazione di dati a livello di scala Likert 
+
+In questo tutorial, ripreso da @brown2023psychometrics, esamineremo i dati di un questionario ordinale. In particolare, esamineremo il **Strengths and Difficulties Questionnaire (SDQ)**, ovvero un breve questionario di screening comportamentale progettato per valutare i comportamenti di bambini e adolescenti tra i 3 e i 16 anni. Il SDQ è disponibile in diverse versioni per soddisfare le esigenze di ricercatori, clinici ed educatori. Per maggiori informazioni, è possibile consultare il sito ufficiale [http://www.sdqinfo.org/](http://www.sdqinfo.org/), dove è possibile scaricare il questionario, insieme alle chiavi di scoring e alle norme pubblicate dal distributore del test. 
+
+Il questionario include 25 item suddivisi in 5 scale (o dimensioni) che misurano specifici aspetti comportamentali. Ogni scala comprende 5 item:
+
+- **Sintomi Emotivi:** somatizzazione, preoccupazioni, infelicità, attaccamento, paura  
+- **Problemi di Condotta:** capricci, ubbidienza*, litigi, bugie, furti  
+- **Iperattività:** irrequietezza, agitazione, distrazione, riflessione*, attenzione*  
+- **Problemi con i Pari:** solitudine, amicizia*, popolarità*, vittimismo, miglior amico più grande  
+- **Comportamento Prosociale:** considerazione, condivisione, empatia, gentilezza, aiuto agli altri  
+
+Ogni item viene valutato dai partecipanti utilizzando le seguenti opzioni di risposta:
+
+- **0 = "Non vero"**  
+- **1 = "Parzialmente vero"**  
+- **2 = "Assolutamente vero"**  
+
+Alcuni item nel SDQ rappresentano comportamenti che devono essere invertiti rispetto alla scala di appartenenza, ossia **item a punteggio invertito**. Questo significa che punteggi alti sulla scala corrispondono a punteggi bassi per questi specifici item. Ad esempio, l'item *"Di solito faccio ciò che mi viene detto"* (variabile "obeys") è un item a punteggio invertito per la scala "Problemi di Condotta". 
+
+Nel SDQ sono presenti 5 item di questo tipo, contrassegnati con un asterisco (*) nella tabella. Questi item devono essere codificati invertendo i punteggi (ad esempio, da 0 a 2 e viceversa) prima di calcolare il punteggio complessivo della scala.
+
+In questo studio, i partecipanti sono studenti di prima media (Year 7) provenienti dalla stessa scuola, per un totale di **228 ragazzi**. Si tratta di un campione della comunità scolastica, quindi non ci si aspetta che molti dei partecipanti superino le soglie cliniche indicate dal test. 
+
+Il questionario SDQ è stato somministrato due volte:
+
+1. La prima somministrazione è avvenuta all'inizio della scuola secondaria, quando i ragazzi erano nel Year 7.  
+2. La seconda somministrazione è avvenuta un anno dopo, quando i partecipanti erano nel Year 8.  
+
+Questa progettazione longitudinale consente di analizzare eventuali cambiamenti nei punteggi SDQ durante il passaggio tra il primo e il secondo anno di scuola secondaria.
+
+## Emotional Symptoms scale
+
+Iniziamo ad esaminare la scala **Emotional Symptoms**. Questa scala non contiene item reverse. Importiamo i dati in R.
+
+```{r}
+#| vscode: {languageId: r}
+load("../../data/data_sdq/SDQ.RData")
+glimpse(SDQ)
+```
+
+Selezioniamo solo gli item della Emotional Symptoms scale al tempo 1.
+
+```{r}
+items_emotion <- c("somatic", "worries", "unhappy", "clingy", "afraid")
+sdq_emo <- SDQ[, items_emotion]  
+sdq_emo |>
+    head()
+```
+
+Calcoliamo il punteggio della scala.
+
+```{r}
+rowSums(sdq_emo) 
+```
+
+Notiamo che ci sono diversi punteggi mancanti, denotati da NA. Un primo metodo per affrontare i dati mancanti è semplicemente quello di ignorarli:
+
+```{r}
+rowSums(sdq_emo, na.rm = TRUE) 
+```
+
+Tuttavia, questa non è una buona idea. Anche per il fatto che, in questo modo non verrà calcolato il punteggio totale di 7 partecipanti. Possiamo identificare le colonne in cui ci sono dei valori mancanti usando `summary()`.
+
+```{r}
+summary(sdq_emo)
+```
+
+Un approccio semplice per gestire il problema dei dati mancanti è l'imputazione, che consiste nel sostituire i valori mancanti con stime plausibili basate sulle informazioni disponibili nel dataset. Il metodo più elementare di imputazione prevede la sostituzione del valore mancante con la media della colonna corrispondente. Questo approccio è facile da implementare e può essere utile come soluzione preliminare, ma potrebbe non catturare correttamente la variabilità e le relazioni tra le variabili.
+
+```{r}
+sdq_emo <- sdq_emo %>%
+    mutate_at(vars(somatic:afraid), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .))
+```
+
+Questa istruzione utilizza la funzione `mutate_at` del pacchetto dplyr per applicare una trasformazione a colonne specifiche (da `somatic` a `afraid`). All'interno della funzione di trasformazione, essa controlla se ogni valore è mancante (`NA`). Se lo è, lo sostituisce con la media della colonna usando `mean(., na.rm = TRUE)`, che calcola la media escludendo eventuali valori mancanti. 
+
+Possiamo ora calcolare il punteggio della scala per ciascun partecipante.
+
+```{r}
+SDQ$s_emotion <- rowSums(sdq_emo) |> round()
+SDQ$s_emotion 
+```
+
+Un istogramma si ottiene nel modo seguente.
+
+```{r}
+SDQ |>
+    ggplot(aes(x = s_emotion)) +
+    geom_histogram(bins = 10)
+```
+
+```{r}
+hist(SDQ$s_emotion)
+```
+
+Più utile è un KDE plot.
+
+```{r}
+SDQ |>
+    ggplot(aes(x = s_emotion)) +
+    geom_density()
+```
+
+Possiamo ottenere le statistiche descrittive della scala usando la funzione `describe` del pacchetto `psych`.
+
+```{r}
+describe(SDQ$s_emotion)
+```
+
+Come si può vedere, la mediana (il punteggio al di sotto del quale si trova la metà del campione) di `s_emotion` è 2, mentre la media è più alta e pari a 2.87. Questo perché la distribuione dei punteggi è asimmetrica positiva; in questo caso, la mediana è più rappresentativa della tendenza centrale. Queste statistiche sono coerenti con la nostra osservazione dell'istogramma, che mostra un forte *floor effect*.
+
+Di seguito sono riportati i valori di soglia per i casi "Normali", "Borderline" e "Anormali" per i Sintomi Emotivi forniti dal publisher del test (vedi `https://sdqinfo.org/`). Questi sono i punteggi che distinguono i casi probabilmente borderline e anormali dai casi "normali".
+
+```
+Normale: 0-5
+Borderline: 6
+Anormale: 7-10
+```
+
+```{r}
+table(SDQ$s_emotion <= 5)
+```
+
+In questo campione, dunque, l'85% dei partecipanti è classificato nell'intervallo Normale.
+
+```{r}
+table(SDQ$s_emotion <= 5)[2] / length(SDQ$s_emotion)
+```
+
+In maniera equivalente otteniamo i valori dei partecipanti "borderline":
+
+```{r}
+table(SDQ$s_emotion == 6)[2] / length(SDQ$s_emotion)
+```
+
+e dei partecipanti "non-normali":
+
+```{r}
+table(SDQ$s_emotion >= 7)[2] / length(SDQ$s_emotion)
+```
+
+## Item reverse
+
+In un secondo esempio consideriamo la codifica delle risposte degli item SDQ che misurano i Problemi di Condotta. Alcuni item sono stati codificati usando una codifica inversa. Prima di calcolare il punteggio totale è dunque necessario invertire il punteggio degli item a codifica inversa.
+
+```{r}
+items_conduct <- c("tantrum", "obeys", "fights", "lies", "steals")
+```
+
+Per i Problemi di Condotta, abbiamo solo un item reverse, `obeys`. 
+
+```
+tantrum    obeys*      fights       lies       steals
+```
+
+Per invertire il codice di questo item, useremo una funzione dedicata del pacchetto **psych**, `reverse.code()`. Questa funzione ha la forma generale `reverse.code(keys, items,…)`. L'argomento `keys` è un vettore di valori 1 o -1, dove -1 implica l'inversione dell'item. L'argomento `items` sono i nomi delle variabili che vogliamo valutare. 
+
+```{r}
+R_conduct <- reverse.code(keys = c(1, -1, 1, 1, 1), SDQ[, items_conduct]) |> 
+  as_tibble()
+R_conduct |> 
+  head()
+```
+
+```{r}
+SDQ[, items_conduct] |> head()
+```
+
+Anche in questo caso ci sono dei dati mancanti.
+
+```{r}
+summary(R_conduct)
+```
+
+Usiamo la stessa procedura descritta in precedenza:
+
+```{r}
+R_conduct <- R_conduct %>%
+    mutate_at(
+      vars(tantrum:steals), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)
+    )
+```
+
+Calcoliamo ora il punteggio totale.
+
+```{r}
+SDQ$s_conduct <- rowMeans(R_conduct)
+```
+
+```{r}
+SDQ |>
+    ggplot(aes(x = s_conduct)) +
+    geom_histogram(bins = 10)
+```
+
+## Session Info
+
+```{r}
+sessionInfo() 
+```
+

@@ -8,16 +8,22 @@
 
 **Concetti e Competenze Chiave**
 
+- Tipologie di dati e loro implicazioni.
+- Punteggi grezzi e trasformati.
+- Interpretazioni basate sulla norma e sul criterio.
+- Metodi di normazione: tradizionale vs regressione;
+- Teoria della Risposta agli Item (IRT) e punteggi standardizzati.
+
 **Preparazione del Notebook**
 
 ```{r}
-#| vscode: {languageId: r}
 # Carica il file _common.R per impostazioni di pacchetti e opzioni
 here::here("code", "_common.R") |> source()
 
 # Carica pacchetti aggiuntivi
 pacman::p_load(MASS, nortest, missForest, aspect)
 ```
+
 
 ## Introduzione 
 
@@ -545,14 +551,125 @@ I punteggi al criterio confrontano il rendimento con un livello specifico di com
 
 In conclusione, i diversi tipi di punteggi dei test forniscono informazioni per rispondere a diverse domande e devono essere scelti in base alle esigenze specifiche dell'analisi dei dati del test.
 
-## Esercizi
+## Esercizi {.unnumbered}
 
-Bandalos, capitolo 2, E1, E2, E5, E6, E7, E8, E9, E12
+::: {.callout-important title="Problemi" collapse="true"}
+**Esercizio 1: Classificazione delle variabili**
 
-## Session Info
+1. Creare un data frame in R contenente cinque variabili con dati simulati:
+   - **ID soggetto** (codice numerico univoco, dati nominali).
+   - **Sesso** (M/F, dati nominali).
+   - **Livello di ansia** (scala Likert da 1 a 5, dati ordinali).
+   - **Punteggio QI** (media = 100, deviazione standard = 15, dati di intervallo).
+   - **Tempo di reazione in secondi** (valore continuo, dati di rapporto).
+
+2. Verificare la classe di ciascuna variabile con `class()` e discuterne la tipologia.
+
+**Esercizio 2: Calcolo di Punteggi Standardizzati**
+
+1. Utilizzando il data frame dell'Esercizio 1, standardizzare i punteggi QI e Tempo di Reazione con la formula dello z-score:
+   $$
+   Z = \frac{X - \text{media}}{\text{deviazione standard}}
+   $$
+2. Visualizzare la distribuzione dei punteggi grezzi e dei punteggi standardizzati con istogrammi.
+
+**Esercizio 3: Calcolo di Punteggi Percentili**
+
+1. Utilizzare i punteggi QI generati in precedenza.
+2. Calcolare il **percentile rank** per ciascun partecipante.
+3. Identificare il punteggio QI corrispondente al **percentile 90**.
+
+**Esercizio 4: Confronto tra Normazione Tradizionale e Basata sulla Regressione**
+
+1. Creare una variabile di età compresa tra 18 e 65 anni.
+2. Generare punteggi grezzi simulati di un test cognitivo.
+3. Applicare due metodi di normazione:
+   - **Metodo tradizionale:** Dividere il campione in fasce d’età (18-30, 31-45, 46-65) e calcolare la media e la deviazione standard per ciascuna fascia.
+   - **Metodo della regressione:** Applicare una regressione lineare per predire i punteggi in funzione dell’età.
+
+**Esercizio 5: Simulazione della Distribuzione dei Punteggi Stanini**
+
+1. Generare una distribuzione di punteggi di un test (N = 1000) con media = 50 e deviazione standard = 10.
+2. Trasformare i punteggi in **stanini** utilizzando la formula:
+   $$
+   \text{Stanine} = \left(\frac{\text{Punteggio} - \text{Media}}{\text{Deviazione Standard}}\right) \times 2 + 5
+   $$
+3. Creare un istogramma con la distribuzione dei punteggi stanini.
+:::
+
+::: {.callout-tip title="Soluzioni" collapse="true"}
 
 ```{r}
-#| vscode: {languageId: r}
+# Esercizio 1: Classificazione delle variabili
+
+set.seed(123)  # Per riproducibilità
+data <- data.frame(
+  ID = 1:20,
+  Sesso = sample(c("M", "F"), 20, replace = TRUE),
+  Ansia = factor(sample(1:5, 20, replace = TRUE), ordered = TRUE),  # Dati ordinali
+  QI = rnorm(20, mean = 100, sd = 15),  # Dati di intervallo
+  Tempo_Reazione = runif(20, min = 0.3, max = 2.5)  # Dati di rapporto
+)
+
+# Verifica della classe delle variabili
+sapply(data, class)
+
+# Esercizio 2: Calcolo di Punteggi Standardizzati
+data$QI_z <- scale(data$QI)
+data$Tempo_Reazione_z <- scale(data$Tempo_Reazione)
+
+# Visualizzazione della distribuzione
+par(mfrow = c(2, 2))
+hist(data$QI, main = "Distribuzione QI Grezzo", col = "lightblue")
+hist(data$QI_z, main = "Distribuzione QI Standardizzato", col = "lightgreen")
+hist(data$Tempo_Reazione, main = "Distribuzione Tempo di Reazione Grezzo", col = "lightblue")
+hist(data$Tempo_Reazione_z, main = "Distribuzione Tempo di Reazione Standardizzato", col = "lightgreen")
+par(mfrow = c(1, 1))
+
+# Esercizio 3: Calcolo di Punteggi Percentili
+data$Percentile_QI <- ecdf(data$QI)(data$QI) * 100
+
+# Mostra i primi 10 percentili calcolati
+head(data[, c("QI", "Percentile_QI")], 10)
+
+# Calcola il valore di QI corrispondente al 90° percentile
+quantile(data$QI, 0.90)
+
+# Esercizio 4: Confronto tra Normazione Tradizionale e Basata sulla Regressione
+set.seed(123)
+data$Eta <- sample(18:65, 20, replace = TRUE)
+data$Test_Cognitivo <- 50 + 0.3 * data$Eta + rnorm(20, sd = 5)
+
+# Normazione Tradizionale: suddivisione in gruppi di età
+data$Gruppo_Età <- cut(data$Eta, breaks = c(18, 30, 45, 65), labels = c("18-30", "31-45", "46-65"))
+
+# Calcolo della media e deviazione standard per ciascun gruppo
+aggregate(Test_Cognitivo ~ Gruppo_Età, data = data, FUN = function(x) c(media = mean(x), sd = sd(x)))
+
+# Normazione basata sulla regressione
+mod <- lm(Test_Cognitivo ~ Eta, data = data)
+data$Test_Cognitivo_Pred <- predict(mod)
+
+# Confronto tra metodi
+plot(data$Eta, data$Test_Cognitivo, main = "Normazione Tradizionale vs Regressione", pch = 19, col = "blue")
+lines(data$Eta, data$Test_Cognitivo_Pred, col = "red", lwd = 2)
+legend("topright", legend = c("Dati Osservati", "Modello Regressione"), col = c("blue", "red"), pch = c(19, NA), lwd = c(NA, 2))
+
+# Esercizio 5: Simulazione della Distribuzione dei Punteggi Stanini
+set.seed(123)
+punteggi <- rnorm(1000, mean = 50, sd = 10)
+stanine <- round((punteggi - mean(punteggi)) / sd(punteggi) * 2 + 5)
+stanine <- pmax(pmin(stanine, 9), 1)
+
+# Visualizzazione della distribuzione
+hist(stanine, breaks = seq(0.5, 9.5, 1), main = "Distribuzione dei Punteggi Stanini", col = "lightblue", xlab = "Stanine", xaxt = "n")
+axis(1, at = 1:9, labels = 1:9)
+```
+:::
+
+## Session Info {.unnumbered}
+
+```{r}
 sessionInfo()
 ```
 
