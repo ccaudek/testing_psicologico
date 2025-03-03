@@ -26,73 +26,144 @@ Per posizionare gli oggetti sulla scala di Thurstone, si procede nel seguente mo
 - Si determinano i corrispondenti percentile (z-scores) della distribuzione cumulativa normale, che ci dicono quante deviazioni standard un valore è distante dalla media.
 - Si calcola la media di questi z-scores per ciascun oggetto.
 
-**Esempio Pratico**
+Di seguito propongo un esempio più lineare e coerente dello scaling di Thurstone per tre oggetti (A, B e C), assieme a una spiegazione puntuale dei vari passaggi. 
 
-Immaginiamo di avere tre oggetti: A, B e C. Dopo aver raccolto le preferenze, scopriamo che:
+## Esempio
 
-- Il 70% dei rispondenti preferisce A rispetto a B e C.
-- Il 50% dei rispondenti preferisce B rispetto ad A, ma solo il 30% lo preferisce a C.
-- Il 80% dei rispondenti preferisce C rispetto a B, ma solo il 50% lo preferisce ad A.
+Immaginiamo di avere tre oggetti – A, B e C – per cui abbiamo raccolto preferenze pairwise (cioè a coppie). Ipotizziamo di aver rilevato le seguenti percentuali di preferenza:
 
-Trasformando queste percentuali in z-scores, possiamo ottenere una misura della "distanza" di ciascun oggetto dalla media sulla scala latente. Mediando questi z-scores, possiamo creare un ranking discreto che riflette le preferenze medie aggregate, permettendoci di interpretare quali oggetti sono generalmente preferiti rispetto ad altri secondo il modello Thurstoniano.
+- **A** è preferito a **B** dal 70% dei rispondenti.
+- **A** è preferito a **C** dall’80% dei rispondenti.
+- **B** è preferito a **C** dal 60% dei rispondenti.
 
-**Soluzione**
+Quindi, se chiediamo ad un gruppo di persone di scegliere tra A e B, il 70% sceglie A, mentre se chiediamo di scegliere tra A e C, l’80% sceglie A; tra B e C, il 60% sceglie B.
 
-Ecco il codice R per risolvere il problema utilizzando il modello Thurstoniano per trasformare le preferenze in z-score e calcolare il ranking latente. 
+### Creazione del data frame delle preferenze
+
+In R, possiamo creare un piccolo data frame (chiamato `preferences`) che contiene queste informazioni. Ciascuna riga riporta:
+
+1. La prima colonna (`obj1`): l’oggetto preferito dalla proporzione `p`.
+2. La seconda colonna (`obj2`): l’altro oggetto del confronto.
+3. La terza colonna (`p`): la proporzione di rispondenti che preferisce `obj1` rispetto a `obj2`.
 
 ```{r}
-# Definizione delle percentuali di preferenza
+# Definiamo le preferenze pairwise
 preferences <- data.frame(
-  obj1 = c("A", "A", "B", "B", "C", "C"),
-  obj2 = c("B", "C", "A", "C", "B", "A"),
-  p = c(0.70, 0.70, 0.50, 0.30, 0.80, 0.50)
+  obj1 = c("A", "A", "B"),
+  obj2 = c("B", "C", "C"),
+  p    = c(0.70, 0.80, 0.60)
 )
+preferences
+```
 
-# Conversione delle percentuali in z-score
+- Prima riga: “A vs. B, p=0.70” significa che il 70% preferisce A rispetto a B.
+- Seconda riga: “A vs. C, p=0.80” significa che l’80% preferisce A rispetto a C.
+- Terza riga: “B vs. C, p=0.60” significa che il 60% preferisce B rispetto a C.
+
+### Conversione delle percentuali in z-score (qnorm)
+
+Il modello di Thurstone (caso V) prevede che queste proporzioni siano interpretabili come aree cumulative di una distribuzione normale standard. Se ad esempio il 70% preferisce A a B, questo 0.70 è la probabilità cumulata (fino a uno z-score positivo). Per convertire una proporzione in uno z-score, utilizziamo la funzione `qnorm()`. 
+
+```{r}
+# Aggiungiamo al data frame la colonna z, che contiene la trasformazione delle 
+# proporzioni in z-score
 preferences <- preferences %>%
   mutate(z = qnorm(p))
 
 preferences
 ```
 
-```{r}
-# Creazione della matrice delle preferenze
-objects <- unique(c(preferences$obj1, preferences$obj2))
-objects
+### Creazione di una matrice delle preferenze (z-score matrix)
 
-z_matrix <- matrix(0, nrow = length(objects), ncol = length(objects),
+Ora vogliamo creare una **matrice** (che chiameremo `z_matrix`) contenente gli z-score di tutte le coppie (A-B, A-C, B-C, e anche B-A, C-A, C-B, che saranno i corrispettivi negativi). In altre parole:
+
+- Nelle celle della matrice in cui la riga è `obj1` e la colonna è `obj2`, mettiamo lo z-score positivo (es. 0.52 se il 70% preferisce A a B).
+- Nella cella opposta (dove la riga è `obj2` e la colonna è `obj1`), mettiamo lo z-score negativo (es. -0.52, perché se 70% preferisce A a B, allora il 30% preferisce B a A).
+
+Così otteniamo un quadro simmetrico del grado di preferenza fra tutti gli oggetti.
+
+```{r}
+# Ricaviamo l’elenco degli oggetti presenti
+objects <- unique(c(preferences$obj1, preferences$obj2))
+
+# Creiamo una matrice quadrata vuota in cui inserire gli z-score
+z_matrix <- matrix(0, 
+                   nrow = length(objects), 
+                   ncol = length(objects),
                    dimnames = list(objects, objects))
 
-# Popolamento della matrice
+# Compiliamo la matrice: 
+# per ogni riga del data frame `preferences`,
+# inseriamo lo z-score positivo nella posizione [obj1, obj2] e
+# quello negativo nella posizione [obj2, obj1].
 for (i in 1:nrow(preferences)) {
-  z_matrix[preferences$obj1[i], preferences$obj2[i]] <- preferences$z[i]
-  z_matrix[preferences$obj2[i], preferences$obj1[i]] <- -preferences$z[i]
+  riga    <- preferences$obj1[i]
+  colonna <- preferences$obj2[i]
+  valore  <- preferences$z[i]
+  
+  z_matrix[riga, colonna] <- valore
+  z_matrix[colonna, riga] <- -valore
 }
 
-# Calcolo dei punteggi latenti medi per ogni oggetto
-latent_scores <- rowMeans(z_matrix)
+z_matrix
+```
 
-# Creazione del data frame con il ranking
+- La diagonale è 0 (ovviamente un oggetto confrontato con sé stesso non dà informazioni).
+- L’elemento `[A, B]` è $+0.524$ (z-score corrispondente a 70%), 
+  mentre l’elemento `[B, A]` è $-0.524$.
+
+### Calcolo dei punteggi latenti medi 
+
+Secondo il modello di Thurstone, uno dei modi più semplici per posizionare ogni oggetto sulla scala latente è calcolare, per ogni riga, la **media** degli z-score rispetto agli altri oggetti. L’idea è che questa media costituisca una stima della “posizione” dell’oggetto sulla scala latente di preferenza.
+
+```{r}
+# Calcoliamo la media degli z-score per ogni riga (oggetto)
+latent_scores <- rowMeans(z_matrix)
+latent_scores
+```
+
+Per esempio: 
+
+```{r}
+c(0.000,  0.524, 0.842) |> mean()
+```
+
+Se `latent_scores["A"]` è più alto degli altri, significa che A si colloca in media “più a destra” (o più in alto) sulla scala latente rispetto a B e C (cioè, è mediamente più preferito).
+
+### Creazione del ranking finale
+
+Infine, ordiniamo gli oggetti in base a questi punteggi latenti. Il risultato è un data frame con:
+
+1. Il nome dell’oggetto.
+2. Il suo punteggio latente medio.
+3. L’ordine di ranking (da più alto a più basso).
+
+```{r}
 ranking <- data.frame(
-  Oggetto = names(latent_scores),
+  Oggetto          = names(latent_scores),
   Punteggio_Latente = latent_scores
 ) %>%
   arrange(desc(Punteggio_Latente)) %>%
   mutate(Ranking = row_number())
 
-# Stampa del ranking finale
-print(ranking)
+ranking
 ```
 
-Spiegazione:
+### Interpretazione
 
-1. **Definizione delle preferenze**: Creiamo un data frame con le coppie di oggetti confrontati e le percentuali di preferenza.
-2. **Trasformazione in z-score**: Convertiamo le percentuali in z-score usando `qnorm()`.
-3. **Creazione della matrice delle preferenze**: Inizializziamo una matrice quadrata con gli oggetti e assegnamo gli z-score alle rispettive posizioni.
-4. **Calcolo del punteggio latente**: Per ogni oggetto, calcoliamo la media degli z-score rispetto agli altri oggetti.
-5. **Creazione del ranking**: Ordiniamo gli oggetti in base ai punteggi latenti.
+- **Oggetti con punteggi latenti più alti**: sono quelli preferiti più spesso dagli intervistati.  
+- **Oggetti con punteggi latenti più bassi**: sono quelli meno preferiti.
 
-Il risultato mostrerà un ranking basato sulle preferenze aggregate, riflettendo l'ordine degli oggetti sulla scala latente di preferenza.
+Se ad esempio `A` ha un punteggio latente di 0.5, `B` di 0.1 e `C` di -0.6, allora l’ordine di preferenza sarà A > B > C.
+
+In conclusione, questa è la logica di base dello **Scaling di Thurstone (caso V)**, che assume varianza costante degli errori di giudizio e distribuzioni normali per i punteggi latenti. Nella pratica, se si hanno molti oggetti (non solo 3), si procede alla raccolta di tutte le percentuali pairwise e poi si utilizza un procedimento analogo (eventualmente affinandolo con tecniche di stima più complesse).
+
+## Scaling Fechneriano
+
+Un altro esempio di scaling psicologico riguarda lo scaling fechneriano. Faccio qui riferimento ad uno studio condotto un po' di tempo fa nell'ambito delle Vision Sciences. 
+
+Nello studio di @domini2009intrinsic, abbiamo utilizzato il modello *Intrinsic Constraints* per correlare la **profondità visiva percepita** di un oggetto tridimensionale con i principi teorici dello **scaling sensoriale Fechneriano**. Quest’ultimo, basato sulle teorie psicofisiche di Fechner, prevede la costruzione di una scala psicofisica per attributi sensoriali mediante l’**integrazione cumulativa di incrementi psicometrici**, in particolare delle *Just Noticeable Differences* (JNDs). L’obiettivo della ricerca era progettare stimoli visivi caratterizzati da diversi indizi di profondità (stereopsi, parallasse di movimento, ecc.) in modo da indurre una **percezione soggettiva equivalente della profondità 3D**. Secondo questa logica, oggetti definiti da cue visivi distinti dovrebbero risultare percettivamente equiparabili in termini di profondità qualora fossero associati a un **numero identico di JNDs**. In altre parole, l’uniformità percettiva emerge quando gli stimoli, pur differendo negli indizi di profondità, raggiungono la stessa soglia di discriminabilità psicofisica.
+
 
 ## Studio sulle preferenze riguardanti le caratteristiche dell'occupazione ideale
 
@@ -107,6 +178,8 @@ I dati utilizzati in questo studio sono stati raccolti nell'ambito di una ricerc
 7. Interazione Sociale (Interazione)
 8. Ambiente Competitivo (Competizione)
 9. Ambiente Piacevole e Sicuro (Sicurezza)
+
+L'obiettivo è identificare la struttura latente delle preferenze attraverso il modello di scaling di Thurstone (Caso V), tecnica psicometrica classica per l'analisi delle preferenze comparative.
 
 Un punteggio di 1 attribuito a qualsiasi aspetto lavorativo indica che tale aspetto era il più importante per quel partecipante, mentre un punteggio di 9 indica che era il meno importante.
 
