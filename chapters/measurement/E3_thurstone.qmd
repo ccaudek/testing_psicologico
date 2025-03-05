@@ -6,157 +6,164 @@ library("rio")
 library("psych")
 ```
 
-## Introduzione allo Scaling di Thurstone
+## Il Modello Thurstoniano
 
-Lo scaling di Thurstone, sviluppato da Louis Leon Thurstone nel 1931, è un approccio statistico che mira a modellare dati di ranking soggettivo. I dati di ranking soggettivo si producono quando le persone ordinano un insieme di elementi o stimoli secondo un criterio particolare. Questo tipo di dati è particolarmente utile quando è più semplice per i partecipanti esprimere una preferenza relativa piuttosto che stime quantitative precise.
+Il modello Thurstoniano fornisce un quadro statistico per analizzare e interpretare preferenze o ranking di oggetti (o stimoli) da parte di singoli individui. L’idea di base è che, dietro i ranking osservati, esista una scala latente continua, non direttamente misurabile, dove ogni individuo assegna un punteggio personale a ciascun oggetto. Tali punteggi individuali, sebbene soggettivi, possono essere descritti complessivamente su una dimensione unica, grazie a ipotesi specifiche sulle distribuzioni di questi punteggi.
 
-### Il Modello Thurstoniano 
+Più in dettaglio, il modello ipotizza che:
 
-Il modello Thurstoniano rappresenta un approccio statistico per analizzare e interpretare le preferenze o i ranking individuali rispetto a vari oggetti o stimoli. Questo modello si basa sull'idea che esista una scala latente, ovvero una dimensione non direttamente osservabile, attorno alla quale si distribuiscono i ranking individuali. In altre parole, ogni individuo assegna un punteggio ad ogni oggetto basandosi su criteri personali, ma queste valutazioni individuali sono influenzate da una percezione collettiva o aggregata che può essere descritta su una scala continua latente.
+- Le utilità (o punteggi) latenti siano distribuite normalmente.
+Ogni oggetto possiede una distribuzione gaussiana dei propri punteggi latenti nella popolazione.
+- Le distribuzioni differiscano nelle medie, ma abbiano la stessa varianza.
+Nel Caso V di Thurstone, tutte le distribuzioni hanno una varianza comune, mentre le medie possono variare da un oggetto all’altro (alcuni oggetti sono mediamente più apprezzati di altri).
 
-Il principale obiettivo del modello Thurstoniano è di trasformare queste medie di ranking latenti aggregati, che esistono su una scala continua, in un ranking discreto che possiamo interpretare più facilmente. Per farlo, il modello si avvale di alcune ipotesi chiave:
+Sulla base di questi presupposti, si procede così:
 
-1. **Distribuzione Gaussiana**: Si assume che il ranking latente per ciascun oggetto possa essere descritto da una distribuzione gaussiana. 
+- Si calcola, per ciascuna coppia di oggetti, la proporzione di individui che preferisce un oggetto all’altro.
+- Tali proporzioni vengono convertite in z-score (percentili della distribuzione normale cumulativa) per stimare quanto un oggetto supera un altro in termini di deviazioni standard.
+- Sommando o mediando opportunamente questi z-score, si ottiene una stima dell’utilità media (ovvero la media della distribuzione normale latente) di ogni oggetto.
+Di solito, per identificare il modello, si fissa a zero la media di un oggetto (ad esempio, quello meno desiderato).
 
-2. **Media Differenziata, Varianza Costante**: Il modello presuppone che le distribuzioni gaussiane dei ranking per ciascun oggetto differiscano tra loro solo per la media, mantenendo costante la varianza (scaling di Thurstone caso V). Questo implica che, sebbene gli oggetti possano avere livelli di preferenza medi diversi (alcuni potrebbero essere generalmente preferiti ad altri), la variabilità delle valutazioni (quanto le opinioni dei rispondenti differiscono tra loro) è la stessa per tutti gli oggetti.
+Questa procedura consente di trasformare i dati di ranking discreti in stime numeriche di utilità psicologica, evidenziando le differenze relative di importanza fra gli oggetti analizzati.
 
-Per posizionare gli oggetti sulla scala di Thurstone, si procede nel seguente modo:
 
-- Si calcola la proporzione di rispondenti che preferiscono un oggetto rispetto a ciascuno degli altri.
-- Si determinano i corrispondenti percentile (z-scores) della distribuzione cumulativa normale, che ci dicono quante deviazioni standard un valore è distante dalla media.
-- Si calcola la media di questi z-scores per ciascun oggetto.
+## Tutorial
 
-Di seguito propongo un esempio più lineare e coerente dello scaling di Thurstone per tre oggetti (A, B e C), assieme a una spiegazione puntuale dei vari passaggi. 
+Nel seguente esercizio vedremo come eseguire uno scaling thurstoniano su dati di preferenze (o scelte) e ottenere delle stime delle *utilità* psicologiche di una serie di oggetti o caratteristiche confrontate fra loro. In altre parole, date le classifiche (rank) osservate, vogliamo inferire quali possano essere le distribuzioni di “valore psicologico” che hanno generato tali preferenze. Per stimare le utilità non osservate a partire dalle preferenze osservate, si ipotizza che le utilità siano distribuite normalmente con la stessa varianza (ipotesi del “Caso V” di Thurstone).
 
-## Esempio
+### Studio delle preferenze per alcune caratteristiche lavorative
 
-Immaginiamo di avere tre oggetti – A, B e C – per cui abbiamo raccolto preferenze pairwise (cioè a coppie). Ipotizziamo di aver rilevato le seguenti percentuali di preferenza:
+I dati di questo esempio provengono (in forma semplificata) da uno studio sulla motivazione al lavoro, condotto su $N=1100$ partecipanti. A ogni partecipante è stato chiesto di ordinare in base all’importanza nove possibili caratteristiche di un lavoro ideale (assegnando il rank 1 alla più importante e il rank 9 alla meno importante). Le nove caratteristiche, qui elencate con i nomi delle colonne corrispondenti, sono:
 
-- **A** è preferito a **B** dal 70% dei rispondenti.
-- **A** è preferito a **C** dall’80% dei rispondenti.
-- **B** è preferito a **C** dal 60% dei rispondenti.
+1.  **Ambiente di Sostegno (Support)**
+2.  **Lavoro Stimolante (Challenge)**
+3.  **Prospettive di Carriera (Career)**
+4.  **Integrità Etica (Ethics)**
+5.  **Autonomia e Impatto Personale (Autonomy)**
+6.  **Opportunità di Crescita (Development)**
+7.  **Interazione Sociale (Interaction)**
+8.  **Competizione (Competition)**
+9.  **Ambiente e Sicurezza (Safety)**
 
-Quindi, se chiediamo ad un gruppo di persone di scegliere tra A e B, il 70% sceglie A, mentre se chiediamo di scegliere tra A e C, l’80% sceglie A; tra B e C, il 60% sceglie B.
 
-### Creazione del data frame delle preferenze
+Di seguito, illustriamo passo dopo passo l’analisi con il pacchetto **psych** di R.
 
-In R, possiamo creare un piccolo data frame (chiamato `preferences`) che contiene queste informazioni. Ciascuna riga riporta:
+### Passo 1. Lettura e ispezione dei dati
 
-1. La prima colonna (`obj1`): l’oggetto preferito dalla proporzione `p`.
-2. La seconda colonna (`obj2`): l’altro oggetto del confronto.
-3. La terza colonna (`p`): la proporzione di rispondenti che preferisce `obj1` rispetto a `obj2`.
-
-```{r}
-# Definiamo le preferenze pairwise
-preferences <- data.frame(
-  obj1 = c("A", "A", "B"),
-  obj2 = c("B", "C", "C"),
-  p    = c(0.70, 0.80, 0.60)
-)
-preferences
-```
-
-- Prima riga: “A vs. B, p=0.70” significa che il 70% preferisce A rispetto a B.
-- Seconda riga: “A vs. C, p=0.80” significa che l’80% preferisce A rispetto a C.
-- Terza riga: “B vs. C, p=0.60” significa che il 60% preferisce B rispetto a C.
-
-### Conversione delle percentuali in z-score (qnorm)
-
-Il modello di Thurstone (caso V) prevede che queste proporzioni siano interpretabili come aree cumulative di una distribuzione normale standard. Se ad esempio il 70% preferisce A a B, questo 0.70 è la probabilità cumulata (fino a uno z-score positivo). Per convertire una proporzione in uno z-score, utilizziamo la funzione `qnorm()`. 
+Il file di dati (ad esempio, `JobFeatures.txt`) contiene le classifiche di 1100 partecipanti, ciascuno con i ranghi per le 9 caratteristiche. Per leggere il file in RStudio si può usare la funzione `read.delim()`:
 
 ```{r}
-# Aggiungiamo al data frame la colonna z, che contiene la trasformazione delle 
-# proporzioni in z-score
-preferences <- preferences %>%
-  mutate(z = qnorm(p))
-
-preferences
+JobFeatures <- rio::import("../../data/JobFeatures.txt")
+glimpse(JobFeatures)
 ```
 
-### Creazione di una matrice delle preferenze (z-score matrix)
-
-Ora vogliamo creare una **matrice** (che chiameremo `z_matrix`) contenente gli z-score di tutte le coppie (A-B, A-C, B-C, e anche B-A, C-A, C-B, che saranno i corrispettivi negativi). In altre parole:
-
-- Nelle celle della matrice in cui la riga è `obj1` e la colonna è `obj2`, mettiamo lo z-score positivo (es. 0.52 se il 70% preferisce A a B).
-- Nella cella opposta (dove la riga è `obj2` e la colonna è `obj1`), mettiamo lo z-score negativo (es. -0.52, perché se 70% preferisce A a B, allora il 30% preferisce B a A).
-
-Così otteniamo un quadro simmetrico del grado di preferenza fra tutti gli oggetti.
+Possiamo controllare i nomi delle variabili con:
 
 ```{r}
-# Ricaviamo l’elenco degli oggetti presenti
-objects <- unique(c(preferences$obj1, preferences$obj2))
-
-# Creiamo una matrice quadrata vuota in cui inserire gli z-score
-z_matrix <- matrix(0, 
-                   nrow = length(objects), 
-                   ncol = length(objects),
-                   dimnames = list(objects, objects))
-
-# Compiliamo la matrice: 
-# per ogni riga del data frame `preferences`,
-# inseriamo lo z-score positivo nella posizione [obj1, obj2] e
-# quello negativo nella posizione [obj2, obj1].
-for (i in 1:nrow(preferences)) {
-  riga    <- preferences$obj1[i]
-  colonna <- preferences$obj2[i]
-  valore  <- preferences$z[i]
-  
-  z_matrix[riga, colonna] <- valore
-  z_matrix[colonna, riga] <- -valore
-}
-
-z_matrix
+names(JobFeatures)
 ```
 
-- La diagonale è 0 (ovviamente un oggetto confrontato con sé stesso non dà informazioni).
-- L’elemento `[A, B]` è $+0.524$ (z-score corrispondente a 70%), 
-  mentre l’elemento `[B, A]` è $-0.524$.
-
-### Calcolo dei punteggi latenti medi 
-
-Secondo il modello di Thurstone, uno dei modi più semplici per posizionare ogni oggetto sulla scala latente è calcolare, per ogni riga, la **media** degli z-score rispetto agli altri oggetti. L’idea è che questa media costituisca una stima della “posizione” dell’oggetto sulla scala latente di preferenza.
+La funzione `head(JobFeatures)` mostra le prime righe del data frame:
 
 ```{r}
-# Calcoliamo la media degli z-score per ogni riga (oggetto)
-latent_scores <- rowMeans(z_matrix)
-latent_scores
+head(JobFeatures)
 ```
 
-Per esempio: 
+### Passo 2. Esecuzione dello scaling thurstoniano
+
+Per poter eseguire l’analisi, caricando il pacchetto **psych**. La funzione che ci interessa è `thurstone()`. Se cerchiamo informazioni:
+
+```r
+help("thurstone")
+```
+
+scopriamo che la funzione ha la forma generale:
+
+```r
+thurstone(x, ranks = FALSE, digits = 2)
+```
+
+- **x**: il set di dati su cui eseguire lo scaling.
+- **ranks**: se `TRUE`, i dati forniti sono ranghi raw; se `FALSE`, ci si aspetta una matrice di proporzioni di scelta (di default è `FALSE`).
+- **digits**: numero di cifre decimali per l’indice di bontà di adattamento (default 2).
+
+Dal momento che abbiamo dati grezzi di ranking, impostiamo `ranks = TRUE`. Il comando:
 
 ```{r}
-c(0.000,  0.524, 0.842) |> mean()
+thurstone(JobFeatures, ranks = TRUE)
 ```
 
-Se `latent_scores["A"]` è più alto degli altri, significa che A si colloca in media “più a destra” (o più in alto) sulla scala latente rispetto a B e C (cioè, è mediamente più preferito).
+restituirà in Console un output simile al seguente:
 
-### Creazione del ranking finale
+```
+Thurstonian scale (case 5) scale values 
+Call: thurstone(x = JobFeatures, ranks = TRUE)
+[1] 0.97 0.93 0.91 0.92 0.60 1.04 0.63 0.00 0.23
 
-Infine, ordiniamo gli oggetti in base a questi punteggi latenti. Il risultato è un data frame con:
+Goodness of fit of model   1
+```
 
-1. Il nome dell’oggetto.
-2. Il suo punteggio latente medio.
-3. L’ordine di ranking (da più alto a più basso).
+- I valori dopo la riga `Call:` sono le **medie** stimate delle utilità psicologiche.  
+- Sono ordinate nello stesso modo in cui le caratteristiche compaiono nel data frame.  
+- Una di queste medie è fissata a 0 (tipicamente, la caratteristica meno preferita viene posta a 0 per identificare il modello).  
+
+
+### Passo 3. Calcolo delle proporzioni di preferenza a coppie
+
+Se assegniamo i risultati della funzione a un oggetto, ad esempio:
 
 ```{r}
-ranking <- data.frame(
-  Oggetto          = names(latent_scores),
-  Punteggio_Latente = latent_scores
-) %>%
-  arrange(desc(Punteggio_Latente)) %>%
-  mutate(Ranking = row_number())
-
-ranking
+scaling <- thurstone(JobFeatures, ranks = TRUE)
 ```
 
-### Interpretazione
+non vediamo nulla stampato in Console, ma l’analisi è stata eseguita. Ora `ls(scaling)` mostra i componenti:
 
-- **Oggetti con punteggi latenti più alti**: sono quelli preferiti più spesso dagli intervistati.  
-- **Oggetti con punteggi latenti più bassi**: sono quelli meno preferiti.
+```{r}
+ls(scaling)
+```
 
-Se ad esempio `A` ha un punteggio latente di 0.5, `B` di 0.1 e `C` di -0.6, allora l’ordine di preferenza sarà A > B > C.
+- `scaling$scale` contiene i valori medi di utilità, già visti.  
+- `scaling$choice` contiene la **matrice delle proporzioni di scelta** (9×9). Ogni cella $(i, j)$ indica la proporzione di partecipanti che preferiscono la caratteristica j rispetto alla caratteristica i.  
 
-In conclusione, questa è la logica di base dello **Scaling di Thurstone (caso V)**, che assume varianza costante degli errori di giudizio e distribuzioni normali per i punteggi latenti. Nella pratica, se si hanno molti oggetti (non solo 3), si procede alla raccolta di tutte le percentuali pairwise e poi si utilizza un procedimento analogo (eventualmente affinandolo con tecniche di stima più complesse).
+```{r}
+scaling$choice |> 
+  round(2)
+```
+
+Se, per esempio, la cella $(8,6)$ vale 0.853, significa che l’**8ª caratteristica** è preferita alla **6ª** dall’85.3% del campione (o dei ranghi aggregati).
+
+### Passo 4. Valutazione dell’adattamento del modello
+
+Possiamo esaminare gli scarti (residui) confrontando le proporzioni osservate con quelle predette dal modello:
+
+```{r}
+scaling$residual |> 
+  round(3)
+```
+
+- Residui vicini a zero indicano che il modello di Thurstone (utilità normali) riproduce bene i dati osservati.  
+
+Infine, con:
+
+```{r}
+scaling$GF
+```
+
+otteniamo un indice di bontà di adattamento prossimo a 1, segno che il modello fornisce una buona descrizione dei dati (più il valore è vicino a 1, meglio il modello si adatta).
+
+**In sintesi**  
+- **Thurstonian scaling (Caso V)**: presuppone che le utilità latenti degli oggetti abbiano distribuzioni normali con varianza uguale.  
+- **Procedura**:  
+  1. Lettura dei ranking e ispezione dei dati.  
+  2. Calcolo dello scaling con la funzione `thurstone()`.  
+  3. Interpretazione delle *scale* (medie di utilità).  
+  4. Analisi delle proporzioni di preferenza a coppie.  
+  5. Verifica dei residui e dell’indice *Goodness of Fit* (GF).  
+- **Conclusione interpretativa**:  
+  - Un oggetto con media più alta risulta, in media, più desiderato.  
+  - L’oggetto con media zero (fissata) è quello meno preferito o funge da riferimento.  
+  - Residui bassi e un GF vicino a 1 indicano che il modello spiega bene i dati.
+
 
 ## Scaling Fechneriano
 
@@ -164,107 +171,23 @@ Un altro esempio di scaling psicologico riguarda lo scaling fechneriano. Faccio 
 
 Nello studio di @domini2009intrinsic, abbiamo utilizzato il modello *Intrinsic Constraints* per correlare la **profondità visiva percepita** di un oggetto tridimensionale con i principi teorici dello **scaling sensoriale Fechneriano**. Quest’ultimo, basato sulle teorie psicofisiche di Fechner, prevede la costruzione di una scala psicofisica per attributi sensoriali mediante l’**integrazione cumulativa di incrementi psicometrici**, in particolare delle *Just Noticeable Differences* (JNDs). L’obiettivo della ricerca era progettare stimoli visivi caratterizzati da diversi indizi di profondità (stereopsi, parallasse di movimento, ecc.) in modo da indurre una **percezione soggettiva equivalente della profondità 3D**. Secondo questa logica, oggetti definiti da cue visivi distinti dovrebbero risultare percettivamente equiparabili in termini di profondità qualora fossero associati a un **numero identico di JNDs**. In altre parole, l’uniformità percettiva emerge quando gli stimoli, pur differendo negli indizi di profondità, raggiungono la stessa soglia di discriminabilità psicofisica.
 
+## Riflessioni Conclusive
 
-## Studio sulle preferenze riguardanti le caratteristiche dell'occupazione ideale
+Lo **scaling thurstoniano (Caso V)** trasforma i ranking discreti in stime continue di utilità, consentendo di evidenziare differenze relative fra le caratteristiche analizzate e di quantificare la “distanza” tra gli oggetti su una scala latente comune. Quando il numero di oggetti è elevato, si procede al calcolo di tutte le proporzioni di preferenza pairwise, applicando la stessa logica, eventualmente integrata con metodi di stima più sofisticati.
 
-I dati utilizzati in questo studio sono stati raccolti nell'ambito di una ricerca sulla motivazione lavorativa condotta da Ilke Inceoglu. Nel corso di questa indagine, 1079 partecipanti sono stati invitati a classificare nove aspetti lavorativi in base all'importanza che desideravano che fossero presenti nella loro occupazione ideale:
+Questa metodologia, introdotta da **Louis Leon Thurstone** negli anni Venti, è una delle prime forme di *scaling* psicologico. Con il termine *scaling* si indica il processo di collocare stimoli (o concetti) su un continuum, in base al grado in cui essi possiedono una certa proprietà psicologica. Nel *Caso V*, si assume che tutte le distribuzioni di punteggi latenti abbiano la stessa varianza, ipotesi che semplifica il modello ma può risultare limitante nella pratica, poiché la coerenza dei giudizi e la natura degli stimoli possono variare notevolmente.
 
-1. Ambiente di Supporto (Supporto)
-2. Lavoro Stimolante (Sfida)
-3. Progressione di Carriera (Carriera)
-4. Lavoro Etico (Etica)
-5. Controllo sul Lavoro, Impatto Personale (Autonomia)
-6. Sviluppo (Sviluppo)
-7. Interazione Sociale (Interazione)
-8. Ambiente Competitivo (Competizione)
-9. Ambiente Piacevole e Sicuro (Sicurezza)
+Prima di Thurstone, **Gustav Theodor Fechner** (1801-1887) pose le basi della psicofisica proponendo l’idea che la relazione fra l’intensità fisica di uno stimolo e la sua percezione psicologica seguisse una legge logaritmica. Al centro del metodo di Fechner vi è il concetto di *JND* (Just Noticeable Difference, o “differenza appena percepibile”): la più piccola variazione dello stimolo che un individuo è in grado di distinguere da un riferimento. Accumulando queste *unità di percezione* – le JND – Fechner ipotizzò che si potesse costruire una scala psicologica che misurasse l’intensità soggettiva delle sensazioni in funzione dello stimolo fisico.
 
-L'obiettivo è identificare la struttura latente delle preferenze attraverso il modello di scaling di Thurstone (Caso V), tecnica psicometrica classica per l'analisi delle preferenze comparative.
+Dal punto di vista concettuale, lo scaling di Fechner precede e ispira quello di Thurstone in quanto entrambi i metodi assumono l’esistenza di **variabili latenti** alla base dei giudizi individuali. Nel caso di Fechner, l’obiettivo principale era correlare la misura fisica di uno stimolo (ad esempio, il peso o la luminosità) alla sensazione percepita dal soggetto, segmentando la scala fisica in unità psicologicamente equipollenti (le JND). Thurstone, invece, ha esteso questo paradigma al contesto dei giudizi di preferenza e classificazione, introducendo la nozione di distribuzioni normali per i punteggi latenti e di varianza costante tra gli oggetti.
 
-Un punteggio di 1 attribuito a qualsiasi aspetto lavorativo indica che tale aspetto era il più importante per quel partecipante, mentre un punteggio di 9 indica che era il meno importante.
+### Limiti e prospettive
 
-```{r}
-JobFeatures <- rio::import("../../data/JobFeatures.txt")
-glimpse(JobFeatures)
-```
+Una criticità rilevante nello scaling thurstoniano è la **mancanza di procedure consolidate per la falsificazione interna** del modello: a differenza, ad esempio, di quanto avviene nello *scaling di Mokken*, dove si può testare la monotonicità delle risposte. Se i dati violano l’assunzione di varianza costante o di un unico continuum psicologico condiviso, il modello di Thurstone non fornisce criteri immediati per identificare o risolvere tali problemi.
 
-Consideriamo i dati del primo rispondente:
+Nel panorama odierno, molti studiosi preferiscono approcci basati sulla **Teoria della Risposta all’Item (IRT)**, che offre una rappresentazione più flessibile: la probabilità di risposta a un item dipende sia dalle sue caratteristiche, sia dal livello latente dell’individuo. L’IRT permette di testare in modo più rigoroso le assunzioni del modello (p. es. la monotonicità e l’indipendenza locale) e di stimare con maggiore precisione sia le proprietà degli item, sia i parametri delle persone.
 
-```{r}
-JobFeatures[1, ]
-```
-
-Questo rispondente ha risposto assegnando la caratteristica più importante dell'impego a "Interaction", seguita da "Autonomy". L'ultima preferenza è "Safety".
-
-Eseguiamo lo scaling di Thurstone usando la funzione `thurstone` del pacchetto psych:
-
-```{r}
-scaling <- psych::thurstone(JobFeatures, ranks = TRUE)
-```
-
-Gli attributi dell'oggetto `scaling` prodotto da `thurstone()` possono essere elencati nel modo seguente.
-
-```{r}
-attributes(scaling)
-```
-
-I risultati dello scaling si ottengono nel modo seguente. Sono elencati nell'ordine fornito sopra, ovvero Support,	Challenge,	Career,	Ethics,	Autonomy,	Development,	Interaction,	Competition	e Safety.
-
-Una media alta indica che i partecipanti attribuiscono un alto valore a questo aspetto lavorativo rispetto agli altri. Tuttavia, poiché le preferenze sono sempre relative, è impossibile identificare in maniera univoca tutte le medie. Pertanto, una delle medie deve essere fissata a un valore arbitrario. È consuetudine fissare la media dell'aspetto meno preferito a 0. Quindi, tutte le altre medie sono positive.
-
-```{r}
-scaling$scale |> print()
-```
-
-La media più bassa (0.0) corrisponde all'8° aspetto, Competizione, mentre la media più alta (1.04) corrisponde al 6° aspetto, Sviluppo. Ciò significa che l'ambiente competitivo era il meno desiderato, mentre le opportunità di sviluppo personale erano le più desiderate dalle persone nel loro lavoro ideale. Gli altri aspetti sono stati valutati come aventi un'importanza relativa intermedia a queste due, con Sicurezza che ha una media bassa (0.23) - appena superiore a 0 per la Competizione, mentre Supporto, Sfida, Carriera ed Etica hanno medie simili (intorno a 0.9). Autonomia e Interazione hanno medie moderate simili intorno a 0.6.
-
-L'istruzione seguente produce una matrice 9x9 contenente le proporzioni dei partecipanti nel campione che hanno preferito l'aspetto nella colonna rispetto all'aspetto nella riga. Nella matrice risultante, le righe e le colonne seguono l'ordine delle variabili nel file originale.
-
-```{r}
-scaling$choice |> 
-  round(2)
-```
-
-Il valore maggiore è
-
-```{r}
-max(scaling$choice)
-```
-
-Questo valore, 0.8526, rappresenta la proporzione di partecipanti che hanno preferito l'8° aspetto, Competizione, al 6° aspetto, Sviluppo, ed è il valore più grande nella matrice precedente: questa coppia di caratteristiche ha la preferenza più decisa per un aspetto rispetto all'altro.
-
-La preferenza più decisa in termini di proporzioni di persone che scelgono un aspetto rispetto all'altro deve avere la maggiore distanza/differenza sulla scala delle preferenze soggettive (il 6° aspetto, Sviluppo, deve avere una preferenza percepita media molto più alta dell'8° aspetto, Competizione). Questo risultato è effettivamente in linea con i risultati per le medie di utilità, dove la media dello Sviluppo è la più alta con un valore di 1.04 e la Competizione è la più bassa con un valore di 0.
-
-Consideriamo i residui del modello:
-
-```{r}
-scaling$residual |> 
-  round(2)
-```
-
-L'istruzione precedente produce una matrice 9x9 contenente le differenze tra le proporzioni osservate (la matrice delle scelte) e le proporzioni attese (proporzioni che preferiscono l'aspetto nella riga rispetto all'aspetto nella colonna, che sarebbe atteso in base alle distribuzioni normali standard delle preferenze soggettive intorno alle medie scalate come sopra). Gli scarti tra i valori attesi e quelli osservati sono il modo più diretto di misurare se un modello (in questo caso, il modello proposto da Thurstone) "si adatta" ai dati osservati. Gli scarti piccoli (vicini allo zero) indicano che ci sono piccole discrepanze tra le scelte osservate e le scelte previste dal modello; il che significa che il modello che abbiamo adottato è piuttosto buono. 
-
-Infine, esaminiamo un indice di bontà di adattamento:
-
-```{r}
-scaling$GF
-```
-
-Il valore GF (Goodness of Fit) viene calcolato come 1 meno la somma dei residui al quadrato divisi per i valori osservati al quadrato. Quando i residui sono quasi zero, i loro rapporti al quadrato rispetto alle proporzioni osservate dovrebbero anch'essi avvicinarsi a zero. Di conseguenza, l'indice di bontà di adattamento di un modello ben adattato dovrebbe essere vicino a 1.
-
-Nella nostra analisi, tutti i residui sono notevolmente piccoli, indicando una stretta corrispondenza tra le scelte osservate (proporzioni di preferenze per una caratteristica rispetto a un'altra). Questo allineamento preciso si riflette nell'indice GF, che è quasi 1, suggerendo che il modello di Thurstone cattura adeguatamente le proprietà dei dati relativi alle caratteristiche dell'occupazione ideale.
-
-## Considerazioni conclusive
-
-Questa metodologia, introdotta da Louis Leon Thurstone negli anni '20, rappresenta una delle forme più semplici e intuitive di scaling, dove per "scaling" si intende il processo di costruzione di un ordinamento di valori lungo un continuum psicologico. Lo scaling thurstoniano si basa sulla premessa che sia possibile ordinare stimoli o concetti secondo il grado in cui incarnano una certa proprietà psicologica, creando così una scala di misura che riflette le percezioni, le attitudini o i giudizi degli individui.
-
-Uno degli aspetti centrali dello scaling di Thurstone, in particolare il caso V della sua legge del giudizio comparativo, è l'assunzione che le distribuzioni di ranking degli stimoli abbiano varianze uguali. Questa ipotesi, pur facilitando la modellizzazione matematica e l'interpretazione dei dati, è stata oggetto di critiche poiché difficilmente riscontrabile nella pratica. Le varianze possono differire significativamente tra gli stimoli a seconda della coerenza dei giudizi degli individui e della natura degli stimoli stessi. Questa limitazione ha stimolato lo sviluppo e l'adozione di metodi alternativi più flessibili per affrontare la complessità dello scaling psicologico.
-
-Un'ulteriore criticità metodologica, spesso poco discussa, riguarda la falsificazione della coerenza interna del modello. Ad esempio, nello scaling di Mokken si assume la monotonicità, ovvero che la probabilità di una risposta positiva a un item aumenti monotonamente con l'aumentare del livello del tratto psicologico misurato. Tale assunzione può essere esplicitamente verificata sui dati empirici, e quando viene violata indica un problema di validità interna della scala. Lo scaling di Thurstone, tuttavia, non prevede procedure sistematiche o strumenti consolidati per testare esplicitamente e falsificare la validità interna del modello. In altre parole, se gli individui forniscono risposte non coerenti con l'assunzione di uguale varianza o di un unico continuum psicologico comune, il modello thurstoniano stesso non offre criteri chiari per identificare e gestire tali violazioni. Questa assenza di procedure di falsificazione interna rappresenta uno dei limiti più significativi del modello di Thurstone.
-
-Nel panorama contemporaneo, l'approccio più diffuso e metodologicamente avanzato per lo scaling psicologico deriva dalla Teoria della Risposta all'Item (IRT). L'IRT supera alcune delle limitazioni intrinseche allo scaling thurstoniano offrendo un quadro teorico e metodologico che considera la probabilità di una certa risposta a un item in funzione delle caratteristiche dell'item stesso e del livello dell'attributo psicologico del rispondente. Questo approccio permette di gestire in modo più efficace la varianza tra gli stimoli, di testare esplicitamente assunzioni chiave (come la monotonicità e l'indipendenza locale) e di fornire stime più accurate delle proprietà psicometriche degli item e delle caratteristiche degli individui.
-
-In conclusione, mentre lo scaling thurstoniano ha rappresentato un passo fondamentale nello sviluppo degli strumenti di misurazione in psicologia, l'evoluzione metodologica e teorica ha portato a preferire approcci basati sull'IRT. Questo non diminuisce il valore storico e didattico dello scaling di Thurstone, che continua a essere un esempio introduttivo prezioso per comprendere i concetti fondamentali dello scaling psicologico. Tuttavia, è nell'ambito della IRT che attualmente si trovano le soluzioni più robuste e sofisticate per affrontare le sfide della misurazione psicologica, guidando la ricerca e l'applicazione pratica nel campo della psicometria contemporanea.
+**In conclusione**, lo scaling thurstoniano è stato un passo fondamentale nello sviluppo degli strumenti di misurazione in psicologia, ereditando la tensione di Fechner nel voler “misurare l’immisurabile”. Nonostante la sua eleganza e semplicità introduttiva, diverse questioni tecniche (come l’ipotesi di varianza costante) e l’assenza di metodi di falsificazione robusti hanno portato, nel tempo, allo sviluppo di approcci più potenti e flessibili, tra cui la **Teoria della Risposta all’Item**. Rimane comunque un importante riferimento storico e didattico per comprendere la logica dello scaling psicologico e il percorso che ha condotto agli strumenti sofisticati oggi disponibili.
 
 ## Sesssion Info
 
