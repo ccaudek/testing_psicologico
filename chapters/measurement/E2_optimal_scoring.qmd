@@ -1,16 +1,47 @@
 # ✏️ Esercizi
 
-## Ottimizzazione dello scoring dei dati di questionari ordinali
+## Ottimizzazione dello scoring per questionari a dati ordinali  
 
-Nell'Esercizio precedente, abbiamo calcolato i punteggi del **Strength and Difficulties Questionnaire (SDQ)** utilizzando il cosiddetto approccio della **"scalatura Likert"**. In questo metodo, alle categorie di risposta "Non vero", "Parzialmente vero" e "Assolutamente vero" sono stati assegnati interi consecutivi, rispettivamente 0-1-2. Sebbene questo assegnamento rifletta apparentemente un grado crescente di accordo nelle opzioni di risposta, la scelta degli interi è stata arbitraria: non vi era un motivo particolare per assegnare 0-1-2 anziché, ad esempio, 1-2-3. Questo tipo di assegnazione arbitraria dei punteggi agli item è comunemente chiamato **"misurazione per decreto"** (*measurement by fiat*). 
+Nel precedente esercizio, i punteggi del *Questionario sulle Difficoltà e Risorse (SDQ)* sono stati calcolati mediante **scalatura Likert tradizionale**, assegnando in modo sequenziale i valori 0, 1 e 2 alle categorie "Non vero", "Parzialmente vero" e "Assolutamente vero". Sebbene questa assegnazione rifletta intuitivamente una progressione nell’accordo con le affermazioni, la scelta degli interi specifici (0-1-2 anziché 1-2-3 o altri) è puramente arbitraria, un metodo noto in letteratura come **"misurazione per decreto"** (*measurement by fiat*).  
 
-In questo secondo esercizio, cercheremo di individuare punteggi "ottimali" per le risposte ordinali al SDQ. Per "ottimali" intendiamo che i punteggi assegnati non siano semplicemente arbitrari, ma rappresentino la "migliore" scelta possibile in base a un determinato criterio statistico.
+In questo secondo esercizio, proponiamo un approccio alternativo volto a determinare punteggi **ottimali** per le risposte ordinali dell’SDQ, dove "ottimalità" è definita in base a criteri statistici rigorosi. L’obiettivo è superare l’arbitrarietà della scalatura tradizionale, identificando valori che massimizzino la coerenza psicometrica della scala.  
 
-Esistono diversi modi per "ottimizzare" i punteggi degli item. In questo caso, ci concentreremo sulla massimizzazione del rapporto tra la varianza del punteggio totale e la somma delle varianze dei punteggi degli item. In psicometria, soddisfare questo criterio significa massimizzare la somma delle correlazioni tra gli item e, di conseguenza, migliorare la **consistenza interna** del test, misurata, ad esempio, dall'**alfa di Cronbach**.
+## Obiettivo di ottimizzazione 
 
-Questo approccio consente di definire punteggi più informativi, che riflettono meglio la coerenza tra le risposte degli item e il punteggio totale del test, migliorando la qualità psicometrica della scala.
+Trovare i punteggi $s_j$ (pesi numerici) assegnati alle categorie ordinali degli item che massimizzino la funzione:  
 
-Per fare un esempio, useremo di nuovo gli item della scala  **Sintomi Emotivi**. Utilizzeremo il pacchetto **`aspect`**, che semplifica l'ottimizzazione della scalatura grazie a una gamma di opzioni utili e a funzioni grafiche integrate. 
+$$
+\mathcal{R} = \frac{\text{Var}(T)}{\sum_{i=1}^k \text{Var}(X_i)} ,
+$$
+
+dove: 
+
+- $T = \sum_{i=1}^k X_i$ è il punteggio totale del test ($k =$ numero di item),  
+- $\text{Var}(T)$ è la varianza del punteggio totale,  
+- $\text{Var}(X_i)$ è la varianza del punteggio dell'$i$-esimo item.  
+
+**Relazione con l'affidabilità**:  
+Il rapporto $\mathcal{R}$ è legato all’**alfa di Cronbach** ($\alpha$) dalla relazione:  
+$$
+\alpha = \frac{k}{k-1} \left( 1 - \frac{\sum_{i=1}^k \text{Var}(X_i)}{\text{Var}(T)} \right) = \frac{k}{k-1} \left( 1 - \frac{1}{\mathcal{R}} \right) .
+$$  
+Massimizzare $\mathcal{R}$ equivale quindi a massimizzare $\alpha$, garantendo che gli item siano **coerenti** nel misurare il costrutto latente.  
+
+**Interpretazione**:  
+
+- Un $\mathcal{R}$ elevato implica che la varianza totale $\text{Var}(T)$ è spiegata principalmente dalle **covarianze tra gli item** (segnale condiviso), anziché dalla varianza individuale (rumore).  
+- Ciò ottimizza la **validità di costrutto** e la **sensibilità discriminante** del test.
+
+
+## Implementazione con il pacchetto `aspect`
+
+Per illustrare il metodo, focalizziamoci sulla sottoscala **Sintomi Emotivi** dell’SDQ. Utilizzeremo il pacchetto R **`aspect`**, progettato per ottimizzare le scalature attraverso algoritmi flessibili e strumenti visuali integrati. Questo strumento permette di: 
+
+1. Assegnare punteggi non lineari alle categorie ordinali, adattandosi alla struttura latente dei dati.  
+2. Visualizzare graficamente l’impatto delle diverse scalature sull’affidabilità del test.  
+3. Confrontare soluzioni alternative in modo efficiente.  
+
+L’approccio ottimizzato non solo migliora la qualità metriche della scala, ma fornisce anche informazioni sulla risonanza psicologica degli item, rendendo i punteggi totali più rappresentativi del costrutto misurato.
 
 ```{r}
 source("../../code/_common.R")
@@ -135,7 +166,7 @@ Questo approccio offre un metodo rigoroso per ottimizzare la misurazione degli i
 I punteggi ottenuti si ottengono nel modo seguente:
 
 ```{r}
-opt$scoremat
+opt$scoremat |> head()
 ```
 
 Esaminiamo la relazione tra lo scoring basato sul metodo Likert con lo scoring ottimale.

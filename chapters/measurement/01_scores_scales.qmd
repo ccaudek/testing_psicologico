@@ -27,7 +27,7 @@ pacman::p_load(MASS, nortest, missForest, aspect)
 
 ## Introduzione 
 
-Questo capitolo si propone di introdurre l'utilizzo del software "R", ponendo l'attenzione sulla differenza tra valutazioni normative e criteriali. 
+Questo capitolo si propone di introdurre l'utilizzo del software R, ponendo l'attenzione sulla differenza tra valutazioni normative e criteriali. 
 
 ## Tipologie di Dati
 
@@ -280,7 +280,8 @@ quantile(raw_score, .74)
 
 ```{r}
 #| vscode: {languageId: r}
-# Use a different type (see https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample)
+# Use a different type (see https://en.wikipedia.org/wiki/Quantile
+# Estimating_quantiles_from_a_sample)
 quantile(raw_score, .74, type = 6)
 ```
 
@@ -325,7 +326,7 @@ I punteggi T sono una forma specifica di punteggi standardizzati, utilizzati fre
 
 - **Media e Deviazione Standard**: La media fissata a 50 e la deviazione standard di 10 sono scelte per offrire una scala più intuitiva e di facile lettura rispetto agli z-score. Questa trasformazione sposta la scala degli z-score in una gamma numericamente più familiare e più semplice da interpretare per la maggior parte delle persone.
   
-- **Calcolo dei Punteggi T**: Il calcolo dei punteggi T avviene trasformando prima i punteggi grezzi in z-score e poi convertendo questi z-score nella scala dei punteggi T. Matematicamente, se $ Z $ è lo z-score, il punteggio T corrispondente $ T $ è calcolato come:
+- **Calcolo dei Punteggi T**: Il calcolo dei punteggi T avviene trasformando prima i punteggi grezzi in z-score e poi convertendo questi z-score nella scala dei punteggi T. Matematicamente, se $Z$ è lo z-score, il punteggio T corrispondente $T$ è calcolato come:
   
   $$
   T = 50 + 10 \times Z. 
@@ -351,10 +352,10 @@ c(mean = mean(T_score), sd = sd(T_score))
 
 ### Punteggi Stanini
 
-I punteggi Stanini (dall'inglese "standard nine") rappresentano un metodo standardizzato per categorizzare i risultati dei test in psicometria, dividendoli in nove intervalli. Questa scala, progettata per semplificare l'interpretazione dei dati, permette di valutare la posizione relativa di un individuo all'interno di un gruppo di riferimento.
+I punteggi Stanini (dall'inglese "standard nine") rappresentano un metodo standardizzato per **categorizzare** i risultati dei test in psicometria, dividendoli in nove intervalli. Questa scala, progettata per semplificare l'interpretazione dei dati, permette di valutare la posizione relativa di un individuo all'interno di un gruppo di riferimento.
 
 **Come funzionano?**
-Ogni intervallo Stanine corrisponde a un range di punteggi grezzi, con un'ampiezza che può variare leggermente a seconda della distribuzione dei dati. Un punteggio Stanine di 5 indica una prestazione media, mentre valori più alti o più bassi indicano prestazioni rispettivamente superiori o inferiori alla media. È importante notare che i punteggi Stanini sono principalmente utilizzati per confronti relativi all'interno di un gruppo, piuttosto che per misurazioni assolute.
+Ogni intervallo Stanine corrisponde a un range di punteggi grezzi, con un'ampiezza che può variare leggermente a seconda della distribuzione dei dati. Un punteggio Stanine di 5 indica una prestazione media, mentre valori più alti o più bassi indicano prestazioni rispettivamente superiori o inferiori alla media. È importante notare che i punteggi Stanini sono principalmente utilizzati per **confronti relativi** all'interno di un gruppo, piuttosto che per misurazioni assolute.
 
 **Calcolo dei Punteggi Stanini.**
 Per calcolare i punteggi Stanini, è necessario seguire alcuni passaggi:
@@ -424,117 +425,146 @@ La seguente figura proposta da @petersen2024principles illustra le relazioni tra
 
 ### Equivalenti alla Curva Normale (NCE)
 
-Gli Equivalenti alla Curva Normale, noti come NCE (dall'inglese "Normal Curve Equivalents"), sono un tipo di punteggio standardizzato utilizzato in ambito psicometrico. Questi punteggi vengono calcolati per trasformare i punteggi grezzi ottenuti in un test in una scala che rifletta una distribuzione approssimativamente normale. L'obiettivo principale dei punteggi NCE è quello di rendere i punteggi di diverse misure o test direttamente confrontabili, mantenendo una distribuzione che si allinea strettamente con una curva normale standard.
+Gli Equivalenti alla Curva Normale (NCE, dall'inglese "Normal Curve Equivalents") sono un metodo di standardizzazione dei punteggi utilizzato in ambito psicometrico. L’obiettivo principale di questa trasformazione è convertire i punteggi grezzi di un test in una scala che segue approssimativamente una distribuzione normale, facilitando così il confronto diretto tra misure o test diversi.
 
-#### Caratteristiche dei Punteggi NCE
-- **Distribuzione Normalizzata**: I punteggi NCE sono progettati per aderire a una distribuzione normale. Ciò significa che, a differenza di altri tipi di punteggi, i NCE si allineano più da vicino con le caratteristiche di una curva di distribuzione gaussiana, con la maggior parte dei punteggi concentrati intorno alla media e una distribuzione simmetrica verso gli estremi.
-- **Facilità di Comparazione**: Grazie alla loro standardizzazione, i punteggi NCE consentono un confronto diretto e significativo tra le prestazioni in diversi test o misure. Questo è particolarmente utile in contesti educativi e clinici dove è necessario interpretare e confrontare i risultati di diversi test.
+In pratica, il procedimento si articola nei seguenti passaggi:
+- **Calcolo del rango percentuale:** Per ciascun punteggio grezzo si determina la posizione percentuale all’interno della distribuzione.
+- **Mappatura sulla scala normale:** Il rango percentuale viene poi "mappato" su una scala teorica che rispetta le caratteristiche di una distribuzione normale standard (tipicamente con media 50 e una deviazione standard prefissata). 
 
-#### Calcolo e Utilizzo dei Punteggi NCE
-Il calcolo dei punteggi NCE si basa sulla trasformazione dei punteggi grezzi in modo che si adattino a una distribuzione normalizzata. Questo processo implica l'uso di formule matematiche che riallineano i dati grezzi su una scala standard, considerando la media e la deviazione standard del campione normativo.
+È fondamentale sottolineare che questa trasformazione non “normalizza” i dati nel senso di correggere eventuali asimmetrie o deviazioni presenti nella distribuzione originale, ma assegna a ciascun punteggio il valore che esso assumerebbe se la distribuzione fosse perfettamente normale. Ad esempio, un punteggio situato al 84° percentile nella distribuzione grezza viene convertito in un valore equivalente a uno z-score di circa 1, secondo la scala NCE.
 
-Una volta calcolati, i punteggi NCE offrono una visione chiara e immediata delle prestazioni relative di un individuo o di un gruppo, rispetto a un campione normativo. Questo tipo di punteggio è particolarmente utile quando i punteggi grezzi provengono da distribuzioni che non seguono una curva normale, consentendo così un'interpretazione più accurata e standardizzata dei risultati.
+Pertanto, i NCE rappresentano il risultato di una trasformazione non lineare, mirata a rappresentare i punteggi su una scala standardizzata che riflette le proprietà di una distribuzione normale, senza alterare l’ordine dei punteggi originari.
 
-#### Applicazioni Pratiche dei Punteggi NCE
-I punteggi NCE trovano impiego in una varietà di contesti, tra cui:
+Esaminiamo il seguente esempio.
 
-- **Valutazioni Educative**: In ambito scolastico, per confrontare le prestazioni degli studenti in test diversi.
-- **Ricerca Psicologica**: Per analizzare e confrontare i risultati di diversi studi o misure psicometriche.
-- **Pratica Clinica**: Nella valutazione di clienti o pazienti utilizzando diversi strumenti diagnostici.
-
-In conclusione, i punteggi Equivalenti alla Curva Normale rappresentano uno strumento psicometrico potente per standardizzare e confrontare efficacemente i risultati di diversi test o misure, assicurando che questi siano interpretati all'interno di un quadro coerente e comparabile.
-
-Per i dati dell'esempio abbiamo:
+1. Simulazione dei punteggi grezzi.  Creiamo 100 punteggi grezzi simulati da una distribuzione esponenziale (non normale).
 
 ```{r}
-#| vscode: {languageId: r}
-# Using normal quantile
-qnorm_pr <- qnorm(pr / 100)
-# Convert raw scores
-normalized_zscore <- as.vector(qnorm_pr[as.character(raw_score)])
-```
-
-In alternativa, è possibile usare la trasformazione di Box-Cox, che è una tecnica parametrica che cerca di correggere le asimmetrie e trasformare i dati in una forma che approssima una distribuzione normale. È efficace per i dati positivi. La trasformazione è definita come segue:
-
-$$
- y(\lambda) = \begin{cases} \frac{x^\lambda - 1}{\lambda} & \text{se } \lambda \neq 0 \\ \log(x) & \text{se } \lambda = 0 \end{cases},
- $$
-
-dove $x$ è il valore originale e $\lambda$ è il parametro di trasformazione che viene spesso trovato attraverso la massimizzazione della verosimiglianza.
-
-Supponiamo di voler utilizzare la trasformazione di Box-Cox sul nostro set di dati. La procedura è la seguente. Questo codice utilizza la funzione `boxcox` dal pacchetto MASS per trovare il valore di $\lambda$ che massimizza la log-verosimiglianza della trasformazione di Box-Cox applicata ai dati. Poi, utilizza questo $\lambda$ per trasformare i dati.
-
-```{r}
-#| vscode: {languageId: r}
-# Dati di esempio
-set.seed(123) # Per rendere l'esempio riproducibile
-data <- raw_score
-
-# Trova il miglior lambda per la trasformazione di Box-Cox
-bc <- boxcox(data ~ 1, lambda = seq(-2, 2, by = 0.1))
-
-# Calcola la trasformazione di Box-Cox con il lambda ottimale
-lambda_opt <- bc$x[which.max(bc$y)]
-data_transformed <- (data^lambda_opt - 1) / lambda_opt
-```
-
-Avendo trovato i dati trasformati con la procedura Box-Cox, li confrontiamo con gli Equivalenti alla Curva Normale (NCE) calcolati con la procedura usuale.
-
-```{r}
-#| vscode: {languageId: r}
-plot(normalized_zscore, data_transformed)
+set.seed(123)
+n <- 100
+raw_scores <- rexp(n, rate = 1)
 ```
 
 ```{r}
-#| vscode: {languageId: r}
-plot(density(normalized_zscore)) # the shape will be closer to normal
+mean(raw_scores)
+sd(raw_scores)
+```
+
+2. Calcolo dei percentili per i punteggi grezzi. Utilizziamo la formula: $(\text{rank} - 0.5)/n$ per ottenere percentili centrati.
+
+```{r}
+raw_percentiles <- (rank(raw_scores, ties.method = "average") - 0.5) / n
+```
+
+3. Trasformazione in NCE.  Per ogni punteggio calcoliamo lo z-score corrispondente tramite la funzione `qnorm()`.
+
+```{r}
+z_scores <- qnorm(raw_percentiles)
+# Successivamente trasformiamo lo z-score in NCE impostando una media di 50 e una SD di circa 21.06
+nce_scores <- 50 + 21.06 * z_scores
+```
+
+4. Calcolo dei percentili per i punteggi NCE.
+
+```{r}
+nce_percentiles <- (rank(nce_scores, ties.method = "average") - 0.5) / n
 ```
 
 ```{r}
-#| vscode: {languageId: r}
-plot(density((data_transformed - mean(data_transformed)) / sd(data_transformed)))
+summary(nce_percentiles)
 ```
 
-Si osservi che i dati NCE presentano una distribuzione più simile a una curva a forma campanulare rispetto ai dati grezzi.
+5. Creazione di una tabella riassuntiva.
 
 ```{r}
-#| vscode: {languageId: r}
-lillie.test(normalized_zscore)
+df <- data.frame(
+  raw_score = round(raw_scores, 2),
+  raw_percentile = round(raw_percentiles, 2),
+  z_score = round(z_scores, 2),
+  nce_score = round(nce_scores, 2),
+  nce_percentile = round(nce_percentiles, 2)
+)
+head(df)
 ```
+
+6. Plot delle distribuzioni
+
+Dividiamo l'area grafica in due colonne per visualizzare fianco a fianco le distribuzioni.
 
 ```{r}
-#| vscode: {languageId: r}
-lillie.test(data_transformed)
+par(mfrow = c(1, 2))
+
+# Istogramma dei punteggi grezzi
+hist(raw_scores, main = "Distribuzione dei punteggi grezzi",
+     xlab = "Punteggi grezzi", col = "lightblue", breaks = 10)
+
+# Istogramma degli NCE
+hist(nce_scores, main = "Distribuzione degli NCE",
+     xlab = "NCE", col = "lightgreen", breaks = 10)
+
+# Ripristino l'area grafica a una singola finestra
+par(mfrow = c(1, 1))
 ```
 
-## Riflessioni Finali sui Metodi di Trasformazione dei Punteggi
+**Spiegazione passo per passo.**
 
-La trasformazione dei punteggi grezzi in formati più interpretabili è una pratica cruciale in psicometria. Due sono i principali approcci utilizzati per attribuire significato ai punteggi di un test: il riferimento normativo e il riferimento criteriale.
+1. **Simulazione dei punteggi grezzi:**  
+   Utilizziamo una distribuzione esponenziale per simulare dati che non seguono una distribuzione normale. Questo aiuta a mostrare come la trasformazione in NCE “mappa” i punteggi su una scala teoricamente normale.
 
-### Riferimento Normativo
-Nel riferimento normativo, si confronta il punteggio di un individuo con quello medio del gruppo normativo, ovvero gli altri soggetti che hanno svolto lo stesso test. Ci sono diversi tipi di punteggi normati, ciascuno con i suoi specifici vantaggi e limitazioni:
+2. **Calcolo dei percentili:**  
+   Con la funzione `rank()` e la formula $(\text{rank} - 0.5)/n$ otteniamo i percentili dei punteggi grezzi, che servono come base per la trasformazione.
 
-- **Punteggi Percentili**: Questi punteggi sono intuitivi e offrono un'indicazione immediata della posizione relativa di un individuo all'interno di un gruppo. Tuttavia, sono una scala ordinale e non si prestano bene a calcoli matematici più complessi.
-  
-- **Punteggi Standardizzati**: Gli z-score e i T-scores rientrano in questa categoria. Sono scalari a intervallo, quindi adatti a operazioni matematiche. Mantengono la forma distributiva originale dei punteggi grezzi, rendendo più agevole la loro elaborazione statistica.
+3. **Trasformazione in NCE:**  
+   - Il comando `qnorm(raw_percentiles)` trasforma i percentili nel corrispondente z-score (ovvero, il valore teorico in una distribuzione normale standard).
+   - Applicando la formula $\text{NCE} = 50 + 21.06 \times \text{z\_score}$ otteniamo i punteggi NCE, che hanno una media di 50 e una deviazione standard di circa 21.06.
 
-### Riferimento Criteriale
-Al contrario del riferimento normativo, il riferimento criteriale confronta i punteggi di un individuo con uno standard prestabilito o un criterio specifico, piuttosto che con i punteggi di altri individui.
+4. **Calcolo dei percentili dei NCE:**  
+   Viene eseguito lo stesso procedimento usato per i punteggi grezzi, per verificare che l’ordinamento rimanga inalterato.
 
-### Trasformazioni per la Normalizzazione
-Per ottenere una distribuzione dei punteggi più vicina alla curva normale, si possono utilizzare trasformazioni come gli stanini o gli NCE (Normal Curve Equivalents). Questi metodi di normalizzazione aiutano a standardizzare la distribuzione dei punteggi, facilitando così l'interpretazione e l'analisi dei dati psicometrici.
+5. **Tabella riassuntiva:**  
+   La tabella mostra, per ogni osservazione, il punteggio grezzo, il relativo percentile, lo z-score ottenuto, il punteggio NCE e il suo percentile.
 
-In conclusione, la scelta del metodo di trasformazione dei punteggi dipende dagli obiettivi specifici della valutazione e dall'interpretazione desiderata. La comprensione di queste diverse tecniche è essenziale per una corretta interpretazione dei risultati dei test e per l'analisi psicometrica più generale.
+6. **Plot delle distribuzioni:**  
+   Vengono creati due istogrammi affiancati: il primo mostra la distribuzione dei punteggi grezzi (spesso asimmetrica), mentre il secondo evidenzia la distribuzione degli NCE, che per costruzione segue una distribuzione normale teorica.
+
+Questo esempio evidenzia come la trasformazione in NCE converta i dati originali in una scala standardizzata, mantenendo l’ordine dei punteggi ma “mappando” i valori su una distribuzione normale teorica, facilitando così il confronto tra diversi test o misure.
+
+::: {.callout-note title="Approfondimento" collapse="true"}
+Il valore 21.06 è scelto per "espandere" la scala degli z-score in modo da ottenere una distribuzione NCE con media 50 e un intervallo approssimativo da 1 a 99. 
+
+Per chiarire:
+
+- Nella trasformazione NCE si parte dallo z-score, che ha media 0 e deviazione standard 1.
+- Moltiplicando lo z-score per 21.06 e aggiungendo 50 si ottiene una nuova scala centrata in 50.
+- Il fattore 21.06 è scelto perché, considerando i valori estremi della distribuzione normale standard (circa -2.33 e +2.33, che corrispondono approssimativamente al 1° e al 99° percentile), il calcolo diventa:
+  - $50 + 21.06 \times (-2.33) \approx 1$
+  - $50 + 21.06 \times (+2.33) \approx 99$
+
+Così, quasi tutti i punteggi (circa il 98% se consideriamo -2.33 e +2.33) rientrano nell'intervallo da 1 a 99, rendendo la scala intuitiva e facilmente interpretabile.
+:::
 
 ## Riflessioni Conclusive
 
-Questo capitolo fornisce una panoramica sui diversi tipi di punteggi dei test e il loro significato. Iniziamo notando che i punteggi grezzi, sebbene facili da calcolare, di solito forniscono poche informazioni utili sul rendimento di un esaminando in un test. Di conseguenza, di solito trasformiamo i punteggi grezzi in punteggi derivati, che possono essere di riferimento normativo o al criterio. I punteggi di riferimento normativo confrontano il rendimento di un esaminando con quello di altre persone nel campione di standardizzazione, mentre quelli al criterio confrontano il rendimento con un livello di competenza specificato. È importante valutare l'adeguatezza del campione di standardizzazione quando si utilizzano punteggi di riferimento normativo.
+In questo capitolo abbiamo approfondito la trasformazione dei punteggi grezzi, una pratica fondamentale in psicometria per attribuire significato ai risultati dei test e facilitare l’analisi statistica. Abbiamo esaminato due approcci interpretativi principali:
 
-Per interpretazioni basate sui punteggi di riferimento normativo, è utile conoscere la distribuzione normale e i punteggi standard di riferimento. Questi ultimi hanno una media predefinita e una deviazione standard. Esistono anche punteggi normalizzati quando i punteggi non seguono una distribuzione normale. Altri tipi di punteggi di riferimento normativo includono il rango percentile e i punteggi basati su età o livello di scolarità. Tuttavia, questi ultimi sono da evitare, se possibile, a favore di punteggi standard e ranghi percentile.
+- **Riferimento Normativo:**  
+  Questo metodo confronta il rendimento di un individuo con quello ottenuto da un gruppo di riferimento. Si utilizzano strumenti come i punteggi percentili, gli z-score e i T-score, che permettono confronti diretti e analisi statistiche robuste. Quando i dati non seguono una distribuzione normale, si ricorre a tecniche di normalizzazione, come gli stanini e gli Equivalenti alla Curva Normale (NCE), per mappare i punteggi su una scala teorica che agevoli l’interpretazione e il confronto.
 
-I punteggi al criterio confrontano il rendimento con un livello specifico di competenza. Sono utili per valutare abilità in domini specifici, ma richiedono una chiara definizione del dominio. A volte, un test può produrre entrambi i tipi di punteggi. Forniamo anche una panoramica dei punteggi basati sulla teoria della risposta agli item (IRT), che sono utili per misurare i cambiamenti nel tempo.
+- **Riferimento Criteriale:**  
+  In questo caso, il rendimento viene valutato rispetto a standard prestabiliti, anziché confrontarlo con altri soggetti. Tale approccio è particolarmente utile per verificare il raggiungimento di specifici livelli di competenza in domini ben definiti.
 
-In conclusione, i diversi tipi di punteggi dei test forniscono informazioni per rispondere a diverse domande e devono essere scelti in base alle esigenze specifiche dell'analisi dei dati del test.
+La scelta tra questi metodi dipende da vari fattori:
+
+- **Obiettivo della Valutazione:**  
+  Se si intende confrontare un soggetto con un gruppo, il riferimento normativo è l’approccio più indicato; se invece l’interesse è valutare il raggiungimento di standard specifici, si predilige il riferimento criteriale.
+
+- **Esigenze Analitiche:**  
+  I punteggi standardizzati sono ideali per analisi matematiche e confronti statistici, mentre i ranghi percentile offrono una lettura immediata della posizione relativa, pur presentando limiti per calcoli ulteriori.
+
+- **Necessità di Normalizzazione:**  
+  Tecniche come gli stanini e gli NCE consentono di trasformare i punteggi in una distribuzione più vicina a quella teorica della curva normale, migliorandone così l’interpretabilità e la comparabilità.
+
+In sintesi, la scelta del metodo di trasformazione dei punteggi deve essere guidata dagli obiettivi specifici della valutazione, garantendo un’interpretazione accurata e utile dei risultati. Questa conoscenza è essenziale per condurre analisi psicometriche affidabili e rispondere in modo mirato alle domande di ricerca o alle esigenze diagnostiche.
 
 ## Esercizi {.unnumbered}
 
