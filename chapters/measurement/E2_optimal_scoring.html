@@ -98,7 +98,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Inviare",
     "search-label": "Ricerca"
   }
-}</script>
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 </head>
 <body class="nav-sidebar floating">
 
@@ -906,8 +931,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Indice</h2>
    
   <ul>
-<li><a href="#ottimizzazione-dello-scoring-dei-dati-di-questionari-ordinali" id="toc-ottimizzazione-dello-scoring-dei-dati-di-questionari-ordinali" class="nav-link active" data-scroll-target="#ottimizzazione-dello-scoring-dei-dati-di-questionari-ordinali"><span class="header-section-number">3.1</span> Ottimizzazione dello scoring dei dati di questionari ordinali</a></li>
-  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">3.2</span> Session Info</a></li>
+<li><a href="#ottimizzazione-dello-scoring-per-questionari-a-dati-ordinali" id="toc-ottimizzazione-dello-scoring-per-questionari-a-dati-ordinali" class="nav-link active" data-scroll-target="#ottimizzazione-dello-scoring-per-questionari-a-dati-ordinali"><span class="header-section-number">3.1</span> Ottimizzazione dello scoring per questionari a dati ordinali</a></li>
+  <li><a href="#obiettivo-di-ottimizzazione" id="toc-obiettivo-di-ottimizzazione" class="nav-link" data-scroll-target="#obiettivo-di-ottimizzazione"><span class="header-section-number">3.2</span> Obiettivo di ottimizzazione</a></li>
+  <li><a href="#implementazione-con-il-pacchetto-aspect" id="toc-implementazione-con-il-pacchetto-aspect" class="nav-link" data-scroll-target="#implementazione-con-il-pacchetto-aspect"><span class="header-section-number">3.3</span> Implementazione con il pacchetto <code>aspect</code></a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">3.4</span> Session Info</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -928,13 +955,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><section id="ottimizzazione-dello-scoring-dei-dati-di-questionari-ordinali" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="ottimizzazione-dello-scoring-dei-dati-di-questionari-ordinali">
-<span class="header-section-number">3.1</span> Ottimizzazione dello scoring dei dati di questionari ordinali</h2>
-<p>Nell’Esercizio precedente, abbiamo calcolato i punteggi del <strong>Strength and Difficulties Questionnaire (SDQ)</strong> utilizzando il cosiddetto approccio della <strong>“scalatura Likert”</strong>. In questo metodo, alle categorie di risposta “Non vero”, “Parzialmente vero” e “Assolutamente vero” sono stati assegnati interi consecutivi, rispettivamente 0-1-2. Sebbene questo assegnamento rifletta apparentemente un grado crescente di accordo nelle opzioni di risposta, la scelta degli interi è stata arbitraria: non vi era un motivo particolare per assegnare 0-1-2 anziché, ad esempio, 1-2-3. Questo tipo di assegnazione arbitraria dei punteggi agli item è comunemente chiamato <strong>“misurazione per decreto”</strong> (<em>measurement by fiat</em>).</p>
-<p>In questo secondo esercizio, cercheremo di individuare punteggi “ottimali” per le risposte ordinali al SDQ. Per “ottimali” intendiamo che i punteggi assegnati non siano semplicemente arbitrari, ma rappresentino la “migliore” scelta possibile in base a un determinato criterio statistico.</p>
-<p>Esistono diversi modi per “ottimizzare” i punteggi degli item. In questo caso, ci concentreremo sulla massimizzazione del rapporto tra la varianza del punteggio totale e la somma delle varianze dei punteggi degli item. In psicometria, soddisfare questo criterio significa massimizzare la somma delle correlazioni tra gli item e, di conseguenza, migliorare la <strong>consistenza interna</strong> del test, misurata, ad esempio, dall’<strong>alfa di Cronbach</strong>.</p>
-<p>Questo approccio consente di definire punteggi più informativi, che riflettono meglio la coerenza tra le risposte degli item e il punteggio totale del test, migliorando la qualità psicometrica della scala.</p>
-<p>Per fare un esempio, useremo di nuovo gli item della scala <strong>Sintomi Emotivi</strong>. Utilizzeremo il pacchetto <strong><code>aspect</code></strong>, che semplifica l’ottimizzazione della scalatura grazie a una gamma di opzioni utili e a funzioni grafiche integrate.</p>
+</header><section id="ottimizzazione-dello-scoring-per-questionari-a-dati-ordinali" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="ottimizzazione-dello-scoring-per-questionari-a-dati-ordinali">
+<span class="header-section-number">3.1</span> Ottimizzazione dello scoring per questionari a dati ordinali</h2>
+<p>Nel precedente esercizio, i punteggi del <em>Questionario sulle Difficoltà e Risorse (SDQ)</em> sono stati calcolati mediante <strong>scalatura Likert tradizionale</strong>, assegnando in modo sequenziale i valori 0, 1 e 2 alle categorie “Non vero”, “Parzialmente vero” e “Assolutamente vero”. Sebbene questa assegnazione rifletta intuitivamente una progressione nell’accordo con le affermazioni, la scelta degli interi specifici (0-1-2 anziché 1-2-3 o altri) è puramente arbitraria, un metodo noto in letteratura come <strong>“misurazione per decreto”</strong> (<em>measurement by fiat</em>).</p>
+<p>In questo secondo esercizio, proponiamo un approccio alternativo volto a determinare punteggi <strong>ottimali</strong> per le risposte ordinali dell’SDQ, dove “ottimalità” è definita in base a criteri statistici rigorosi. L’obiettivo è superare l’arbitrarietà della scalatura tradizionale, identificando valori che massimizzino la coerenza psicometrica della scala.</p>
+</section><section id="obiettivo-di-ottimizzazione" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="obiettivo-di-ottimizzazione">
+<span class="header-section-number">3.2</span> Obiettivo di ottimizzazione</h2>
+<p>Trovare i punteggi <span class="math inline">\(s_j\)</span> (pesi numerici) assegnati alle categorie ordinali degli item che massimizzino la funzione:</p>
+<p><span class="math display">\[
+\mathcal{R} = \frac{\text{Var}(T)}{\sum_{i=1}^k \text{Var}(X_i)} ,
+\]</span></p>
+<p>dove:</p>
+<ul>
+<li>
+<span class="math inline">\(T = \sum_{i=1}^k X_i\)</span> è il punteggio totale del test (<span class="math inline">\(k =\)</span> numero di item),<br>
+</li>
+<li>
+<span class="math inline">\(\text{Var}(T)\)</span> è la varianza del punteggio totale,<br>
+</li>
+<li>
+<span class="math inline">\(\text{Var}(X_i)\)</span> è la varianza del punteggio dell’<span class="math inline">\(i\)</span>-esimo item.</li>
+</ul>
+<p><strong>Relazione con l’affidabilità</strong>:<br>
+Il rapporto <span class="math inline">\(\mathcal{R}\)</span> è legato all’<strong>alfa di Cronbach</strong> (<span class="math inline">\(\alpha\)</span>) dalla relazione:<br><span class="math display">\[
+\alpha = \frac{k}{k-1} \left( 1 - \frac{\sum_{i=1}^k \text{Var}(X_i)}{\text{Var}(T)} \right) = \frac{k}{k-1} \left( 1 - \frac{1}{\mathcal{R}} \right) .
+\]</span><br>
+Massimizzare <span class="math inline">\(\mathcal{R}\)</span> equivale quindi a massimizzare <span class="math inline">\(\alpha\)</span>, garantendo che gli item siano <strong>coerenti</strong> nel misurare il costrutto latente.</p>
+<p><strong>Interpretazione</strong>:</p>
+<ul>
+<li>Un <span class="math inline">\(\mathcal{R}\)</span> elevato implica che la varianza totale <span class="math inline">\(\text{Var}(T)\)</span> è spiegata principalmente dalle <strong>covarianze tra gli item</strong> (segnale condiviso), anziché dalla varianza individuale (rumore).<br>
+</li>
+<li>Ciò ottimizza la <strong>validità di costrutto</strong> e la <strong>sensibilità discriminante</strong> del test.</li>
+</ul></section><section id="implementazione-con-il-pacchetto-aspect" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="implementazione-con-il-pacchetto-aspect">
+<span class="header-section-number">3.3</span> Implementazione con il pacchetto <code>aspect</code>
+</h2>
+<p>Per illustrare il metodo, focalizziamoci sulla sottoscala <strong>Sintomi Emotivi</strong> dell’SDQ. Utilizzeremo il pacchetto R <strong><code>aspect</code></strong>, progettato per ottimizzare le scalature attraverso algoritmi flessibili e strumenti visuali integrati. Questo strumento permette di:</p>
+<ol type="1">
+<li>Assegnare punteggi non lineari alle categorie ordinali, adattandosi alla struttura latente dei dati.<br>
+</li>
+<li>Visualizzare graficamente l’impatto delle diverse scalature sull’affidabilità del test.<br>
+</li>
+<li>Confrontare soluzioni alternative in modo efficiente.</li>
+</ol>
+<p>L’approccio ottimizzato non solo migliora la qualità metriche della scala, ma fornisce anche informazioni sulla risonanza psicologica degli item, rendendo i punteggi totali più rappresentativi del costrutto misurato.</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">"../../code/_common.R"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://r-forge.r-project.org/projects/psychor/">"aspect"</a></span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1183,236 +1246,14 @@ Il pacchetto <strong><code>aspect</code></strong> offre grafici utili che mostra
 <p>Questo approccio offre un metodo rigoroso per ottimizzare la misurazione degli item, migliorando la qualità psicometrica della scala e assicurando che l’interpretazione delle risposte rifletta al meglio la coerenza interna del test.</p>
 <p>I punteggi ottenuti si ottengono nel modo seguente:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">opt</span><span class="op">$</span><span class="va">scoremat</span></span>
-<span><span class="co">#&gt;     somatic worries unhappy clingy afraid</span></span>
-<span><span class="co">#&gt; 1     1.972   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 2     1.972  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 3    -0.901  -0.854  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 4    -0.901  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 5     1.972   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 6     0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 7    -0.901   0.445   1.393  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 8    -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 9     0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 10   -0.901  -0.854  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 11   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 12    1.972   2.096   1.393  0.237  1.951</span></span>
-<span><span class="co">#&gt; 13   -0.901  -0.854  -0.601 -1.199  1.951</span></span>
-<span><span class="co">#&gt; 14   -0.901   0.445  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 15    0.586   2.096   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 16    1.972  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 17    0.586   0.445  -0.601  1.617  1.009</span></span>
-<span><span class="co">#&gt; 18    0.586   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 19    0.586   2.096   2.659  1.617  1.009</span></span>
-<span><span class="co">#&gt; 20    0.586   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 21    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 22    1.972   0.445  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 23    1.972   2.096   2.659  0.237  1.951</span></span>
-<span><span class="co">#&gt; 24   -0.901   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 25    0.586   2.096  -0.601 -1.199  1.951</span></span>
-<span><span class="co">#&gt; 26    1.972   2.096   2.659  1.617  1.009</span></span>
-<span><span class="co">#&gt; 27   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 28    0.586  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 29    0.586  -0.854   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 30   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 31   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 32   -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 33    0.586   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 34    0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 35    1.972   2.096   1.393  1.617  1.951</span></span>
-<span><span class="co">#&gt; 36    0.586   0.445   1.393 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 37   -0.901   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 38   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 39    0.586   2.096   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 40    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 41    0.586   0.445  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 42    0.586  -0.854   1.393  1.617  1.951</span></span>
-<span><span class="co">#&gt; 43    0.586   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 44    1.972   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 45   -0.901   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 46    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 47   -0.901   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 48    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 49   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 50   -0.901   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 51   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 52    0.586   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 53    1.972  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 54   -0.901   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 55   -0.901   0.445  -0.601  1.617  1.009</span></span>
-<span><span class="co">#&gt; 56    0.586   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 57    0.586   0.445   2.659  0.237  1.009</span></span>
-<span><span class="co">#&gt; 58   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 59    1.972   2.096   2.659  0.237  1.009</span></span>
-<span><span class="co">#&gt; 60   -0.901  -0.854  -0.601  0.237  1.951</span></span>
-<span><span class="co">#&gt; 61   -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 62   -0.901  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 63    0.586   0.445   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 64   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 65   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 66   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 67   -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 68    0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 69    1.972   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 70   -0.901   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 71   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 72   -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 73    1.972   0.445   1.393  1.617  1.951</span></span>
-<span><span class="co">#&gt; 74   -0.901  -0.854  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 75   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 76    1.972   0.445  -0.601  1.617  1.951</span></span>
-<span><span class="co">#&gt; 77    0.586  -0.854  -0.601  0.237  1.951</span></span>
-<span><span class="co">#&gt; 78   -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 79    0.586   2.096   1.393  1.617  1.951</span></span>
-<span><span class="co">#&gt; 80   -0.901   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 81    0.586   2.096  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 82   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 83    0.586   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 84    0.586   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 85   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 86    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 87    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 88   -0.901   2.096   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 89   -0.901   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 90    0.586   2.096  -0.601  0.237  1.951</span></span>
-<span><span class="co">#&gt; 91    0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 92    0.586  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 93   -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 94    0.586   2.096   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 95   -0.901   2.096   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 96   -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 97   -0.901  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 98   -0.901   0.445  -0.601  1.617  1.009</span></span>
-<span><span class="co">#&gt; 99    0.586   2.096  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 100  -0.901   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 101   0.586  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 102  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 103  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 104   1.972   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 105  -0.901  -0.854   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 106   0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 107   0.586   2.096  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 108   0.586  -0.854   1.393  0.237  1.951</span></span>
-<span><span class="co">#&gt; 109   0.586   2.096   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 110  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 111  -0.901   0.445  -0.601  1.617  1.009</span></span>
-<span><span class="co">#&gt; 112  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 113   0.586   0.445   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 114  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 115  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 116  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 117  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 118  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 119   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 120   0.586   2.096   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 121  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 122   0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 123   0.586   0.445   2.659  1.617  1.951</span></span>
-<span><span class="co">#&gt; 124   0.586  -0.854  -0.601  0.237  1.951</span></span>
-<span><span class="co">#&gt; 125   1.972   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 126  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 127  -0.901  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 128   1.972   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 129   1.972   0.445   1.393  0.237  1.951</span></span>
-<span><span class="co">#&gt; 130  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 131  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 132  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 133   0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 134  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 135   0.586   2.096  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 136   0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 137  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 138   1.972   2.096   2.659  1.617  1.951</span></span>
-<span><span class="co">#&gt; 139   0.586   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 140  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 141  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 142   1.972   2.096   2.659 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 143   0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 144  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 145  -0.901  -0.854   1.393 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 146  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 147  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 148   1.972  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 149  -0.901  -0.854   2.659  0.237  1.009</span></span>
-<span><span class="co">#&gt; 150   0.586  -0.854   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 151   0.586  -0.854   1.393 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 152   0.586   0.445  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 153   1.972   0.445   1.393  1.617  1.009</span></span>
-<span><span class="co">#&gt; 154   0.586   2.096   1.393 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 155   1.972   2.096   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 156  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 157  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 158   0.586   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 159  -0.901   0.445   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 160   0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 161   0.586  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 162  -0.901  -0.854  -0.601  1.617  1.009</span></span>
-<span><span class="co">#&gt; 163  -0.901   2.096  -0.601  1.617  1.951</span></span>
-<span><span class="co">#&gt; 164  -0.901   0.445  -0.601  0.237  1.951</span></span>
-<span><span class="co">#&gt; 165  -0.901  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 166  -0.901  -0.854   1.393  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 167  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 168  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 169   0.586  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 170   0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 171  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 172   0.586  -0.854   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 173  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 174  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 175  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 176   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 177  -0.901  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 178  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 179  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 180  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 181   0.586   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 182   0.586  -0.854   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 183  -0.901   0.445  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 184  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 185   1.972   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 186   0.586   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 187  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 188   0.586   2.096   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 189   1.972  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 190   0.586   0.445   1.393  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 191  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 192   0.586   0.445   1.393  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 193  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 194  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 195   0.586   2.096  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 196   0.586   0.445   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 197  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 198   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 199   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 200   0.586  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 201   0.586   0.445  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 202  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 203  -0.901   2.096  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 204   0.586   0.445   1.393 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 205   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 206   0.586  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 207  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 208   0.586  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 209  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 210  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 211  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 212  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 213  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 214   0.586   2.096   1.393  1.617  1.951</span></span>
-<span><span class="co">#&gt; 215  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 216  -0.901  -0.854  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 217  -0.901  -0.854  -0.601  0.237  1.009</span></span>
-<span><span class="co">#&gt; 218   0.586  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 219  -0.901  -0.854  -0.601  1.617 -0.769</span></span>
-<span><span class="co">#&gt; 220   0.586  -0.854  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 221   0.586  -0.854   1.393  0.237  1.009</span></span>
-<span><span class="co">#&gt; 222  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 223  -0.901  -0.854  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 224  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 225   0.586  -0.854  -0.601 -1.199  1.009</span></span>
-<span><span class="co">#&gt; 226  -0.901   0.445  -0.601  0.237 -0.769</span></span>
-<span><span class="co">#&gt; 227  -0.901   0.445  -0.601 -1.199 -0.769</span></span>
-<span><span class="co">#&gt; 228   1.972   0.445   1.393  0.237  1.009</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">opt</span><span class="op">$</span><span class="va">scoremat</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   somatic worries unhappy clingy afraid</span></span>
+<span><span class="co">#&gt; 1   1.972   0.445  -0.601  0.237 -0.769</span></span>
+<span><span class="co">#&gt; 2   1.972  -0.854  -0.601  0.237 -0.769</span></span>
+<span><span class="co">#&gt; 3  -0.901  -0.854  -0.601 -1.199  1.009</span></span>
+<span><span class="co">#&gt; 4  -0.901  -0.854  -0.601  0.237  1.009</span></span>
+<span><span class="co">#&gt; 5   1.972   0.445  -0.601  0.237 -0.769</span></span>
+<span><span class="co">#&gt; 6   0.586  -0.854  -0.601  0.237 -0.769</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo la relazione tra lo scoring basato sul metodo Likert con lo scoring ottimale.</p>
 <div class="cell" data-layout-align="center">
@@ -1462,8 +1303,8 @@ Il pacchetto <strong><code>aspect</code></strong> offre grafici utili che mostra
 </div>
 <p>Guardando ai grafici ottenuti, si può notare che 1) i punteggi per le categorie successive aumentano quasi linearmente; 2) le categorie sono approssimativamente equidistanti. Concludiamo che per la valutazione degli item ordinali nella scala dei Sintomi Emotivi del SDQ, la scala Likert è appropriata, e l’ottimizzazione della scala rispetto alla semplice scala Likert di base produce cambiamenti minimi. Per altri dati, comunque, la situazione potrebbe essere molto diversa.</p>
 <p>In conclusione, l’ottimizzazione dello scoring dei dati di questionari ordinali offre un metodo rigoroso per ottimizzare la misurazione degli item, migliorando la qualità psicometrica della scala e assicurando che l’interpretazione delle risposte rifletta al meglio la coerenza interna del test.</p>
-</section><section id="session-info" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="session-info">
-<span class="header-section-number">3.2</span> Session Info</h2>
+</section><section id="session-info" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="session-info">
+<span class="header-section-number">3.4</span> Session Info</h2>
 <div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
@@ -1494,7 +1335,7 @@ Il pacchetto <strong><code>aspect</code></strong> offre grafici utili che mostra
 <span><span class="co">#&gt; [29] here_1.0.1       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.0      magrittr_2.0.3     </span></span>
+<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.1      magrittr_2.0.3     </span></span>
 <span><span class="co">#&gt;   [4] TH.data_1.1-3       estimability_1.5.1  farver_2.1.2       </span></span>
 <span><span class="co">#&gt;   [7] nloptr_2.1.1        rmarkdown_2.29      vctrs_0.6.5        </span></span>
 <span><span class="co">#&gt;  [10] minqa_1.2.8         base64enc_0.1-3     rstatix_0.7.2      </span></span>
