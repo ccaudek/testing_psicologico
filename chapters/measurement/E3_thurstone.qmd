@@ -6,6 +6,16 @@ library("rio")
 library("psych")
 ```
 
+## Scaling Psicologico
+
+Lo scaling psicologico si propone di affrontare il problema della misurazione di fenomeni soggettivi e latenti, quali percezioni, giudizi e preferenze, che non sono direttamente osservabili. L’obiettivo è trasformare dati qualitativi o discreti (come ranking o scelte) in stime quantitative che rappresentino in modo coerente la “distanza” o la differenza tra stimoli lungo un continuum psicologico. Storicamente, approcci come quello di Fechner – basato sull’accumulo di unità di percezione (JND) – e il modello Thurstoniano – che assume distribuzioni normali per le utilità latenti – hanno fornito strumenti fondamentali per tradurre il “misurare l’immisurabile” in misurazioni numeriche. Queste metodologie, pur partendo da presupposti differenti, condividono l’obiettivo di rendere comparabili e analizzabili fenomeni psicologici complessi, permettendo così una valutazione più precisa dei processi decisionali e delle percezioni individuali.
+
+## Scaling Fechneriano
+
+Un esempio di scaling psicologico riguarda lo scaling fechneriano. Faccio qui riferimento ad uno studio condotto un po' di tempo fa nell'ambito delle Vision Sciences. 
+
+Nello studio di @domini2009intrinsic, abbiamo utilizzato il modello *Intrinsic Constraints* per correlare la **profondità visiva percepita** di un oggetto tridimensionale con i principi teorici dello **scaling sensoriale Fechneriano**. Quest’ultimo, basato sulle teorie psicofisiche di Fechner, prevede la costruzione di una scala psicofisica per attributi sensoriali mediante l’**integrazione cumulativa di incrementi psicometrici**, in particolare delle *Just Noticeable Differences* (JNDs). L’obiettivo della ricerca era progettare stimoli visivi caratterizzati da diversi indizi di profondità (stereopsi, parallasse di movimento, ecc.) in modo da indurre una **percezione soggettiva equivalente della profondità 3D**. Secondo questa logica, oggetti definiti da cue visivi distinti dovrebbero risultare percettivamente equiparabili in termini di profondità qualora fossero associati a un **numero identico di JNDs**. In altre parole, l’uniformità percettiva emerge quando gli stimoli, pur differendo negli indizi di profondità, raggiungono la stessa soglia di discriminabilità psicofisica.
+
 ## Il Modello Thurstoniano
 
 Il modello Thurstoniano fornisce un quadro statistico per analizzare e interpretare preferenze o ranking di oggetti (o stimoli) da parte di singoli individui. L’idea di base è che, dietro i ranking osservati, esista una scala latente continua, non direttamente misurabile, dove ogni individuo assegna un punteggio personale a ciascun oggetto. Tali punteggi individuali, sebbene soggettivi, possono essere descritti complessivamente su una dimensione unica, grazie a ipotesi specifiche sulle distribuzioni di questi punteggi.
@@ -27,11 +37,11 @@ Di solito, per identificare il modello, si fissa a zero la media di un oggetto (
 Questa procedura consente di trasformare i dati di ranking discreti in stime numeriche di utilità psicologica, evidenziando le differenze relative di importanza fra gli oggetti analizzati.
 
 
-## Tutorial
+### Tutorial
 
 Nel seguente esercizio vedremo come eseguire uno scaling thurstoniano su dati di preferenze (o scelte) e ottenere delle stime delle *utilità* psicologiche di una serie di oggetti o caratteristiche confrontate fra loro. In altre parole, date le classifiche (rank) osservate, vogliamo inferire quali possano essere le distribuzioni di “valore psicologico” che hanno generato tali preferenze. Per stimare le utilità non osservate a partire dalle preferenze osservate, si ipotizza che le utilità siano distribuite normalmente con la stessa varianza (ipotesi del “Caso V” di Thurstone).
 
-### Studio delle preferenze per alcune caratteristiche lavorative
+#### Studio delle preferenze per alcune caratteristiche lavorative
 
 I dati di questo esempio provengono (in forma semplificata) da uno studio sulla motivazione al lavoro, condotto su $N=1100$ partecipanti. A ogni partecipante è stato chiesto di ordinare in base all’importanza nove possibili caratteristiche di un lavoro ideale (assegnando il rank 1 alla più importante e il rank 9 alla meno importante). Le nove caratteristiche, qui elencate con i nomi delle colonne corrispondenti, sono:
 
@@ -48,7 +58,7 @@ I dati di questo esempio provengono (in forma semplificata) da uno studio sulla 
 
 Di seguito, illustriamo passo dopo passo l’analisi con il pacchetto **psych** di R.
 
-### Passo 1. Lettura e ispezione dei dati
+#### Passo 1. Lettura e ispezione dei dati
 
 Il file di dati (ad esempio, `JobFeatures.txt`) contiene le classifiche di 1100 partecipanti, ciascuno con i ranghi per le 9 caratteristiche. Per leggere il file in RStudio si può usare la funzione `read.delim()`:
 
@@ -69,7 +79,7 @@ La funzione `head(JobFeatures)` mostra le prime righe del data frame:
 head(JobFeatures)
 ```
 
-### Passo 2. Esecuzione dello scaling thurstoniano
+#### Passo 2. Esecuzione dello scaling thurstoniano
 
 Per poter eseguire l’analisi, caricando il pacchetto **psych**. La funzione che ci interessa è `thurstone()`. Se cerchiamo informazioni:
 
@@ -108,7 +118,7 @@ Goodness of fit of model   1
 - Una di queste medie è fissata a 0 (tipicamente, la caratteristica meno preferita viene posta a 0 per identificare il modello).  
 
 
-### Passo 3. Calcolo delle proporzioni di preferenza a coppie
+#### Passo 3. Calcolo delle proporzioni di preferenza a coppie
 
 Se assegniamo i risultati della funzione a un oggetto, ad esempio:
 
@@ -132,7 +142,7 @@ scaling$choice |>
 
 Se, per esempio, la cella $(8,6)$ vale 0.853, significa che l’**8ª caratteristica** è preferita alla **6ª** dall’85.3% del campione (o dei ranghi aggregati).
 
-### Passo 4. Valutazione dell’adattamento del modello
+#### Passo 4. Valutazione dell’adattamento del modello
 
 Possiamo esaminare gli scarti (residui) confrontando le proporzioni osservate con quelle predette dal modello:
 
@@ -152,6 +162,7 @@ scaling$GF
 otteniamo un indice di bontà di adattamento prossimo a 1, segno che il modello fornisce una buona descrizione dei dati (più il valore è vicino a 1, meglio il modello si adatta).
 
 **In sintesi**  
+
 - **Thurstonian scaling (Caso V)**: presuppone che le utilità latenti degli oggetti abbiano distribuzioni normali con varianza uguale.  
 - **Procedura**:  
   1. Lettura dei ranking e ispezione dei dati.  
@@ -164,12 +175,6 @@ otteniamo un indice di bontà di adattamento prossimo a 1, segno che il modello 
   - L’oggetto con media zero (fissata) è quello meno preferito o funge da riferimento.  
   - Residui bassi e un GF vicino a 1 indicano che il modello spiega bene i dati.
 
-
-## Scaling Fechneriano
-
-Un altro esempio di scaling psicologico riguarda lo scaling fechneriano. Faccio qui riferimento ad uno studio condotto un po' di tempo fa nell'ambito delle Vision Sciences. 
-
-Nello studio di @domini2009intrinsic, abbiamo utilizzato il modello *Intrinsic Constraints* per correlare la **profondità visiva percepita** di un oggetto tridimensionale con i principi teorici dello **scaling sensoriale Fechneriano**. Quest’ultimo, basato sulle teorie psicofisiche di Fechner, prevede la costruzione di una scala psicofisica per attributi sensoriali mediante l’**integrazione cumulativa di incrementi psicometrici**, in particolare delle *Just Noticeable Differences* (JNDs). L’obiettivo della ricerca era progettare stimoli visivi caratterizzati da diversi indizi di profondità (stereopsi, parallasse di movimento, ecc.) in modo da indurre una **percezione soggettiva equivalente della profondità 3D**. Secondo questa logica, oggetti definiti da cue visivi distinti dovrebbero risultare percettivamente equiparabili in termini di profondità qualora fossero associati a un **numero identico di JNDs**. In altre parole, l’uniformità percettiva emerge quando gli stimoli, pur differendo negli indizi di profondità, raggiungono la stessa soglia di discriminabilità psicofisica.
 
 ## Riflessioni Conclusive
 
