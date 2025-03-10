@@ -1,0 +1,321 @@
+# Metodi di stima dell'affidabilità {#sec-ctt-methods-reliability}
+
+**Preparazione del Notebook**
+
+```{r}
+here::here("code", "_common.R") |> source()
+pacman::p_load(modelsummary, ltm)
+```
+
+## Introduzione
+
+I punteggi ottenuti da test psicologici possono variare per differenze tra item, occasioni di somministrazione o modalità di valutazione. La CTT affronta questo problema introducendo il concetto di affidabilità, intesa come stabilità e coerenza delle misure ottenute, distinguendo tra "punteggio vero" e "errore di misurazione".
+
+Nel capitolo precedente abbiamo visto che l'affidabilità riflette la proporzione della varianza dovuta al punteggio vero rispetto alla varianza totale. Il problema successivo è stimare accuratamente l'affidabilità, considerando diverse modalità di errore.
+
+## Come stimare l'affidabilità
+
+Per stimare l'affidabilità ($\rho$), dobbiamo affrontare la difficoltà legata all'impossibilità di osservare direttamente il punteggio vero o l'errore di misurazione. La strategia di stima dipende da come definiamo e interpretiamo l'errore di misurazione (σ²ₑ):
+  
+1. **Affidabilità delle Forme Parallele**:
+  - Considera l’errore come differenza tra punteggi ottenuti da forme equivalenti del test.
+
+2. **Consistenza Interna**:
+  - Valuta quanto gli item all’interno dello stesso test siano omogenei rispetto al costrutto misurato (es. Alpha di Cronbach).
+
+3. **Affidabilità Test-Retest (Coerenza Temporale)**:
+  - Misura l’errore come variazione dei punteggi nel tempo, attraverso somministrazioni ripetute dello stesso test.
+
+La principale differenza tra questi metodi è nella definizione operativa e nel calcolo della varianza d’errore ($\sigma^2_e$).
+
+
+## Affidabilità come Consistenza Interna
+  
+  La consistenza interna valuta l’omogeneità tra item. Esistono tre principali modelli teorici relativi alle relazioni tra item:
+  
+- **Item paralleli**: medie e varianze uguali, correlazione pari all’affidabilità.
+- **Item τ-equivalenti**: medie e varianze diverse, correlazione diversa dall’affidabilità.
+- **Item congenerici**: rapporti più complessi tra medie, varianze e correlazioni; la correlazione non equivale all'affidabilità.
+
+La CTT propone due indici principali per misurare la consistenza interna:
+
+### Coefficiente Alpha di Cronbach
+
+Il coefficiente Alpha è adatto per item τ-equivalenti:
+
+$$ \alpha = \frac{k}{k-1} \left(1 - \frac{\sum \sigma_i^2}{\sigma_X^2}\right) $$
+
+dove:
+
+- $k$ è il numero di item,
+- $\sigma_i^2$ è la varianza dell'item i,
+- $\sigma_X^2$ è la varianza totale del test.
+
+Una derivazione della formula del coefficiente alpha di Cronbach è fornita nel capitolo @reliability-fa-notebook.
+
+L’Alpha di Cronbach fornisce una stima conservativa (limite inferiore) dell'affidabilità solo quando le assunzioni del modello τ-equivalente sono rispettate. In caso contrario, può sovrastimare l'affidabilità.
+
+::: {#exm-}
+Per illustrare la procedura di calcolo del coefficiente $\alpha$, useremo i dati `bfi` contenuti nel pacchetto `psych`. Il dataframe `bfi` comprende 25 item di autovalutazione della personalità. Sono riportati i dati di 2800 soggetti. Ci concentreremo qui sulla sottoscala *Openness*:
+
+- O1: *Am full of ideas*; 
+- O2: *Avoid difficult reading material*; 
+- O3: *Carry the conversation to a higher level*; 
+- O4: *Spend time reflecting on things*; 
+- O5: *Will not probe deeply into a subject*. 
+
+Leggiamo i dati in R.
+
+```{r}
+data(bfi, package = "psych")
+head(bfi[c("O1", "O2", "O3", "O4", "O5")])
+```
+
+Esaminiamo la correlazione tra gli item della sottoscale Openness.
+
+```{r}
+cor(bfi[c("O1", "O2", "O3", "O4", "O5")], use = "pairwise.complete.obs") |>
+    round(2)
+```
+
+È necessario ricodificare due item.
+
+```{r}
+bfi$O2r <- 7 - bfi$O2
+bfi$O5r <- 7 - bfi$O5
+```
+
+```{r}
+cor(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs") |>
+    round(2)
+```
+
+Consideriamo la matrice di varianze e covarianze della sottoscala Openness. 
+
+```{r}
+C <- cov(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+C |> round(2)
+```
+
+Calcoliamo alpha:
+
+```{r}
+p <- 5
+alpha <- (p / (p - 1)) * (1 - tr(C) / sum(C))
+alpha
+```
+
+Lo stesso risultato si ottiene utilizzando la funzione `alpha()`
+contenuta nel pacchetto `psych`:
+
+```{r}
+psych::alpha(C)
+```
+:::
+
+### Coefficiente KR-20
+
+La formula di Kuder-Richardson-20 (KR-20) è un caso particolare del coefficiente α. Se ogni item è dicotomico, il coefficiente α diventa il KR-20. Il coefficiente Coefficiente KR-20 si calcola con la formula:
+
+$$
+KR\_20 = \frac{{k}}{{k-1}} \left( 1 - \frac{{p(1-p)}}{{\sigma_{X}^{2}}} \right) 
+$$
+
+dove:
+
+- $k$ è il numero di item nel test,
+- $p$ è la proporzione di individui che rispondono correttamente all'item,
+- $\sigma_{X}^{2}$ è la varianza totale dei punteggi del test.
+
+::: {#exm-}
+Consideriamo il data-set `LSAT` contenuto nel pacchetto `ltm`.
+
+```{r}
+KR20 <- function(responses) {
+    # Get number of items (N) and individuals
+    n.items <- ncol(responses)
+    n.persons <- nrow(responses)
+    # get p_j for each item
+    p <- colMeans(responses)
+    # Get total scores (X)
+    x <- rowSums(responses)
+    # observed score variance
+    var.x <- var(x) * (n.persons - 1) / n.persons
+    # Apply KR-20 formula
+    rel <- (n.items / (n.items - 1)) * (1 - sum(p * (1 - p)) / var.x)
+    return(rel)
+}
+```
+
+```{r}
+data(LSAT)
+head(LSAT)
+```
+
+```{r}
+KR20(LSAT)
+```
+:::
+
+#### Coefficiente KR-21
+
+Il coefficiente Coefficiente KR-21 si calcola con la formula:
+
+$$
+KR\_21 = \frac{{k}}{{k-1}} \left( 1 - \frac{{\frac{{\sum_{i=1}^{k} p_{i}(1-p_{i})}}{{\sigma_{X}^{2}}}}}{{1 - \frac{{\sum_{i=1}^{k} p_{i}}}{k}}} \right) 
+$$
+
+dove:
+
+- $k$ è il numero di item nel test,
+- $p_{i}$ è la proporzione di individui che rispondono correttamente all'item $i$,
+- $\sigma_{X}^{2}$ è la varianza totale dei punteggi del test.
+
+### Formula di Spearman-Brown
+
+La formula di Spearman-Brown stima l'affidabilità nel caso di item paralleli:
+
+$$ \rho_p = \frac{p \rho_1}{(p-1)\rho_1 + 1} $$
+
+dove $\rho_1$ è l'affidabilità media di un singolo item, e $p$ è il numero di item.
+
+::: {#exm-}
+Poniamoci il problema di calcolare l'attendibilità della sottoscala Openness utilizzando la formula di Spearman-Brown. Ipotizziamo dunque che gli item della scala Openness siano paralleli. La matrice di correlazione è:
+
+```{r}
+R <- cor(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+R |> round(2)
+```
+
+Supponiamo di calcolare l'attendibilità di un singolo item ($\rho_1$) come la correlazione media tra gli item:
+
+```{r}
+rr <- NULL
+p <- 5
+k <- 1
+for (i in 1:p) {
+    for (j in 1:p) {
+        if (j != i) {
+            rr[k] <- R[i, j]
+        }
+        k <- k + 1
+    }
+}
+ro_1 <- mean(rr, na.rm = TRUE)
+ro_1
+```
+
+Applicando la formula di Spearman-Brown, la stima dell'attendibilità del
+test diventa pari a
+
+```{r}
+(p * ro_1) / ((p - 1) * ro_1 + 1)
+```
+:::
+
+## Affidabilità delle Forme Alternative
+  
+  Si riferisce alla coerenza tra punteggi ottenuti da versioni diverse ma equivalenti del test. Le forme alternative sono utilizzate per evitare effetti di pratica e memoria. Tuttavia, è fondamentale garantire che le forme siano realmente equivalenti per contenuto e difficoltà. L’affidabilità delle forme alternative viene valutata attraverso la correlazione tra le versioni.
+
+
+## Affidabilità Test-Retest
+  
+Misura la stabilità dei punteggi ottenuti dallo stesso test in momenti diversi. Questo approccio è utile per costrutti considerati stabili nel tempo (ad es. intelligenza, personalità). Non è appropriato per costrutti instabili o soggetti a cambiamenti frequenti.
+
+
+## Affidabilità dei Punteggi Compositi
+  
+Si riferisce alla stabilità di punteggi derivati dalla combinazione di più sottoscale o item. In generale, i punteggi compositi hanno un'affidabilità superiore ai punteggi singoli, poiché l’errore specifico di ciascuna misura viene mitigato dalla combinazione con altri punteggi correlati.
+
+::: {#exm-}
+Per esempio, dati due subtest con una varianza del vero punteggio di 25 ciascuno e una covarianza di 15 (dovuta al vero punteggio), la varianza del vero punteggio nel composito è data da:
+
+$$ \text{Var}(Z_{vero}) = 25 + 25 + 2 \cdot 15 = 80 $$
+
+La varianza totale nel composito, tenendo conto anche della varianza dell'errore di misura, sarà:
+
+$$ \text{Var}(Z_{totale}) = 35 + 35 + 2 \cdot 15 = 100 $$
+
+Il rapporto tra la varianza del vero punteggio e la varianza totale nel composito è:
+
+$$ \text{Rapporto} = \frac{\text{Var}(Z_{vero})}{\text{Var}(Z_{totale})} = \frac{80}{100} = 0.8 $$
+
+**Confronto con un Singolo Subtest.**
+
+La varianza del vero punteggio in un singolo subtest è data (come da ipotesi) da 25.
+
+La varianza totale in un singolo subtest è la somma della varianza del vero punteggio e quella dell'errore di misura, quindi 35 (25 di vero punteggio + 10 di errore).
+
+Il rapporto tra la varianza del vero punteggio e la varianza totale in un singolo subtest è:
+
+$$ \text{Rapporto} = \frac{\text{Var}(X_{vero})}{\text{Var}(X_{totale})} = \frac{25}{35} \approx 0.714 $$
+
+Il confronto mostra che l'affidabilità del punteggio composito (0.8) è maggiore di quella di un singolo subtest (circa 0.714). Questo esemplifica come la correlazione positiva tra i subtest possa effettivamente aumentare l'affidabilità del punteggio composito rispetto ai subtest individuali.
+
+Quindi, il vantaggio di combinare i punteggi dai subtest in un punteggio composito emerge principalmente quando i subtest sono in qualche modo correlati e/o quando la varianza dell'errore di misura è ridotta rispetto alla varianza del vero punteggio. In pratica, l'uso di punteggi compositi è spesso giustificato dall'idea che essi forniscono una misura più completa e rappresentativa del costrutto di interesse, riducendo l'impatto dell'errore di misura specifico di ciascun subtest.
+:::
+
+
+## Affidabilità dei Punteggi Differenza
+
+Si applica quando si analizzano differenze tra due punteggi, ad esempio per valutare l'efficacia di un trattamento (punteggi pre-post). Generalmente, l'affidabilità dei punteggi differenza è minore rispetto a quella delle singole misure, soprattutto quando queste ultime sono altamente correlate. La formula è:
+
+$$ r_{dd} = \frac{0.5 (r_{xx} + r_{yy}) - r_{xy}}{1 - r_{xy}} $$
+
+dove:
+
+- $r_{xx}$ e $r_{yy}$ sono le affidabilità delle due misure,
+- $r_{xy}$ è la correlazione tra le due misure.
+
+::: {#exm-}
+Facciamo un esempio numerico varianza la correlazione tra le due componenti.
+
+```{r}
+#| vscode: {languageId: r}
+rdd <- function(rxx, ryy, rxy) {
+    (0.5 * (rxx + ryy) - rxy) / (1 - rxy)
+}
+
+seq(0.01, 0.81, by = 0.1)
+```
+
+```{r}
+#| vscode: {languageId: r}
+rxx <- 0.9
+ryy <- 0.8
+
+rdd(rxx, ryy, seq(0.01, 0.81, by = 0.1))
+```
+
+Si vede che, all'aumentare di $r_{xy}$, l'affidabilità del punteggio differenza diminuisce.
+:::
+
+## Scelta del Coefficiente di Affidabilità
+
+La scelta del coefficiente appropriato dipende da vari fattori:
+
+- **Affidabilità Test-Retest**: per misurare stabilità nel tempo.
+- **Consistenza Interna** (Alpha, KR-20): per test con una sola somministrazione, ideali quando il test misura un singolo costrutto omogeneo.
+- **Affidabilità Forme Alternative**: per test con versioni diverse.
+- **Affidabilità Inter-Valutatori**: per giudizi soggettivi, valuta accordo tra valutatori.
+
+### Linee Guida Generali
+
+- Decisioni importanti (diagnosi): ≥ 0.90
+- Test di rendimento/personalità: ≥ 0.80
+- Screening didattici: ≥ 0.70
+- Ricerca di gruppo: ≥ 0.60 (con cautela sotto 0.70)
+
+
+## Riflessioni Conclusive
+
+La valutazione dell’affidabilità richiede l’applicazione accurata di metodi che rispecchino il contesto d’uso, tenendo conto delle fonti di errore e del tipo di costrutto misurato. Una scelta informata dell’indice di affidabilità garantisce decisioni più precise e affidabili, migliorando la qualità complessiva delle misurazioni psicologiche.
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
+

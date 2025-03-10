@@ -6,8 +6,6 @@
 
 - Si consiglia di ripassare i concetti fondamentali della teoria delle probabilità, in particolare le proprietà delle variabili aleatorie. Per approfondire, si rimanda al materiale didattico dell'insegnamento di Psicometria disponibile al seguente [link](https://ccaudek.github.io/psicometria-r/).
 
-**Concetti e Competenze Chiave**
-
 **Preparazione del Notebook**
 
 ```{r}
@@ -22,198 +20,145 @@ pacman::p_load(modelsummary, MASS)
 
 ## Introduzione
 
-La CTT, originariamente sviluppata da @ch1904general e successivamente formalizzata da @lord1968statistical, è una teoria utilizzata in psicometria per valutare e misurare le caratteristiche psicologiche degli individui attraverso l'uso di test e questionari. Alla base della CTT c'è l'idea che il punteggio di un individuo in un test rifletta tanto il suo vero livello nella caratteristica misurata quanto un certo grado di errore casuale di misurazione. Questa teoria fornisce un quadro concettuale per comprendere come il punteggio osservato possa differire dal punteggio vero e per analizzare la precisione e l'affidabilità del test stesso. Sebbene siano stati sviluppati approcci più recenti, come la teoria della risposta all'item e la teoria della generalizzabilità, la CTT rimane una componente fondamentale nella psicometria e continua a guidare la costruzione, l'interpretazione e la valutazione dei test psicologici.
+La Teoria Classica dei Test (CTT), sviluppata inizialmente da @ch1904general e formalizzata in seguito da @lord1968statistical, costituisce un pilastro della psicometria per la valutazione di caratteristiche psicologiche mediante strumenti quali test e questionari. Il principio fondante della CTT risiede nell’assunzione che il **punteggio osservato** di un individuo derivi dalla combinazione di due elementi: il **punteggio vero**, corrispondente al livello effettivo del tratto misurato, e un **errore casuale** insito nel processo di misurazione. Questo framework teorico offre un modello per stimare la discrepanza tra performance reale e risultato empirico, oltre a fornire strumenti per valutarne la precisione e l’affidabilità. Nonostante l’emergere di approcci avanzati come la Teoria della Risposta all’Item (IRT) e la Teoria della Generalizzabilità, la CTT mantiene un ruolo centrale nella progettazione, nell’interpretazione e nella validazione dei test psicometrici.
 
-Secondo questa teoria, il punteggio ottenuto da un individuo in un test è influenzato da due componenti: il  punteggio vero dell'individuo sulla caratteristica misurata e l'errore casuale di misurazione.
+**Fondamenti concettuali**  
 
-Il punteggio vero rappresenta la misura effettiva della caratteristica che si intende valutare nel soggetto. Tuttavia, a causa di vari fattori come l'errore di misurazione, le distrazioni o l'incertezza dell'individuo durante il test, il punteggio osservato può deviare dal  punteggio vero. Questa discrepanza tra il punteggio vero e il punteggio osservato viene definita errore di misurazione.
-
-La teoria classica dei test si focalizza sulla quantificazione della relazione tra il punteggio vero, il punteggio osservato e l'errore di misurazione. Attraverso l'uso di statistiche come la media, la deviazione standard e il coefficiente di affidabilità, questa teoria fornisce una base concettuale per la costruzione dei test, l'interpretazione dei risultati e l'analisi dell'affidabilità del test stesso.
-
-## Costrutti
-
-Un costrutto è un concetto, spesso considerato una idea latente o fenomeno non direttamente osservabile [@petersen2024principles]. Ad esempio, la depressione può essere un costrutto perché non possiamo misurare direttamente il livello di depressione di una persona, ma lo inferiamo attraverso indicatori indiretti come umore basso, perdita di interesse, difficoltà nel sonno, ecc. Gli indicatori sono misure che riflettono il costrutto.
-
-Esistono due tipi principali di costrutti: **costrutti riflessivi** e **costrutti formativi**.
-
-- In un **costrutto riflessivo**, il costrutto causa le misure e gli indicatori riflettono il costrutto [@bollen1991conventional]. Ad esempio, l'estroversione è un costrutto riflessivo perché la risposta agli indicatori come "piacere di parlare con sconosciuti" o "andare a feste" riflette il livello di estroversione della persona. Gli indicatori sono correlati perché riflettono tutti un unico costrutto latente. La **consistenza interna** tra gli indicatori è quindi attesa.
-
-- In un **costrutto formativo**, invece, le misure causano il costrutto [@bollen1991conventional]. Ad esempio, lo stato socioeconomico (SES) può essere formato dall'educazione, dal reddito e dal prestigio occupazionale di una persona. Gli indicatori formano il costrutto e potrebbero non essere correlati tra loro, in contrasto con i costrutti riflessivi.
-
-Differenze tra costrutti riflessivi e formativi:
-
-- **Correlazioni tra indicatori**: Gli indicatori riflessivi sono correlati, mentre quelli formativi non lo devono necessariamente essere.
-
-- **Campionamento degli indicatori**: Nei costrutti formativi è essenziale campionare tutti gli aspetti del costrutto, mentre nei riflessivi gli indicatori possono essere intercambiabili.
-
-- **Correlazioni ottimali**: Nei costrutti riflessivi, alte correlazioni tra indicatori sono desiderabili, mentre nei formativi correlazioni troppo alte possono creare multicollinearità.
-
-I costrutti riflessivi devono essere stimati con modelli latenti come SEM, analisi fattoriale o teoria della risposta dell'item (IRT). I costrutti formativi possono essere stimati con medie pesate o tramite SEM. 
-
-In sintesi, prima di stimare un costrutto, è importante comprendere la sua natura teorica. I costrutti riflessivi richiedono modelli che riflettano la varianza comune tra gli indicatori, mentre i costrutti formativi possono essere stimati con medie o punteggi sommativi. La teoria è essenziale per guidare la scelta del metodo di stima.
-
-## L'Equazione Fondamentale della CTT
-
-La CTT descrive come i punteggi ottenuti da un test psicometrico siano legati a un costrutto latente. Uno dei concetti fondamentali all'interno della CTT riguarda l'affidabilità dei punteggi ottenuti dai test. L'affidabilità, in questo contesto, indica la capacità del test di produrre risultati coerenti e stabili in diverse occasioni. Questo concetto può essere compreso attraverso l'equazione fondamentale della CTT:
+Secondo la CTT, ogni risposta a un test è riconducibile all’equazione:  
 
 $$
 X = T + E,
-$$ {#eq-observed-true-plus-error}
+$$  {#eq-observed-true-plus-error}
 
-dove $X$ rappresenta il punteggio osservato nel test, $T$ è il punteggio vero (ovvero la rappresentazione della variabile latente di interesse), e $E$ rappresenta l'errore di misurazione.
+dove $X$ rappresenta il punteggio osservato, $T$ il punteggio vero (costante teorica) ed $E$ l’errore di misurazione, inteso come componente stocastica a media nulla. Il **punteggio vero** riflette la competenza o il tratto latente del soggetto, mentre l’**errore** incorpora fattori contingenti (es. distrazioni, variabilità ambientali, limitazioni dello strumento) che influenzano la performance in modo non sistematico.  
 
-Un aspetto di particolare rilevanza all'interno della CTT riguarda la varianza dell'errore. Maggiore è questa varianza, minore sarà la precisione con cui il punteggio vero si riflette nei punteggi osservati. In un contesto ideale, gli errori di misurazione sarebbero tutti nulli, garantendo punteggi esatti per ogni partecipante. Tuttavia, a causa delle inevitabili imperfezioni, si verifica una certa variazione negli errori. La deviazione standard associata a questi errori è chiamata **errore standard di misurazione** e viene indicata con $\sigma_E$. Uno degli obiettivi principali della CTT è stimare $\sigma_E$ al fine di valutare la qualità di una scala psicometrica.
+**Implicazioni metodologiche**  
+
+La teoria si concentra sull’analisi della varianza dei punteggi: attraverso indicatori statistici quali deviazione standard, coefficienti di affidabilità (es. alpha di Cronbach) e correlazioni tra item, quantifica la proporzione di variabilità attribuibile al costrutto rispetto al rumore sperimentale. Questa analisi guida la standardizzazione dei test, l’ottimizzazione del numero di item e la stima dell’intervallo di confidenza per i punteggi veri. Pur non modellando esplicitamente la difficoltà degli item o i tratti latenti (come avviene nell’IRT), la CTT rimane indispensabile per la valutazione psicometrica di base, garantendo rigore nella costruzione degli strumenti e nell’interpretazione dei dati.  
+
+
+## Costrutti in Psicometria  
+
+Un **costrutto** è un concetto teorico, tipicamente latente e non direttamente osservabile, che rappresenta una caratteristica psicologica, sociale o comportamentale [@petersen2024principles]. Esempi emblematici includono *depressione*, *intelligenza* o *autostima*: questi fenomeni non possono essere misurati in modo diretto, ma vengono inferiti attraverso **indicatori osservabili** (es. risposte a item di un test, comportamenti registrati). La validità di un costrutto dipende dalla sua definizione teorica e dalla capacità degli indicatori di rappresentarlo in modo coerente.  
+
+### Tipologie di Costrutti  
+
+La letteratura distingue due categorie fondamentali, con implicazioni metodologiche divergenti [@bollen1991conventional]:  
+
+#### Costrutti Riflessivi
+
+- **Definizione**: Il costrutto latente *causa* le manifestazioni osservate. Gli indicatori riflettono variazioni nel tratto sottostante.  
+- **Esempio**: L’*estroversione* si manifesta attraverso comportamenti come "partecipare attivamente a eventi sociali" o "preferire conversazioni con sconosciuti".  
+- **Proprietà**:  
+  - **Correlazioni attese**: Gli indicatori mostrano **covarianze sistematiche** (es. alta consistenza interna, misurata tramite alpha di Cronbach).  
+  - **Intercambiabilità**: Gli item sono replicabili (rimuovere un indicatore non compromette la definizione del costrutto).  
+  - **Modelli statistici**: Richiedono approcci che catturino la **varianza comune** (analisi fattoriale confirmatoria, modelli SEM, IRT).  
+
+#### Costrutti Formativi
+
+- **Definizione**: Gli indicatori *definiscono* il costrutto, agendo come cause dirette. Il costrutto è una sintesi delle sue componenti.  
+- **Esempio**: Lo *status socioeconomico (SES)* emerge dalla combinazione di educazione, reddito e prestigio occupazionale.  
+- **Proprietà**:  
+  - **Assenza di correlazioni**: Gli indicatori possono essere indipendenti (es. reddito e educazione non necessariamente covariano).  
+  - **Completezza**: L’omissione di un indicatore altera la definizione del costrutto (es. escludere il reddito distorce la misura del SES).  
+  - **Rischi statistici**: Alte correlazioni tra indicatori generano **multicollinearità**, compromettendo regressioni o modelli a equazioni strutturali.  
+  - **Modelli statistici**: Punteggi sommativi, indici pesati o modelli SEM con relazioni causali esplicite.  
+
+### Confronto Sistematico  
+
+| Caratteristica          | Costrutti Riflessivi          | Costrutti Formativi           |  
+|-------------------------|-------------------------------|--------------------------------|  
+| **Natura causale**      | Costrutto → Indicatori        | Indicatori → Costrutto         |  
+| **Correlazioni**        | Attese e desiderabili         | Non necessarie, talvolta indesiderate |  
+| **Campionamento**       | Item intercambiabili          | Item essenziali e non ridondanti |  
+| **Obiettivo statistico**| Massimizzare varianza comune  | Sintetizzare informazioni multiple |  
+
+### Implicazioni per la Stima  
+
+La scelta del metodo di misurazione deve allinearsi alla **natura teorica del costrutto**:  
+- Per costrutti **riflessivi**, modelli basati sulla covarianza (es. analisi fattoriale) identificano la struttura latente sottostante.  
+- Per costrutti **formativi**, approcci compositi (es. punteggi sommativi) o modelli causali (SEM formativo) sono più appropriati.  
+
+**Sintesi critica**: L’ambiguità nella classificazione di un costrutto (riflessivo vs. formativo) può portare a errori metodologici gravi, come l’uso improprio dell’alpha di Cronbach per costrutti formativi. La chiarezza concettuale e il rigore teorico sono prerequisiti per una misurazione valida.  
+
+## L'Equazione Fondamentale della CTT
+
+La Teoria Classica dei Test (CTT) descrive il modo in cui i punteggi ottenuti da un test psicometrico siano legati a un costrutto latente che si intende misurare. Un concetto centrale nella CTT è quello dell'affidabilità, ovvero la capacità del test di produrre risultati coerenti e stabili nel tempo e in differenti condizioni di misurazione. Tale concetto è chiarito dall'equazione fondamentale della CTT, l'@eq-observed-true-plus-error.
 
 ### Le due componenti del punteggio osservato
 
-L'@eq-observed-true-plus-error rappresenta il cuore del modello, sottolineando che il punteggio osservato è il risultato dell'addizione del punteggio vero e dell'errore di misurazione.
+L'equazione fondamentale evidenzia che ogni punteggio osservato ($X$) può essere scomposto in due componenti principali:
 
-L'obiettivo principale della CTT è quantificare l'errore di misurazione (rappresentato da $\sigma_E$) per valutare l'affidabilità del test e ottenere una stima dell'errore standard di misurazione. L'affidabilità del test riflette la precisione con cui il test può misurare il punteggio vero (Coaley, 2014). Si calcola come il rapporto tra la varianza dei punteggi veri e la varianza dei punteggi osservati. Un'alta affidabilità indica una ridotta incertezza dovuta all'errore di misurazione ($\sigma_E$), indicando che il punteggio osservato ($X$) fornisce una misura accurata del punteggio vero ($T$). Al contrario, una bassa affidabilità indica un elevato errore di misurazione ($\sigma_E$) e una significativa discrepanza tra il punteggio osservato e il punteggio vero.
+- **Punteggio vero ($T$)**: rappresenta il valore reale, non influenzato da errori, della caratteristica o del costrutto misurato.
+- **Errore di misurazione ($E$)**: rappresenta tutte le variazioni casuali che influenzano la misura e impediscono al punteggio osservato di coincidere esattamente con quello vero.
 
-La stima dell'errore standard di misurazione comporta il calcolo della deviazione standard della variabile casuale $E$ (ossia $\sigma_E$), che rappresenta l'errore di misurazione influente sui punteggi veri. Questa stima offre un'indicazione della dispersione dei punteggi osservati attorno ai punteggi veri, causata dall'errore di misurazione.
+### Errore standard di misurazione
 
-Nelle prossime sezioni, esploreremo come il concetto chiave di attendibilità nella CTT possa essere collegato al coefficiente di determinazione nel contesto del modello statistico di regressione lineare. Inoltre, vedremo come l'errore standard di misurazione della CTT possa essere associato all'errore standard nella regressione.
+Un aspetto di particolare importanza nella CTT riguarda la varianza dell'errore di misurazione. Più grande è tale varianza, minore sarà la precisione con cui il punteggio vero è rappresentato dal punteggio osservato. Idealmente, se l'errore di misurazione fosse nullo, ogni punteggio osservato corrisponderebbe esattamente al punteggio vero. Tuttavia, nella realtà, gli errori di misurazione sono inevitabili.
+
+La deviazione standard dell'errore di misurazione è chiamata **errore standard di misurazione** e indicata con $\sigma_E$. Questa quantità misura la dispersione dei punteggi osservati intorno al punteggio vero dovuta agli errori casuali di misurazione. Uno degli obiettivi principali della CTT è proprio stimare $\sigma_E$ per valutare la qualità di una scala psicometrica.
+
+### Affidabilità e precisione del test
+
+L'affidabilità nella CTT è definita come il rapporto tra la varianza dei punteggi veri e la varianza totale dei punteggi osservati. Un'alta affidabilità indica una bassa incidenza degli errori casuali di misurazione (ossia un piccolo valore di $\sigma_E$), garantendo quindi che il punteggio osservato ($X$) sia una misura accurata del punteggio vero ($T$). Al contrario, una bassa affidabilità implica una grande incertezza nella misura, evidenziando una significativa discrepanza tra il punteggio osservato e il punteggio vero.
+
+Nelle sezioni successive, esploreremo come il concetto di affidabilità nella CTT sia correlato al coefficiente di determinazione ($R^2$) utilizzato nella regressione lineare. Inoltre, vedremo come l'errore standard di misurazione nella CTT sia analogo all'errore standard della stima nel modello statistico della regressione.
 
 ### Il punteggio vero
 
-L'@eq-observed-true-plus-error ci spiega che il punteggio osservato è il risultato della combinazione di due componenti: una componente sistematica (il punteggio vero) e una componente aleatoria (l'errore di misurazione). Ma cosa rappresenta esattamente il punteggio vero? La Teoria Classica dei Test (CTT) attribuisce diverse interpretazioni al concetto di punteggio vero.
+Secondo l'@eq-observed-true-plus-error, il punteggio osservato risulta dalla combinazione di due componenti: una sistematica, cioè il punteggio vero, e una aleatoria, rappresentata dall'errore di misurazione. Ma cosa si intende esattamente con il concetto di punteggio vero? La Teoria Classica dei Test (CTT) propone diverse interpretazioni complementari.
 
-- Da un punto di vista psicologico, la CTT considera il test come una selezione casuale di domande da un insieme più ampio di domande che riflettono il costrutto da misurare [@nunnally1994psychometric; @kline2013handbook]. In questo contesto, il punteggio vero rappresenta il punteggio che un partecipante otterrebbe se rispondesse a tutte le domande dell'insieme completo. L'errore di misurazione riflette quindi quanto le domande selezionate rappresentano l'intero insieme di domande relative al costrutto.
+- Dal punto di vista psicologico, la CTT interpreta un test come una selezione casuale di domande estratte da un insieme più ampio che riflette il costrutto che si vuole misurare [@nunnally1994psychometric; @kline2013handbook]. In questa prospettiva, il punteggio vero corrisponde al risultato che un partecipante otterrebbe rispondendo all'intero insieme di domande. L'errore di misurazione rappresenta dunque quanto le specifiche domande selezionate casualmente si discostano dalla totalità delle domande relative al costrutto.
 
-- In modo equivalente, il punteggio vero può essere considerato come il punteggio non influenzato da fattori esterni al costrutto, come effetti di apprendimento, fatica, memoria, motivazione, e così via. Poiché è concepito come un processo completamente casuale, la componente aleatoria non introduce alcun bias nella tendenza centrale della misurazione (la media di $E$ è assunta essere uguale a 0).
+- In modo analogo, il punteggio vero può essere visto come il risultato della misurazione ideale, cioè non influenzata da fattori estranei al costrutto di interesse, come l'apprendimento durante il test, la fatica, la memoria o la motivazione del soggetto. Poiché la componente aleatoria (errore) è considerata un processo casuale, essa non introduce alcun bias sistematico; infatti, per definizione, la media di $E$ è uguale a zero.
 
-- Dal punto di vista statistico, il punteggio vero è un punteggio inosservabile che rappresenta il valore atteso di infinite misurazioni del punteggio ottenute:
+- Da un punto di vista statistico, il punteggio vero è una quantità teorica, non osservabile direttamente, che rappresenta il valore atteso (media) delle misurazioni ottenute somministrando ripetutamente il test allo stesso individuo nelle medesime condizioni:
 
 $$
 T = \mathbb{E}(X) \equiv \mu_X \equiv \mu_{T}.
 $$
 
-Combinando le definizioni presentate sopra, @lord1968statistical concepiscono il punteggio vero come la media dei punteggi che un soggetto otterrebbe se il test venisse somministrato ripetutamente nelle stesse condizioni, senza effetti di apprendimento o fatica.
+Integrando le definizioni precedenti, @lord1968statistical definiscono il punteggio vero come il punteggio medio che un individuo otterrebbe se il test fosse somministrato ripetutamente nelle stesse condizioni, escludendo ogni effetto di apprendimento o affaticamento.
 
 ### Somministrazioni ripetute
 
-Nella CTT, possiamo distinguere due tipi di esperimenti casuali: uno in cui l'unità di osservazione (l’individuo) è considerata una variabile campionaria, e un altro in cui il punteggio di un singolo individuo è trattato come una variabile casuale. La combinazione di questi due esperimenti consente di estendere i risultati della CTT, originariamente sviluppata assumendo somministrazioni ripetute immaginarie del test allo stesso individuo in condizioni identiche, al caso di una singola somministrazione su un campione di individui [@allen2001introduction].
+Nella Teoria Classica dei Test (CTT) è possibile distinguere due approcci sperimentali complementari: uno in cui ciascun individuo costituisce un'unità di osservazione che varia casualmente all'interno di un campione, e un altro in cui il punteggio ottenuto da un singolo individuo viene trattato come una variabile casuale derivante da ripetute somministrazioni teoriche dello stesso test. Combinare questi due approcci consente di generalizzare i risultati della CTT—originariamente formulata ipotizzando molteplici somministrazioni immaginarie dello stesso test allo stesso individuo, in condizioni identiche—al caso pratico di una singola somministrazione del test a un campione di individui [@allen2001introduction].
 
-Questa estensione si fonda sull’assunzione ergodica, secondo cui è possibile interpretare la variabilità nelle misurazioni ripetute su un singolo individuo come rappresentativa della variabilità in un campione di individui, a condizione che siano soddisfatte le seguenti condizioni: 
+Questa generalizzazione si basa sull’assunzione ergodica, la quale consente di considerare la variabilità derivante da somministrazioni ripetute dello stesso test su un singolo individuo come rappresentativa della variabilità tra individui differenti in un unico momento temporale. L'assunzione ergodica è valida se sono soddisfatte le seguenti condizioni:
 
-- **Omogeneità:** le proprietà fondamentali del costrutto misurato sono uguali per tutti gli individui nel campione. In altre parole, ogni individuo risponde in modo simile rispetto alla dimensione latente misurata dal test, e le differenze individuali sono esclusivamente dovute alla variabilità casuale o all’errore di misura, non a variazioni sostanziali nel costrutto.
+- **Omogeneità:** tutti gli individui nel campione condividono le stesse proprietà fondamentali del costrutto misurato. Ciò implica che le differenze osservate tra individui non riflettono variazioni sostanziali del costrutto, bensì derivano principalmente dalla variabilità casuale o dall'errore di misurazione.
 
-- **Stabilità:** le caratteristiche individuali misurate restano costanti nel tempo durante le somministrazioni ripetute. Ciò significa che, per uno stesso individuo, il costrutto misurato non cambia tra una somministrazione e l’altra, e le variazioni osservate riflettono soltanto la componente di errore o la variabilità casuale.
+- **Stabilità:** le caratteristiche individuali misurate dal test rimangono costanti nel tempo durante le ipotetiche somministrazioni ripetute. Pertanto, eventuali variazioni osservate in misurazioni successive dello stesso individuo sono attribuibili esclusivamente all'errore di misura e non a effettivi cambiamenti nel costrutto.
 
-Quando queste condizioni sono soddisfatte, le quantità fondamentali della CTT assumono un significato empirico valido anche per la somministrazione del test a una popolazione di individui. In questo contesto:
+Quando queste condizioni sono rispettate, le principali quantità definite dalla CTT acquisiscono un'interpretazione empirica valida anche in una singola somministrazione a un campione di individui. In particolare:
 
-- $\sigma^2_X$ rappresenta la varianza del punteggio osservato nella popolazione,
+- $\sigma^2_X$ corrisponde alla varianza dei punteggi osservati nel campione o nella popolazione;
+- $\sigma^2_T$ corrisponde alla varianza dei punteggi veri, rappresentando la reale differenza tra individui nella popolazione;
+- $\sigma^2_E$ rappresenta la varianza degli errori di misurazione nella popolazione.
 
-- $\sigma^2_T$ rappresenta la varianza del punteggio vero nella popolazione,
-
-- $\sigma^2_E$ rappresenta la varianza della componente d’errore nella popolazione.
-
-L’assunzione ergodica permette quindi di inferire proprietà della popolazione a partire da misurazioni su individui singoli e viceversa, in quanto la variabilità all’interno di un individuo e quella tra individui sono considerate comparabili nelle stesse condizioni.
+L’assunzione ergodica, quindi, permette di inferire proprietà della popolazione partendo dalla variabilità osservata in singoli individui, e viceversa, considerando che la variabilità intra-individuale (somministrazioni ripetute su un singolo individuo) e quella inter-individuale (tra individui diversi) siano comparabili sotto le condizioni descritte.
 
 ### Le assunzioni sul punteggio ottenuto
 
-La CTT *assume* che la media del punteggio osservato $X$ sia uguale alla
-media del punteggio vero, 
+La Teoria Classica dei Test (CTT) assume che il valore atteso del punteggio osservato $X$ sia uguale al valore atteso del punteggio vero $T$:
 
 $$
 \mu_X \equiv \mu_{T},
 $$ {#eq-assunzione-media-x-media-t}
 
-in altri termini, assume che il punteggio osservato fornisca una stima statisticamente corretta dell'abilità latente (punteggio vero). 
-
-In pratica, il punteggio osservato non sarà mai uguale all'abilità latente, ma corrisponde solo ad uno dei possibili punteggi che il soggetto può ottenere, subordinatamente alla sua abilità latente. L'errore della misura è la differenza tra il punteggio osservato e il punteggio vero:
+Ciò significa che, in media, il punteggio osservato fornisce una stima accurata del punteggio vero (abilità latente). Tuttavia, nella pratica, ogni singolo punteggio osservato sarà influenzato da un errore di misurazione, per cui non coinciderà mai esattamente con il punteggio vero:
 
 $$
 E \equiv X - T.
 $$
 
-In base all'assunzione secondo cui il valore atteso dei punteggi è uguale alla media del valore vero, segue che
+Data l'assunzione che i punteggi osservati siano mediamente uguali ai punteggi veri, ne consegue che l'errore di misurazione ha valore atteso pari a zero:
 
 $$
-\mathbb{E}(E) = \mathbb{E}(X - T) = \mathbb{E}(X) - \mathbb{E}(T) = \mu_{T} - \mu_{T} = 0,
+\mathbb{E}(E) = \mathbb{E}(X - T) = \mathbb{E}(X) - \mathbb{E}(T) = \mu_{T} - \mu_{T} = 0.
 $$
 
-ovvero, il valore atteso degli errori è uguale a zero.
-
-Per dare un contenuto concreto alle affermazioni precedenti, consideriamo la seguente simulazione svolta in $\textsf{R}$. In tale simulazione il punteggio vero $T$ e l'errore $E$ sono creati in modo tale da soddisfare i vincoli della CTT: $T$ e $E$ sono variabili casuali gaussiane tra loro incorrelate. Nella simulazione generiamo 100 coppie di valori $X$ e $T$ con i seguenti parametri: $T \sim \mathcal{N}(\mu_T = 12, \sigma^2_T = 6)$, $E \sim \mathcal{N}(\mu_E = 0, \sigma^2_T = 3)$:
-
-```{r}
-#| vscode: {languageId: r}
-set.seed(8394)
-
-n <- 100
-Sigma <- matrix(c(6, 0, 0, 3), byrow = TRUE, ncol = 2)
-mu <- c(12, 0)
-dat <- mvrnorm(n, mu, Sigma, empirical = TRUE)
-T <- dat[, 1]
-E <- dat[, 2]
-```
-
-Le istruzioni precedenti (`empirical = TRUE`) creano un campione di valori nei quali  le medie e la matrice di covarianze assumono esattamente i valori richiesti. Possiamo dunque immaginare tale insieme di dati come la "popolazione".
-
-Secondo la CTT, il punteggio osservato è $X = T + E$. Simuliamo dunque
-il punteggio osservato $X$ come:
-
-```{r}
-#| vscode: {languageId: r}
-X <- T + E
-```
-
-Le prime 6 osservazioni così ottenute sono:
-
-```{r}
-#| vscode: {languageId: r}
-tibble(X, T, E) |> head()
-```
-
-\
-Un diagramma di dispersione è fornito nella figura seguente:
-
-```{r}
-#| vscode: {languageId: r}
-tibble(X, T) |>
-ggplot(aes(T, X)) +
-    geom_point(position = position_jitter(w = .3, h = .3)) +
-    geom_abline(col = "blue")
-```
-
-Secondo la CTT, il valore atteso di $T$ è uguale al valore atteso di
-$X$. Verifichiamo questa assunzione nei nostri dati
-
-```{r}
-#| vscode: {languageId: r}
-mean(T) == mean(X)
-```
-
-\
-L'errore deve avere media zero:
-
-```{r}
-#| vscode: {languageId: r}
-mean(E)
-```
-
-\
-Le varianze dei punteggi veri, dei punteggi osservati e degli errori sono rispettivamente uguali a:
-
-```{r}
-#| vscode: {languageId: r}
-c(var(T), var(X), var(E))  
-```
-
-## L'errore standard della misurazione $\sigma_E$
-
-La radice quadrata della varianza degli errori di misurazione, ovvero la deviazione standard degli errori, $\sigma_E$, è la quantità fondamentale della CTT ed è chiamata *errore standard della misurazione*. La stima dell'errore standard della misurazione costituisce uno degli obiettivi più importanti della CTT. 
-
-Nel caso presente, abbiamo:
-
-```{r}
-#| vscode: {languageId: r}
-sqrt(var(E))
-```
-
-\
-Ricordiamo che la deviazione standard indica quanto i dati di una distribuzione si discostano dalla media di quella distribuzione. È simile allo scarto tipico, ovvero la distanza media tra i valori della distribuzione e la loro media. Possiamo dunque utilizzare questa proprietà per descrivere il modo in cui la CTT interpreta la quantità $\sigma_E$: l'errore standard della misurazione $\sigma_E$ ci dice qual è, approssimativamente, la quantità attesa di variazione del punteggio osservato, se il test venisse somministrato ripetute volte al medesimo rispondente sotto le stesse condizioni (ovvero, in assenza di effetti di apprendimento o di fatica).
+In altre parole, gli errori di misurazione non introducono alcun bias sistematico, ma solo variazione casuale.
 
 ## Assiomi della Teoria Classica
 
@@ -237,288 +182,208 @@ $$
 
 La quantità $\sigma_E$ è appunto l'errore standard della misurazione. Sulla base di tali assunzioni la CTT deriva la formula dell'attendibilità di un test. Si noti che le assunzioni della CTT hanno una corrispondenza puntuale con le assunzioni su cui si basa il modello di regressione lineare.
 
-Verifichiamo le assunzioni per i dati dell'esempio.
+## Simulazione empirica
+
+Per chiarire ulteriormente queste idee, consideriamo la seguente simulazione realizzata con il software $\textsf{R}$. In questa simulazione, i punteggi veri ($T$) e gli errori di misurazione ($E$) sono generati rispettando le condizioni della CTT, ovvero:
+
+- $T$ ed $E$ sono variabili casuali Gaussiane;
+- $T$ ed $E$ sono tra loro indipendenti (covarianza nulla);
+- Il valore atteso di $E$ è zero.
+
+Generiamo un campione di 100 osservazioni con i seguenti parametri:
+
+- $T \sim \mathcal{N}(\mu_T = 12, \sigma^2_T = 6)$
+- $E \sim \mathcal{N}(\mu_E = 0, \sigma^2_E = 3)$
 
 ```{r}
-#| vscode: {languageId: r}
+set.seed(8394)
+
+n <- 100
+Sigma <- matrix(c(6, 0, 0, 3), byrow = TRUE, ncol = 2)
+mu <- c(12, 0)
+dat <- mvrnorm(n, mu, Sigma, empirical = TRUE)
+T <- dat[, 1]
+E <- dat[, 2]
+```
+
+Utilizzando l'opzione `empirical = TRUE`, otteniamo un campione in cui le medie e le covarianze sono esattamente quelle specificate. Possiamo quindi interpretare questo insieme di dati come rappresentativo di una "popolazione".
+
+Il punteggio osservato viene simulato come $X = T + E$:
+
+```{r}
+X <- T + E
+```
+
+Le prime sei osservazioni sono le seguenti:
+
+```{r}
+tibble(X, T, E) |> head()
+```
+
+Il seguente diagramma di dispersione mostra la relazione tra punteggi veri e osservati:
+
+```{r}
+tibble(X, T) |>
+ggplot(aes(T, X)) +
+    geom_point(position = position_jitter(w = .3, h = .3)) +
+    geom_abline(col = "blue")
+```
+
+Verifichiamo le assunzioni della CTT per i dati dell'esempio:
+
+```{r}
 cor(E, T)
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 plot(density(E))
 curve(dnorm(x, mean(E), sd(E)), add = TRUE, col = "red")
 ```
 
+Verifichiamo che la media dei punteggi veri e dei punteggi osservati siano uguali:
+
+```{r}
+mean(T) == mean(X)
+```
+
+Verifichiamo anche che l'errore di misurazione abbia valore medio zero:
+
+```{r}
+mean(E)
+```
+
+Le varianze dei punteggi veri, dei punteggi osservati e degli errori sono rispettivamente
+
+```{r}
+c(var(T), var(X), var(E))
+```
+
+coerentemente con i valori usati nella simulazione.
+
+## L'errore standard della misurazione ($\sigma_E$)
+
+L'errore standard della misurazione ($\sigma_E$) è un concetto fondamentale della CTT. Si tratta della deviazione standard degli errori di misurazione e indica la precisione con cui un test riflette il punteggio vero di un individuo. In termini pratici, $\sigma_E$ rappresenta la quantità media di variazione attesa nei punteggi osservati qualora il test fosse somministrato ripetutamente **allo stesso individuo**, nelle medesime condizioni (senza effetti di apprendimento o affaticamento).
+
+Un test con un valore basso di $\sigma_E$ sarà considerato altamente preciso, poiché i punteggi osservati tenderanno a variare poco intorno al punteggio vero. Viceversa, un valore elevato di $\sigma_E$ indica una maggiore variabilità dei punteggi osservati, riflettendo una minore precisione nella misura.
+
+La **stima** di questo errore è uno degli obiettivi principali della CTT, perché permette di quantificare l'affidabilità del test.
+
+Nel nostro esempio, l'errore standard della misurazione viene calcolato come segue:
+
+```{r}
+sqrt(var(E))
+```
+
+Questo valore rappresenta quindi la quantità attesa di variazione del punteggio osservato nel caso di somministrazioni ripetute dello stesso test alla medesima persona, nelle stesse condizioni.
+
 ## Quattro Livelli di Misurazione nella CTT
 
-Nell'ambito della CTT, le misure della stessa entità (che possono essere item, sottoscale o test) possono essere classificate in base al loro livello di similarità. In questa sezione, verranno definiti quattro livelli di similarità: misure parallele, $\tau$-equivalenti, essenzialmente $\tau$-equivalenti e congeneriche. 
+Nella Teoria Classica dei Test (CTT), le misure della stessa entità (item, sottoscale o test) possono essere classificate secondo quattro livelli gerarchici di similarità, dal più al meno restrittivo: misure parallele, misure τ-equivalenti, misure essenzialmente τ-equivalenti e misure congeneriche. Questa gerarchia riflette i vincoli progressivamente minori sulle caratteristiche delle misure.
 
-È importante notare che questi livelli sono gerarchici nel senso che il livello più alto (misure parallele) richiede la maggiore similarità, mentre i livelli inferiori nella gerarchia consentono una minore similarità nelle proprietà del test. Ad esempio, le misure parallele devono avere varianze di vero punteggio uguali, mentre le misure congenetiche non richiedono questa condizione.
-
-Un modo utile per comprendere questi livelli è riflettere sulle relazioni tra i punteggi veri di coppie di misure [@komaroff1997effect]. Nella CTT, la relazione tra i punteggi veri su due misure ($t_i$ e $t_j$) è espressa come:
+La similarità tra due misure è definita dalla relazione tra i punteggi veri ($t_i$ e $t_j$):
 
 $$
-t_i = a_{ij }+ b_{ij} t_{j}.
+t_i = a_{ij} + b_{ij} t_j
 $$
 
-* $a_{ij}$: Rappresenta lo *scarto medio* tra i punteggi delle due misure. Se è diverso da zero, una misura tende a dare punteggi sistematicamente più alti o più bassi dell'altra.
-
-* $b_{ij}$: Rappresenta la *scala* con cui una misura misura il tratto latente rispetto all'altra. Se è diverso da uno, le misure non misurano lo stesso tratto con la stessa intensità.
-
-**Cosa significano questi parametri per i livelli di similarità?**
-
-* **Misure parallele:** Entrambe le misure sono identiche, sia nella scala che nello scarto medio.
-
-* **Misure τ-equivalenti:** Le misure hanno la stessa scala, ma potrebbero avere uno scarto medio diverso.
-
-* **Misure essenzialmente τ-equivalenti:** Le misure possono differire sia nella scala che nello scarto medio, ma entro certi limiti.
-
-* **Misure congeneriche:** Le misure possono differire in modo sostanziale sia nella scala che nello scarto medio.
-
-In sostanza, più i parametri $a_{ij}$ e $b_{ij}$ sono vicini a zero e uno, rispettivamente, più le misure sono simili e misurano lo stesso costrutto in modo più coerente.
+- $a_{ij}$: differenza sistematica nelle medie tra le misure.
+- $b_{ij}$: differenza di scala rispetto al costrutto latente misurato.
 
 ### Misure parallele
 
-Le **misure parallele** rappresentano il livello più alto di similarità tra le misure. Ciò significa che due misure sono considerate parallele quando soddisfano le seguenti condizioni:
+Le **misure parallele** soddisfano tre condizioni fondamentali:
 
-* **Uguaglianza delle medie dei punteggi veri:** Il termine $a_{ij}$ nell'equazione è uguale a zero per tutte le coppie di misure, indicando che non esiste alcuna differenza sistematica tra le medie dei punteggi veri delle due misure.
+- Medie dei punteggi veri uguali ($a_{ij} = 0$).
+- Varianze dei punteggi veri uguali ($b_{ij} = 1$).
+- Varianze degli errori di misura uguali.
 
-* **Uguaglianza delle varianze dei punteggi veri:** Il termine $b_{ij}$ è uguale a uno per tutte le coppie di misure, indicando che le varianze dei punteggi veri delle due misure sono identiche.
-
-* **Uguaglianza delle varianze di errore:** Le misure parallele presentano la stessa quantità di errore di misura.
-
-Queste condizioni implicano che:
-
-* I punteggi osservati (ovvero, i punteggi effettivamente ottenuti dai soggetti) avranno medie, varianze e correlazioni uguali. 
-
-* Gli item che costituiscono misure parallele hanno lo stesso potere discriminativo (carico fattoriale) rispetto al costrutto che misurano.
-
-In sostanza, le misure parallele misurano esattamente lo stesso costrutto, con la stessa precisione e senza alcuna distorsione sistematica.
-
-Simuliamo i punteggi di due test paralleli in R.
+Simulazione in R:
 
 ```{r}
-#| vscode: {languageId: r}
-set.seed(2237) # setting the seed ensure reproducibility
-num_person <- 1000 # number of respondents
-# True scores for Test 1
-t1 <- rnorm(num_person, mean = 20, sd = 5)
-# Error scores for Test 1
-e1 <- rnorm(num_person, mean = 0, sd = 2)
-# Observed scores for Test 1
+set.seed(123)
+n <- 1000
+t1 <- rnorm(n, mean = 20, sd = 5)
+e1 <- rnorm(n, mean = 0, sd = 2)
 x1 <- t1 + e1
-# True scores for Test 2
-t2 <- t1 # parallel tests have equal true scores
-# Error scores for Test 2
-e2 <- rnorm(num_person, mean = 0, sd = 2)
-# Observed scores for Test 2
+
+t2 <- t1
+e2 <- rnorm(n, mean = 0, sd = 2)
 x2 <- t2 + e2
+
+cor(x1, x2)
 ```
 
-```{r}
-#| vscode: {languageId: r}
-# Merge into a data frame
-test_df <- data.frame(x1, x2)
-# Get means and variances
-mv <- datasummary(x1 + x2 ~ Mean + Var,
-    data = test_df,
-    output = "data.frame"
-)
-mv
-```
+### Misure τ-equivalenti
+
+Le **misure τ-equivalenti** soddisfano:
+
+- Medie dei punteggi veri uguali ($a_{ij} = 0$).
+- Varianze dei punteggi veri uguali ($b_{ij} = 1$).
+- Possibile differenza nelle varianze degli errori di misura.
+
+Simulazione in R:
 
 ```{r}
-#| vscode: {languageId: r}
-cor(test_df$x1, test_df$x2)
-```
-
-\
-Nel caso di due test paralleli, le medie e le varianze dei punteggi osservati sono (teoricamente) uguali; la correlazione descrive l'affidabilità del test.
-
-### Misure $\tau$-equivalenti
-
-Le **misure τ-equivalenti** rappresentano un livello di similarità leggermente inferiore rispetto alle misure parallele. 
-
-Caratteristiche delle misure τ-equivalenti:
-
-* **Uguaglianza delle varianze dei punteggi veri:** Come le misure parallele, anche le misure τ-equivalenti hanno lo stesso valore del punteggio vero per ogni individuo, indipendentemente dal test utilizzato. Ciò implica che il parametro $b_{ij}$ è sempre uguale a 1.
-
-* **Possibile differenza nelle varianze di errore:** A differenza delle misure parallele, le misure τ-equivalenti possono presentare diversi livelli di errore di misura. Questo significa che, pur misurando lo stesso costrutto, un test potrebbe essere più preciso di un altro.
-
-In sintesi, le misure τ-equivalenti misurano lo stesso costrutto sullo stesso scala, ma possono differire nella precisione con cui lo misurano. In altre parole, i punteggi veri sono uguali per tutti gli item, ma gli errori di misura possono variare.
-
-Conseguenze:
-
-* **Covarianze uguali:** Le misure τ-equivalenti presentano le stesse covarianze tra i punteggi veri e tra i punteggi osservati.
-
-* **Variazioni nelle varianze osservate:** A causa delle possibili differenze nelle varianze di errore, le varianze dei punteggi osservati possono differire tra le misure τ-equivalenti.
-
-Simuliamo due misure $\tau$-equivalenti.
-
-```{r}
-#| vscode: {languageId: r}
-set.seed(2237) # setting the seed ensure reproducibility
-num_person <- 1000 # number of respondents
-# True scores for Test 1
-t1 <- rnorm(num_person, mean = 20, sd = 5)
-# Error scores for Test 1
-e1 <- rnorm(num_person, mean = 0, sd = 2)
-# Observed scores for Test 1
+set.seed(456)
+t1 <- rnorm(n, mean = 20, sd = 5)
+e1 <- rnorm(n, mean = 0, sd = 2)
 x1 <- t1 + e1
-# True scores for Test 2
-t2 <- t1 # parallel tests have equal true scores
-# Error scores for Test 2
-e2 <- rnorm(num_person, mean = 0, sd = 2)
-# Observed scores for Test 2
+
+t2 <- t1
+e2 <- rnorm(n, mean = 0, sd = 4)
 x2 <- t2 + e2
+
+cor(x1, x2)
 ```
 
-Se conosciamo i punteggi veri, le stime dell'affidabilità di x1 e x2 sono:
+### Misure essenzialmente τ-equivalenti
+
+Le **misure essenzialmente τ-equivalenti** permettono:
+
+- Differenze sistematiche nelle medie dei punteggi veri ($a_{ij} \neq 0$).
+- Varianze dei punteggi veri uguali ($b_{ij} = 1$).
+- Differenze nelle varianze degli errori di misura.
+
+Simulazione in R:
 
 ```{r}
-#| vscode: {languageId: r}
-# Reliability for x1
-var(t1) / var(x1)
+set.seed(789)
+t1 <- rnorm(n, mean = 20, sd = 5)
+e1 <- rnorm(n, mean = 0, sd = 2)
+x1 <- t1 + e1
+
+t2 <- 5 + t1
+e2 <- rnorm(n, mean = 0, sd = 3)
+x2 <- t2 + e2
+
+cor(x1, x2)
 ```
+
+### Misure congeneriche
+
+Le **misure congeneriche** sono il modello più generale e consentono:
+
+- Differenze sostanziali nelle medie dei punteggi veri ($a_{ij} \neq 0$).
+- Differenze nella scala dei punteggi veri ($b_{ij} \neq 1$).
+- Differenze sostanziali nelle varianze degli errori di misura.
+
+Simulazione in R:
 
 ```{r}
-#| vscode: {languageId: r}
-# Reliability for x2
-var(t2) / var(x2)
+set.seed(1011)
+t1 <- rnorm(n, mean = 20, sd = 5)
+e1 <- rnorm(n, mean = 0, sd = 2)
+x1 <- t1 + e1
+
+t2 <- 3 + 0.8 * t1
+e2 <- rnorm(n, mean = 0, sd = 4)
+x2 <- t2 + e2
+
+cor(x1, x2)
 ```
 
-```{r}
-#| vscode: {languageId: r}
-# Merge into a data frame
-test_df <- data.frame(x1, x2)
-# Get means and variances
-mv <- datasummary(x1 + x2 ~ Mean + Var,
-    data = test_df,
-    output = "data.frame"
-)
-mv
-```
+Queste simulazioni permettono di comprendere chiaramente le implicazioni pratiche e teoriche dei diversi livelli di similarità nella misurazione secondo la CTT.
 
-```{r}
-#| vscode: {languageId: r}
-cor(test_df$x1, test_df$x2)
-```
-
-\
-In conclusione, nel caso di due test $\tau$-equivalenti, le medie e le varianze dei punteggi osservati sono (teoricamente) uguali. Anche in questo caso, la correlazione descrive l'affidabilità del test.
-
-### Misure essenzialmente $\tau$-equivalenti
-
-Le **misure essenzialmente $\tau$-equivalenti** rappresentano una forma di misurazione in cui i punteggi veri possono differire di una costante additiva. Ciò significa che, pur misurando lo stesso costrutto, le medie dei punteggi veri di diversi item possono variare leggermente.
-
-Caratteristiche delle misure essenzialmente $\tau$-equivalenti:
-
-* **Uguaglianza delle varianze dei punteggi veri:** Come nelle misure $\tau$-equivalenti, la varianza del punteggio vero è la stessa per tutti gli item. 
-
-* **Possibili differenze nelle medie dei punteggi veri:** Il parametro $a_{ij}$ può essere diverso da zero, indicando che le medie dei punteggi veri possono variare.
-
-* **Possibili differenze nelle varianze di errore:** Come nelle misure $\tau$-equivalenti, gli item possono avere diversi livelli di precisione, ovvero diverse varianze di errore.
-
-Implicazioni:
-
-* **Correlazione perfetta tra i punteggi veri:** Nonostante le differenze nelle medie, i punteggi veri sono perfettamente correlati linearmente.
-
-* **Covarianze uguali tra i punteggi veri:** Le covarianze tra i punteggi veri sono uguali per tutte le coppie di item.
-
-* **Possibili differenze nelle varianze e nelle covarianze dei punteggi osservati:** A causa delle differenze nelle varianze di errore, le varianze e le covarianze dei punteggi osservati possono variare.
-
-In sintesi, le misure essenzialmente $\tau$-equivalenti sono utili quando si desidera confrontare diversi item che misurano lo stesso costrutto, ma si ammette la possibilità di piccole differenze sistematiche nelle medie dei punteggi.
-
-```{r}
-#| vscode: {languageId: r}
-# True scores for Test 3
-t3 <- 5 + t1 # essentially tau-equivalent tests
-# Error scores for Test 3 (larger error SDs)
-e3 <- rnorm(num_person, mean = 0, sd = 4)
-# Observed scores for Test 2
-x3 <- t3 + e3
-```
-
-```{r}
-#| vscode: {languageId: r}
-# Merge into a data frame
-test_df2 <- data.frame(x1, x3)
-# Get means and variances
-mv <- datasummary(x1 + x3 ~ Mean + Var,
-    data = test_df2,
-    output = "data.frame"
-)
-mv
-```
-
-Se conosciamo i punteggi veri, la stima dell'affidabilità di x3 è:
-
-```{r}
-#| vscode: {languageId: r}
-# Reliability for x3
-var(t3) / var(x3)
-```
-
-\
-In conclusione, nel caso di test essenzialmente $\tau$-equivalenti, le medie e le varianze dei punteggi osservati sono diverse; la correlazione non è uguale all'affidabilità.
-
-### Misure Congeneriche
-
-Le **misure congeneriche** rappresentano il livello di similarità più basso tra le diverse tipologie di misure. 
-
-Caratteristiche delle misure congeneriche:
-
-* **Nessuna restrizione:** A differenza delle misure parallele, τ-equivalenti ed essenzialmente τ-equivalenti, le misure congeneriche non sono soggette a restrizioni specifiche sui parametri $a_{ij}$ e $b_{ij}$. Ciò significa che:
-
-  * Le medie dei punteggi veri possono differire significativamente.
-
-  * Le varianze dei punteggi veri possono essere diverse.
-  
-  * Le varianze di errore possono variare notevolmente.
-
-* **Unidimensionalità:** Nonostante queste differenze, si assume che tutte le misure congeneriche misurino lo stesso costrutto latente sottostante.
-
-Implicazioni:
-
-* **Flessibilità:** Le misure congeneriche offrono la massima flessibilità in termini di differenze tra gli item.
-
-* **Minor comparabilità:** A causa delle numerose differenze, confrontare direttamente i punteggi ottenuti con misure congeneriche può essere più complesso.
-
-In sintesi, le misure congeneriche rappresentano un modello molto generale, che consente di includere una vasta gamma di situazioni. Tuttavia, la loro flessibilità comporta una minore comparabilità tra gli item.
-
-```{r}
-#| vscode: {languageId: r}
-# True scores for Test 4
-t4 <- 2 + 0.8 * t1
-# Error scores for Test 4 (larger error SDs)
-e4 <- rnorm(num_person, mean = 0, sd = 3)
-# Observed scores for Test 2
-x4 <- t4 + e4
-```
-
-```{r}
-#| vscode: {languageId: r}
-# Merge into a data frame
-test_df3 <- data.frame(x1, x4)
-# Get means and variances
-mv <- datasummary(x1 + x4 ~ Mean + Var,
-    data = test_df3,
-    output = "data.frame"
-)
-mv
-```
-
-Se conosciamo i punteggi veri, la stima dell'affidabilità di x4 è:
-
-```{r}
-#| vscode: {languageId: r}
-# Reliability for x4
-var(t4) / var(x4)
-```
-
-\
-Nel caso di test congenerici, le medie e le varianze dei punteggi osservati sono diverse; la correlazione non è uguale all'affidabilità. Per distinguere test congenerici dai test essenzialmente $\tau$-equivalenti sono necessari più di due test.
 
 ## Riflessioni Conclusive
 
