@@ -1,0 +1,394 @@
+# L'errore standard della misurazione {#sec-ctt-err-st-mis}
+
+**Preparazione del Notebook**
+
+```{r}
+here::here("code", "_common.R") |> source()
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(psychometric)
+```
+
+## Introduzione
+
+Nell'ambito della Teoria Classica dei Test, l'**errore standard della misurazione (SEM, Standard Error of Measurement)** rappresenta una stima della variabilità degli errori associati ai punteggi osservati di un test o di uno strumento di misura. Il SEM indica di quanto potrebbe variare il punteggio osservato di una persona se il test fosse somministrato ripetutamente nelle stesse condizioni. Un valore basso di SEM suggerisce che il punteggio osservato è una stima abbastanza precisa del punteggio "vero" della persona; al contrario, un SEM più elevato implica una maggiore incertezza nella stima del punteggio vero. Il SEM è calcolato combinando la deviazione standard dei punteggi osservati e il coefficiente di affidabilità del test.
+
+I coefficienti di affidabilità, trattati nel capitolo precedente, rappresentano invece la proporzione della varianza osservata attribuibile alla varianza reale dei punteggi. Essi sono strumenti fondamentali per valutare e confrontare l'affidabilità delle diverse procedure di misura. Generalmente, nella scelta fra strumenti diversi, si preferisce il test con il più alto coefficiente di affidabilità. Tuttavia, una volta selezionato il test, l'attenzione si sposta dall'affidabilità del test stesso all'interpretazione corretta e significativa dei punteggi ottenuti.
+
+## Definizione 
+
+Il SEM rappresenta uno strumento fondamentale per interpretare i punteggi ottenuti in un test psicometrico. Esso è definito come la deviazione standard della distribuzione teorica dei punteggi che un individuo otterrebbe se sottoposto a un numero infinito di forme parallele del test. Queste forme parallele devono essere composte da item selezionati casualmente dallo stesso dominio di contenuto, garantendo equivalenza nella misurazione del costrutto.  
+
+### Il Concetto di SEM e il Punteggio Vero  
+
+Immaginando di somministrare ripetutamente forme parallele a una persona *senza effetti di apprendimento o affaticamento*, si osserverebbe una variabilità nei punteggi a causa di errori casuali (esempio: familiarità con specifici item, fattori contestuali). La media di questa distribuzione ipotetica corrisponderebbe al **punteggio vero (T)** dell’individuo, mentre il SEM ne rappresenterebbe la deviazione standard, quantificando così la dispersione dei punteggi attorno al valore reale.  
+
+Nella pratica, è impossibile somministrare infinite volte lo stesso test. Pertanto, la CTT offre un metodo per stimare il SEM a partire dai dati disponibili.  
+
+### Stima del SEM nella CTT  
+
+Secondo la CTT, l’errore di misurazione è espresso come:  
+
+$$
+E = X - T,
+$$  
+
+dove $X$ è il punteggio osservato e $T$ il punteggio vero. L’obiettivo della CTT è stimare $T$ e valutare l’entità dell’errore $E$. La deviazione standard di $E$, nota come SEM, fornisce una misura della precisione del test: minore è il SEM, maggiore è l’affidabilità della misurazione.  
+
+### La Formula del SEM e il Ruolo dell’Affidabilità  
+
+La stima del SEM si basa sulla seguente equazione:  
+
+$$
+\sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}}, 
+$$ {#eq-err-stnd-mis}
+
+dove:  
+
+- $\sigma_X$ = deviazione standard dei punteggi osservati nel campione;  
+- $\rho_{XX^\prime}$ = coefficiente di attendibilità del test (es. alpha di Cronbach).  
+
+#### Interpretazione della Formula  
+
+1. **Affidabilità e SEM**:  
+   - Un’elevata affidabilità ($\rho_{XX^\prime} \rightarrow 1$) riduce il SEM, avvicinando i punteggi osservati al punteggio vero.  
+   - Se $\rho_{XX^\prime} = 1$, il SEM è nullo ($\sigma_E = 0$): non esiste errore di misurazione.  
+   - Se $\rho_{XX^\prime} = 0$, il SEM coincide con $\sigma_X$: l’errore è massimo e i punteggi riflettono solo casualità.  
+
+2. **Distribuzione Normale degli Errori**:  
+   La CTT assume che, in condizioni ideali di somministrazione ripetuta, i punteggi si distribuiscano normalmente attorno al punteggio vero. Il SEM definisce l’ampiezza di questa distribuzione: il 68% dei punteggi osservati cade nell’intervallo $T \pm \sigma_E$, mentre il 95% in $T \pm 1.96\sigma_E$.  
+
+
+### Implicazioni Pratiche  
+
+Il SEM consente di:  
+
+- **Costruire intervalli di confidenza** attorno al punteggio osservato (es.: $X \pm 1.96\sigma_E$), fornendo una stima probabilistica del punteggio vero.  
+- **Valutare la sensibilità del test**: Test con SEM basso sono più adatti a rilevare differenze sottili tra individui.  
+- **Ottimizzare l’affidabilità**: Interventi per aumentare $\rho_{XX^\prime}$ (es. aggiunta di item) riducono il SEM, migliorando la precisione.  
+
+In sintesi, il SEM è un indicatore essenziale per interpretare i risultati dei test, poiché quantifica l’incertezza insita nella misurazione psicometrica. La sua stima, legata all’affidabilità del test, permette di distinguere tra variazioni sistematiche (dovute al costrutto misurato) e fluttuazioni casuali, garantendo una valutazione più rigorosa dei punteggi.
+
+### Interpretazione
+
+#### Differenze Concettuali tra CTT e l’Approccio di McDonald  
+
+La CTT presuppone che, in condizioni ideali di somministrazione ripetuta, i punteggi di un individuo si distribuiscano normalmente attorno al punteggio vero $T$, con il SEM a rappresentarne la dispersione. Un SEM elevato segnala una maggiore incertezza nella stima dell’abilità latente, riducendo la fiducia nell’accuratezza del punteggio osservato.  
+
+@mcdonald2013test introduce una prospettiva alternativa, interpretando l’errore $E$ come parte di una **distribuzione di propensione**. Questa riflette le fluttuazioni casuali nelle prestazioni individuali nel tempo, influenzate da variabili transitorie (es. umore, motivazione, contesto). In questo quadro, il SEM misura la variabilità attesa dei punteggi di un individuo in test ripetuti, presupponendo un punteggio vero costante.  
+
+
+#### Metriche a Confronto
+
+Le tre metriche chiave per valutare la precisione di un test offrono insight complementari: 
+
+1. **Errore Standard della Misurazione (SEM)**  
+   - **Focus**: Precisione del punteggio individuale.  
+   - **Unità**: Espresso nella stessa metrica del test (es. punti), facilita l’interpretazione diretta (es.: "Il punteggio vero ha il 68% di probabilità di trovarsi in $X \pm 5$").  
+   - **Utilizzo**: Costruzione di intervalli di confidenza attorno al punteggio osservato.  
+
+2. **Varianza dell’Errore ($\sigma_E^2$)**  
+   - **Focus**: Variabilità totale degli errori nella popolazione.  
+   - **Unità**: Quadrato delle unità del test (es. punti²), meno intuitiva per l’interpretazione pratica.  
+   - **Utilizzo**: Analisi della composizione della varianza totale ($\sigma_X^2 = \sigma_T^2 + \sigma_E^2$).  
+
+3. **Coefficiente di Attendibilità ($\rho_{XX'}$)**  
+   - **Focus**: Consistenza relativa del test nella popolazione.  
+   - **Unità**: Adimensionale (range 0-1), esprime la proporzione di varianza osservata attribuibile ai punteggi veri.  
+   - **Utilizzo**: Confronto tra test o versioni diverse, ottimizzazione del numero di item.  
+
+#### Implicazioni per la Pratica  
+
+- **SEM vs. Attendibilità**:  
+  Un’alta attendibilità ($\rho_{XX'} > 0.8$) non implica necessariamente un SEM basso. Ad esempio, test con scala ampia (es. $\sigma_X = 15$) possono avere SEM elevati ($> 3$) nonostante un’affidabilità accettabile.  
+- **Priorità d’Uso**:  
+  - Per valutazioni individuali (es. diagnosi clinica), il SEM è prioritario.  
+  - Per confronti di gruppo o ricerca, l’attendibilità assume maggiore rilevanza.  
+
+In sintesi, mentre la CTT enfatizza la distribuzione teorica dei punteggi, l’approccio di McDonald sottolinea la natura dinamica degli errori. La scelta tra SEM, varianza d’errore e coefficiente di attendibilità dipende dall’obiettivo: interpretare la precisione individuale, analizzare la struttura del test o valutarne la coerenza complessiva.
+
+
+::: {#exm-}
+Consideriamo un esempio in cui un test di intelligenza fornisce un punteggio medio di 100 con una deviazione standard di 15. Supponiamo inoltre che l'attendibilità di questo test sia pari a 0.73. Vogliamo calcolare l'errore standard della misurazione.
+
+Utilizzando la formula dell'errore standard della misurazione, otteniamo:
+
+$$
+\begin{equation}
+\begin{aligned}
+\sigma_E &= \sigma_X \sqrt{1 -\rho_{XX^\prime}} \notag\\
+&= 15 \sqrt{1 - 0.73} \notag\\
+&= 7.79.\notag
+\end{aligned}
+\end{equation}
+$$
+
+Il valore 7.79 rappresenta l'errore standard atteso nei punteggi ottenuti da un singolo individuo se il test fosse somministrato più volte sotto identiche condizioni. In altre parole, ci aspettiamo che i punteggi variino in media di circa 8 punti tra diverse somministrazioni del test.
+
+Inoltre, possiamo utilizzare l'errore standard della misurazione per calcolare un intervallo di confidenza *intorno al vero punteggio del rispondente*. Utilizzando la proprietà della distribuzione gaussiana, possiamo stimare che il 95% dei punteggi ottenuti da ripetute somministrazioni del test si troveranno nell'intervallo:
+
+$$
+\text{punteggio vero del rispondente} \pm 1.96 \cdot \text{errore standard della misurazione}. 
+$$
+
+Nel nostro caso, questo intervallo sarebbe pari a $2 \cdot 1.96 \cdot 7.79 = 30.54$ punti. Quindi, ci aspettiamo che i punteggi del QI di un singolo rispondente varino all'interno di un intervallo di 30 punti se il test fosse somministrato molte volte sotto le stesse condizioni.
+
+Questo esempio dimostra che se un test ha un'attendibilità di 0.73 e una deviazione standard dei punteggi di 15, la misurazione del test su un singolo individuo risulterebbe poco affidabile a causa dell'ampio errore di misurazione. A titolo di confronto, la Full Scale IQ (FSIQ) della WAIS-IV @wechsler2008wechsler ha un'attendibilità split-half di 0.98 e un errore standard di misurazione di 2.16.
+
+L'errore standard della misurazione può anche essere calcolato utilizzando la funzione `SE.Means()` del pacchetto `psychometric`.
+
+```{r}
+SE.Meas(15, .73)
+```
+:::
+
+::: {#exm-}
+Continuando con l'esempio precedente, per gli ipotetici dati riportati
+sopra, poniamoci ora la seguente domanda: qual è la probabilità che un rispondente ottenga un punteggio minore o uguale a 116 nel test, se il suo punteggio vero fosse uguale a 120?
+
+Il problema si risolve rendendosi conto che i punteggi del rispondente si distribuiscono normalmente attorno al punteggio vero di 120, con una deviazione standard uguale a 7.79. Dobbiamo dunque trovare
+l'area sottesa alla normale $\mathcal{N}(120, 7.79)$ nell'intervallo $[-\infty, 116]$. Utilizzando R, la soluzione si trova nel modo seguente:
+
+```{r}
+pnorm(116, 120, 7.79)
+```
+
+Se la variabile aleatoria che corrisponde al punteggio osservato segue una distribuzione $\mathcal{N}(120, 7.79)$, la probabilità che il rispondente ottenga un punteggio minore o uguale a 116 è dunque uguale a 0.30.
+:::
+
+::: {#exm-}
+Sempre per l'esempio discusso, poniamoci ora la seguente domanda: quale intervallo di valori centrato sul punteggio vero contiene, con una probabilità di 0.95, i punteggi che il rispondente otterrebbe in ipotetiche somministrazioni ripetute del
+test sotto le stesse identiche condizioni?
+
+Dobbiamo trovare i quantili della distribuzione $\mathcal{N}(120, 7.79)$ a cui sono associate le probabilità di 0.025 e 0.975. La soluzione è data da:
+
+```{r}
+qnorm(c(.025, .975), 120, 7.79)
+```
+
+L'intervallo cercato è dunque $[104.7, 135.3]$.
+:::
+
+::: {#exm-} 
+Calcoliamo ora l'errore standard di misurazione utilizzando un campione di dati grezzi. Esamineremo un set di dati discusso da @brown2015confirmatory. Il set di dati grezzi contiene 9 indicatori utilizzati per misurare la depressione maggiore così come è definita nel DSM-IV:
+
+- MDD1: depressed mood;
+- MDD2: loss of interest in usual activities;
+- MDD3: weight/appetite change;
+- MDD4: sleep disturbance;
+- MDD5: psychomotor agitation/retardation;
+- MDD6: fatigue/loss of energy;
+- MDD7: feelings of worthlessness/guilt;
+- MDD8: concentration difficulties;
+- MDD9: thoughts of death/suicidality.
+
+Importiamo i dati:
+
+```{r}
+df <- readRDS(
+    here::here("data", "mdd_sex.RDS")
+) |>
+    dplyr::select(-sex)
+```
+
+Ci sono 750 osservazioni:
+
+```{r}
+dim(df) |> print()
+```
+
+```{r}
+head(df)
+```
+
+Calcoliamo il coefficiente di attendibilità $\alpha$ di Cronbach con la funzione `alpha()` del pacchetto `psych`.
+
+```{r}
+res <- psych::alpha(df)
+alpha <- res$total$raw_alpha
+alpha
+```
+
+Calcoliamo un vettore che contiene il punteggio totale del test per ciascun individuo:
+
+```{r}
+total_score <- rowSums(df)
+```
+
+Troviamo l'errore standard di misurazione:
+
+```{r}
+sd(total_score) * sqrt(1 - alpha)
+```
+
+Confrontiamo il risultato con quello ottenuto con la funzione `SE.Meas()`:
+
+```{r}
+SE.Meas(sd(total_score), alpha)
+```
+:::
+
+## Dimostrazione
+
+Vediamo ora la derivazione dettagliata della formula dell'errore standard di misurazione, definito dalla relazione:
+
+$$
+\sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}} .
+$$
+
+Per giungere a questa espressione, procederemo attraverso due passaggi fondamentali:
+
+1. Calcolare la varianza del punteggio vero.
+2. Rappresentare la varianza del punteggio osservato come somma della varianza del punteggio vero e della varianza dell'errore.
+
+**Primo passaggio:**  
+Partiamo dalla definizione del coefficiente di attendibilità:
+
+$$
+\rho_{XX^\prime} = \frac{\sigma^2_T}{\sigma^2_X} ,
+$$
+
+dove:
+
+- $\sigma^2_T$ indica la varianza del punteggio vero.
+- $\sigma^2_X$ indica la varianza del punteggio osservato.
+
+Esplicitando $\sigma^2_T$, otteniamo:
+
+$$
+\sigma^2_T = \rho_{XX^\prime}\sigma^2_X .
+$$
+
+Consideriamo ora due forme parallele dello stesso test, indicate con $X$ e $X^\prime$. Poiché per definizione di forme parallele abbiamo $\sigma_X = \sigma_{X^\prime}$, possiamo esprimere la covarianza tra le due misurazioni parallele come:
+
+$$
+\sigma_{XX^\prime} = \rho_{XX^\prime}\sigma_X\sigma_{X^\prime} = \rho_{XX^\prime}\sigma_X^2 .
+$$
+
+Ne consegue immediatamente che:
+
+$$
+\sigma^2_T = \sigma_{XX^\prime} .
+$$
+
+In altre parole, la varianza del punteggio vero coincide con la covarianza tra due forme parallele del test.
+
+**Secondo passaggio:**  
+Passiamo ora alla varianza del punteggio osservato. In base alla Teoria Classica dei Test, ogni punteggio osservato $X$ può essere scomposto come somma di due componenti: punteggio vero ($T$) ed errore di misurazione ($E$):
+
+$$
+X = T + E .
+$$
+
+Da qui, otteniamo l'espressione della varianza del punteggio osservato:
+
+$$
+\sigma^2_X = \sigma^2_T + \sigma^2_E .
+$$
+
+Sostituendo la definizione precedente di $\sigma^2_T$, ovvero $\sigma^2_T = \rho_{XX^\prime}\sigma^2_X$, abbiamo:
+
+$$
+\sigma^2_X = \rho_{XX^\prime}\sigma^2_X + \sigma^2_E .
+$$
+
+Da questa equazione possiamo isolare la varianza dell'errore $\sigma^2_E$:
+
+$$
+\sigma^2_E = \sigma^2_X - \rho_{XX^\prime}\sigma^2_X = \sigma^2_X(1 - \rho_{XX^\prime}) .
+$$
+
+Abbiamo così espresso la varianza dell'errore di misurazione $\sigma^2_E$ in funzione di due grandezze osservabili: la varianza del punteggio osservato ($\sigma^2_X$) e il coefficiente di attendibilità ($\rho_{XX^\prime}$). Infine, prendendo la radice quadrata di entrambi i lati, otteniamo l'errore standard di misurazione nella forma finale:
+
+$$
+\sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}} .
+$$
+
+Questa formula mostra chiaramente che l'errore standard di misurazione diminuisce all'aumentare dell'attendibilità del test e aumenta al diminuire della stessa.
+
+
+## Relazione tra Affidabilità e SEM
+
+Un aspetto importante della Teoria Classica dei Test è la relazione inversa tra il coefficiente di affidabilità di un test e il suo **Errore Standard di Misurazione (SEM)**. In pratica, all’aumentare dell’affidabilità, il SEM diminuisce. Questa relazione riflette il fatto che il coefficiente di affidabilità ($\rho_{XX'}$) quantifica la quota della varianza dei punteggi osservati attribuibile alla varianza dei punteggi veri, mentre il SEM rappresenta la variabilità imputabile a fattori di errore.
+
+- **Affidabilità alta** $\Rightarrow$ **SEM basso** $\Rightarrow$ punteggi osservati più precisi.  
+- **Affidabilità bassa** $\Rightarrow$ **SEM alto** $\Rightarrow$ punteggi osservati meno precisi.
+
+Per estremizzare questo concetto:
+
+- Con un coefficiente di affidabilità pari a $1.0$, il SEM risulta **uguale a 0**, ossia non c’è errore di misurazione (il punteggio osservato coincide con il punteggio vero).
+- Con un coefficiente di affidabilità pari a $0$, il SEM è **uguale alla deviazione standard** dei punteggi, indicando che tutta la varianza nei punteggi è dovuta all’errore.
+
+## Intervallo di Confidenza e SEM
+
+Il **SEM** è ampiamente utilizzato per costruire bande o intervalli intorno ai punteggi osservati, all’interno dei quali ci si aspetta che cada il punteggio vero dell’individuo.  
+
+- **Intervallo di confidenza**: è un range di valori che contiene il punteggio vero con un certo livello di probabilità (ad esempio, il 95%).  
+- **Ruolo del SEM**: poiché il SEM quantifica la dispersione dei punteggi attorno al valore vero, è la grandezza alla base del calcolo degli intervalli di confidenza.
+
+### Esempio di calcolo (in R)
+
+Supponiamo che un individuo abbia un “punteggio vero” stimato di 70 e che il SEM sia pari a 3. Possiamo calcolare la probabilità di ottenere punteggi compresi tra 67 e 73 (uno scarto di ±3) in R eseguendo:
+
+```{r}
+# Definiamo il punteggio vero e il SEM
+punteggio_vero <- 70
+SEM <- 3
+
+pnorm(73, 70, 3) - pnorm(67, 70, 3)
+```
+
+Tendenzialmente, questo intervallo ($70 \pm 3$) coprirà circa i 2/3 dei punteggi osservati, a patto che non intervengano altri fattori che alterino la prestazione al test.
+
+Per ottenere un intervallo di confidenza del **95%**, occorre moltiplicare il SEM per il valore critico $z$ (pari a circa $1{,}96$). Di conseguenza, l’intervallo di confidenza al 95% sarà:
+
+$$
+70 \pm (3 \times 1{.}96) \quad \longrightarrow \quad [64{.}12;\, 75{.}88]
+$$
+
+In R, ciò si traduce nel seguente codice:
+
+```{r}
+# Calcoliamo il valore critico Z per il livello di confidenza del 95%
+livello_confidenza <- 0.95
+z_critico <- qnorm((1 + livello_confidenza) / 2)
+
+# Calcoliamo l'errore standard dell'intervallo
+errore_standard_intervallo <- SEM * z_critico
+
+# Calcoliamo l'intervallo di confidenza
+intervallo_confidenza_inf <- punteggio_vero - errore_standard_intervallo
+intervallo_confidenza_sup <- punteggio_vero + errore_standard_intervallo
+
+cat("L'intervallo di confidenza al 95% è [", 
+    intervallo_confidenza_inf, ", ", 
+    intervallo_confidenza_sup, "]\n")
+```
+
+### Relazione tra Affidabilità, SEM e Intervalli di Confidenza
+
+La correlazione negativa tra il SEM e il coefficiente di affidabilità si riflette anche sulla **larghezza degli intervalli di confidenza**. Se l’affidabilità di un test è alta, il SEM risulta più basso e di conseguenza l’intervallo di confidenza si restringe, aumentando la precisione con cui stimiamo il punteggio vero di un individuo.
+
+## Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza
+
+L’uso del SEM e dei relativi intervalli di confidenza serve a **ricordare** che esiste sempre una componente di errore in ogni punteggio osservato. È frequente, infatti, considerare il punteggio di un test come un valore perfettamente attendibile, mentre invece è soltanto una stima influenzata da numerosi fattori.  
+
+Per esempio, se riportiamo che Alice ha ottenuto un QI di 113, potremmo essere tentati di considerarlo un dato esatto. In realtà, anche i migliori test presentano margini di errore. Sfruttando il SEM, siamo in grado di definire un intervallo attorno a 113 entro cui ci aspettiamo che ricada il suo punteggio vero, ricordando che vi è incertezza nella stima.
+
+## Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati
+
+Una critica spesso mossa a questa procedura è che, in molti manuali e software, si usi **il SEM del punteggio osservato** per costruire direttamente l’intervallo di confidenza. Tuttavia, numerosi autori (ad es. @charter1996revisiting, @dudek1979continuing) sostengono che questa pratica sia **inappropriata**, in quanto il SEM dovrebbe riferirsi a una stima del **punteggio vero** e non direttamente al punteggio osservato.
+
+In alternativa, si raccomanda di ricorrere all’**Errore Standard della Stima (SEE)**, che risulta più indicato per costruire intervalli di confidenza sul punteggio vero stimato. Questo aspetto verrà trattato più approfonditamente nel prossimo capitolo.
+
+## Riflessioni Conclusive
+
+Nel quadro della Teoria Classica dei Test, i coefficienti di affidabilità forniscono una misura globale della **coerenza** di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare **l’Errore Standard di Misurazione (SEM)**. Un SEM più basso implica un minor margine di errore e una maggior fiducia nel fatto che il punteggio osservato rifletta in modo accurato le abilità reali della persona.
+
+In definitiva, conoscere e comprendere il SEM permette di interpretare i risultati del test in modo più consapevole, evitando di sovrastimare la precisione dei singoli punteggi osservati e accettando che ogni misura rechi in sé una componente di incertezza.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
