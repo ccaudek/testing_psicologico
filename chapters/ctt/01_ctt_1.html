@@ -177,7 +177,7 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Benvenuti</span></a>
+ <span class="menu-text">Informazioni Generali</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -1012,7 +1012,7 @@ window.Quarto = {
 <li><p>Si consiglia di ripassare i concetti fondamentali della teoria delle probabilità, in particolare le proprietà delle variabili aleatorie. Per approfondire, si rimanda al materiale didattico dell’insegnamento di Psicometria disponibile al seguente <a href="https://ccaudek.github.io/psicometria-r/">link</a>.</p></li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div class="cell" data-tags="remove_cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carica il file _common.R per impostazioni di pacchetti e opzioni</span></span>
 <span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -1306,13 +1306,14 @@ E \sim \mathcal{N}(0, \sigma_E).
 <p>Nella Teoria Classica dei Test (CTT), le misure della stessa entità (item, sottoscale o test) possono essere classificate secondo quattro livelli gerarchici di similarità, dal più al meno restrittivo: misure parallele, misure τ-equivalenti, misure essenzialmente τ-equivalenti e misure congeneriche. Questa gerarchia riflette i vincoli progressivamente minori sulle caratteristiche delle misure.</p>
 <p>La similarità tra due misure è definita dalla relazione tra i punteggi veri (<span class="math inline">\(t_i\)</span> e <span class="math inline">\(t_j\)</span>):</p>
 <p><span class="math display">\[
-t_i = a_{ij} + b_{ij} t_j
+t_i = a_{ij} + b_{ij} t_j ,
 \]</span></p>
+<p>dove:</p>
 <ul>
 <li>
-<span class="math inline">\(a_{ij}\)</span>: differenza sistematica nelle medie tra le misure.</li>
+<span class="math inline">\(a_{ij}\)</span>: differenza sistematica nelle medie tra le misure (intercetta);</li>
 <li>
-<span class="math inline">\(b_{ij}\)</span>: differenza di scala rispetto al costrutto latente misurato.</li>
+<span class="math inline">\(b_{ij}\)</span>: differenza di scala rispetto al costrutto latente misurato (pendenza).</li>
 </ul>
 <section id="misure-parallele" class="level3" data-number="8.7.1"><h3 data-number="8.7.1" class="anchored" data-anchor-id="misure-parallele">
 <span class="header-section-number">8.7.1</span> Misure parallele</h3>
@@ -1322,6 +1323,61 @@ t_i = a_{ij} + b_{ij} t_j
 <li>Varianze dei punteggi veri uguali (<span class="math inline">\(b_{ij} = 1\)</span>).</li>
 <li>Varianze degli errori di misura uguali.</li>
 </ul>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Approfondimento">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Approfondimento
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Perché la differenza di intercetta (<span class="math inline">\(a_{ij}\)</span>) corrisponde a una differenza di media?</strong></p>
+<p>Quando aggiungi un termine costante <span class="math inline">\(a_{ij}\)</span> a un punteggio latente <span class="math inline">\(t_j\)</span>, stai semplicemente <strong>spostando</strong> in alto o in basso tutti i valori di <span class="math inline">\(t_j\)</span> della stessa quantità. Questo spostamento costante equivale a cambiare la “posizione” della distribuzione dei punteggi, senza però modificarne la forma (cioè senza modificare deviazione standard o varianza).</p>
+<ul>
+<li>Se <span class="math inline">\(a_{ij} = 0\)</span>, non c’è spostamento: le due misure hanno la stessa media.</li>
+<li>Se <span class="math inline">\(a_{ij} \neq 0\)</span>, la media di <span class="math inline">\(t_i\)</span> risulterà traslata rispetto alla media di <span class="math inline">\(t_j\)</span> proprio di <span class="math inline">\(a_{ij}\)</span>.</li>
+</ul>
+<p>In formula, la media di <span class="math inline">\(t_i\)</span> diventa:</p>
+<p><span class="math display">\[
+\mathbb{E}[t_i] \;=\; \mathbb{E}[a_{ij} + b_{ij}\,t_j]
+\;=\; a_{ij} + b_{ij} \, \mathbb{E}[t_j].
+\]</span></p>
+<p>Se <span class="math inline">\(b_{ij} = 1\)</span>, allora <span class="math inline">\(\mathbb{E}[t_i] = a_{ij} + \mathbb{E}[t_j]\)</span>, e <span class="math inline">\(a_{ij}\)</span> è precisamente lo scostamento nella media.</p>
+<p><strong>Perché la differenza di pendenza (<span class="math inline">\(b_{ij}\)</span>) corrisponde a una differenza di varianza?</strong></p>
+<p>La pendenza <span class="math inline">\(b_{ij}\)</span> agisce come un <strong>fattore di scala</strong> sul punteggio <span class="math inline">\(t_j\)</span>. Quando un punteggio viene moltiplicato per un coefficiente <span class="math inline">\(b_{ij}\)</span>, l’<strong>ampiezza</strong> (o dispersione) della distribuzione cambia. Più formalmente, la varianza di <span class="math inline">\(t_i\)</span> è data da:</p>
+<p><span class="math display">\[
+\mathrm{Var}(t_i)
+\;=\; \mathrm{Var}(a_{ij} + b_{ij}\, t_j)
+\;=\; \mathrm{Var}(b_{ij}\, t_j)
+\;=\; b_{ij}^2 \,\mathrm{Var}(t_j),
+\]</span></p>
+<p>perché l’aggiunta di un termine costante (<span class="math inline">\(a_{ij}\)</span>) non influisce mai sulla varianza, mentre la moltiplicazione per una costante (<span class="math inline">\(b_{ij}\)</span>) la cambia in modo proporzionale al quadrato di tale costante (<span class="math inline">\(b_{ij}^2\)</span>).</p>
+<ul>
+<li>Se <span class="math inline">\(b_{ij} = 1\)</span>, la varianza di <span class="math inline">\(t_i\)</span> coincide esattamente con la varianza di <span class="math inline">\(t_j\)</span>: non c’è alcun cambiamento di scala.</li>
+<li>Se <span class="math inline">\(b_{ij} \neq 1\)</span>, la varianza di <span class="math inline">\(t_i\)</span> viene “riscalata” di <span class="math inline">\(b_{ij}^2\)</span>. Di conseguenza, le due misure avranno una diversa dispersione (cioè una diversa “ampiezza” nella distribuzione dei punteggi veri).</li>
+</ul>
+<p><strong>Conclusioni.</strong></p>
+<ol type="1">
+<li>
+<strong><span class="math inline">\(a_{ij}\)</span> rappresenta uno “shift” costante</strong>: indica quanto le due misure differiscono in termini di <strong>media</strong> (posizione della distribuzione).</li>
+<li>
+<strong><span class="math inline">\(b_{ij}\)</span> rappresenta un fattore di scala</strong>: indica quanto le due misure differiscono in termini di <strong>varianza</strong> (grandezza o dispersione della distribuzione).</li>
+</ol>
+<p>Questi due aspetti sono centrali nella definizione dei livelli di similarità fra misure in CTT:</p>
+<ul>
+<li>
+<strong>Misure parallele</strong> richiedono nessuna differenza di media (quindi <span class="math inline">\(a_{ij}=0\)</span>) e nessuna differenza di varianza (quindi <span class="math inline">\(b_{ij}=1\)</span>), oltre a errori di misura uguali.<br>
+</li>
+<li>Strutture meno restrittive (τ-equivalenti, essenzialmente τ-equivalenti, congeneriche) permettono sempre più libertà nei valori di <span class="math inline">\(a_{ij}\)</span> e <span class="math inline">\(b_{ij}\)</span>.</li>
+</ul>
+<p>Ecco perché, nel caso delle <strong>misure parallele</strong>, il requisito è che <strong>non</strong> ci sia né uno shift costante (<span class="math inline">\(a_{ij} = 0\)</span>) né un fattore di riscalamento (<span class="math inline">\(b_{ij} = 1\)</span>), in modo che i due test condividano media e varianza vera, oltre ad avere la stessa precisione di misura (varianza d’errore).</p>
+</div>
+</div>
+</div>
 <p>Simulazione in R:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
@@ -1347,7 +1403,7 @@ t_i = a_{ij} + b_{ij} t_j
 </ul>
 <p>Simulazione in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">456</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">20</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">e1</span></span>
@@ -1357,7 +1413,7 @@ t_i = a_{ij} + b_{ij} t_j
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="va">t2</span> <span class="op">+</span> <span class="va">e2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.739</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.733</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="misure-essenzialmente-τ-equivalenti" class="level3" data-number="8.7.3"><h3 data-number="8.7.3" class="anchored" data-anchor-id="misure-essenzialmente-τ-equivalenti">
 <span class="header-section-number">8.7.3</span> Misure essenzialmente τ-equivalenti</h3>
@@ -1369,39 +1425,39 @@ t_i = a_{ij} + b_{ij} t_j
 </ul>
 <p>Simulazione in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">789</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">20</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">e1</span></span>
 <span></span>
 <span><span class="va">t2</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="va">t1</span></span>
-<span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="va">t2</span> <span class="op">+</span> <span class="va">e2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.804</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.733</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="misure-congeneriche" class="level3" data-number="8.7.4"><h3 data-number="8.7.4" class="anchored" data-anchor-id="misure-congeneriche">
 <span class="header-section-number">8.7.4</span> Misure congeneriche</h3>
 <p>Le <strong>misure congeneriche</strong> sono il modello più generale e consentono:</p>
 <ul>
-<li>Differenze sostanziali nelle medie dei punteggi veri (<span class="math inline">\(a_{ij} \neq 0\)</span>).</li>
+<li>Differenze sistematiche nelle medie dei punteggi veri (<span class="math inline">\(a_{ij} \neq 0\)</span>).</li>
 <li>Differenze nella scala dei punteggi veri (<span class="math inline">\(b_{ij} \neq 1\)</span>).</li>
-<li>Differenze sostanziali nelle varianze degli errori di misura.</li>
+<li>Differenze nelle varianze degli errori di misura.</li>
 </ul>
 <p>Simulazione in R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1011</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">20</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="va">t1</span> <span class="op">+</span> <span class="va">e1</span></span>
 <span></span>
-<span><span class="va">t2</span> <span class="op">&lt;-</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="va">t1</span></span>
+<span><span class="va">t2</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="va">t1</span></span>
 <span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="va">t2</span> <span class="op">+</span> <span class="va">e2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.66</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.664</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Queste simulazioni permettono di comprendere chiaramente le implicazioni pratiche e teoriche dei diversi livelli di similarità nella misurazione secondo la CTT.</p>
 </section></section><section id="riflessioni-conclusive" class="level2" data-number="8.8"><h2 data-number="8.8" class="anchored" data-anchor-id="riflessioni-conclusive">
@@ -1414,7 +1470,7 @@ t_i = a_{ij} + b_{ij} t_j
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
