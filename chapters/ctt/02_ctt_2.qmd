@@ -19,7 +19,7 @@ pacman::p_load(modelsummary, MASS)
 
 L'affidabilità (o attendibilità) rappresenta un principio fondamentale nella teoria della misurazione ed è essenziale per garantire che le misure siano coerenti, stabili e precise nei diversi contesti applicativi. Nel testing psicologico, una buona affidabilità implica che i punteggi ottenuti siano sufficientemente consistenti e non eccessivamente influenzati da errori casuali. Questa caratteristica è di estrema importanza perché i punteggi osservati possono variare non solo in funzione delle differenze tra individui, ma anche a causa di fattori esterni e condizioni di misurazione non perfettamente controllabili.
 
-La Teoria della Misurazione Classica (CTT, Classical Test Theory) fornisce una cornice teorica chiara per affrontare e quantificare il problema della misurazione affidabile. Secondo la CTT, ogni punteggio osservato (X) può essere scomposto in due componenti: il punteggio vero (T) e l'errore di misurazione (E). Uno degli obiettivi fondamentali della CTT consiste proprio nel suddividere la varianza complessiva dei punteggi osservati in due parti distinte:
+La CTT fornisce una cornice teorica chiara per affrontare e quantificare il problema della misurazione affidabile. Secondo la CTT, ogni punteggio osservato (X) può essere scomposto in due componenti: il punteggio vero (T) e l'errore di misurazione (E). Uno degli obiettivi fondamentali della CTT consiste proprio nel suddividere la varianza complessiva dei punteggi osservati in due parti distinte:
 
 1. **Varianza del punteggio vero ($\sigma_T^2$)**, che riflette la differenza reale tra gli individui rispetto alla caratteristica misurata.
 2. **Varianza dell'errore ($\sigma_E^2$)**, che rappresenta le variazioni casuali e indesiderate derivanti da imperfezioni nel processo di misurazione.
@@ -30,7 +30,9 @@ Per poter ottenere questa suddivisione e definire formalmente l'affidabilità, l
 - **Indipendenza tra punteggio vero e errore**: L'errore di misurazione non deve essere correlato con il punteggio vero, cioè la correlazione $\rho_{T,E} = 0$. Questo significa che l'errore non dipende dal valore della caratteristica misurata.
 - **Indipendenza degli errori nel tempo**: L'errore di misurazione in un'occasione deve essere indipendente dall'errore in un'altra occasione ($\rho_{e_1, e_2} = 0$).
 
-## Varianza del punteggio osservato
+Per definire formalmente l’attendibilità nella CTT, è inoltre necessario introdurre tre grandezze fondamentali: la varianza del punteggio osservato, la covarianza tra punteggio osservato e punteggio vero, e la correlazione tra punteggio osservato e punteggio vero.
+
+## Varianza del Punteggio Osservato
 
 Secondo la CTT, la varianza del punteggio osservato ($\sigma^2_X$) è la somma della varianza del punteggio vero e della varianza dell'errore:
 
@@ -56,9 +58,11 @@ Ad esempio, utilizzando dati simulati:
 set.seed(8394)
 
 n <- 100
+# Impongo una covarianza nulla tra T ed E.
 Sigma <- matrix(c(6, 0, 0, 3), byrow = TRUE, ncol = 2)
 mu <- c(12, 0)
 dat <- MASS::mvrnorm(n, mu, Sigma, empirical = TRUE)
+
 T <- dat[, 1]
 E <- dat[, 2]
 X <- T + E
@@ -67,7 +71,7 @@ var(X)
 var(T) + var(E)
 ```
 
-## Covarianza tra punteggio osservato e punteggio vero
+## Covarianza tra Punteggio Osservato e Punteggio Vero
 
 La covarianza tra il punteggio osservato e il punteggio vero è pari alla varianza del punteggio vero:
 
@@ -75,7 +79,7 @@ $$
 \sigma_{X T} = \sigma_T^2.
 $$ {#eq-cov-obs-true}
 
-Questa relazione è dimostrata considerando l'indipendenza tra punteggio vero e errore e il fatto che $E(E) = 0$:
+Questa relazione è dimostrata considerando l'indipendenza tra punteggio vero e errore e il fatto che $\mathbb{E}(E) = 0$:
 
 $$
 \begin{aligned}
@@ -94,7 +98,7 @@ cov(X, T)
 var(T)
 ```
 
-## Correlazione tra punteggio osservato e punteggio vero
+## Correlazione tra Punteggio Osservato e Punteggio Vero
 
 La correlazione tra punteggio osservato e punteggio vero è data dal rapporto tra la deviazione standard del punteggio vero e quella del punteggio osservato:
 
@@ -145,44 +149,61 @@ cor(X, T)
 sd(T) / sd(X)
 ```
 
-## Definizione e interpretazione dell'affidabilità
+## Definizione e Interpretazione dell’Affidabilità
 
-Il quadrato della correlazione tra punteggio osservato e punteggio vero, $\rho_{XT}^2$, corrisponde all'attendibilità del test. Quindi, la **CTT definisce formalmente l'affidabilità** di un test come il rapporto tra la varianza del punteggio vero e la varianza del punteggio osservato:
+La CTT definisce formalmente l’affidabilità di un test come il rapporto tra la varianza del punteggio vero ($\sigma_T^2$) e la varianza del punteggio osservato ($\sigma_X^2$). In notazione matematica:
 
+::: {#def-}
 $$
-\rho_{X T}^2 = \frac{\sigma_T^2}{\sigma_X^2}.
+\rho_{XT}^2 = \frac{\sigma_T^2}{\sigma_X^2},
 $$ {#eq-reliability-1}
 
-Questa relazione implica anche che l'affidabilità è uguale al quadrato della correlazione tra il punteggio osservato e il punteggio vero. L'affidabilità può quindi essere interpretata come la proporzione della varianza osservata che riflette la reale differenza tra individui rispetto alla caratteristica misurata.
+dove $\rho_{XT}^2$ rappresenta il **quadrato** della correlazione tra punteggio osservato ($X$) e punteggio vero ($T$). 
+:::
 
-Questa formula è il concetto fondamentale della CTT e misura il livello di variazione del punteggio vero rispetto alla variazione del punteggio osservato.
+In altre parole, l’affidabilità misura **la proporzione di varianza del punteggio osservato imputabile a differenze reali** nella caratteristica misurata, piuttosto che a fonti di errore. Questa relazione è il fulcro della CTT perché collega direttamente la precisione del test (varianza vera) alla sua eterogeneità totale (varianza osservata).
 
-Verifica empirica:
-
-```{r}
-cor(X, T)^2
-var(T) / var(X)
-```
-
-Infine, considerando che $\sigma_X^2 = \sigma_T^2 + \sigma_E^2$, possiamo anche esprimere l'affidabilità in termini di errore:
+Poiché $\rho_{XT} = \mathrm{corr}(X,T)$,
 
 $$
-\begin{equation}
-\rho_{XT}^2 = \frac{\sigma_{T}^2}{\sigma_X^2} =\frac{\sigma_{X}^2 - \sigma^2_E}{\sigma_X^2} = 1-\frac{\sigma_{E}^2}{\sigma_{X}^2}.
-\end{equation}
+\rho_{XT}^2 \;=\; \frac{\sigma_T^2}{\sigma_X^2}
+\;\;\;\Rightarrow\;\;\;
+\mathrm{corr}(X,T) \;=\; \sqrt{\frac{\sigma_T^2}{\sigma_X^2}}.
+$$
+
+### Forma Equivalente Basata sull’Errore di Misura
+
+Sapendo che $\sigma_X^2 = \sigma_T^2 + \sigma_E^2$, possiamo riscrivere l’affidabilità come:
+
+$$
+\rho_{XT}^2 
+= 1 - \frac{\sigma_E^2}{\sigma_X^2}.
 $$ {#eq-3-2-6}
 
+Questa formula mostra immediatamente che:
 
-Dall'@eq-3-2-6, possiamo dedurre che il coefficiente di affidabilità assume il valore di $1$ quando la varianza degli errori $\sigma_{E}^2$ è nulla, e assume il valore di $0$ quando la varianza degli errori è uguale alla varianza del punteggio osservato. Quindi, il coefficiente di affidabilità è un valore assoluto situato nell'intervallo tra $0$ e $1$ che indica il grado in cui un test misura stabilmente una caratteristica psicologica senza interferenze casuali.
+- l’affidabilità è pari a 1 (massima) se e solo se $\sigma_E^2 = 0$, ovvero in assenza di errore di misura;  
+- l’affidabilità è pari a 0 (minima) se e solo se $\sigma_E^2 = \sigma_X^2$, cioè quando tutta la varianza osservata è dovuta a errore.
 
-In relazione ai dati dell'esempio, otteniamo:
+### Verifica Empirica 
+
+Nella pratica, se disponiamo di stime dei punteggi veri e osservati, possiamo valutare l’affidabilità secondo tre approcci equivalenti:
 
 ```{r}
+# 1. Quadrato della correlazione tra punteggio osservato e punteggio vero
+cor(X, T)^2
+
+# 2. Rapporto tra varianza del punteggio vero e varianza del punteggio osservato
+var(T) / var(X)
+
+# 3. Esprimendo l’affidabilità in termini di errore
 1 - (var(E) / var(X))
 ```
 
+Le tre stime coincidono, poiché rappresentano la stessa identica misura di quanto un test “catturi” effettivamente la variabilità reale (vera) della caratteristica psicologica, distinguendola dalla porzione di varianza dovuta a fattori casuali.
 
-## Attendibilità e modello di regressione lineare
+
+## Attendibilità e Modello di Regressione Lineare
 
 La CTT può essere chiaramente compresa attraverso il parallelo con il modello di regressione lineare semplice. Infatti, nella CTT il punteggio osservato (variabile dipendente) viene espresso come funzione lineare del punteggio vero (variabile indipendente). In altre parole, il punteggio osservato può essere considerato come il risultato di una regressione lineare del punteggio vero, con un'intercetta uguale a 0 e una pendenza uguale a 1, a cui si aggiunge un errore casuale.
 
@@ -207,7 +228,7 @@ fm <- lm(X ~ T)
 summary(fm)
 ```
 
-Come possiamo osservare dall'output, la regressione ha intercetta prossima a 0 e pendenza prossima a 1. Questo risultato è coerente con le assunzioni della CTT secondo cui i punteggi osservati dovrebbero riflettere direttamente i punteggi veri, $\mathbb{E}(X) = \mathbb{E}(T)$.
+Come possiamo osservare dall'output, la regressione ha intercetta pari a 0 e pendenza pari a 1. Questo risultato è coerente con le assunzioni della CTT secondo cui i punteggi osservati dovrebbero riflettere direttamente i punteggi veri, $\mathbb{E}(X) = \mathbb{E}(T)$.
 
 Inoltre, il coefficiente di determinazione  fornito dal modello di regressione corrisponde precisamente al coefficiente di attendibilità calcolato tramite la formula della CTT:
 
@@ -229,53 +250,21 @@ Inoltre, l'errore standard della regressione corrisponde esattamente all'errore 
 sqrt(var(E) * 99 / 98)
 ```
 
-**Nota importante:** il fattore correttivo utilizzato nella formula precedente deriva dal fatto che, nella stima della varianza tramite regressione lineare, si usa $n-2$ al denominatore (dove $n$ è il numero di osservazioni), mentre la funzione `var()` di R usa $n-1$. Da qui la necessità della correzione:
+::: {.callout-important title="Nota importante" collapse="true"}
+Il fattore correttivo utilizzato nella formula precedente deriva dal fatto che, nella stima della varianza tramite regressione lineare, si usa $n-2$ al denominatore (dove $n$ è il numero di osservazioni), mentre la funzione `var()` di R usa $n-1$. Da qui la necessità della correzione:
 
 $$
 \text{Errore standard} = \sqrt{\frac{(n-1)}{(n-2)} \cdot \sigma_E^2}.
 $$
+:::
 
 Questa equivalenza chiarisce ulteriormente come il modello di regressione lineare e la CTT siano strettamente connessi, offrendo una prospettiva intuitiva per comprendere il significato e l'importanza del concetto di affidabilità.
 
-<!-- ## Misurazioni parallele e affidabilità -->
+## Misurazioni Parallele e Affidabilità
 
-<!-- L'equazione $\rho_{XT}^2 = \frac{\sigma_{T}^2}{\sigma_X^2}$ definisce il coefficiente di affidabilità, ma non ci fornisce gli strumenti pratici per calcolarlo direttamente. Questo perché la varianza del punteggio reale $\sigma_{T}^2$ rappresenta un valore sconosciuto. Il metodo utilizzato dalla CTT per ottenere una stima empirica dell'attendibilità è quello delle *forme parallele* del -->
-<!-- test. In pratica, se è possibile creare versioni alternative del test che siano equivalenti in termini di contenuto, modalità di risposta e caratteristiche statistiche, allora diventa possibile ottenere una stima empirica del coefficiente di affidabilità. -->
+La definizione formale del coefficiente di affidabilità è data dall'@eq-reliability-1. Tuttavia, questa formula presenta una difficoltà pratica fondamentale: la varianza del punteggio vero $\sigma_{T}^2$ non è direttamente osservabile, essendo una quantità teorica sconosciuta. La CTT risolve questo problema attraverso il metodo delle *forme parallele* del test, che permette di ottenere una **stima empirica** della sua attendibilità.
 
-<!-- Secondo la CTT, due test $X=T+E$ e $X^\prime=T^\prime+E^\prime$ sono considerati misurazioni parallele della stessa abilità latente quando: -->
-
-<!-- - $T = T^\prime$, -->
-<!-- - $\mathbb{V}(E) = \mathbb{V}(E^\prime)$. -->
-
-<!-- Queste premesse implicano che $\mathbb{E}(X) = \mathbb{E}(X^\prime)$. -->
-
-<!-- La dimostrazione procede come segue. Considerando che $\mathbb{E}(X) = T$ e $\mathbb{E}(X^\prime) = T$, è evidente che $\mathbb{E}(X) =\mathbb{E}(X^\prime)$ poiché $\mathbb{E}(E) = \mathbb{E}(E^\prime) = 0$. -->
-
-<!-- In modo analogo, l'uguaglianza delle varianze nei punteggi osservati delle due misurazioni parallele deve essere verificata, cioè $\mathbb{V}(X) = \mathbb{V}(X^\prime)$. -->
-
-<!-- Questa dimostrazione si sviluppa come segue. Per $X$, possiamo scrivere  -->
-
-<!-- $$\mathbb{V}(X) = \mathbb{V}(T + E) = \mathbb{V}(T) + \mathbb{V}(E);$$ -->
-
-<!-- mentre per $X^\prime$ possiamo scrivere  -->
-
-<!-- $$\mathbb{V}(X^\prime) = \mathbb{V}(T^\prime + E^\prime) = \mathbb{V}(T^\prime) + \mathbb{V}(E^\prime).$$  -->
-
-<!-- Poiché sappiamo che $\mathbb{V}(E) = \mathbb{V}(E^\prime)$ e che $T = T^\prime$, possiamo dedurre che $\mathbb{V}(X) = \mathbb{V}(X^\prime)$. -->
-
-<!-- In aggiunta, è importante notare che per costruzione gli errori $E$ e $E^\prime$ sono incorrelati sia con $T$ che tra di loro. -->
-
-## Misurazioni parallele e affidabilità
-
-La definizione formale del coefficiente di affidabilità è data dall'equazione:
-
-$$
-\rho_{XT}^2 = \frac{\sigma_{T}^2}{\sigma_X^2}
-$$
-
-Tuttavia, questa formula presenta una difficoltà pratica fondamentale: la varianza del punteggio vero $\sigma_{T}^2$ non è direttamente osservabile, essendo una quantità teorica sconosciuta. La Teoria Classica dei Test (CTT) risolve questo problema attraverso il metodo delle *forme parallele* del test, che permette di ottenere una stima empirica della sua attendibilità.
-
-Due test $X = T + E$ e $X' = T' + E'$ sono definiti paralleli quando misurano la stessa abilità latente e soddisfano le seguenti condizioni:
+Due test $X = T + E$ e $X' = T' + E'$ sono definiti paralleli quando misurano la stessa abilità latente e soddisfano le seguenti condizioni (si veda il @sec-ctt-foundations):
 
 - uguaglianza dei punteggi veri: $T = T'$,
 - uguaglianza delle varianze degli errori: $\mathbb{V}(E) = \mathbb{V}(E')$.
@@ -323,81 +312,9 @@ $$
 \text{Cov}(E, T) = \text{Cov}(E', T') = \text{Cov}(E, E') = 0 .
 $$
 
-Queste proprietà costituiscono i requisiti essenziali per la validità pratica ed empirica del metodo delle forme parallele, permettendo di stimare in modo affidabile il coefficiente di attendibilità del test tramite la correlazione tra le due misurazioni parallele.
+Queste proprietà costituiscono i requisiti essenziali per la validità pratica ed empirica del metodo delle forme parallele, e consentono di stimare in modo affidabile il coefficiente di attendibilità del test tramite la correlazione tra le due misurazioni parallele.
 
-
-
-<!-- ## La correlazione tra due forme parallele del test -->
-
-<!-- Ora procediamo a dimostrare che, secondo le ipotesi della Teoria della CTT, la correlazione tra due versioni parallele di un test è effettivamente equivalente al rapporto tra la varianza del punteggio reale e la varianza del punteggio osservato. Come discusso nel capitolo precedente, le misurazioni parallele rappresentano il grado più elevato di somiglianza tra due diverse versioni di un test. -->
-
-<!-- La dimostrazione è la seguente. Consideriamo, senza perdita di generalità, che $\mathbb{E}(X) = \mathbb{E}(X') = \mathbb{E}(T) = 0$. Questa scelta ci consente di scrivere: -->
-
-<!-- $$ -->
-<!-- \begin{aligned} -->
-<!-- \rho_{X X^\prime} &= \frac{\sigma(X, X^\prime)}{\sigma(X) \sigma(X^\prime)} \\ -->
-<!-- &= \frac{\mathbb{E}(XX^\prime)}{\sigma(X) \sigma(X^\prime)} \\ -->
-<!-- &= \frac{\mathbb{E}[(T+E)(T+E^\prime)]}{\sigma(X) \sigma(X^\prime)} \\ -->
-<!-- &= \frac{\mathbb{E}(T^2) + \mathbb{E}(TE^\prime) + \mathbb{E}(TE) + \mathbb{E}(EE^\prime)}{\sigma(X) \sigma(X^\prime)}. -->
-<!-- \end{aligned} -->
-<!-- $$ -->
-
-<!-- Tuttavia, sappiamo che $\mathbb{E}(TE) = \mathbb{E}(TE^\prime) = \mathbb{E}(EE^\prime) = 0$. Inoltre, $\sigma(X) = \sigma(X^\prime) = \sigma_X$. Pertanto, giungiamo a: -->
-
-<!-- $$ -->
-<!-- \rho_{X X^\prime} = \frac{\mathbb{E}(T^2)}{\sigma_X \sigma_X} = \frac{\sigma^2_T}{\sigma^2_X}. -->
-<!-- $$ {#eq:3-3-5} -->
-
-<!-- Notiamo che il risultato ottenuto, insieme all'equazione che definisce il coefficiente di affidabilità $\rho_{XT}^2 = \frac{\sigma_{T}^2}{\sigma_X^2}$, presentano entrambi la stessa espressione a destra del segno di uguale. Questo conduce a un risultato cruciale: il coefficiente di affidabilità, ossia il quadrato della correlazione tra il punteggio osservato e il punteggio reale, è identico alla correlazione tra i punteggi osservati di due versioni parallele del test: -->
-
-<!-- $$ -->
-<!-- \rho^2_{XT} =  \rho_{XX^\prime}. -->
-<!-- $$ {#eq-rho2xt-rhoxx} -->
-
-<!-- Questa conclusione è di notevole importanza in quanto consente di esprimere la variabile inosservabile $\rho^2_{XT}$ in termini della variabile osservabile $\rho_{XX^\prime}$, la quale può essere calcolata in base ai punteggi osservati delle due forme parallele del test. Fondamentalmente, la stima di $\rho^2_{XT}$ si semplifica nella stima di $\rho^2_{XX^\prime}$. Questo spiega l'importanza dell'equazione {eq}`eq-rho2xt-rhoxx` nella CTT. Inoltre, è da sottolineare che l'equazione {ref}`eq:rho2xt-rhoxx` fornisce una giustificazione per l'utilizzo della correlazione split-half come misura di affidabilità. -->
-
-<!-- ## La correlazione tra punteggio osservato e punteggio vero -->
-
-<!-- Esaminiamo adesso la correlazione tra il punteggio osservato e il punteggio reale. L'@eq-rho2xt-rhoxx può essere riformulata come segue: -->
-
-<!-- $$ -->
-<!-- \rho_{XT} = \sqrt{\rho_{XX^\prime}}. -->
-<!-- $$  -->
-
-<!-- In altre parole, la radice quadrata del coefficiente di affidabilità equivale alla correlazione tra il punteggio osservato e il punteggio reale. -->
-
-<!-- Procediamo ora a verificare questa relazione utilizzando i dati dell'esempio. -->
-
-<!-- ```{r} -->
-<!-- #| vscode: {languageId: r} -->
-<!-- sqrt(var(T) / var(X)) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- #| vscode: {languageId: r} -->
-<!-- cor(X, T) -->
-<!-- ``` -->
-
-<!-- ## I fattori che influenzano l'attendibilità -->
-
-<!-- Considerando le tre equazioni: -->
-
-<!-- $$ -->
-<!-- \rho^2_{XT} = \rho_{XX'},\quad -->
-<!-- \rho_{XT}^2 = \frac{\sigma_{T}^2}{\sigma_X^2}, \quad -->
-<!-- \rho_{XT}^2 = 1-\frac{\sigma_{E}^2}{\sigma_X^2}, -->
-<!-- $$  -->
-
-<!-- possiamo affermare che esistono tre modi equivalenti per giungere alla conclusione che l'attendibilità di un test è elevata. L'attendibilità di un test è considerata alta quando si verificano le seguenti condizioni: -->
-
-<!-- - La correlazione tra le forme parallele del test è elevata. -->
-<!-- - La varianza del punteggio vero è ampia rispetto alla varianza del punteggio osservato. -->
-<!-- - La varianza dell'errore di misurazione è ridotta rispetto alla varianza del punteggio osservato. -->
-
-<!-- Queste considerazioni rivestono un'importanza fondamentale nella progettazione di un test. In particolare, l'equazione $\rho^2_{XT} = \rho_{XX'}$ fornisce un criterio per la selezione degli item da includere nel test. Se interpretiamo $\rho_{XX'}$ come la correlazione tra due item, allora gli item che presentano la correlazione più elevata tra di loro dovrebbero essere inclusi nel test. In questo modo, l'attendibilità del test aumenta, poiché gli item selezionati risultano fortemente correlati con il punteggio vero. -->
-
-
-## La correlazione tra due forme parallele del test
+## La Correlazione tra Due Forme Parallele del Test
 
 Vediamo ora come dimostrare formalmente che, sotto le ipotesi della CTT, la correlazione tra due versioni parallele del test coincide esattamente con il rapporto tra la varianza del punteggio vero e la varianza del punteggio osservato.
 
@@ -418,7 +335,7 @@ $$
 \rho_{X X^\prime} = \frac{\mathbb{E}(T^2)}{\sigma_X \sigma_X} = \frac{\sigma^2_T}{\sigma^2_X}.
 $$ {#eq-3-3-5}
 
-Questo risultato è estremamente rilevante poiché permette di collegare la correlazione osservabile tra due forme parallele $\rho_{X X'}$ con la correlazione teorica (non direttamente osservabile) tra il punteggio osservato e quello vero:
+Questo risultato è estremamente rilevante poiché permette di collegare la correlazione **osservabile** tra due forme parallele $\rho_{X X'}$ con la correlazione **teorica** (non direttamente osservabile) tra il punteggio osservato e quello vero:
 
 $$
 \rho^2_{XT} = \rho_{XX^\prime}.
@@ -426,7 +343,7 @@ $$ {#eq-rho2xt-rhoxx}
 
 Questa equazione giustifica l'uso empirico della correlazione tra forme parallele (ad esempio, tramite metodo split-half) per stimare l'affidabilità del test. 
 
-## La correlazione tra punteggio osservato e punteggio vero
+## La correlazione tra Punteggio Osservato e Punteggio Vero
 
 L'equazione @eq-rho2xt-rhoxx può essere riscritta per esprimere direttamente la correlazione tra punteggio osservato e punteggio vero:
 
@@ -446,7 +363,7 @@ sqrt(var(T) / var(X))
 cor(X, T)
 ```
 
-## I fattori che influenzano l'attendibilità
+## I Fattori che Influenzano l'Attendibilità
 
 Le seguenti tre equazioni riassumono concisamente i criteri fondamentali per valutare l'affidabilità di un test:
 
@@ -459,32 +376,20 @@ $$
 Da queste espressioni possiamo identificare tre condizioni equivalenti che descrivono un test altamente attendibile:
 
 - una correlazione elevata tra le due forme parallele del test;
-- una varianza del punteggio vero significativamente più ampia rispetto alla varianza del punteggio osservato;
+- una varianza del punteggio vero notevolmente più ampia rispetto alla varianza del punteggio osservato;
 - una varianza dell'errore di misurazione ridotta rispetto alla varianza complessiva del punteggio osservato.
 
-Questi fattori svolgono un ruolo cruciale nella progettazione e nello sviluppo di strumenti psicometrici. In particolare, la selezione di item strettamente correlati tra loro aumenta l'affidabilità, perché contribuisce direttamente a incrementare la proporzione di varianza del punteggio vero rispetto alla varianza totale osservata.
+Questi fattori svolgono un ruolo cruciale nella progettazione e nello sviluppo di strumenti psicometrici. In particolare, la selezione di item fortemente correlati tra loro aumenta l'affidabilità, perché contribuisce direttamente a incrementare la proporzione di varianza del punteggio vero rispetto alla varianza totale osservata.
 
 
-## Riflessioni conclusive
+## Riflessioni Conclusive
 
 L'affidabilità costituisce un concetto fondamentale all'interno della teoria della misurazione, poiché si riferisce alla coerenza dei punteggi in varie situazioni, come diverse configurazioni di item, versioni del test o momenti di somministrazione. Nel corso di questo capitolo, abbiamo esplorato le basi teoriche dell'affidabilità. All'interno della CTT, l'affidabilità è definita come la correlazione tra il punteggio vero e il punteggio osservato, oppure, equivalentemente, come uno meno la correlazione tra il punteggio di errore e il punteggio osservato. Dal momento che il punteggio vero non è direttamente osservabile, è necessario ricorrere a metodi alternativi per stimare l'affidabilità. Il metodo proposto dalla CTT per ottenere tale stima è quello della correlazione dei punteggi ottenuti da due test paralleli.
 
 ## Session Info
 
 ```{r}
-#| vscode: {languageId: r}
 sessionInfo()
 ```
 
-<!-- [^2]: Vedremo in seguito -->
-<!--     (§ [$$ch:err_stnd_stima$$](#ch:err_stnd_stima){reference-type="ref" -->
-<!--     reference="ch:err_stnd_stima"}) come il livello di abilità latente -->
-<!--     (il punteggio vero) possa essere stimato con la formula di Kelley -->
-<!--     (1923), ovvero $$\begin{aligned} -->
-<!--     \hat{T}_i &= \rho_{XT} x_i + (1 - \rho_{XT})\mu_x\notag\\ -->
-<!--     &= \mu_x + \rho_{XT} (x_i - \mu_x),\notag\end{aligned}$$ dove -->
-<!--     $\mu_x$ è la media dei punteggio osservato e $\hat{T}_i$ è la stima -->
-<!--     del punteggio vero per l'$i$-esimo rispondente. -->
-
-<!-- [^3]:  -->
 

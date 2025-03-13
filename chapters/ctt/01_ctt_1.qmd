@@ -9,8 +9,6 @@
 **Preparazione del Notebook**
 
 ```{r}
-#| tags: [remove_cell]
-#| vscode: {languageId: r}
 # Carica il file _common.R per impostazioni di pacchetti e opzioni
 here::here("code", "_common.R") |> source()
 
@@ -35,7 +33,6 @@ dove $X$ rappresenta il punteggio osservato, $T$ il punteggio vero (costante teo
 **Implicazioni metodologiche**  
 
 La teoria si concentra sull’analisi della varianza dei punteggi: attraverso indicatori statistici quali deviazione standard, coefficienti di affidabilità (es. alpha di Cronbach) e correlazioni tra item, quantifica la proporzione di variabilità attribuibile al costrutto rispetto al rumore sperimentale. Questa analisi guida la standardizzazione dei test, l’ottimizzazione del numero di item e la stima dell’intervallo di confidenza per i punteggi veri. Pur non modellando esplicitamente la difficoltà degli item o i tratti latenti (come avviene nell’IRT), la CTT rimane indispensabile per la valutazione psicometrica di base, garantendo rigore nella costruzione degli strumenti e nell’interpretazione dei dati.  
-
 
 ## Costrutti in Psicometria  
 
@@ -283,11 +280,13 @@ Nella Teoria Classica dei Test (CTT), le misure della stessa entità (item, sott
 La similarità tra due misure è definita dalla relazione tra i punteggi veri ($t_i$ e $t_j$):
 
 $$
-t_i = a_{ij} + b_{ij} t_j
+t_i = a_{ij} + b_{ij} t_j ,
 $$
 
-- $a_{ij}$: differenza sistematica nelle medie tra le misure.
-- $b_{ij}$: differenza di scala rispetto al costrutto latente misurato.
+dove: 
+
+- $a_{ij}$: differenza sistematica nelle medie tra le misure (intercetta);
+- $b_{ij}$: differenza di scala rispetto al costrutto latente misurato (pendenza).
 
 ### Misure parallele
 
@@ -296,6 +295,53 @@ Le **misure parallele** soddisfano tre condizioni fondamentali:
 - Medie dei punteggi veri uguali ($a_{ij} = 0$).
 - Varianze dei punteggi veri uguali ($b_{ij} = 1$).
 - Varianze degli errori di misura uguali.
+
+::: {.callout-tip title="Approfondimento" collapse="true"}
+**Perché la differenza di intercetta ($a_{ij}$) corrisponde a una differenza di media?**
+
+Quando aggiungi un termine costante $a_{ij}$ a un punteggio latente $t_j$, stai semplicemente **spostando** in alto o in basso tutti i valori di $t_j$ della stessa quantità. Questo spostamento costante equivale a cambiare la “posizione” della distribuzione dei punteggi, senza però modificarne la forma (cioè senza modificare deviazione standard o varianza).
+
+- Se $a_{ij} = 0$, non c’è spostamento: le due misure hanno la stessa media.
+- Se $a_{ij} \neq 0$, la media di $t_i$ risulterà traslata rispetto alla media di $t_j$ proprio di $a_{ij}$. 
+
+In formula, la media di $t_i$ diventa:
+
+$$
+\mathbb{E}[t_i] \;=\; \mathbb{E}[a_{ij} + b_{ij}\,t_j] 
+\;=\; a_{ij} + b_{ij} \, \mathbb{E}[t_j].
+$$
+
+Se $b_{ij} = 1$, allora $\mathbb{E}[t_i] = a_{ij} + \mathbb{E}[t_j]$, e $a_{ij}$ è precisamente lo scostamento nella media.
+
+
+**Perché la differenza di pendenza ($b_{ij}$) corrisponde a una differenza di varianza?**
+
+La pendenza $b_{ij}$ agisce come un **fattore di scala** sul punteggio $t_j$. Quando un punteggio viene moltiplicato per un coefficiente $b_{ij}$, l’**ampiezza** (o dispersione) della distribuzione cambia. Più formalmente, la varianza di $t_i$ è data da:
+
+$$
+\mathrm{Var}(t_i) 
+\;=\; \mathrm{Var}(a_{ij} + b_{ij}\, t_j)
+\;=\; \mathrm{Var}(b_{ij}\, t_j)
+\;=\; b_{ij}^2 \,\mathrm{Var}(t_j),
+$$
+
+perché l’aggiunta di un termine costante ($a_{ij}$) non influisce mai sulla varianza, mentre la moltiplicazione per una costante ($b_{ij}$) la cambia in modo proporzionale al quadrato di tale costante ($b_{ij}^2$).
+
+- Se $b_{ij} = 1$, la varianza di $t_i$ coincide esattamente con la varianza di $t_j$: non c’è alcun cambiamento di scala.
+- Se $b_{ij} \neq 1$, la varianza di $t_i$ viene “riscalata” di $b_{ij}^2$. Di conseguenza, le due misure avranno una diversa dispersione (cioè una diversa “ampiezza” nella distribuzione dei punteggi veri).
+
+**Conclusioni.**
+
+1. **$a_{ij}$ rappresenta uno “shift” costante**: indica quanto le due misure differiscono in termini di **media** (posizione della distribuzione).
+2. **$b_{ij}$ rappresenta un fattore di scala**: indica quanto le due misure differiscono in termini di **varianza** (grandezza o dispersione della distribuzione).
+
+Questi due aspetti sono centrali nella definizione dei livelli di similarità fra misure in CTT: 
+
+- **Misure parallele** richiedono nessuna differenza di media (quindi $a_{ij}=0$) e nessuna differenza di varianza (quindi $b_{ij}=1$), oltre a errori di misura uguali.  
+- Strutture meno restrittive (τ-equivalenti, essenzialmente τ-equivalenti, congeneriche) permettono sempre più libertà nei valori di $a_{ij}$ e $b_{ij}$.  
+
+Ecco perché, nel caso delle **misure parallele**, il requisito è che **non** ci sia né uno shift costante ($a_{ij} = 0$) né un fattore di riscalamento ($b_{ij} = 1$), in modo che i due test condividano media e varianza vera, oltre ad avere la stessa precisione di misura (varianza d’errore).
+:::
 
 Simulazione in R:
 
@@ -324,7 +370,7 @@ Le **misure τ-equivalenti** soddisfano:
 Simulazione in R:
 
 ```{r}
-set.seed(456)
+set.seed(123)
 t1 <- rnorm(n, mean = 20, sd = 5)
 e1 <- rnorm(n, mean = 0, sd = 2)
 x1 <- t1 + e1
@@ -347,13 +393,13 @@ Le **misure essenzialmente τ-equivalenti** permettono:
 Simulazione in R:
 
 ```{r}
-set.seed(789)
+set.seed(123)
 t1 <- rnorm(n, mean = 20, sd = 5)
 e1 <- rnorm(n, mean = 0, sd = 2)
 x1 <- t1 + e1
 
 t2 <- 5 + t1
-e2 <- rnorm(n, mean = 0, sd = 3)
+e2 <- rnorm(n, mean = 0, sd = 4)
 x2 <- t2 + e2
 
 cor(x1, x2)
@@ -363,19 +409,19 @@ cor(x1, x2)
 
 Le **misure congeneriche** sono il modello più generale e consentono:
 
-- Differenze sostanziali nelle medie dei punteggi veri ($a_{ij} \neq 0$).
+- Differenze sistematiche nelle medie dei punteggi veri ($a_{ij} \neq 0$).
 - Differenze nella scala dei punteggi veri ($b_{ij} \neq 1$).
-- Differenze sostanziali nelle varianze degli errori di misura.
+- Differenze nelle varianze degli errori di misura.
 
 Simulazione in R:
 
 ```{r}
-set.seed(1011)
+set.seed(123)
 t1 <- rnorm(n, mean = 20, sd = 5)
 e1 <- rnorm(n, mean = 0, sd = 2)
 x1 <- t1 + e1
 
-t2 <- 3 + 0.8 * t1
+t2 <- 5 + 0.8 * t1
 e2 <- rnorm(n, mean = 0, sd = 4)
 x2 <- t2 + e2
 
