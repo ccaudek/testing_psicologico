@@ -177,7 +177,7 @@ window.Quarto = {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Benvenuti</span></a>
+ <span class="menu-text">Informazioni Generali</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -976,14 +976,15 @@ window.Quarto = {
   <li>
 <a href="#intervallo-di-confidenza-e-sem" id="toc-intervallo-di-confidenza-e-sem" class="nav-link" data-scroll-target="#intervallo-di-confidenza-e-sem"><span class="header-section-number">11.5</span> Intervallo di Confidenza e SEM</a>
   <ul>
-<li><a href="#esempio-di-calcolo-in-r" id="toc-esempio-di-calcolo-in-r" class="nav-link" data-scroll-target="#esempio-di-calcolo-in-r"><span class="header-section-number">11.5.1</span> Esempio di calcolo (in R)</a></li>
-  <li><a href="#relazione-tra-affidabilit%C3%A0-sem-e-intervalli-di-confidenza" id="toc-relazione-tra-affidabilità-sem-e-intervalli-di-confidenza" class="nav-link" data-scroll-target="#relazione-tra-affidabilit%C3%A0-sem-e-intervalli-di-confidenza"><span class="header-section-number">11.5.2</span> Relazione tra Affidabilità, SEM e Intervalli di Confidenza</a></li>
+<li><a href="#intervalli-di-confidenza" id="toc-intervalli-di-confidenza" class="nav-link" data-scroll-target="#intervalli-di-confidenza"><span class="header-section-number">11.5.1</span> Intervalli di Confidenza</a></li>
+  <li><a href="#applicazioni-pratiche" id="toc-applicazioni-pratiche" class="nav-link" data-scroll-target="#applicazioni-pratiche"><span class="header-section-number">11.5.2</span> Applicazioni pratiche</a></li>
+  <li><a href="#esempio-di-calcolo-in-r" id="toc-esempio-di-calcolo-in-r" class="nav-link" data-scroll-target="#esempio-di-calcolo-in-r"><span class="header-section-number">11.5.3</span> Esempio di Calcolo in R</a></li>
+  <li><a href="#affidabilit%C3%A0-sem-e-larghezza-dellintervallo-di-confidenza" id="toc-affidabilità-sem-e-larghezza-dellintervallo-di-confidenza" class="nav-link" data-scroll-target="#affidabilit%C3%A0-sem-e-larghezza-dellintervallo-di-confidenza"><span class="header-section-number">11.5.4</span> Affidabilità, SEM e Larghezza dell’Intervallo di Confidenza</a></li>
+  <li><a href="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" id="toc-vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="nav-link" data-scroll-target="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza"><span class="header-section-number">11.5.5</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</a></li>
+  <li><a href="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" id="toc-problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="nav-link" data-scroll-target="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati"><span class="header-section-number">11.5.6</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</a></li>
   </ul>
 </li>
-  <li><a href="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" id="toc-vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="nav-link" data-scroll-target="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza"><span class="header-section-number">11.6</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</a></li>
-  <li><a href="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" id="toc-problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="nav-link" data-scroll-target="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati"><span class="header-section-number">11.7</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</a></li>
-  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">11.8</span> Riflessioni Conclusive</a></li>
-  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info"><span class="header-section-number">11.9</span> Session Info</a></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">11.6</span> Riflessioni Conclusive</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -1010,14 +1011,14 @@ window.Quarto = {
 </div>
 <section id="introduzione" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="introduzione">
 <span class="header-section-number">11.1</span> Introduzione</h2>
-<p>Nell’ambito della Teoria Classica dei Test, l’<strong>errore standard della misurazione (SEM, Standard Error of Measurement)</strong> rappresenta una stima della variabilità degli errori associati ai punteggi osservati di un test o di uno strumento di misura. Il SEM indica di quanto potrebbe variare il punteggio osservato di una persona se il test fosse somministrato ripetutamente nelle stesse condizioni. Un valore basso di SEM suggerisce che il punteggio osservato è una stima abbastanza precisa del punteggio “vero” della persona; al contrario, un SEM più elevato implica una maggiore incertezza nella stima del punteggio vero. Il SEM è calcolato combinando la deviazione standard dei punteggi osservati e il coefficiente di affidabilità del test.</p>
-<p>I coefficienti di affidabilità, trattati nel capitolo precedente, rappresentano invece la proporzione della varianza osservata attribuibile alla varianza reale dei punteggi. Essi sono strumenti fondamentali per valutare e confrontare l’affidabilità delle diverse procedure di misura. Generalmente, nella scelta fra strumenti diversi, si preferisce il test con il più alto coefficiente di affidabilità. Tuttavia, una volta selezionato il test, l’attenzione si sposta dall’affidabilità del test stesso all’interpretazione corretta e significativa dei punteggi ottenuti.</p>
+<p>Nell’ambito della Teoria Classica dei Test, l’<strong>errore standard della misurazione (SEM, Standard Error of Measurement)</strong> rappresenta una stima della variabilità degli errori associati ai punteggi osservati di un test o di uno strumento di misura. Il SEM indica di quanto potrebbe variare il punteggio osservato di <strong>una persona</strong> se il test fosse somministrato <strong>ripetutamente nelle stesse condizioni</strong>. Un valore basso di SEM suggerisce che il punteggio osservato è una stima abbastanza precisa del punteggio “vero” della persona; al contrario, un SEM più elevato implica una maggiore incertezza nella stima del punteggio vero. Il SEM è calcolato combinando la deviazione standard dei punteggi osservati e il coefficiente di affidabilità del test.</p>
+<p>I coefficienti di affidabilità, trattati nel capitolo precedente, rappresentano invece la <strong>proporzione della varianza</strong> osservata attribuibile alla varianza reale dei punteggi. Essi sono strumenti fondamentali per valutare e confrontare l’affidabilità delle diverse procedure di misura. Generalmente, nella scelta fra strumenti diversi, si preferisce il test con il più alto coefficiente di affidabilità. Tuttavia, una volta selezionato il test, l’attenzione si sposta dall’affidabilità del test stesso all’interpretazione dei punteggi ottenuti.</p>
 </section><section id="definizione" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="definizione">
 <span class="header-section-number">11.2</span> Definizione</h2>
 <p>Il SEM rappresenta uno strumento fondamentale per interpretare i punteggi ottenuti in un test psicometrico. Esso è definito come la deviazione standard della distribuzione teorica dei punteggi che un individuo otterrebbe se sottoposto a un numero infinito di forme parallele del test. Queste forme parallele devono essere composte da item selezionati casualmente dallo stesso dominio di contenuto, garantendo equivalenza nella misurazione del costrutto.</p>
 <section id="il-concetto-di-sem-e-il-punteggio-vero" class="level3" data-number="11.2.1"><h3 data-number="11.2.1" class="anchored" data-anchor-id="il-concetto-di-sem-e-il-punteggio-vero">
 <span class="header-section-number">11.2.1</span> Il Concetto di SEM e il Punteggio Vero</h3>
-<p>Immaginando di somministrare ripetutamente forme parallele a una persona <em>senza effetti di apprendimento o affaticamento</em>, si osserverebbe una variabilità nei punteggi a causa di errori casuali (esempio: familiarità con specifici item, fattori contestuali). La media di questa distribuzione ipotetica corrisponderebbe al <strong>punteggio vero (T)</strong> dell’individuo, mentre il SEM ne rappresenterebbe la deviazione standard, quantificando così la dispersione dei punteggi attorno al valore reale.</p>
+<p>Immaginando di somministrare ripetutamente forme parallele a una persona <em>senza effetti di apprendimento o affaticamento</em>, si osserverebbe una variabilità nei punteggi a causa di errori casuali (esempio: familiarità con specifici item, fattori contestuali). La media di questa distribuzione ipotetica corrisponderebbe al <strong>punteggio vero (T)</strong> dell’individuo, mentre il SEM ne rappresenterebbe la <strong>deviazione standard</strong>, quantificando così la dispersione dei punteggi attorno al valore reale.</p>
 <p>Nella pratica, è impossibile somministrare infinite volte lo stesso test. Pertanto, la CTT offre un metodo per stimare il SEM a partire dai dati disponibili.</p>
 </section><section id="stima-del-sem-nella-ctt" class="level3" data-number="11.2.2"><h3 data-number="11.2.2" class="anchored" data-anchor-id="stima-del-sem-nella-ctt">
 <span class="header-section-number">11.2.2</span> Stima del SEM nella CTT</h3>
@@ -1273,7 +1274,7 @@ Partiamo dalla definizione del coefficiente di attendibilità:</p>
 \]</span></p>
 <p>In altre parole, la varianza del punteggio vero coincide con la covarianza tra due forme parallele del test.</p>
 <p><strong>Secondo passaggio:</strong><br>
-Passiamo ora alla varianza del punteggio osservato. In base alla Teoria Classica dei Test, ogni punteggio osservato <span class="math inline">\(X\)</span> può essere scomposto come somma di due componenti: punteggio vero (<span class="math inline">\(T\)</span>) ed errore di misurazione (<span class="math inline">\(E\)</span>):</p>
+Passiamo ora alla varianza del punteggio osservato. In base alla CTT, ogni punteggio osservato <span class="math inline">\(X\)</span> può essere scomposto come somma di due componenti: punteggio vero (<span class="math inline">\(T\)</span>) ed errore di misurazione (<span class="math inline">\(E\)</span>):</p>
 <p><span class="math display">\[
 X = T + E .
 \]</span></p>
@@ -1293,10 +1294,9 @@ X = T + E .
 <p><span class="math display">\[
 \sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}} .
 \]</span></p>
-<p>Questa formula mostra chiaramente che l’errore standard di misurazione diminuisce all’aumentare dell’attendibilità del test e aumenta al diminuire della stessa.</p>
 </section><section id="relazione-tra-affidabilità-e-sem" class="level2" data-number="11.4"><h2 data-number="11.4" class="anchored" data-anchor-id="relazione-tra-affidabilità-e-sem">
 <span class="header-section-number">11.4</span> Relazione tra Affidabilità e SEM</h2>
-<p>Un aspetto importante della Teoria Classica dei Test è la relazione inversa tra il coefficiente di affidabilità di un test e il suo <strong>Errore Standard di Misurazione (SEM)</strong>. In pratica, all’aumentare dell’affidabilità, il SEM diminuisce. Questa relazione riflette il fatto che il coefficiente di affidabilità (<span class="math inline">\(\rho_{XX'}\)</span>) quantifica la quota della varianza dei punteggi osservati attribuibile alla varianza dei punteggi veri, mentre il SEM rappresenta la variabilità imputabile a fattori di errore.</p>
+<p>Un aspetto importante della CTT è la relazione inversa tra il coefficiente di affidabilità di un test e il SEM. In pratica, all’aumentare dell’affidabilità, il SEM diminuisce. Questa relazione riflette il fatto che il coefficiente di affidabilità (<span class="math inline">\(\rho_{XX'}\)</span>) quantifica la quota della varianza dei punteggi osservati attribuibile alla varianza dei punteggi veri, mentre il SEM rappresenta la variabilità imputabile a fattori di errore.</p>
 <ul>
 <li>
 <strong>Affidabilità alta</strong> <span class="math inline">\(\Rightarrow\)</span> <strong>SEM basso</strong> <span class="math inline">\(\Rightarrow\)</span> punteggi osservati più precisi.<br>
@@ -1308,72 +1308,72 @@ X = T + E .
 <ul>
 <li>Con un coefficiente di affidabilità pari a <span class="math inline">\(1.0\)</span>, il SEM risulta <strong>uguale a 0</strong>, ossia non c’è errore di misurazione (il punteggio osservato coincide con il punteggio vero).</li>
 <li>Con un coefficiente di affidabilità pari a <span class="math inline">\(0\)</span>, il SEM è <strong>uguale alla deviazione standard</strong> dei punteggi, indicando che tutta la varianza nei punteggi è dovuta all’errore.</li>
-</ul></section><section id="intervallo-di-confidenza-e-sem" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="intervallo-di-confidenza-e-sem">
-<span class="header-section-number">11.5</span> Intervallo di Confidenza e SEM</h2>
-<p>Il <strong>SEM</strong> è ampiamente utilizzato per costruire bande o intervalli intorno ai punteggi osservati, all’interno dei quali ci si aspetta che cada il punteggio vero dell’individuo.</p>
-<ul>
-<li>
-<strong>Intervallo di confidenza</strong>: è un range di valori che contiene il punteggio vero con un certo livello di probabilità (ad esempio, il 95%).<br>
-</li>
-<li>
-<strong>Ruolo del SEM</strong>: poiché il SEM quantifica la dispersione dei punteggi attorno al valore vero, è la grandezza alla base del calcolo degli intervalli di confidenza.</li>
 </ul>
-<section id="esempio-di-calcolo-in-r" class="level3" data-number="11.5.1"><h3 data-number="11.5.1" class="anchored" data-anchor-id="esempio-di-calcolo-in-r">
-<span class="header-section-number">11.5.1</span> Esempio di calcolo (in R)</h3>
-<p>Supponiamo che un individuo abbia un “punteggio vero” stimato di 70 e che il SEM sia pari a 3. Possiamo calcolare la probabilità di ottenere punteggi compresi tra 67 e 73 (uno scarto di ±3) in R eseguendo:</p>
+<p>Dopo aver esaminato il documento, ho notato che è necessario chiarire meglio alcuni concetti riguardanti l’intervallo di confidenza e il SEM (Standard Error of Measurement). Ecco la versione corretta:</p>
+</section><section id="intervallo-di-confidenza-e-sem" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="intervallo-di-confidenza-e-sem">
+<span class="header-section-number">11.5</span> Intervallo di Confidenza e SEM</h2>
+<p>All’interno della Teoria Classica dei Test, il <strong>SEM</strong> esprime la <strong>dispersione stimata</strong> dei punteggi osservati attorno al <strong>punteggio vero</strong> di un individuo. In altre parole, se potessimo somministrare infinite volte un test a una persona (senza effetti di apprendimento o stanchezza), la distribuzione dei suoi punteggi osservati avrebbe come media il punteggio vero e una deviazione standard pari al SEM.</p>
+<section id="intervalli-di-confidenza" class="level3" data-number="11.5.1"><h3 data-number="11.5.1" class="anchored" data-anchor-id="intervalli-di-confidenza">
+<span class="header-section-number">11.5.1</span> Intervalli di Confidenza</h3>
+<p>L’intervallo di confidenza basato sul SEM deve essere costruito <strong>attorno al punteggio vero</strong>, non attorno al punteggio osservato. Questo è fondamentale perché concettualmente è il punteggio osservato che varia attorno al punteggio vero, e non viceversa.</p>
+<ul>
+<li>L’intervallo di confidenza corretto è quindi <span class="math inline">\(\bigl[T \pm z \times \text{SEM}\bigr]\)</span>, dove <span class="math inline">\(T\)</span> è il punteggio vero e <span class="math inline">\(z\)</span> è il valore critico corrispondente al livello di confidenza desiderato.</li>
+<li>
+<strong>Non è appropriato</strong> calcolare l’intervallo di confidenza attorno al punteggio osservato <span class="math inline">\(X\)</span> utilizzando il SEM, poiché questo non riflette correttamente la fonte dell’incertezza nella misurazione.</li>
+</ul></section><section id="applicazioni-pratiche" class="level3" data-number="11.5.2"><h3 data-number="11.5.2" class="anchored" data-anchor-id="applicazioni-pratiche">
+<span class="header-section-number">11.5.2</span> Applicazioni pratiche</h3>
+<p>In contesti simulati dove conosciamo il punteggio vero, possiamo costruire direttamente l’intervallo attorno ad esso. Nella pratica, poiché il punteggio vero è sconosciuto, si deve ricorrere a metodi di stima appropriati:</p>
+<ol type="1">
+<li>Il metodo di Kelly può essere utilizzato per stimare il punteggio vero a partire dal punteggio osservato</li>
+<li>Una volta stimato il punteggio vero, si può costruire l’intervallo di confidenza attorno a questa stima</li>
+</ol></section><section id="esempio-di-calcolo-in-r" class="level3" data-number="11.5.3"><h3 data-number="11.5.3" class="anchored" data-anchor-id="esempio-di-calcolo-in-r">
+<span class="header-section-number">11.5.3</span> Esempio di Calcolo in R</h3>
+<p>Supponiamo di conoscere (in un contesto di simulazione) che il punteggio vero di un individuo sia 70, e che il SEM valga 3. Possiamo calcolare, ad esempio, la probabilità che i punteggi osservati ricadano tra 67 e 73 (cioè <span class="math inline">\(\pm 3\)</span> dal punteggio vero). In R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Definiamo il punteggio vero e il SEM</span></span>
-<span><span class="va">punteggio_vero</span> <span class="op">&lt;-</span> <span class="fl">70</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">punteggio_vero</span> <span class="op">&lt;-</span> <span class="fl">70</span></span>
 <span><span class="va">SEM</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fl">73</span>, <span class="fl">70</span>, <span class="fl">3</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fl">67</span>, <span class="fl">70</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fl">73</span>, mean <span class="op">=</span> <span class="va">punteggio_vero</span>, sd <span class="op">=</span> <span class="va">SEM</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">pnorm</a></span><span class="op">(</span><span class="fl">67</span>, mean <span class="op">=</span> <span class="va">punteggio_vero</span>, sd <span class="op">=</span> <span class="va">SEM</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.683</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Tendenzialmente, questo intervallo (<span class="math inline">\(70 \pm 3\)</span>) coprirà circa i 2/3 dei punteggi osservati, a patto che non intervengano altri fattori che alterino la prestazione al test.</p>
-<p>Per ottenere un intervallo di confidenza del <strong>95%</strong>, occorre moltiplicare il SEM per il valore critico <span class="math inline">\(z\)</span> (pari a circa <span class="math inline">\(1{,}96\)</span>). Di conseguenza, l’intervallo di confidenza al 95% sarà:</p>
+<p>Nelle ipotesi della TCT (e in assenza di fattori sistematici), circa i 2/3 dei punteggi osservati dell’individuo cadrebbero in questo intervallo di 6 punti (±1 SEM), se la distribuzione è approssimativamente normale.</p>
+<p>Per un <strong>intervallo di confidenza al 95%</strong> attorno al punteggio vero (70), moltiplichiamo il SEM per <span class="math inline">\(z \approx 1{,}96\)</span>:</p>
 <p><span class="math display">\[
-70 \pm (3 \times 1{.}96) \quad \longrightarrow \quad [64{.}12;\, 75{.}88]
+70 \pm (3 \times 1{,}96)
+\;\; \longrightarrow \;\;
+[64{,}12;\; 75{,}88].
 \]</span></p>
-<p>In R, ciò si traduce nel seguente codice:</p>
+<p>In R:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcoliamo il valore critico Z per il livello di confidenza del 95%</span></span>
-<span><span class="va">livello_confidenza</span> <span class="op">&lt;-</span> <span class="fl">0.95</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">livello_confidenza</span> <span class="op">&lt;-</span> <span class="fl">0.95</span></span>
 <span><span class="va">z_critico</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">livello_confidenza</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Calcoliamo l'errore standard dell'intervallo</span></span>
 <span><span class="va">errore_standard_intervallo</span> <span class="op">&lt;-</span> <span class="va">SEM</span> <span class="op">*</span> <span class="va">z_critico</span></span>
-<span></span>
-<span><span class="co"># Calcoliamo l'intervallo di confidenza</span></span>
 <span><span class="va">intervallo_confidenza_inf</span> <span class="op">&lt;-</span> <span class="va">punteggio_vero</span> <span class="op">-</span> <span class="va">errore_standard_intervallo</span></span>
 <span><span class="va">intervallo_confidenza_sup</span> <span class="op">&lt;-</span> <span class="va">punteggio_vero</span> <span class="op">+</span> <span class="va">errore_standard_intervallo</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"L'intervallo di confidenza al 95% è ["</span>, </span>
-<span>    <span class="va">intervallo_confidenza_inf</span>, <span class="st">", "</span>, </span>
-<span>    <span class="va">intervallo_confidenza_sup</span>, <span class="st">"]\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; L'intervallo di confidenza al 95% è [ 64.1 ,  75.9 ]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Intervallo di confidenza al 95%:"</span>,</span>
+<span>    <span class="st">"["</span>, <span class="va">intervallo_confidenza_inf</span>, <span class="st">","</span>, <span class="va">intervallo_confidenza_sup</span>, <span class="st">"]\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Intervallo di confidenza al 95%: [ 64.1 , 75.9 ]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="relazione-tra-affidabilità-sem-e-intervalli-di-confidenza" class="level3" data-number="11.5.2"><h3 data-number="11.5.2" class="anchored" data-anchor-id="relazione-tra-affidabilità-sem-e-intervalli-di-confidenza">
-<span class="header-section-number">11.5.2</span> Relazione tra Affidabilità, SEM e Intervalli di Confidenza</h3>
-<p>La correlazione negativa tra il SEM e il coefficiente di affidabilità si riflette anche sulla <strong>larghezza degli intervalli di confidenza</strong>. Se l’affidabilità di un test è alta, il SEM risulta più basso e di conseguenza l’intervallo di confidenza si restringe, aumentando la precisione con cui stimiamo il punteggio vero di un individuo.</p>
-</section></section><section id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="level2" data-number="11.6"><h2 data-number="11.6" class="anchored" data-anchor-id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza">
-<span class="header-section-number">11.6</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</h2>
-<p>L’uso del SEM e dei relativi intervalli di confidenza serve a <strong>ricordare</strong> che esiste sempre una componente di errore in ogni punteggio osservato. È frequente, infatti, considerare il punteggio di un test come un valore perfettamente attendibile, mentre invece è soltanto una stima influenzata da numerosi fattori.</p>
-<p>Per esempio, se riportiamo che Alice ha ottenuto un QI di 113, potremmo essere tentati di considerarlo un dato esatto. In realtà, anche i migliori test presentano margini di errore. Sfruttando il SEM, siamo in grado di definire un intervallo attorno a 113 entro cui ci aspettiamo che ricada il suo punteggio vero, ricordando che vi è incertezza nella stima.</p>
-</section><section id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="level2" data-number="11.7"><h2 data-number="11.7" class="anchored" data-anchor-id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati">
-<span class="header-section-number">11.7</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</h2>
-<p>Una critica spesso mossa a questa procedura è che, in molti manuali e software, si usi <strong>il SEM del punteggio osservato</strong> per costruire direttamente l’intervallo di confidenza. Tuttavia, numerosi autori (ad es. <span class="citation" data-cites="charter1996revisiting">Charter (<a href="../../99-references.html#ref-charter1996revisiting" role="doc-biblioref">1996</a>)</span>, <span class="citation" data-cites="dudek1979continuing">Dudek (<a href="../../99-references.html#ref-dudek1979continuing" role="doc-biblioref">1979</a>)</span>) sostengono che questa pratica sia <strong>inappropriata</strong>, in quanto il SEM dovrebbe riferirsi a una stima del <strong>punteggio vero</strong> e non direttamente al punteggio osservato.</p>
-<p>In alternativa, si raccomanda di ricorrere all’<strong>Errore Standard della Stima (SEE)</strong>, che risulta più indicato per costruire intervalli di confidenza sul punteggio vero stimato. Questo aspetto verrà trattato più approfonditamente nel prossimo capitolo.</p>
-</section><section id="riflessioni-conclusive" class="level2" data-number="11.8"><h2 data-number="11.8" class="anchored" data-anchor-id="riflessioni-conclusive">
-<span class="header-section-number">11.8</span> Riflessioni Conclusive</h2>
-<p>Nel quadro della Teoria Classica dei Test, i coefficienti di affidabilità forniscono una misura globale della <strong>coerenza</strong> di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare <strong>l’Errore Standard di Misurazione (SEM)</strong>. Un SEM più basso implica un minor margine di errore e una maggior fiducia nel fatto che il punteggio osservato rifletta in modo accurato le abilità reali della persona.</p>
-<p>In definitiva, conoscere e comprendere il SEM permette di interpretare i risultati del test in modo più consapevole, evitando di sovrastimare la precisione dei singoli punteggi osservati e accettando che ogni misura rechi in sé una componente di incertezza.</p>
-</section><section id="session-info" class="level2" data-number="11.9"><h2 data-number="11.9" class="anchored" data-anchor-id="session-info">
-<span class="header-section-number">11.9</span> Session Info</h2>
+</section><section id="affidabilità-sem-e-larghezza-dellintervallo-di-confidenza" class="level3" data-number="11.5.4"><h3 data-number="11.5.4" class="anchored" data-anchor-id="affidabilità-sem-e-larghezza-dellintervallo-di-confidenza">
+<span class="header-section-number">11.5.4</span> Affidabilità, SEM e Larghezza dell’Intervallo di Confidenza</h3>
+<p>Se un test è altamente affidabile, gran parte della varianza nei punteggi osservati riflette differenze “vere” tra le persone, e il SEM risulta relativamente piccolo. Di conseguenza, l’intervallo di confidenza attorno al punteggio vero è <strong>più stretto</strong>, suggerendo una stima più precisa.</p>
+</section><section id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="level3" data-number="11.5.5"><h3 data-number="11.5.5" class="anchored" data-anchor-id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza">
+<span class="header-section-number">11.5.5</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</h3>
+<p>Specificare un intervallo di confidenza attorno al punteggio vero (o a una sua stima appropriata) permette di riconoscere l’incertezza intrinseca nella misurazione. Ad esempio, se Alice riporta un QI di 113, questo non dovrebbe essere considerato un dato “esatto”, ma piuttosto un punto di partenza per stimare il suo punteggio vero, con un’opportuna quantificazione dell’incertezza.</p>
+</section><section id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="level3" data-number="11.5.6"><h3 data-number="11.5.6" class="anchored" data-anchor-id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati">
+<span class="header-section-number">11.5.6</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</h3>
+<p>Calcolare un intervallo di confidenza direttamente attorno al <strong>punteggio osservato</strong> usando il SEM è concettualmente errato. Diversi autori (ad es. <em>Charter, 1996; Dudek, 1979</em>) evidenziano che quando si vuole costruire un intervallo di confidenza partendo dal punteggio osservato, sarebbe più appropriato impiegare l’<strong>Errore Standard della Stima (SEE)</strong>, che riflette meglio l’incertezza nella stima del punteggio vero a partire dall’osservato. Questo aspetto sarà affrontato in modo più approfondito nel capitolo successivo.</p>
+</section></section><section id="riflessioni-conclusive" class="level2" data-number="11.6"><h2 data-number="11.6" class="anchored" data-anchor-id="riflessioni-conclusive">
+<span class="header-section-number">11.6</span> Riflessioni Conclusive</h2>
+<p>Nel quadro della Teoria Classica dei Test, i coefficienti di affidabilità forniscono una misura globale della <strong>coerenza</strong> di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare <strong>l’Errore Standard di Misurazione (SEM)</strong> e costruire correttamente gli intervalli di confidenza attorno al punteggio vero.</p>
+<p>In definitiva, comprendere che l’intervallo di confidenza basato sul SEM si riferisce alla distribuzione dei punteggi osservati attorno al punteggio vero permette di interpretare i risultati del test in modo più consapevole e metodologicamente corretto. ## Session Info</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -1441,12 +1441,6 @@ X = T + E .
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
 <div id="ref-brown2015confirmatory" class="csl-entry" role="listitem">
 Brown, T. A. (2015). <em>Confirmatory factor analysis for applied research</em>. Guilford publications.
-</div>
-<div id="ref-charter1996revisiting" class="csl-entry" role="listitem">
-Charter, R. A. (1996). Revisiting the standard errors of measurement, estimate, and prediction and their application to test scores. <em>Perceptual and Motor Skills</em>, <em>82</em>(3), 1139–1144.
-</div>
-<div id="ref-dudek1979continuing" class="csl-entry" role="listitem">
-Dudek, F. J. (1979). The continuing misinterpretation of the standard error of measurement. <em>Psychological Bulletin</em>, <em>86</em>(2), 335--337.
 </div>
 <div id="ref-mcdonald2013test" class="csl-entry" role="listitem">
 McDonald, R. P. (2013). <em>Test theory: A unified treatment</em>. <span>Psychology Press</span>.
