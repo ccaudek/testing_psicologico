@@ -84,8 +84,8 @@ corr_par <- cor(X1_parallel, X2_parallel)
 rel_par <- var(T) / var(X1_parallel)
 
 cat("Item paralleli:\n")
-cat("Correlazione (X1, X2):", round(corr_par, 3), "\n")
-cat("Affidabilità teorica  :", round(rel_par, 3), "\n")
+cat("Correlazione (X1, X2):", round(corr_par, 2), "\n")
+cat("Affidabilità teorica  :", round(rel_par, 2), "\n")
 ```
 
 **Risultato**: La correlazione tra $X_1$ e $X_2$ dovrebbe approssimare molto da vicino la stima dell’affidabilità: se i due item sono paralleli, “vedono” lo stesso punteggio vero con la stessa qualità di misura.
@@ -137,7 +137,7 @@ cat("Correlazione (X1, X2):", round(corr_tau, 3), "\n")
 cat("Affidabilità teorica  :", round(rel_tau, 3), "\n")
 ```
 
-**Risultato**: Qui la correlazione tra $X_1$ e $X_2$ non coincide con la stima di affidabilità, perché abbiamo rotto una delle condizioni di parallelismo (stessa varianza d’errore e/o zero shift). Pur avendo la stessa “pendenza” ($b=1$), lo shift e la differente varianza d’errore fanno sì che $\mathrm{corr}(X_1, X_2)\neq \mathrm{var}(T)/\mathrm{var}(X_1)$.
+**Risultato**: Qui la correlazione tra $X_1$ e $X_2$ non coincide con la stima di affidabilità, perché abbiamo violato una delle condizioni di parallelismo (stessa varianza d’errore e/o zero shift). Pur avendo la stessa “pendenza” ($b=1$), lo shift e la differente varianza d’errore fanno sì che $\mathrm{corr}(X_1, X_2)\neq \mathrm{var}(T)/\mathrm{var}(X_1)$.
 
 ###  Item congenerici
   
@@ -193,11 +193,11 @@ cat("Affidabilità teorica di X1:", round(rel_cong, 3), "\n")
 
 ### Coefficiente Alpha di Cronbach
 
-I coefficiente Alpha di Cronbach è l'indice principale fornito dalla CTT per misurare la consistenza interna. Il coefficiente Alpha è adatto per item $\tau$-equivalenti:
+I coefficiente Alpha di Cronbach è l'indice più utilizzato fornito dalla CTT per misurare la consistenza interna. Il coefficiente Alpha è adatto per item $\tau$-equivalenti:
 
 $$ 
 \alpha = \frac{k}{k-1} \left(1 - \frac{\sum \sigma_i^2}{\sigma_X^2}\right) ,
-$$
+$$ {#eq-cronbach-application}
 
 dove:
 
@@ -205,9 +205,9 @@ dove:
 - $\sigma_i^2$ è la varianza dell'item i,
 - $\sigma_X^2$ è la varianza totale del test.
 
-Una derivazione della formula del coefficiente alpha di Cronbach è fornita nel capitolo @sec-fa-reliability.
+Una derivazione della formula del coefficiente alpha di Cronbach sarà fornita nel capitolo @sec-fa-reliability.
 
-L’Alpha di Cronbach fornisce una stima conservativa (limite inferiore) dell'affidabilità solo quando le assunzioni del modello τ-equivalente sono rispettate. In caso contrario, può sovrastimare l'affidabilità.
+L’Alpha di Cronbach fornisce una stima conservativa (limite inferiore) dell'affidabilità solo quando le assunzioni del modello $\tau$-equivalente sono rispettate. In caso contrario, può sovrastimare l'affidabilità. In altre parole, per utilizzare il coefficiente alpha di Cronbach **è necessario che gli item soddisfino la condizione di $\tau$-equivalenza**.
 
 ::: {#exm-}
 Per illustrare la procedura di calcolo del coefficiente $\alpha$, useremo i dati `bfi` contenuti nel pacchetto `psych`. Il dataframe `bfi` comprende 25 item di autovalutazione della personalità. Sono riportati i dati di 2800 soggetti. Ci concentreremo qui sulla sottoscala *Openness*:
@@ -228,7 +228,10 @@ head(bfi[c("O1", "O2", "O3", "O4", "O5")])
 Esaminiamo la correlazione tra gli item della sottoscale Openness.
 
 ```{r}
-cor(bfi[c("O1", "O2", "O3", "O4", "O5")], use = "pairwise.complete.obs") |>
+cor(
+  bfi[c("O1", "O2", "O3", "O4", "O5")], 
+  use = "pairwise.complete.obs"
+  ) |>
     round(2)
 ```
 
@@ -240,14 +243,20 @@ bfi$O5r <- 7 - bfi$O5
 ```
 
 ```{r}
-cor(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs") |>
+cor(
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  use = "pairwise.complete.obs"
+  ) |>
     round(2)
 ```
 
 Consideriamo la matrice di varianze e covarianze della sottoscala Openness. 
 
 ```{r}
-C <- cov(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+C <- cov(
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  use = "pairwise.complete.obs"
+  )
 C |> round(2)
 ```
 
@@ -372,29 +381,32 @@ Se, invece, si vuole esprimere $\bar p$ in funzione di $\sum_{i=1}^k p_i$, la fo
 
 ### Formula di Spearman-Brown
 
-La **formula di Spearman-Brown** consente di stimare l’affidabilità di un test composto da $p$ item paralleli, partendo dalla stima dell’affidabilità di un singolo item ($\rho_1$):
+La **formula di Spearman-Brown** consente di stimare l’affidabilità di un test composto da $p$ **item paralleli**, partendo dalla stima dell’affidabilità di un singolo item ($\rho_1$):
 
 $$
 \rho_p 
 = \frac{p \,\rho_1}{(p - 1)\,\rho_1 + 1}.
 $$ {#eq-spearman-brown}
 
-In questo contesto, **$\rho_1$** rappresenta la correlazione (o affidabilità) media di un item rispetto al costrutto che si intende misurare, mentre **$p$** è il numero di item totali. Una derivazione della formula del coefficiente di Spearman-Brown è fornita nel capitolo @sec-fa-reliability.
+In questo contesto, **$\rho_1$** rappresenta la correlazione (o affidabilità) media di un item rispetto al costrutto che si intende misurare, mentre **$p$** è il numero di item totali. Una derivazione della formula del coefficiente di Spearman-Brown sarà fornita nel capitolo @sec-fa-reliability.
 
 ::: {#exm-}
 Stimiamo l’affidabilità della sottoscala Openness di un questionario, assumendo che gli item siano **paralleli**. Di seguito, otteniamo la matrice di correlazione degli item e calcoliamo la correlazione media tra di essi, usandola come $\rho_1$.
 
 ```{r}
-R <- cor(bfi[c("O1", "O2r", "O3", "O4", "O5r")], use = "pairwise.complete.obs")
+R <- cor(
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  use = "pairwise.complete.obs"
+  )
 round(R, 2)
 
 # Numero di item
 p <- 5
 
 # Calcolo della correlazione media tra item (stima di rho_1)
+
 # Sostituiamo la diagonale con NA
 diag(R) <- NA
-
 # Calcoliamo la media di tutti i valori non-NA
 ro_1 <- mean(R, na.rm = TRUE)
 
@@ -409,7 +421,7 @@ rho_p
 ```
 :::
 
-In sintesi, la **Spearman-Brown** combina il numero degli item ($p$) con l’affidabilità di un singolo item ($\rho_1$) per stimare la **consistenza interna globale** di una scala composta da item paralleli. Quando tale assunzione (parallelismo) è soddisfatta, la stima risulta particolarmente intuitiva.
+In sintesi, la **Spearman-Brown** combina il numero degli item ($p$) con l’affidabilità di un singolo item ($\rho_1$) per stimare la **consistenza interna globale** di una scala composta da item paralleli. 
 
 ### L’indice $\omega$ di McDonald
 
@@ -432,13 +444,13 @@ L’affidabilità di un punteggio composito si riferisce alla **stabilità** di 
 
 ### Esempio numerico
 
-Supponiamo di avere due subtest, ciascuno con:  
+Supponiamo di avere due subtest, $X_1$ e $X_2$, ciascuno con:  
 
-- Varianza del **punteggio vero** pari a $25$,  
-- Varianza dell’**errore di misura** pari a $10$,  
-- Covarianza tra i punteggi veri dei due subtest pari a $15$.
+- varianza del **punteggio vero** pari a $25$,  
+- varianza dell’**errore di misura** pari a $10$,  
+- covarianza tra i punteggi veri dei due subtest pari a $15$.
 
-1. **Varianza del punteggio composito** (sola parte vera). Se $Z$ è la somma dei due subtest:  
+1. **Varianza del punteggio composito $Z$** (sola parte vera). Se $Z$ è la somma dei due subtest:  
    $$
    \mathrm{Var}(Z_{\text{vero}}) 
    = \mathrm{Var}(X_1^{\text{vero}}) + \mathrm{Var}(X_2^{\text{vero}}) + 2\,\mathrm{Cov}(X_1^{\text{vero}},X_2^{\text{vero}})
@@ -453,6 +465,76 @@ Supponiamo di avere due subtest, ciascuno con:
    + \underbrace{2 \cdot 15}_{\text{covarianza vera}}
    = 35 + 35 + 2 \cdot 15 = 100.
    $$
+
+::: {.callout-tip title="Nota" collapse="true"}
+
+La varianza totale del punteggio composito $Z$ è data dalla somma della varianza della componente vera, della varianza della componente di errore e del doppio della covarianza tra le due variabili, in base alle proprietà della varianza di una somma di variabili aleatorie.
+
+Se consideriamo un punteggio composito $Z$ ottenuto come somma di due subtest $X_1$ e $X_2$, la varianza di $Z$ è data dalla formula:
+
+$$
+\text{Var}(Z) = \text{Var}(X_1 + X_2) = \text{Var}(X_1) + \text{Var}(X_2) + 2\cdot\text{Cov}(X_1, X_2)
+$$
+
+Ciascun subtest $X_1$ e $X_2$ è composto da due componenti:
+
+- La parte vera $X_1^{\text{vero}}$ e $X_2^{\text{vero}}$
+- La parte di errore $X_1^{\text{errore}}$ e $X_2^{\text{errore}}$
+
+Possiamo quindi scrivere:
+
+$$
+X_1 = X_1^{\text{vero}} + X_1^{\text{errore}}
+$$
+
+$$
+X_2 = X_2^{\text{vero}} + X_2^{\text{errore}}
+$$
+
+Utilizzando la proprietà della varianza per una somma di variabili, la varianza totale di $Z$ diventa:
+
+$$
+\text{Var}(Z) = \text{Var}(X_1^{\text{vero}} + X_1^{\text{errore}} + X_2^{\text{vero}} + X_2^{\text{errore}})
+$$
+
+Espandendo il termine:
+
+$$
+\text{Var}(Z) = \text{Var}(X_1^{\text{vero}}) + \text{Var}(X_2^{\text{vero}}) + \text{Var}(X_1^{\text{errore}}) + \text{Var}(X_2^{\text{errore}})
++ 2\cdot\text{Cov}(X_1^{\text{vero}}, X_2^{\text{vero}})
+$$
+
+Dato che si assume che gli errori non siano correlati tra loro né con le parti vere ($\text{Cov}(X_1^{\text{vero}}, X_1^{\text{errore}}) = 0$ e simili), tutte le altre covarianze sono nulle.
+
+Ora, sostituendo i valori numerici:
+
+1. La varianza della parte vera è:
+
+   $$
+   \text{Var}(X_1^{\text{vero}}) + \text{Var}(X_2^{\text{vero}}) = 25 + 25 = 50
+   $$
+
+2. La varianza della parte di errore è:
+
+   $$
+   \text{Var}(X_1^{\text{errore}}) + \text{Var}(X_2^{\text{errore}}) = 10 + 10 = 20
+   $$
+
+3. La covarianza tra le parti vere contribuisce con:
+
+   $$
+   2\cdot\text{Cov}(X_1^{\text{vero}}, X_2^{\text{vero}}) = 2 \cdot 15 = 30
+   $$
+
+Pertanto, la varianza totale di $Z$ è:
+
+$$
+\text{Var}(Z) = 50 + 20 + 30 = 100
+$$
+
+Il termine $2\cdot\text{Cov}(X_1^{\text{vero}}, X_2^{\text{vero}})$ appare perché, quando calcoliamo la varianza di una somma, dobbiamo considerare non solo le varianze individuali, ma anche la covarianza tra le due variabili, che rappresenta la loro interdipendenza. Questo termine indica quanto i due punteggi veri tendono a variare insieme in modo sistematico.
+
+:::
 
 3. **Affidabilità del composito**. Il coefficiente di affidabilità corrisponde alla proporzione di varianza vera rispetto alla varianza totale:  
    $$
@@ -487,7 +569,11 @@ n <- 10000  # numero di soggetti
 library(MASS)
 Sigma_true <- matrix(c(25, 15,
                        15, 25), nrow = 2)
-X_true <- MASS::mvrnorm(n = n, mu = c(0,0), Sigma = Sigma_true)
+X_true <- MASS::mvrnorm(
+  n = n, 
+  mu = c(0,0), 
+  Sigma = Sigma_true
+)
 
 # Aggiungiamo errori indipendenti (varianza 10 => sd = ~3.162)
 E1 <- rnorm(n, 0, sqrt(10))
@@ -504,11 +590,13 @@ Z <- X1 + X2
 var_true_X1 <- var(X_true[,1])  # Dovrebbe ~25
 var_true_X2 <- var(X_true[,2])  # Dovrebbe ~25
 cov_true    <- cov(X_true[,1], X_true[,2]) # Dovrebbe ~15
+c(var_true_X1, var_true_X2, cov_true)
 
 # Verifichiamo varianza e affidabilità osservate
 var_X1 <- var(X1)
 var_X2 <- var(X2)
 var_Z  <- var(Z)
+c(var_X1, var_X2, var_Z)
 
 # Stima affidabilità subtest 1
 reliability_X1 <- var_true_X1 / var_X1
@@ -531,7 +619,7 @@ Eseguendo questo codice, troveremo valori prossimi a quelli **attesi** teoricame
 **Conclusioni.**
 
 - **Maggiore affidabilità**: Combinare più subtest (o item) **correlati** tende a migliorare l’affidabilità del punteggio totale, perché aumenta la porzione di varianza vera rispetto alla varianza d’errore.  
-- **Vantaggio pratico**: Un punteggio composito è spesso considerato più **robusto** e **rappresentativo** del costrutto di interesse, specialmente in ambito psicometrico, dove il singolo item o subtest può essere soggetto a un errore specifico più elevato.
+- **Vantaggio pratico**: Un punteggio composito è spesso considerato più  **rappresentativo** del costrutto di interesse, specialmente in ambito psicometrico, dove il singolo item o subtest può essere soggetto a un errore specifico più elevato.
 
 
 ## Affidabilità dei Punteggi Differenza
@@ -555,6 +643,133 @@ dove:
 - $r_{xx}$ e $r_{yy}$ sono le affidabilità (per esempio Cronbach $\alpha$ o test-retest) delle due misure $X$ e $Y$;  
 - $r_{xy}$ è la correlazione tra $X$ e $Y$;  
 - $r_{dd}$ è l’affidabilità del punteggio differenza $(X - Y)$.
+
+::: {.callout-tip title="Dimostrazione" collapse="true"}
+
+### **Passo 1: Definizione dell'affidabilità di una variabile**
+L'affidabilità di una variabile è definita come la proporzione di varianza vera sulla varianza totale. Se una variabile $X$ è composta da una componente vera $T_X$ e un errore $E_X$, possiamo scrivere:
+
+$$
+X = T_X + E_X
+$$
+
+L'affidabilità di $X$ è data da:
+
+$$
+r_{xx} = \frac{\text{Var}(T_X)}{\text{Var}(X)}
+$$
+
+Analogamente, per $Y$:
+
+$$
+Y = T_Y + E_Y
+$$
+
+$$
+r_{yy} = \frac{\text{Var}(T_Y)}{\text{Var}(Y)}
+$$
+
+### **Passo 2: Definizione del punteggio differenza**
+Il punteggio differenza è definito come:
+
+$$
+D = X - Y
+$$
+
+La varianza del punteggio differenza è:
+
+$$
+\text{Var}(D) = \text{Var}(X - Y)
+$$
+
+Utilizzando la proprietà della varianza:
+
+$$
+\text{Var}(D) = \text{Var}(X) + \text{Var}(Y) - 2\text{Cov}(X, Y)
+$$
+
+Poiché la covarianza è:
+
+$$
+\text{Cov}(X, Y) = r_{xy} \cdot \sigma_X \cdot \sigma_Y
+$$
+
+si può riscrivere la varianza del punteggio differenza come:
+
+$$
+\text{Var}(D) = \sigma_X^2 + \sigma_Y^2 - 2 r_{xy} \sigma_X \sigma_Y
+$$
+
+### **Passo 3: Calcolo della componente vera del punteggio differenza**
+Analogamente a quanto fatto per $X$ e $Y$, scriviamo la componente vera del punteggio differenza:
+
+$$
+T_D = T_X - T_Y
+$$
+
+La sua varianza è:
+
+$$
+\text{Var}(T_D) = \text{Var}(T_X - T_Y)
+$$
+
+Utilizzando la stessa proprietà della varianza:
+
+$$
+\text{Var}(T_D) = \text{Var}(T_X) + \text{Var}(T_Y) - 2\text{Cov}(T_X, T_Y)
+$$
+
+Poiché l'affidabilità è definita come il rapporto tra la varianza vera e la varianza osservata:
+
+$$
+\text{Var}(T_X) = r_{xx} \text{Var}(X), \quad \text{Var}(T_Y) = r_{yy} \text{Var}(Y)
+$$
+
+$$
+\text{Cov}(T_X, T_Y) = r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y
+$$
+
+Quindi:
+
+$$
+\text{Var}(T_D) = r_{xx} \sigma_X^2 + r_{yy} \sigma_Y^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y
+$$
+
+### **Passo 4: Calcolo dell'affidabilità del punteggio differenza**
+L'affidabilità del punteggio differenza è data da:
+
+$$
+r_{dd} = \frac{\text{Var}(T_D)}{\text{Var}(D)}
+$$
+
+Sostituendo le espressioni trovate:
+
+$$
+r_{dd} = \frac{r_{xx} \sigma_X^2 + r_{yy} \sigma_Y^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y}{\sigma_X^2 + \sigma_Y^2 - 2 r_{xy} \sigma_X \sigma_Y}
+$$
+
+Se assumiamo che $\sigma_X = \sigma_Y$ (varianza uguale per entrambe le misure), possiamo semplificare il numeratore:
+
+$$
+r_{dd} = \frac{r_{xx} + r_{yy} - 2 r_{xy} \sqrt{r_{xx} r_{yy}}}{2(1 - r_{xy})}
+$$
+
+Semplificando ulteriormente, otteniamo la **formula di Lord**:
+
+$$
+r_{dd} = \frac{0.5\,(r_{xx} + r_{yy}) - r_{xy}}{1 - r_{xy}}
+$$
+
+Questa formula mostra come l'affidabilità del punteggio differenza dipenda dalle affidabilità delle misure individuali e dalla loro correlazione.
+
+---
+
+**Intuizione:**  
+- Se $r_{xy}$ è alto, significa che le due misure sono molto correlate e la differenza tra loro ha una varianza ridotta, quindi la sua affidabilità diminuisce.  
+- Se $r_{xx}$ e $r_{yy}$ sono elevate, significa che le misure originali sono più affidabili, aumentando l'affidabilità del punteggio differenza.  
+- Se $r_{xy}$ è basso, il punteggio differenza cattura una maggiore variabilità vera, aumentando $r_{dd}$.
+:::
+
 
 **Interpretazione:**  
 
