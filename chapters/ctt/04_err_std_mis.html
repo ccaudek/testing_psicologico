@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.40">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Corrado Caudek">
 <title>11&nbsp; L’errore standard della misurazione – Testing Psicologico</title>
@@ -87,7 +87,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-9ac0fa60fcd2ae55f2ddd9f231fc218f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-70d37b45c5086134dc26dbb10e888fc0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-d0edb45afdd5f5fd9663be5d5709df0d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
@@ -979,7 +979,6 @@ window.Quarto = {
   <li><a href="#esempio-di-calcolo-in-r" id="toc-esempio-di-calcolo-in-r" class="nav-link" data-scroll-target="#esempio-di-calcolo-in-r"><span class="header-section-number">11.6.3</span> Esempio di Calcolo in R</a></li>
   <li><a href="#affidabilit%C3%A0-sem-e-larghezza-dellintervallo-di-confidenza" id="toc-affidabilità-sem-e-larghezza-dellintervallo-di-confidenza" class="nav-link" data-scroll-target="#affidabilit%C3%A0-sem-e-larghezza-dellintervallo-di-confidenza"><span class="header-section-number">11.6.4</span> Affidabilità, SEM e Larghezza dell’Intervallo di Confidenza</a></li>
   <li><a href="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" id="toc-vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="nav-link" data-scroll-target="#vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza"><span class="header-section-number">11.6.5</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</a></li>
-  <li><a href="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" id="toc-problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="nav-link" data-scroll-target="#problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati"><span class="header-section-number">11.6.6</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</a></li>
   </ul>
 </li>
   <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">11.7</span> Riflessioni Conclusive</a></li>
@@ -1201,9 +1200,9 @@ Un’alta attendibilità (<span class="math inline">\(\rho_{XX'} &gt; 0.8\)</spa
 <p>Importiamo i dati:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span></span>
-<span>    <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"mdd_sex.RDS"</span><span class="op">)</span></span>
+<span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"mdd_sex.RDS"</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">sex</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">sex</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ci sono 750 osservazioni:</p>
 <div class="cell" data-layout-align="center">
@@ -1248,38 +1247,7 @@ Un’alta attendibilità (<span class="math inline">\(\rho_{XX'} &gt; 0.8\)</spa
 <p><span class="math display">\[
 \sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}} .
 \]</span></p>
-<p>Per giungere a questa espressione, procederemo attraverso due passaggi fondamentali:</p>
-<ol type="1">
-<li>Calcolare la varianza del punteggio vero.</li>
-<li>Rappresentare la varianza del punteggio osservato come somma della varianza del punteggio vero e della varianza dell’errore.</li>
-</ol>
-<p><strong>Primo passaggio:</strong><br>
-Partiamo dalla definizione del coefficiente di attendibilità:</p>
-<p><span class="math display">\[
-\rho_{XX^\prime} = \frac{\sigma^2_T}{\sigma^2_X} ,
-\]</span></p>
-<p>dove:</p>
-<ul>
-<li>
-<span class="math inline">\(\sigma^2_T\)</span> indica la varianza del punteggio vero.</li>
-<li>
-<span class="math inline">\(\sigma^2_X\)</span> indica la varianza del punteggio osservato.</li>
-</ul>
-<p>Esplicitando <span class="math inline">\(\sigma^2_T\)</span>, otteniamo:</p>
-<p><span class="math display">\[
-\sigma^2_T = \rho_{XX^\prime}\sigma^2_X .
-\]</span></p>
-<p>Consideriamo ora due forme parallele dello stesso test, indicate con <span class="math inline">\(X\)</span> e <span class="math inline">\(X^\prime\)</span>. Poiché per definizione di forme parallele abbiamo <span class="math inline">\(\sigma_X = \sigma_{X^\prime}\)</span>, possiamo esprimere la covarianza tra le due misurazioni parallele come:</p>
-<p><span class="math display">\[
-\sigma_{XX^\prime} = \rho_{XX^\prime}\sigma_X\sigma_{X^\prime} = \rho_{XX^\prime}\sigma_X^2 .
-\]</span></p>
-<p>Ne consegue immediatamente che:</p>
-<p><span class="math display">\[
-\sigma^2_T = \sigma_{XX^\prime} .
-\]</span></p>
-<p>In altre parole, la varianza del punteggio vero coincide con la covarianza tra due forme parallele del test.</p>
-<p><strong>Secondo passaggio:</strong><br>
-Passiamo ora alla varianza del punteggio osservato. In base alla CTT, ogni punteggio osservato <span class="math inline">\(X\)</span> può essere scomposto come somma di due componenti: punteggio vero (<span class="math inline">\(T\)</span>) ed errore di misurazione (<span class="math inline">\(E\)</span>):</p>
+<p>In base alla CTT, ogni punteggio osservato <span class="math inline">\(X\)</span> può essere scomposto come somma di due componenti: punteggio vero (<span class="math inline">\(T\)</span>) ed errore di misurazione (<span class="math inline">\(E\)</span>):</p>
 <p><span class="math display">\[
 X = T + E .
 \]</span></p>
@@ -1315,20 +1283,24 @@ X = T + E .
 <li>Con un coefficiente di affidabilità pari a <span class="math inline">\(0\)</span>, il SEM è <strong>uguale alla deviazione standard</strong> dei punteggi, indicando che tutta la varianza nei punteggi è dovuta all’errore.</li>
 </ul></section><section id="intervallo-di-confidenza-e-sem" class="level2" data-number="11.6"><h2 data-number="11.6" class="anchored" data-anchor-id="intervallo-di-confidenza-e-sem">
 <span class="header-section-number">11.6</span> Intervallo di Confidenza e SEM</h2>
-<p>All’interno della Teoria Classica dei Test, il <strong>SEM</strong> esprime la <strong>dispersione stimata</strong> dei punteggi osservati attorno al <strong>punteggio vero</strong> di un individuo. In altre parole, se potessimo somministrare infinite volte un test a una persona (senza effetti di apprendimento o stanchezza), la distribuzione dei suoi punteggi osservati avrebbe come media il punteggio vero e una deviazione standard pari al SEM.</p>
+<p>All’interno della CTT, il <strong>SEM</strong> esprime la <strong>dispersione stimata</strong> dei punteggi osservati attorno al <strong>punteggio vero</strong> di un individuo. In altre parole, se potessimo somministrare infinite volte un test a una persona (senza effetti di apprendimento o stanchezza), la distribuzione dei suoi punteggi osservati avrebbe come media il punteggio vero e una deviazione standard pari al SEM.</p>
 <section id="intervalli-di-confidenza" class="level3" data-number="11.6.1"><h3 data-number="11.6.1" class="anchored" data-anchor-id="intervalli-di-confidenza">
 <span class="header-section-number">11.6.1</span> Intervalli di Confidenza</h3>
 <p>L’intervallo di confidenza basato sul SEM deve essere costruito <strong>attorno al punteggio vero</strong>, non attorno al punteggio osservato. Questo è fondamentale perché concettualmente è il punteggio osservato che varia attorno al punteggio vero, e non viceversa.</p>
 <ul>
-<li>L’intervallo di confidenza corretto è quindi <span class="math inline">\(\bigl[T \pm z \times \text{SEM}\bigr]\)</span>, dove <span class="math inline">\(T\)</span> è il punteggio vero e <span class="math inline">\(z\)</span> è il valore critico corrispondente al livello di confidenza desiderato.</li>
-<li>
-<strong>Non è appropriato</strong> calcolare l’intervallo di confidenza attorno al punteggio osservato <span class="math inline">\(X\)</span> utilizzando il SEM, poiché questo non riflette correttamente la fonte dell’incertezza nella misurazione.</li>
-</ul></section><section id="applicazioni-pratiche" class="level3" data-number="11.6.2"><h3 data-number="11.6.2" class="anchored" data-anchor-id="applicazioni-pratiche">
+<li>L’intervallo di confidenza è quindi</li>
+</ul>
+<p><span id="eq-ci-sem"><span class="math display">\[
+T \pm z \times \text{SEM} ,
+\tag{11.2}\]</span></span></p>
+<p>dove <span class="math inline">\(T\)</span> è il punteggio vero e <span class="math inline">\(z\)</span> è il valore critico corrispondente al livello di confidenza desiderato.</p>
+<p><strong>Non è invece appropriato</strong> calcolare l’intervallo di confidenza attorno al punteggio osservato <span class="math inline">\(X\)</span> utilizzando il SEM, poiché questo non riflette correttamente la fonte dell’incertezza nella misurazione (ad es., Charter, 1996; Dudek, 1979).</p>
+</section><section id="applicazioni-pratiche" class="level3" data-number="11.6.2"><h3 data-number="11.6.2" class="anchored" data-anchor-id="applicazioni-pratiche">
 <span class="header-section-number">11.6.2</span> Applicazioni pratiche</h3>
-<p>In contesti simulati dove conosciamo il punteggio vero, possiamo costruire direttamente l’intervallo attorno ad esso. Nella pratica, poiché il punteggio vero è sconosciuto, si deve ricorrere a metodi di stima appropriati:</p>
+<p>In contesti simulati dove conosciamo il punteggio vero, possiamo costruire direttamente l’intervallo attorno ad esso. Nella pratica, poiché il punteggio vero è sconosciuto, si deve ricorrere a <strong>metodi di stima</strong> appropriati:</p>
 <ol type="1">
-<li>Il metodo di Kelly può essere utilizzato per stimare il punteggio vero a partire dal punteggio osservato</li>
-<li>Una volta stimato il punteggio vero, si può costruire l’intervallo di confidenza attorno a questa stima</li>
+<li>il metodo di Kelly può essere utilizzato per stimare il punteggio vero a partire dal punteggio osservato;</li>
+<li>una volta stimato il punteggio vero, si può costruire l’intervallo di confidenza attorno a questa stima, usando l’errore standard della stima.</li>
 </ol></section><section id="esempio-di-calcolo-in-r" class="level3" data-number="11.6.3"><h3 data-number="11.6.3" class="anchored" data-anchor-id="esempio-di-calcolo-in-r">
 <span class="header-section-number">11.6.3</span> Esempio di Calcolo in R</h3>
 <p>Supponiamo di conoscere (in un contesto di simulazione) che il punteggio vero di un individuo sia 70, e che il SEM valga 3. Possiamo calcolare, ad esempio, la probabilità che i punteggi osservati ricadano tra 67 e 73 (cioè <span class="math inline">\(\pm 3\)</span> dal punteggio vero). In R:</p>
@@ -1355,8 +1327,10 @@ X = T + E .
 <span><span class="va">intervallo_confidenza_inf</span> <span class="op">&lt;-</span> <span class="va">punteggio_vero</span> <span class="op">-</span> <span class="va">errore_standard_intervallo</span></span>
 <span><span class="va">intervallo_confidenza_sup</span> <span class="op">&lt;-</span> <span class="va">punteggio_vero</span> <span class="op">+</span> <span class="va">errore_standard_intervallo</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Intervallo di confidenza al 95%:"</span>,</span>
-<span>    <span class="st">"["</span>, <span class="va">intervallo_confidenza_inf</span>, <span class="st">","</span>, <span class="va">intervallo_confidenza_sup</span>, <span class="st">"]\n"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Intervallo di confidenza al 95%:"</span>,</span>
+<span>  <span class="st">"["</span>, <span class="va">intervallo_confidenza_inf</span>, <span class="st">","</span>, <span class="va">intervallo_confidenza_sup</span>, <span class="st">"]\n"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Intervallo di confidenza al 95%: [ 64.1 , 75.9 ]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="affidabilità-sem-e-larghezza-dellintervallo-di-confidenza" class="level3" data-number="11.6.4"><h3 data-number="11.6.4" class="anchored" data-anchor-id="affidabilità-sem-e-larghezza-dellintervallo-di-confidenza">
@@ -1365,12 +1339,9 @@ X = T + E .
 </section><section id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza" class="level3" data-number="11.6.5"><h3 data-number="11.6.5" class="anchored" data-anchor-id="vantaggio-del-sem-e-delluso-degli-intervalli-di-confidenza">
 <span class="header-section-number">11.6.5</span> Vantaggio del SEM e dell’Uso degli Intervalli di Confidenza</h3>
 <p>Specificare un intervallo di confidenza attorno al punteggio vero (o a una sua stima appropriata) permette di riconoscere l’incertezza intrinseca nella misurazione. Ad esempio, se Alice riporta un QI di 113, questo non dovrebbe essere considerato un dato “esatto”, ma piuttosto un punto di partenza per stimare il suo punteggio vero, con un’opportuna quantificazione dell’incertezza.</p>
-</section><section id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati" class="level3" data-number="11.6.6"><h3 data-number="11.6.6" class="anchored" data-anchor-id="problema-nel-calcolo-dellintervallo-di-confidenza-sui-punteggi-osservati">
-<span class="header-section-number">11.6.6</span> Problema nel Calcolo dell’Intervallo di Confidenza sui Punteggi Osservati</h3>
-<p>Calcolare un intervallo di confidenza direttamente attorno al <strong>punteggio osservato</strong> usando il SEM è concettualmente errato. Diversi autori (ad es. <em>Charter, 1996; Dudek, 1979</em>) evidenziano che quando si vuole costruire un intervallo di confidenza partendo dal punteggio osservato, sarebbe più appropriato impiegare l’<strong>Errore Standard della Stima (SEE)</strong>, che riflette meglio l’incertezza nella stima del punteggio vero a partire dall’osservato. Questo aspetto sarà affrontato in modo più approfondito nel capitolo successivo.</p>
 </section></section><section id="riflessioni-conclusive" class="level2" data-number="11.7"><h2 data-number="11.7" class="anchored" data-anchor-id="riflessioni-conclusive">
 <span class="header-section-number">11.7</span> Riflessioni Conclusive</h2>
-<p>Nel quadro della Teoria Classica dei Test, i coefficienti di affidabilità forniscono una misura globale della <strong>coerenza</strong> di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare <strong>l’Errore Standard di Misurazione (SEM)</strong> e costruire correttamente gli intervalli di confidenza attorno al punteggio vero.</p>
+<p>Nel quadro della CTT, i coefficienti di affidabilità forniscono una misura globale della <strong>coerenza</strong> di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare <strong>l’Errore Standard di Misurazione</strong> (SEM) e costruire correttamente gli intervalli di confidenza attorno al punteggio vero.</p>
 <p>In definitiva, comprendere che l’intervallo di confidenza basato sul SEM si riferisce alla distribuzione dei punteggi osservati attorno al punteggio vero permette di interpretare i risultati del test in modo più consapevole e metodologicamente corretto.</p>
 </section><section id="session-info" class="level2" data-number="11.8"><h2 data-number="11.8" class="anchored" data-anchor-id="session-info">
 <span class="header-section-number">11.8</span> Session Info</h2>
@@ -1395,7 +1366,7 @@ X = T + E .
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] psychometric_2.4  multilevel_2.7    nlme_3.1-167      ggokabeito_0.1.0 </span></span>
-<span><span class="co">#&gt;  [5] see_0.11.0        MASS_7.3-65       viridis_0.6.5     viridisLite_0.4.2</span></span>
+<span><span class="co">#&gt;  [5] see_0.10.0        MASS_7.3-64       viridis_0.6.5     viridisLite_0.4.2</span></span>
 <span><span class="co">#&gt;  [9] ggpubr_0.6.0      ggExtra_0.10.1    gridExtra_2.3     patchwork_1.3.0  </span></span>
 <span><span class="co">#&gt; [13] bayesplot_1.11.1  semTools_0.5-6    semPlot_1.1.6     lavaan_0.6-19    </span></span>
 <span><span class="co">#&gt; [17] psych_2.4.12      scales_1.3.0      markdown_1.13     knitr_1.49       </span></span>
@@ -1404,15 +1375,15 @@ X = T + E .
 <span><span class="co">#&gt; [29] ggplot2_3.5.1     tidyverse_2.0.0   here_1.0.1       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.1      magrittr_2.0.3     </span></span>
+<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.0      magrittr_2.0.3     </span></span>
 <span><span class="co">#&gt;   [4] TH.data_1.1-3       estimability_1.5.1  farver_2.1.2       </span></span>
-<span><span class="co">#&gt;   [7] nloptr_2.2.0        rmarkdown_2.29      vctrs_0.6.5        </span></span>
+<span><span class="co">#&gt;   [7] nloptr_2.1.1        rmarkdown_2.29      vctrs_0.6.5        </span></span>
 <span><span class="co">#&gt;  [10] minqa_1.2.8         base64enc_0.1-3     rstatix_0.7.2      </span></span>
 <span><span class="co">#&gt;  [13] htmltools_0.5.8.1   broom_1.0.7         Formula_1.2-5      </span></span>
 <span><span class="co">#&gt;  [16] htmlwidgets_1.6.4   plyr_1.8.9          sandwich_3.1-1     </span></span>
 <span><span class="co">#&gt;  [19] emmeans_1.10.7      zoo_1.8-13          igraph_2.1.4       </span></span>
 <span><span class="co">#&gt;  [22] mime_0.12           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
-<span><span class="co">#&gt;  [25] Matrix_1.7-3        R6_2.6.1            fastmap_1.2.0      </span></span>
+<span><span class="co">#&gt;  [25] Matrix_1.7-2        R6_2.6.1            fastmap_1.2.0      </span></span>
 <span><span class="co">#&gt;  [28] rbibutils_2.3       shiny_1.10.0        digest_0.6.37      </span></span>
 <span><span class="co">#&gt;  [31] OpenMx_2.21.13      fdrtool_1.2.18      colorspace_2.1-1   </span></span>
 <span><span class="co">#&gt;  [34] rprojroot_2.0.4     Hmisc_5.2-2         timechange_0.3.0   </span></span>
@@ -1423,7 +1394,7 @@ X = T + E .
 <span><span class="co">#&gt;  [49] foreign_0.8-88      zip_2.3.2           httpuv_1.6.15      </span></span>
 <span><span class="co">#&gt;  [52] nnet_7.3-20         glue_1.8.0          quadprog_1.5-8     </span></span>
 <span><span class="co">#&gt;  [55] promises_1.3.2      lisrelToR_0.3       grid_4.4.2         </span></span>
-<span><span class="co">#&gt;  [58] checkmate_2.3.2     cluster_2.1.8.1     reshape2_1.4.4     </span></span>
+<span><span class="co">#&gt;  [58] checkmate_2.3.2     cluster_2.1.8       reshape2_1.4.4     </span></span>
 <span><span class="co">#&gt;  [61] generics_0.1.3      gtable_0.3.6        tzdb_0.4.0         </span></span>
 <span><span class="co">#&gt;  [64] data.table_1.17.0   hms_1.1.3           car_3.1-3          </span></span>
 <span><span class="co">#&gt;  [67] sem_3.1-16          pillar_1.10.1       rockchalk_1.8.157  </span></span>
