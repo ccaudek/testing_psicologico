@@ -952,12 +952,18 @@ window.Quarto = {
   <li>
 <a href="#stimare-un-cambiamento-clinicamente-significativo" id="toc-stimare-un-cambiamento-clinicamente-significativo" class="nav-link" data-scroll-target="#stimare-un-cambiamento-clinicamente-significativo"><span class="header-section-number">13.2</span> Stimare un Cambiamento Clinicamente Significativo</a>
   <ul>
-<li><a href="#calcolo-del-reliable-change-index-rci" id="toc-calcolo-del-reliable-change-index-rci" class="nav-link" data-scroll-target="#calcolo-del-reliable-change-index-rci"><span class="header-section-number">13.2.1</span> Calcolo del Reliable Change Index (RCI)</a></li>
+<li><a href="#calcolo-del-reliable-change-index" id="toc-calcolo-del-reliable-change-index" class="nav-link" data-scroll-target="#calcolo-del-reliable-change-index"><span class="header-section-number">13.2.1</span> Calcolo del Reliable Change Index</a></li>
   <li><a href="#calcolo-della-differenza-tra-punteggi-e-distribuzione-di-errore" id="toc-calcolo-della-differenza-tra-punteggi-e-distribuzione-di-errore" class="nav-link" data-scroll-target="#calcolo-della-differenza-tra-punteggi-e-distribuzione-di-errore"><span class="header-section-number">13.2.2</span> Calcolo della differenza tra punteggi e distribuzione di errore</a></li>
   <li><a href="#definizione-dellrci" id="toc-definizione-dellrci" class="nav-link" data-scroll-target="#definizione-dellrci"><span class="header-section-number">13.2.3</span> Definizione dell’RCI</a></li>
+  <li><a href="#esempio-in-r" id="toc-esempio-in-r" class="nav-link" data-scroll-target="#esempio-in-r"><span class="header-section-number">13.2.4</span> Esempio in R</a></li>
   </ul>
 </li>
-  <li><a href="#affidabilit%C3%A0-e-lunghezza-del-test" id="toc-affidabilità-e-lunghezza-del-test" class="nav-link" data-scroll-target="#affidabilit%C3%A0-e-lunghezza-del-test"><span class="header-section-number">13.3</span> Affidabilità e Lunghezza del Test</a></li>
+  <li>
+<a href="#affidabilit%C3%A0-e-lunghezza-del-test" id="toc-affidabilità-e-lunghezza-del-test" class="nav-link" data-scroll-target="#affidabilit%C3%A0-e-lunghezza-del-test"><span class="header-section-number">13.3</span> Affidabilità e Lunghezza del Test</a>
+  <ul>
+<li><a href="#esempio-in-r-1" id="toc-esempio-in-r-1" class="nav-link" data-scroll-target="#esempio-in-r-1"><span class="header-section-number">13.3.1</span> Esempio in R</a></li>
+  </ul>
+</li>
   <li>
 <a href="#attenuazione" id="toc-attenuazione" class="nav-link" data-scroll-target="#attenuazione"><span class="header-section-number">13.4</span> Attenuazione</a>
   <ul>
@@ -1012,7 +1018,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span></span>
-<span>  <span class="va">lavaan</span>, <span class="va">modelsummary</span>, <span class="va">foreach</span>, <span class="va">ggridges</span>, <span class="va">truncnorm</span>, </span>
+<span>  <span class="va">lavaan</span>, <span class="va">modelsummary</span>, <span class="va">foreach</span>, <span class="va">ggridges</span>, <span class="va">truncnorm</span>,</span>
 <span>  <span class="va">cmdstanr</span>, <span class="va">doParallel</span></span>
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1028,7 +1034,7 @@ window.Quarto = {
 <p>Nel complesso, lo scopo di questo capitolo è fornire una visione articolata su come la CTT, con i suoi strumenti e le sue formule, possa guidare non solo la costruzione e la valutazione di un test, ma anche l’interpretazione dei dati ottenuti. Al tempo stesso, il richiamo all’approccio bayesiano evidenzia come molte procedure classiche trovino un corrispettivo in modelli moderni, sottolineando la continuità tra i due paradigmi.</p>
 </section><section id="stimare-un-cambiamento-clinicamente-significativo" class="level2" data-number="13.2"><h2 data-number="13.2" class="anchored" data-anchor-id="stimare-un-cambiamento-clinicamente-significativo">
 <span class="header-section-number">13.2</span> Stimare un Cambiamento Clinicamente Significativo</h2>
-<p>Un tema fondamentale in psicologia clinica è stabilire se un individuo abbia effettivamente manifestato un <em>cambiamento clinicamente significativo</em> nel tempo. I metodi per valutarlo rientrano per lo più in due categorie: i metodi “basati su ancoraggi” e quelli “basati sulla distribuzione” <span class="citation" data-cites="blampied2022reliable">(<a href="../../99-references.html#ref-blampied2022reliable" role="doc-biblioref">Blampied, 2022</a>)</span>.</p>
+<p>Un tema fondamentale in psicologia clinica è stabilire se un individuo abbia effettivamente manifestato un <strong>cambiamento clinicamente significativo</strong> nel tempo. I metodi per valutarlo rientrano per lo più in due categorie: i metodi “basati su ancoraggi” e quelli “basati sulla distribuzione” <span class="citation" data-cites="blampied2022reliable">(<a href="../../99-references.html#ref-blampied2022reliable" role="doc-biblioref">Blampied, 2022</a>)</span>.</p>
 <ul>
 <li>
 <p><strong>Metodi basati su ancoraggi.</strong> Stabiliscono che un cambiamento clinicamente significativo debba corrispondere a un evento o a un segnale “clinicamente rilevante” esterno allo strumento di misura. In altre parole, invece di concentrarsi solo su quanti punti sono cambiati in una scala, questi metodi pongono l’accento sulla <strong>qualità</strong> di quel cambiamento: la variazione di punteggio deve essere associata a un miglioramento (o peggioramento) tangibile nello stato clinico del paziente, tale da essere riconosciuto come rilevante dal punto di vista clinico o terapeutico.</p>
@@ -1045,58 +1051,130 @@ Il ricercatore definisce dunque come “clinicamente significativo” un miglior
 <p>Grazie a questo collegamento, l’approccio basato su ancoraggi permette di interpretare la variazione dei punteggi alla luce di uno scenario clinico reale e tangibile.</p>
 </li>
 <li>
-<p><strong>Metodi basati sulla distribuzione.</strong> Utilizzano gli indici di errore di misurazione per stabilire se la variazione del punteggio sia sufficientemente grande da non poter essere spiegata dal solo errore. Uno dei primi e più noti metodi di questo tipo è il <em>Reliable Change Index</em> (RCI), introdotto da Jacobson e Truax. Alla base dell’RCI vi è l’errore standard della differenza (SED), a sua volta derivato dall’errore standard di misura (SEM). Quest’ultimo si ottiene dalla seguente formula:</p>
+<p><strong>Metodi basati sulla distribuzione.</strong> Utilizzano gli indici di errore di misurazione per stabilire se la variazione del punteggio sia sufficientemente grande da non poter essere spiegata dal solo errore. Uno dei primi e più noti metodi di questo tipo è il <strong>Reliable Change Index</strong> (RCI), introdotto da Jacobson e Truax. Alla base dell’RCI vi è l’errore standard della differenza (SED), a sua volta derivato dall’errore standard di misura (SEM). Come abbiamo discusso, quest’ultimo si ottiene dalla seguente formula:</p>
 <p><span class="math display">\[
 SEM = s_x \sqrt{1 - r_{xx'}},
 \]</span></p>
-<p>dove <span class="math inline">\(s_x\)</span> è la deviazione standard dei punteggi al pre-test e <span class="math inline">\(r_{xx'}\)</span> l’affidabilità dello strumento. Se la variazione osservata nel punteggio di un individuo supera l’errore di misurazione intrinseco, si può concludere che il cambiamento sia <em>clinicamente significativo</em> e non soltanto frutto della variabilità casuale legata alla misura.</p>
+<p>dove <span class="math inline">\(s_x\)</span> è la deviazione standard dei punteggi al pre-test e <span class="math inline">\(r_{xx'}\)</span> l’affidabilità dello strumento. <strong>Se la variazione osservata nel punteggio di un individuo supera l’errore di misurazione intrinseco</strong>, si può concludere che il cambiamento sia <strong>clinicamente significativo</strong> e non soltanto frutto della variabilità casuale legata alla misura.</p>
 </li>
 </ul>
-<section id="calcolo-del-reliable-change-index-rci" class="level3" data-number="13.2.1"><h3 data-number="13.2.1" class="anchored" data-anchor-id="calcolo-del-reliable-change-index-rci">
-<span class="header-section-number">13.2.1</span> Calcolo del Reliable Change Index (RCI)</h3>
-<p>La logica dell’RCI si basa su una suddivisione di qualunque punteggio osservato (<span class="math inline">\(X\)</span>) in due componenti: il <em>punteggio vero</em> (<span class="math inline">\(T\)</span>) e un <em>errore di misurazione</em> (<span class="math inline">\(E\)</span>):</p>
+<section id="calcolo-del-reliable-change-index" class="level3" data-number="13.2.1"><h3 data-number="13.2.1" class="anchored" data-anchor-id="calcolo-del-reliable-change-index">
+<span class="header-section-number">13.2.1</span> Calcolo del Reliable Change Index</h3>
+<p>La logica dell’RCI si basa su una suddivisione di qualunque punteggio osservato (<span class="math inline">\(X\)</span>) in due componenti: il punteggio vero (<span class="math inline">\(T\)</span>) e un errore di misurazione (<span class="math inline">\(E\)</span>):</p>
 <p><span class="math display">\[
 X = T \pm E.
 \]</span></p>
-<p>Se una persona subisce un vero cambiamento tra due tempi di osservazione (<span class="math inline">\(t1\)</span> e <span class="math inline">\(t2\)</span>), ciò dovrebbe riflettersi in una differenza fra i relativi punteggi veri. Tuttavia, la presenza dell’errore di misurazione rende possibile osservare differenze anche in assenza di un mutamento reale. Di conseguenza, occorre stabilire <em>quanto</em> debba essere ampio un cambiamento per poterlo definire genuino e non dovuto a fluttuazioni casuali.</p>
-<p>Jacobson e Truax (1991), riprendendo concetti introdotti da Jacobson e colleghi (1984), sfruttarono la distribuzione degli errori di misurazione (che ha media zero e varianza pari al <span class="math inline">\(SEM^2\)</span>) per definire un indice che quantifica l’entità di un cambiamento in termini di <em>unità di errore standard</em>.</p>
+<p>Se una persona subisce un vero cambiamento tra due tempi di osservazione (<span class="math inline">\(t1\)</span> e <span class="math inline">\(t2\)</span>), ciò dovrebbe riflettersi in una differenza fra i relativi <strong>punteggi veri</strong>. Tuttavia, la presenza dell’errore di misurazione rende possibile osservare differenze anche in assenza di un mutamento reale. Di conseguenza, occorre stabilire <em>quanto</em> debba essere ampio un cambiamento per poterlo definire genuino e non dovuto a fluttuazioni casuali.</p>
+<p>Jacobson e Truax (1991), riprendendo concetti introdotti da Jacobson e colleghi (1984), sfruttarono la distribuzione degli errori di misurazione (che ha media zero e varianza pari al <span class="math inline">\(SEM^2\)</span>) per definire un indice che quantifica l’entità di un cambiamento in termini di <strong>unità di errore standard</strong>.</p>
 </section><section id="calcolo-della-differenza-tra-punteggi-e-distribuzione-di-errore" class="level3" data-number="13.2.2"><h3 data-number="13.2.2" class="anchored" data-anchor-id="calcolo-della-differenza-tra-punteggi-e-distribuzione-di-errore">
 <span class="header-section-number">13.2.2</span> Calcolo della differenza tra punteggi e distribuzione di errore</h3>
-<p>Il modo più diretto per rilevare un cambiamento consiste nel calcolare il <em>punteggio di differenza</em> (o <em>change score</em>) tra due tempi di misura:</p>
-<p><span class="math display">\[
+<p>Il modo più diretto per rilevare un cambiamento consiste nel calcolare il <strong>punteggio di differenza</strong> (o <em>change score</em>) tra due tempi di misura:</p>
+<p><span id="eq-change-score-def"><span class="math display">\[
 C_i = X_{t1} - X_{t2},
-\]</span></p>
-<p>dove <span class="math inline">\(C_i\)</span> rappresenta il cambiamento per l’individuo <span class="math inline">\(i\)</span>. Poiché ogni punteggio osservato comprende una componente di errore, il punteggio di differenza conterrà anche l’errore combinato delle due misurazioni.</p>
-<p>La distribuzione di questi <em>errori di differenza</em> ha anch’essa media zero, ma una deviazione standard più grande, chiamata deviazione standard della differenza (<span class="math inline">\(SD_{Diff}\)</span>). Per due misure indipendenti o non correlate dal punto di vista dell’errore, essa è data da:</p>
-<p><span class="math display">\[
-SD_{Diff} = \sqrt{2 \times SEM^2}.
-\]</span></p>
+\tag{13.1}\]</span></span></p>
+<p>dove <span class="math inline">\(C_i\)</span> rappresenta il cambiamento per l’individuo <span class="math inline">\(i\)</span>. Poiché ogni punteggio osservato comprende una componente di errore, il punteggio di differenza conterrà anche l’errore combinato delle due misurazioni (si veda la discussione precedente sull’affidabilità dei punteggi differenza).</p>
+<p>La distribuzione di questi <em>errori di differenza</em> ha anch’essa media zero, ma una deviazione standard <strong>più grande</strong>, chiamata <strong>deviazione standard della differenza</strong> (<span class="math inline">\(SD_{Diff}\)</span>). Per due misure indipendenti o non correlate dal punto di vista dell’errore, essa è data da:</p>
+<p><span id="eq-sd-diff-def"><span class="math display">\[
+SD_{Diff} = \sqrt{2 \cdot SEM^2}.
+\tag{13.2}\]</span></span></p>
 <p>Questo nasce dalla proprietà secondo cui la varianza della differenza fra due variabili indipendenti si ottiene sommando le loro varianze. Anche se i punteggi veri al pre- e post- possono essere correlati (perché appartengono alla stessa persona), si assume in psicometria che gli <em>errori di misurazione</em> siano indipendenti fra loro.</p>
 </section><section id="definizione-dellrci" class="level3" data-number="13.2.3"><h3 data-number="13.2.3" class="anchored" data-anchor-id="definizione-dellrci">
 <span class="header-section-number">13.2.3</span> Definizione dell’RCI</h3>
-<p>Una volta calcolati il punteggio di differenza <span class="math inline">\(C_i\)</span> e la sua deviazione standard <span class="math inline">\(SD_{Diff}\)</span>, l’RCI è semplicemente il <em>punteggio di differenza standardizzato</em>:</p>
-<p><span class="math display">\[
+<p>Una volta calcolati il punteggio di differenza <span class="math inline">\(C_i\)</span> e la sua deviazione standard <span class="math inline">\(SD_{Diff}\)</span>, l’RCI è semplicemente il <strong>punteggio di differenza standardizzato</strong>:</p>
+<p><span id="eq-rci-def"><span class="math display">\[
 C_i(\text{Standardized}) = \frac{C_i}{SD_{Diff}}.
-\]</span></p>
+\tag{13.3}\]</span></span></p>
 <p>Analogamente a uno <em>z-score</em>, l’RCI indica di quante <em>unità di errore standard</em> differisce il cambiamento osservato dal valore zero (che corrisponderebbe a nessun cambiamento reale). Più alto è l’RCI in valore assoluto, più ci si può ragionevolmente aspettare che la variazione misurata rifletta un mutamento vero e non solo un artefatto della misura.</p>
 <p>Un RCI che superi una determinata soglia (spesso ±1.96 per p &lt; .05) suggerisce un cambiamento talmente ampio da poter essere considerato <em>clinicamente significativo</em>, cioè non spiegabile interamente dall’errore di misurazione.</p>
+</section><section id="esempio-in-r" class="level3" data-number="13.2.4"><h3 data-number="13.2.4" class="anchored" data-anchor-id="esempio-in-r">
+<span class="header-section-number">13.2.4</span> Esempio in R</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulazione di dati psicologici</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co"># Per replicabilità</span></span>
+<span><span class="va">dati</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="co"># 100 partecipanti</span></span>
+<span>  t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, mean <span class="op">=</span> <span class="fl">25</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, <span class="co"># Punteggi al tempo 1</span></span>
+<span>  t2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, mean <span class="op">=</span> <span class="fl">23</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># Punteggi al tempo 2</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Supponiamo che l'affidabilità del test sia nota</span></span>
+<span><span class="va">reliability</span> <span class="op">&lt;-</span> <span class="fl">0.85</span> <span class="co"># Esempio di coefficiente di affidabilità</span></span>
+<span><span class="va">sd_test</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="co"># Deviazione standard della misura</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo dell'errore standard di misura (SEM)</span></span>
+<span><span class="va">SEM</span> <span class="op">&lt;-</span> <span class="va">sd_test</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">reliability</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo della deviazione standard della differenza tra le due misure</span></span>
+<span><span class="va">SD_Diff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">SEM</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo del punteggio di differenza</span></span>
+<span><span class="va">dati</span><span class="op">$</span><span class="va">Change_Score</span> <span class="op">&lt;-</span> <span class="va">dati</span><span class="op">$</span><span class="va">t1</span> <span class="op">-</span> <span class="va">dati</span><span class="op">$</span><span class="va">t2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcolo dell'RCI per ciascun individuo</span></span>
+<span><span class="va">dati</span><span class="op">$</span><span class="va">RCI</span> <span class="op">&lt;-</span> <span class="va">dati</span><span class="op">$</span><span class="va">Change_Score</span> <span class="op">/</span> <span class="va">SD_Diff</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Identificare i cambiamenti clinicamente significativi (soglia ±1.96)</span></span>
+<span><span class="va">dati</span><span class="op">$</span><span class="va">Significativo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">dati</span><span class="op">$</span><span class="va">RCI</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1.96</span></span>
+<span></span>
+<span><span class="co"># Mostrare i primi risultati</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dati</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   ID   t1   t2 Change_Score    RCI Significativo</span></span>
+<span><span class="co">#&gt; 1  1 22.2 19.4        2.750  1.004         FALSE</span></span>
+<span><span class="co">#&gt; 2  2 23.8 24.3       -0.435 -0.159         FALSE</span></span>
+<span><span class="co">#&gt; 3  3 32.8 21.8       11.027  4.026          TRUE</span></span>
+<span><span class="co">#&gt; 4  4 25.4 21.3        4.090  1.494         FALSE</span></span>
+<span><span class="co">#&gt; 5  5 25.6 18.2        7.405  2.704          TRUE</span></span>
+<span><span class="co">#&gt; 6  6 33.6 22.8       10.800  3.944          TRUE</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Visualizzazione dei RCI</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">dati</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">RCI</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span></span>
+<span>    binwidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"blue"</span>,</span>
+<span>    alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"black"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span></span>
+<span>    xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.96</span>, <span class="fl">1.96</span><span class="op">)</span>,</span>
+<span>    linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"red"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Distribuzione dell'RCI"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Reliable Change Index"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Frequenza"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="06_ctt_applications_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section></section><section id="affidabilità-e-lunghezza-del-test" class="level2" data-number="13.3"><h2 data-number="13.3" class="anchored" data-anchor-id="affidabilità-e-lunghezza-del-test">
 <span class="header-section-number">13.3</span> Affidabilità e Lunghezza del Test</h2>
 <p>Un modo per determinare quanti item servano a raggiungere un dato livello di affidabilità è sfruttare la formula di <strong>Spearman-Brown</strong>, adattandola per calcolare la lunghezza del test desiderata. Nel caso di un <em>item medio</em> con affidabilità stimata <span class="math inline">\(\rho_1\)</span> e di un test esteso il cui obiettivo è raggiungere l’affidabilità complessiva <span class="math inline">\(\rho_p\)</span>, la formula che restituisce il numero di item <span class="math inline">\(p\)</span> necessari è:</p>
-<p><span class="math display">\[
+<p><span id="eq-spearman-brown-number-items"><span class="math display">\[
 p = \frac{\rho_p (1 - \rho_1)}{\rho_1 (1 - \rho_p)}.
-\tag{1}
-\]</span></p>
+\tag{13.4}\]</span></span></p>
+<section id="esempio-in-r-1" class="level3" data-number="13.3.1"><h3 data-number="13.3.1" class="anchored" data-anchor-id="esempio-in-r-1">
+<span class="header-section-number">13.3.1</span> Esempio in R</h3>
 <p>Supponiamo, per esempio, che un test composto da 5 item abbia un’affidabilità di 0.824 e che <span class="math inline">\(\rho_1\)</span> (affidabilità dell’item medio) sia pari a 0.479. Se desideriamo raggiungere un’affidabilità complessiva <span class="math inline">\(\rho_p\)</span> di 0.95, applicando la formula <span class="math inline">\((1)\)</span> si ottiene un valore di <span class="math inline">\(p\)</span> di circa 21 item. In altre parole, servirebbe un totale di 21 item per raggiungere una stima di affidabilità pari a 0.95.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esempio di calcolo in R</span></span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esempio di calcolo in R</span></span>
 <span><span class="va">rho_1</span> <span class="op">&lt;-</span> <span class="fl">0.479</span></span>
 <span><span class="va">desired_rho</span> <span class="op">&lt;-</span> <span class="fl">0.95</span></span>
 <span><span class="va">n_items_needed</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">desired_rho</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho_1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">rho_1</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">desired_rho</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">n_items_needed</span></span>
 <span><span class="co">#&gt; [1] 20.7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="attenuazione" class="level2" data-number="13.4"><h2 data-number="13.4" class="anchored" data-anchor-id="attenuazione">
+</section></section><section id="attenuazione" class="level2" data-number="13.4"><h2 data-number="13.4" class="anchored" data-anchor-id="attenuazione">
 <span class="header-section-number">13.4</span> Attenuazione</h2>
 <section id="attenuazione-e-correlazioni-disattenuate" class="level3" data-number="13.4.1"><h3 data-number="13.4.1" class="anchored" data-anchor-id="attenuazione-e-correlazioni-disattenuate">
 <span class="header-section-number">13.4.1</span> Attenuazione e Correlazioni Disattenuate</h3>
@@ -1119,7 +1197,7 @@ p = \frac{\rho_p (1 - \rho_1)}{\rho_1 (1 - \rho_p)}.
 <p>Il calcolo degli intervalli di confidenza per la <strong>correlazione disattenuata</strong> richiede qualche cautela: un approccio comune è applicare la <em>formula di disattenuazione</em> agli estremi dell’intervallo di confidenza della correlazione osservata, consapevoli che tale procedura è approssimativa. In pratica, si stima l’intervallo di confidenza della correlazione osservata e se ne calcola una versione “corretta” sostituendo in formula i valori limite dell’intervallo.</p>
 <p>Ad esempio, si consideri un caso in cui la correlazione osservata <span class="math inline">\(\rho_{XY} = 0.50\)</span>, con affidabilità <span class="math inline">\(\rho_{XX^\prime} = 0.70\)</span> e <span class="math inline">\(\rho_{YY^\prime} = 0.80\)</span>. Applicando la formula <span class="math inline">\((2)\)</span>, la correlazione disattenuata è:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">r_osservata</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">r_osservata</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span>
 <span><span class="va">rho_X</span> <span class="op">&lt;-</span> <span class="fl">0.7</span></span>
 <span><span class="va">rho_Y</span> <span class="op">&lt;-</span> <span class="fl">0.8</span></span>
 <span></span>
@@ -1129,14 +1207,16 @@ p = \frac{\rho_p (1 - \rho_1)}{\rho_1 (1 - \rho_p)}.
 </div>
 <p>Se l’intervallo di confidenza della correlazione osservata andasse, ad esempio, da 0.40 a 0.60, si otterrebbero due estremi per la correlazione corretta applicando la stessa operazione:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">CI_lower_observed</span> <span class="op">&lt;-</span> <span class="fl">0.4</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">CI_lower_observed</span> <span class="op">&lt;-</span> <span class="fl">0.4</span></span>
 <span><span class="va">CI_upper_observed</span> <span class="op">&lt;-</span> <span class="fl">0.6</span></span>
 <span></span>
 <span><span class="va">CI_lower_corrected</span> <span class="op">&lt;-</span> <span class="va">CI_lower_observed</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">rho_X</span> <span class="op">*</span> <span class="va">rho_Y</span><span class="op">)</span></span>
 <span><span class="va">CI_upper_corrected</span> <span class="op">&lt;-</span> <span class="va">CI_upper_observed</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">rho_X</span> <span class="op">*</span> <span class="va">rho_Y</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Intervallo di confidenza corretto: da"</span>,</span>
-<span>    <span class="va">CI_lower_corrected</span>, <span class="st">"a"</span>, <span class="va">CI_upper_corrected</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Intervallo di confidenza corretto: da"</span>,</span>
+<span>  <span class="va">CI_lower_corrected</span>, <span class="st">"a"</span>, <span class="va">CI_upper_corrected</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; Intervallo di confidenza corretto: da 0.535 a 0.802</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>È importante sottolineare che, sebbene questa procedura offra una stima veloce dei limiti di confidenza disattenuati, non costituisce un metodo pienamente rigoroso per calcolare l’incertezza attorno alle correlazioni latenti.</p>
@@ -1173,7 +1253,7 @@ SE_{X} = \sigma_{X}\,\sqrt{1 - \rho_{XX'}},
 <span class="header-section-number">13.5.3</span> Simulazione: Stima dei Punteggi Veri con Pooling</h3>
 <p>Per illustrare concretamente l’effetto di tale “pooling” verso la media, riportiamo un esempio in R, ispirato al codice di Nathaniel Haines. La simulazione genera dati per 20 soggetti con probabilità di successo media di 0.7, variando il numero di item (10, 30, 100) per osservare come cambia l’affidabilità (e di conseguenza la stima dei punteggi veri).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">43202</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">43202</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Numero di soggetti e di item</span></span>
 <span><span class="va">n_subj</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
@@ -1184,43 +1264,43 @@ SE_{X} = \sigma_{X}\,\sqrt{1 - \rho_{XX'}},
 <span></span>
 <span><span class="co"># Funzione per stimare l'errore standard di misura (al quadrato)</span></span>
 <span><span class="va">est_se2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span>    <span class="va">q</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">p</span></span>
-<span>    <span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span>    <span class="co"># Varianza dell'errore per item binari</span></span>
-<span>    <span class="va">sig2_ep_i</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p</span> <span class="op">*</span> <span class="va">q</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">n</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="va">sig2_ep_i</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>  <span class="va">q</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">p</span></span>
+<span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span>  <span class="co"># Varianza dell'errore per item binari</span></span>
+<span>  <span class="va">sig2_ep_i</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p</span> <span class="op">*</span> <span class="va">q</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">n</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="va">sig2_ep_i</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Simulazione</span></span>
 <span><span class="va">dis_dat</span> <span class="op">&lt;-</span> <span class="fu">foreach</span><span class="op">(</span>i <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">n_items</span><span class="op">)</span>, .combine <span class="op">=</span> <span class="st">"rbind"</span><span class="op">)</span> <span class="op">%do%</span> <span class="op">{</span></span>
-<span>    <span class="co"># Genera dati osservati (binari) per ciascun soggetto</span></span>
-<span>    <span class="va">X_all</span> <span class="op">&lt;-</span> <span class="fu">foreach</span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>, .combine <span class="op">=</span> <span class="st">"rbind"</span><span class="op">)</span> <span class="op">%do%</span> <span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n_items</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="co"># Media di gruppo</span></span>
-<span>    <span class="va">X_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co"># Genera dati osservati (binari) per ciascun soggetto</span></span>
+<span>  <span class="va">X_all</span> <span class="op">&lt;-</span> <span class="fu">foreach</span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>, .combine <span class="op">=</span> <span class="st">"rbind"</span><span class="op">)</span> <span class="op">%do%</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n_items</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="co"># Media di gruppo</span></span>
+<span>  <span class="va">X_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span>    <span class="co"># Calcolo dell'affidabilità</span></span>
-<span>    <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">)</span></span>
-<span>    <span class="va">sig2_ep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">X_all</span>, <span class="fl">1</span>, <span class="va">est_se2</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="va">sig2_X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
-<span>    <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="va">sig2_ep</span> <span class="op">/</span> <span class="va">sig2_X</span><span class="op">)</span></span>
+<span>  <span class="co"># Calcolo dell'affidabilità</span></span>
+<span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">)</span></span>
+<span>  <span class="va">sig2_ep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">X_all</span>, <span class="fl">1</span>, <span class="va">est_se2</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">sig2_X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
+<span>  <span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="va">sig2_ep</span> <span class="op">/</span> <span class="va">sig2_X</span><span class="op">)</span></span>
 <span></span>
-<span>    <span class="co"># Stima dei punteggi veri secondo la formula di Kelley</span></span>
-<span>    <span class="fu">foreach</span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>, .combine <span class="op">=</span> <span class="st">"rbind"</span><span class="op">)</span> <span class="op">%do%</span> <span class="op">{</span></span>
-<span>        <span class="va">X_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>            subj_num <span class="op">=</span> <span class="va">t</span>,</span>
-<span>            n_items <span class="op">=</span> <span class="va">n_items</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span>
-<span>            theta <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>,</span>
-<span>            rho <span class="op">=</span> <span class="va">rho</span>,</span>
-<span>            X <span class="op">=</span> <span class="va">X_i</span>,</span>
-<span>            se_obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span>,</span>
-<span>            se_hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span>,</span>
-<span>            theta_hat <span class="op">=</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">*</span> <span class="va">X_bar</span> <span class="op">+</span> <span class="va">rho</span> <span class="op">*</span> <span class="va">X_i</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
+<span>  <span class="co"># Stima dei punteggi veri secondo la formula di Kelley</span></span>
+<span>  <span class="fu">foreach</span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span>, .combine <span class="op">=</span> <span class="st">"rbind"</span><span class="op">)</span> <span class="op">%do%</span> <span class="op">{</span></span>
+<span>    <span class="va">X_i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">X_all</span><span class="op">[</span><span class="va">t</span>, <span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>      subj_num <span class="op">=</span> <span class="va">t</span>,</span>
+<span>      n_items <span class="op">=</span> <span class="va">n_items</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,</span>
+<span>      theta <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>,</span>
+<span>      rho <span class="op">=</span> <span class="va">rho</span>,</span>
+<span>      X <span class="op">=</span> <span class="va">X_i</span>,</span>
+<span>      se_obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span>,</span>
+<span>      se_hat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">rho</span><span class="op">)</span>,</span>
+<span>      theta_hat <span class="op">=</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">rho</span><span class="op">)</span> <span class="op">*</span> <span class="va">X_bar</span> <span class="op">+</span> <span class="va">rho</span> <span class="op">*</span> <span class="va">X_i</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Visualizzazione</span></span>
@@ -1229,32 +1309,36 @@ SE_{X} = \sigma_{X}\,\sqrt{1 - \rho_{XX'}},
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">subj_num</span>, y <span class="op">=</span> <span class="va">theta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">X</span><span class="op">)</span>,</span>
-<span>             color <span class="op">=</span> <span class="st">"gray"</span>,</span>
-<span>             position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    color <span class="op">=</span> <span class="st">"gray"</span>,</span>
+<span>    position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_linerange</span><span class="op">(</span></span>
 <span>    <span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">X</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">se_obs</span>, ymax <span class="op">=</span> <span class="va">X</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">se_obs</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"gray"</span>,</span>
 <span>    position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">theta_hat</span><span class="op">)</span>,</span>
-<span>             color <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>             position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    color <span class="op">=</span> <span class="st">"red"</span>,</span>
+<span>    position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_linerange</span><span class="op">(</span></span>
 <span>    <span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">theta_hat</span> <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">se_hat</span>, ymax <span class="op">=</span> <span class="va">theta_hat</span> <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> <span class="va">se_hat</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"red"</span>,</span>
 <span>    position <span class="op">=</span> <span class="fu">position_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.2</span>, height <span class="op">=</span> <span class="fl">0</span>, seed <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">dis_dat</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">n_items</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">n_items</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Stime del punteggio vero basate sulla regressione di Kelley"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Soggetto"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Valore"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_minimal</span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        axis.text.x.bottom <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    panel.grid <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.text.x.bottom <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="06_ctt_applications_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="06_ctt_applications_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
@@ -1314,7 +1398,7 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 </section><section id="esempio-di-simulazione-un-solo-soggetto" class="level3" data-number="13.5.6"><h3 data-number="13.5.6" class="anchored" data-anchor-id="esempio-di-simulazione-un-solo-soggetto">
 <span class="header-section-number">13.5.6</span> Esempio di Simulazione (un solo soggetto)</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"hbern.stan"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"hbern.stan"</span><span class="op">)</span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">cmdstan_model</span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
 <span><span class="va">mod</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; data {</span></span>
@@ -1358,7 +1442,8 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 </div>
 <p>Di seguito, uno schema in R che illustra il flusso di lavoro per un singolo soggetto con 30 item:</p>
 <div class="cell" data-layout-align="center" data-tags="hide-output">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Esempio semplificato: un soggetto e 30 item</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#|</span></span>
+<span><span class="co"># Esempio semplificato: un soggetto e 30 item</span></span>
 <span><span class="va">n_subj</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="va">n_items</span> <span class="op">&lt;-</span> <span class="fl">30</span></span>
 <span></span>
@@ -1370,16 +1455,16 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 <span></span>
 <span><span class="co"># Adattamento del modello in Stan (codice non mostrato qui)</span></span>
 <span><span class="va">fit_bernoulli</span> <span class="op">&lt;-</span> <span class="va">mod</span><span class="op">$</span><span class="fu">sample</span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>        N <span class="op">=</span> <span class="va">n_subj</span>,</span>
-<span>        N_items <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>        Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">Y</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    iter_sampling <span class="op">=</span> <span class="fl">2500</span>,</span>
-<span>    iter_warmup <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>    chains <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>    parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">43202</span></span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>    N <span class="op">=</span> <span class="va">n_subj</span>,</span>
+<span>    N_items <span class="op">=</span> <span class="va">n_items</span>,</span>
+<span>    Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">Y</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  iter_sampling <span class="op">=</span> <span class="fl">2500</span>,</span>
+<span>  iter_warmup <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">43202</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Estrazione stime a posteriori per p</span></span>
@@ -1389,16 +1474,16 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 <span></span>
 <span><span class="co"># Prepare the results with a single HDI for 'p'</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>    subj_num <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    n_items <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>    theta <span class="op">=</span> <span class="va">theta</span>,</span>
-<span>    bayes_theta <span class="op">=</span> <span class="va">bayes_theta_est</span>,</span>
-<span>    bayes_lo <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="co"># Lower bound of HDI</span></span>
-<span>    bayes_hi <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="co"># Upper bound of HDI</span></span>
+<span>  subj_num <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  n_items <span class="op">=</span> <span class="va">n_items</span>,</span>
+<span>  theta <span class="op">=</span> <span class="va">theta</span>,</span>
+<span>  bayes_theta <span class="op">=</span> <span class="va">bayes_theta_est</span>,</span>
+<span>  bayes_lo <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="co"># Lower bound of HDI</span></span>
+<span>  bayes_hi <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="co"># Upper bound of HDI</span></span>
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Print the results</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Print the results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      subj_num n_items theta bayes_theta bayes_lo bayes_hi</span></span>
 <span><span class="co">#&gt; 2.5%        1      30  0.63       0.651    0.484    0.797</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1413,7 +1498,7 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 <li>Diversi valori di <span class="math inline">\(n_{items}\)</span> (ad es. 10, 30, 100).</li>
 </ul>
 <div class="cell" data-layout-align="center" data-tags="hide-output">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">43202</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">43202</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_subj</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">n_items_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">30</span>, <span class="fl">100</span><span class="op">)</span></span>
@@ -1422,47 +1507,47 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">n_items</span> <span class="kw">in</span> <span class="va">n_items_vec</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">subj</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_subj</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="co"># Generate "true" theta for the subject</span></span>
-<span>        <span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.7</span>, <span class="fl">.1</span><span class="op">)</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">subj</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_subj</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># Generate "true" theta for the subject</span></span>
+<span>    <span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.7</span>, <span class="fl">.1</span><span class="op">)</span></span>
 <span></span>
-<span>        <span class="co"># Generate observed data for the subject using "true" theta</span></span>
-<span>        <span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n_items</span>, <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span>
+<span>    <span class="co"># Generate observed data for the subject using "true" theta</span></span>
+<span>    <span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n_items</span>, <span class="fl">1</span>, prob <span class="op">=</span> <span class="va">theta</span><span class="op">)</span></span>
 <span></span>
-<span>        <span class="co"># Fit the model</span></span>
-<span>        <span class="va">fit_bernoulli</span> <span class="op">&lt;-</span> <span class="va">mod</span><span class="op">$</span><span class="fu">sample</span><span class="op">(</span></span>
-<span>            data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>                N <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                N_items <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>                Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">Y</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># Ensure Y is a matrix</span></span>
-<span>            <span class="op">)</span>,</span>
-<span>            iter_sampling <span class="op">=</span> <span class="fl">2500</span>,</span>
-<span>            iter_warmup <span class="op">=</span> <span class="fl">500</span>,</span>
-<span>            chains <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>            parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>            seed <span class="op">=</span> <span class="fl">43202</span></span>
-<span>        <span class="op">)</span></span>
+<span>    <span class="co"># Fit the model</span></span>
+<span>    <span class="va">fit_bernoulli</span> <span class="op">&lt;-</span> <span class="va">mod</span><span class="op">$</span><span class="fu">sample</span><span class="op">(</span></span>
+<span>      data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>        N <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        N_items <span class="op">=</span> <span class="va">n_items</span>,</span>
+<span>        Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="va">Y</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># Ensure Y is a matrix</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      iter_sampling <span class="op">=</span> <span class="fl">2500</span>,</span>
+<span>      iter_warmup <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>      chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>      parallel_chains <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>      seed <span class="op">=</span> <span class="fl">43202</span></span>
+<span>    <span class="op">)</span></span>
 <span></span>
-<span>        <span class="co"># Extract and process posterior samples for 'p'</span></span>
-<span>        <span class="va">bayes_est_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">fit_bernoulli</span><span class="op">$</span><span class="fu">draws</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
-<span>        <span class="va">bayes_theta_est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">bayes_est_p</span><span class="op">)</span></span>
-<span>        <span class="va">hdi_bounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">bayes_est_p</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="co"># Extract and process posterior samples for 'p'</span></span>
+<span>    <span class="va">bayes_est_p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">fit_bernoulli</span><span class="op">$</span><span class="fu">draws</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">bayes_theta_est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">bayes_est_p</span><span class="op">)</span></span>
+<span>    <span class="va">hdi_bounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">bayes_est_p</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.025</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span>        <span class="co"># Collect results</span></span>
-<span>        <span class="va">results</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">subj</span>, <span class="va">n_items</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
-<span>            subj_num <span class="op">=</span> <span class="va">subj</span>,</span>
-<span>            n_items <span class="op">=</span> <span class="va">n_items</span>,</span>
-<span>            theta <span class="op">=</span> <span class="va">theta</span>,</span>
-<span>            bayes_theta <span class="op">=</span> <span class="va">bayes_theta_est</span>,</span>
-<span>            bayes_lo <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>            bayes_hi <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
-<span>        <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
+<span>    <span class="co"># Collect results</span></span>
+<span>    <span class="va">results</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">subj</span>, <span class="va">n_items</span><span class="op">)</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>      subj_num <span class="op">=</span> <span class="va">subj</span>,</span>
+<span>      n_items <span class="op">=</span> <span class="va">n_items</span>,</span>
+<span>      theta <span class="op">=</span> <span class="va">theta</span>,</span>
+<span>      bayes_theta <span class="op">=</span> <span class="va">bayes_theta_est</span>,</span>
+<span>      bayes_lo <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>      bayes_hi <span class="op">=</span> <span class="va">hdi_bounds</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Otterremo una tabella con, per ogni soggetto e ogni condizione (numero di item), la stima bayesiana di <span class="math inline">\(p\)</span> o <span class="math inline">\(\theta\)</span>, insieme ai relativi intervalli di credibilità.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="va">all_results</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          subj_num n_items theta bayes_theta bayes_lo bayes_hi</span></span>
 <span><span class="co">#&gt; 2.5%...1        1      10 0.637       0.579    0.311    0.820</span></span>
@@ -1474,16 +1559,16 @@ Ogni risposta <span class="math inline">\(\text{Y}_{ij}\)</span> (soggetto <span
 </div>
 <p>Alla fine, possiamo riunire tutti i risultati in un unico <code>data.frame</code> e tracciarli con <strong>ggplot2</strong>, confrontando i valori “veri” <span class="math inline">\(\theta\)</span> con le stime ottenute dal modello. Per esempio:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">all_results</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">theta</span>, y <span class="op">=</span> <span class="va">bayes_theta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">bayes_lo</span>, ymax <span class="op">=</span> <span class="va">bayes_hi</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0.7</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">n_items</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"True Theta"</span>, y <span class="op">=</span> <span class="st">"Estimated p"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Estimated p vs. True Theta\nfor Different Numbers of Items"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">all_results</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">theta</span>, y <span class="op">=</span> <span class="va">bayes_theta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_errorbar</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">bayes_lo</span>, ymax <span class="op">=</span> <span class="va">bayes_hi</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0.7</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">n_items</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"True Theta"</span>, y <span class="op">=</span> <span class="st">"Estimated p"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Estimated p vs. True Theta\nfor Different Numbers of Items"</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="06_ctt_applications_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="06_ctt_applications_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
@@ -1533,7 +1618,7 @@ Si basa su:</p>
 3. <strong>Migliorare la stima dei punteggi veri</strong> in modo accurato e rigoroso, sia con procedure tradizionali sia tramite modelli bayesiani di ultima generazione.</p>
 <p>La CTT rappresenta dunque un punto di partenza indispensabile per chiunque desideri affrontare le sfide della misurazione in psicologia. La possibilità di integrare queste tecniche con metodologie avanzate—come la Teoria della Risposta all’Item (IRT) o i modelli di equazioni strutturali—apre a sviluppi futuri in cui l’accuratezza e la versatilità delle nostre misurazioni possono essere ulteriormente incrementate, a beneficio tanto della ricerca di base quanto dell’applicazione clinica. ## Session Info</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
@@ -1553,21 +1638,21 @@ Si basa su:</p>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] doParallel_1.0.17  iterators_1.0.14   cmdstanr_0.8.1    </span></span>
-<span><span class="co">#&gt;  [4] truncnorm_1.0-9    ggridges_0.5.6     foreach_1.5.2     </span></span>
-<span><span class="co">#&gt;  [7] modelsummary_2.3.0 ggokabeito_0.1.0   see_0.10.0        </span></span>
-<span><span class="co">#&gt; [10] MASS_7.3-65        viridis_0.6.5      viridisLite_0.4.2 </span></span>
-<span><span class="co">#&gt; [13] ggpubr_0.6.0       ggExtra_0.10.1     gridExtra_2.3     </span></span>
-<span><span class="co">#&gt; [16] patchwork_1.3.0    bayesplot_1.11.1   semTools_0.5-6    </span></span>
-<span><span class="co">#&gt; [19] semPlot_1.1.6      lavaan_0.6-19      psych_2.4.12      </span></span>
-<span><span class="co">#&gt; [22] scales_1.3.0       markdown_1.13      knitr_1.49        </span></span>
-<span><span class="co">#&gt; [25] lubridate_1.9.4    forcats_1.0.0      stringr_1.5.1     </span></span>
-<span><span class="co">#&gt; [28] dplyr_1.1.4        purrr_1.0.4        readr_2.1.5       </span></span>
-<span><span class="co">#&gt; [31] tidyr_1.3.1        tibble_3.2.1       ggplot2_3.5.1     </span></span>
-<span><span class="co">#&gt; [34] tidyverse_2.0.0    here_1.0.1        </span></span>
+<span><span class="co">#&gt;  [1] doParallel_1.0.17   iterators_1.0.14    cmdstanr_0.8.1.9000</span></span>
+<span><span class="co">#&gt;  [4] truncnorm_1.0-9     ggridges_0.5.6      foreach_1.5.2      </span></span>
+<span><span class="co">#&gt;  [7] modelsummary_2.3.0  ggokabeito_0.1.0    see_0.10.0         </span></span>
+<span><span class="co">#&gt; [10] MASS_7.3-64         viridis_0.6.5       viridisLite_0.4.2  </span></span>
+<span><span class="co">#&gt; [13] ggpubr_0.6.0        ggExtra_0.10.1      gridExtra_2.3      </span></span>
+<span><span class="co">#&gt; [16] patchwork_1.3.0     bayesplot_1.11.1    semTools_0.5-6     </span></span>
+<span><span class="co">#&gt; [19] semPlot_1.1.6       lavaan_0.6-19       psych_2.4.12       </span></span>
+<span><span class="co">#&gt; [22] scales_1.3.0        markdown_1.13       knitr_1.49         </span></span>
+<span><span class="co">#&gt; [25] lubridate_1.9.4     forcats_1.0.0       stringr_1.5.1      </span></span>
+<span><span class="co">#&gt; [28] dplyr_1.1.4         purrr_1.0.4         readr_2.1.5        </span></span>
+<span><span class="co">#&gt; [31] tidyr_1.3.1         tibble_3.2.1        ggplot2_3.5.1      </span></span>
+<span><span class="co">#&gt; [34] tidyverse_2.0.0     here_1.0.1         </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] tensorA_0.36.2.1     rstudioapi_0.17.1    jsonlite_1.9.1      </span></span>
+<span><span class="co">#&gt;   [1] tensorA_0.36.2.1     rstudioapi_0.17.1    jsonlite_1.9.0      </span></span>
 <span><span class="co">#&gt;   [4] magrittr_2.0.3       TH.data_1.1-3        estimability_1.5.1  </span></span>
 <span><span class="co">#&gt;   [7] farver_2.1.2         nloptr_2.1.1         rmarkdown_2.29      </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.5          minqa_1.2.8          base64enc_0.1-3     </span></span>
