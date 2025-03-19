@@ -63,7 +63,7 @@ $$
 ```{r}
 set.seed(123)
 
-n <- 100000  # numero di osservazioni
+n <- 100000 # numero di osservazioni
 
 # 1) Generiamo il punteggio vero T
 T <- rnorm(n, mean = 50, sd = 10)
@@ -129,7 +129,7 @@ X2_tau <- (T + c_shift) + E2_tau
 # 5) Correlazione
 corr_tau <- cor(X1_tau, X2_tau)
 
-# 6) "Affidabilità" teorica di X1_tau (ad es.) 
+# 6) "Affidabilità" teorica di X1_tau (ad es.)
 rel_tau <- var(T) / var(X1_tau)
 
 cat("\nItem tau-equivalenti:\n")
@@ -158,8 +158,10 @@ E1_cong <- rnorm(n, mean = 0, sd = 4)
 E2_cong <- rnorm(n, mean = 0, sd = 8)
 
 # 3) Fattori di scala e intercette diverse
-a1 <- 10;  b1 <- 1.2
-a2 <- -5;  b2 <- 0.8
+a1 <- 10
+b1 <- 1.2
+a2 <- -5
+b2 <- 0.8
 
 # 4) Costruiamo i due item congenerici
 X1_cong <- a1 + b1 * T + E1_cong
@@ -172,9 +174,9 @@ corr_cong <- cor(X1_cong, X2_cong)
 #    var( T' ) / var( X1_cong ),
 #    dove T' = b1 * T (non va scordato che a1 è un shift)
 #    ma in CTT spesso si assume T' come 'vera' per X1
-var_true_X1 <- var(b1 * T)  # var(b1*T) = b1^2 * var(T)
-var_X1      <- var(X1_cong)
-rel_cong    <- var_true_X1 / var_X1
+var_true_X1 <- var(b1 * T) # var(b1*T) = b1^2 * var(T)
+var_X1 <- var(X1_cong)
+rel_cong <- var_true_X1 / var_X1
 
 cat("\nItem congenerici:\n")
 cat("Correlazione (X1, X2):", round(corr_cong, 3), "\n")
@@ -229,10 +231,10 @@ Esaminiamo la correlazione tra gli item della sottoscale Openness.
 
 ```{r}
 cor(
-  bfi[c("O1", "O2", "O3", "O4", "O5")], 
+  bfi[c("O1", "O2", "O3", "O4", "O5")],
   use = "pairwise.complete.obs"
-  ) |>
-    round(2)
+) |>
+  round(2)
 ```
 
 È necessario ricodificare due item.
@@ -244,19 +246,19 @@ bfi$O5r <- 7 - bfi$O5
 
 ```{r}
 cor(
-  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")],
   use = "pairwise.complete.obs"
-  ) |>
-    round(2)
+) |>
+  round(2)
 ```
 
 Consideriamo la matrice di varianze e covarianze della sottoscala Openness. 
 
 ```{r}
 C <- cov(
-  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")],
   use = "pairwise.complete.obs"
-  )
+)
 C |> round(2)
 ```
 
@@ -299,18 +301,18 @@ Consideriamo il data-set `LSAT` contenuto nel pacchetto `ltm`.
 
 ```{r}
 KR20 <- function(responses) {
-    # Get number of items (N) and individuals
-    n.items <- ncol(responses)
-    n.persons <- nrow(responses)
-    # get p_j for each item
-    p <- colMeans(responses)
-    # Get total scores (X)
-    x <- rowSums(responses)
-    # observed score variance
-    var.x <- var(x) * (n.persons - 1) / n.persons
-    # Apply KR-20 formula
-    rel <- (n.items / (n.items - 1)) * (1 - sum(p * (1 - p)) / var.x)
-    return(rel)
+  # Get number of items (N) and individuals
+  n.items <- ncol(responses)
+  n.persons <- nrow(responses)
+  # get p_j for each item
+  p <- colMeans(responses)
+  # Get total scores (X)
+  x <- rowSums(responses)
+  # observed score variance
+  var.x <- var(x) * (n.persons - 1) / n.persons
+  # Apply KR-20 formula
+  rel <- (n.items / (n.items - 1)) * (1 - sum(p * (1 - p)) / var.x)
+  return(rel)
 }
 ```
 
@@ -395,9 +397,9 @@ Stimiamo l’affidabilità della sottoscala Openness di un questionario, assumen
 
 ```{r}
 R <- cor(
-  bfi[c("O1", "O2r", "O3", "O4", "O5r")], 
+  bfi[c("O1", "O2r", "O3", "O4", "O5r")],
   use = "pairwise.complete.obs"
-  )
+)
 round(R, 2)
 
 # Numero di item
@@ -561,17 +563,19 @@ Per confermare questi calcoli, possiamo simulare dati in R:
 ```{r}
 set.seed(123)
 
-n <- 10000  # numero di soggetti
+n <- 10000 # numero di soggetti
 
 # Creiamo due punteggi veri correlati
 # Varianza = 25 => sd = 5
 # Covarianza = 15 => correlazione = 15/(5*5) = 0.60
 library(MASS)
-Sigma_true <- matrix(c(25, 15,
-                       15, 25), nrow = 2)
+Sigma_true <- matrix(c(
+  25, 15,
+  15, 25
+), nrow = 2)
 X_true <- MASS::mvrnorm(
-  n = n, 
-  mu = c(0,0), 
+  n = n,
+  mu = c(0, 0),
   Sigma = Sigma_true
 )
 
@@ -580,22 +584,22 @@ E1 <- rnorm(n, 0, sqrt(10))
 E2 <- rnorm(n, 0, sqrt(10))
 
 # Subtest osservati (X1 e X2)
-X1 <- X_true[,1] + E1
-X2 <- X_true[,2] + E2
+X1 <- X_true[, 1] + E1
+X2 <- X_true[, 2] + E2
 
 # Composito
 Z <- X1 + X2
 
 # Calcoliamo varianza vera stimata
-var_true_X1 <- var(X_true[,1])  # Dovrebbe ~25
-var_true_X2 <- var(X_true[,2])  # Dovrebbe ~25
-cov_true    <- cov(X_true[,1], X_true[,2]) # Dovrebbe ~15
+var_true_X1 <- var(X_true[, 1]) # Dovrebbe ~25
+var_true_X2 <- var(X_true[, 2]) # Dovrebbe ~25
+cov_true <- cov(X_true[, 1], X_true[, 2]) # Dovrebbe ~15
 c(var_true_X1, var_true_X2, cov_true)
 
 # Verifichiamo varianza e affidabilità osservate
 var_X1 <- var(X1)
 var_X2 <- var(X2)
-var_Z  <- var(Z)
+var_Z <- var(Z)
 c(var_X1, var_X2, var_Z)
 
 # Stima affidabilità subtest 1
@@ -646,7 +650,8 @@ dove:
 
 ::: {.callout-tip title="Dimostrazione" collapse="true"}
 
-### **Passo 1: Definizione dell'affidabilità di una variabile**
+**Passo 1: Definizione dell'affidabilità di una variabile**
+
 L'affidabilità di una variabile è definita come la proporzione di varianza vera sulla varianza totale. Se una variabile $X$ è composta da una componente vera $T_X$ e un errore $E_X$, possiamo scrivere:
 
 $$
@@ -669,7 +674,8 @@ $$
 r_{yy} = \frac{\text{Var}(T_Y)}{\text{Var}(Y)}
 $$
 
-### **Passo 2: Definizione del punteggio differenza**
+**Passo 2: Definizione del punteggio differenza**
+
 Il punteggio differenza è definito come:
 
 $$
@@ -700,7 +706,8 @@ $$
 \text{Var}(D) = \sigma_X^2 + \sigma_Y^2 - 2 r_{xy} \sigma_X \sigma_Y
 $$
 
-### **Passo 3: Calcolo della componente vera del punteggio differenza**
+**Passo 3: Calcolo della componente vera del punteggio differenza**
+
 Analogamente a quanto fatto per $X$ e $Y$, scriviamo la componente vera del punteggio differenza:
 
 $$
@@ -735,7 +742,8 @@ $$
 \text{Var}(T_D) = r_{xx} \sigma_X^2 + r_{yy} \sigma_Y^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y
 $$
 
-### **Passo 4: Calcolo dell'affidabilità del punteggio differenza**
+**Passo 4: Calcolo dell'affidabilità del punteggio differenza**
+
 L'affidabilità del punteggio differenza è data da:
 
 $$
@@ -748,23 +756,92 @@ $$
 r_{dd} = \frac{r_{xx} \sigma_X^2 + r_{yy} \sigma_Y^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y}{\sigma_X^2 + \sigma_Y^2 - 2 r_{xy} \sigma_X \sigma_Y}
 $$
 
-Se assumiamo che $\sigma_X = \sigma_Y$ (varianza uguale per entrambe le misure), possiamo semplificare il numeratore:
+Se assumiamo che $\sigma_X = \sigma_Y$ (varianza uguale per entrambe le misure), possiamo semplificare la formula.
+
+**Semplificazione della varianza del punteggio differenza**
+
+Abbiamo definito la varianza del punteggio differenza come:
+
+$$
+\text{Var}(D) = \sigma_X^2 + \sigma_Y^2 - 2 r_{xy} \sigma_X \sigma_Y
+$$
+
+Sostituendo $\sigma_X = \sigma_Y = \sigma$:
+
+$$
+\text{Var}(D) = \sigma^2 + \sigma^2 - 2 r_{xy} \sigma \sigma
+$$
+
+$$
+\text{Var}(D) = 2\sigma^2 (1 - r_{xy})
+$$
+
+**Semplificazione della varianza della componente vera del punteggio differenza**
+
+Analogamente, la varianza della componente vera del punteggio differenza è:
+
+$$
+\text{Var}(T_D) = r_{xx} \sigma_X^2 + r_{yy} \sigma_Y^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma_X \sigma_Y
+$$
+
+Sostituendo $\sigma_X = \sigma_Y = \sigma$:
+
+$$
+\text{Var}(T_D) = r_{xx} \sigma^2 + r_{yy} \sigma^2 - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \sigma \sigma
+$$
+
+$$
+\text{Var}(T_D) = \sigma^2 \left( r_{xx} + r_{yy} - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \right)
+$$
+
+**Calcolo dell'affidabilità del punteggio differenza**
+
+L'affidabilità del punteggio differenza è:
+
+$$
+r_{dd} = \frac{\text{Var}(T_D)}{\text{Var}(D)}
+$$
+
+Sostituendo le espressioni ottenute per $\text{Var}(T_D)$ e $\text{Var}(D)$:
+
+$$
+r_{dd} = \frac{\sigma^2 \left( r_{xx} + r_{yy} - 2 r_{xy} \sqrt{r_{xx} r_{yy}} \right)}{2\sigma^2 (1 - r_{xy})}
+$$
+
+Semplificando $\sigma^2$:
 
 $$
 r_{dd} = \frac{r_{xx} + r_{yy} - 2 r_{xy} \sqrt{r_{xx} r_{yy}}}{2(1 - r_{xy})}
 $$
 
-Semplificando ulteriormente, otteniamo la **formula di Lord**:
+Questa è la formula intermedia che, riorganizzata, porta alla **formula di Lord**.
+
+**Passo 5: Ottenimento della formula di Lord**
+
+Riscriviamo il numeratore:
 
 $$
-r_{dd} = \frac{0.5\,(r_{xx} + r_{yy}) - r_{xy}}{1 - r_{xy}}
+r_{xx} + r_{yy} - 2 r_{xy} \sqrt{r_{xx} r_{yy}} = (r_{xx} + r_{yy}) - 2 r_{xy} \sqrt{r_{xx} r_{yy}}
 $$
 
-Questa formula mostra come l'affidabilità del punteggio differenza dipenda dalle affidabilità delle misure individuali e dalla loro correlazione.
+Fattorizziamo il numeratore estraendo un fattore $0.5$:
+
+$$
+r_{dd} = \frac{0.5 (r_{xx} + r_{yy}) - r_{xy} \sqrt{r_{xx} r_{yy}}}{1 - r_{xy}}
+$$
+
+Se $r_{xx} = r_{yy}$, possiamo riscrivere ulteriormente come:
+
+$$
+r_{dd} = \frac{0.5 (r_{xx} + r_{yy}) - r_{xy}}{1 - r_{xy}}
+$$
+
+Questa è la **formula di Lord**, che descrive l'affidabilità del punteggio differenza in termini delle affidabilità delle misure individuali e della loro correlazione.
 
 ---
 
 **Intuizione:**  
+
 - Se $r_{xy}$ è alto, significa che le due misure sono molto correlate e la differenza tra loro ha una varianza ridotta, quindi la sua affidabilità diminuisce.  
 - Se $r_{xx}$ e $r_{yy}$ sono elevate, significa che le misure originali sono più affidabili, aumentando l'affidabilità del punteggio differenza.  
 - Se $r_{xy}$ è basso, il punteggio differenza cattura una maggiore variabilità vera, aumentando $r_{dd}$.
@@ -815,24 +892,28 @@ Definiamo:
 set.seed(123)
 
 # Parametri
-r_xx <- 0.9  # affidabilità X
-r_yy <- 0.8  # affidabilità Y
-r_xy <- 0.5  # correlazione vera tra i costrutti
-n    <- 100000
+r_xx <- 0.9 # affidabilità X
+r_yy <- 0.8 # affidabilità Y
+r_xy <- 0.5 # correlazione vera tra i costrutti
+n <- 100000
 
 # Varianze delle parti vere
 var_Tx <- 100
 var_Ty <- 100
-sd_Tx  <- sqrt(var_Tx)  # 10
-sd_Ty  <- sqrt(var_Ty)  # 10
+sd_Tx <- sqrt(var_Tx) # 10
+sd_Ty <- sqrt(var_Ty) # 10
 
 # Covarianza vera
-cov_TxTy <- r_xy * sd_Tx * sd_Ty  # = 50
+cov_TxTy <- r_xy * sd_Tx * sd_Ty # = 50
 
 # Matrice var-cov per (T_x, T_y)
-Sigma_true <- matrix(c(var_Tx,    cov_TxTy,
-                       cov_TxTy,  var_Ty),
-                     nrow = 2)
+Sigma_true <- matrix(
+  c(
+    var_Tx, cov_TxTy,
+    cov_TxTy, var_Ty
+  ),
+  nrow = 2
+)
 ```
 
 **Passaggio 2: Calcolo delle Varianze d’Errore.**
@@ -850,7 +931,7 @@ $$
 In modo analogo per $Y$. Queste varianze d’errore ci serviranno per generare i punteggi osservati.
 
 ```{r}
-var_Ex <- var_Tx * (1 / r_xx - 1)  
+var_Ex <- var_Tx * (1 / r_xx - 1)
 var_Ey <- var_Ty * (1 / r_yy - 1)
 
 sd_Ex <- sqrt(var_Ex)
@@ -869,9 +950,11 @@ var_Ey
 
 ```{r}
 # (1) Parte vera
-T <- MASS::mvrnorm(n = n,
-                   mu = c(0, 0),
-                   Sigma = Sigma_true)
+T <- MASS::mvrnorm(
+  n = n,
+  mu = c(0, 0),
+  Sigma = Sigma_true
+)
 
 T_x <- T[, 1]
 T_y <- T[, 2]
@@ -905,7 +988,7 @@ Per il punteggio differenza $D$:
 ```{r}
 T_d <- T_x - T_y
 var_Td <- var(T_d)
-var_D  <- var(D)
+var_D <- var(D)
 
 rdd_empirical <- var_Td / var_D
 rdd_empirical

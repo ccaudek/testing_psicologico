@@ -5,7 +5,7 @@
 ```{r}
 here::here("code", "_common.R") |> source()
 pacman::p_load(
-  lavaan, modelsummary, foreach, ggridges, truncnorm, 
+  lavaan, modelsummary, foreach, ggridges, truncnorm,
   cmdstanr, doParallel
 )
 ```
@@ -26,7 +26,7 @@ Nel complesso, lo scopo di questo capitolo è fornire una visione articolata su 
 
 ## Stimare un Cambiamento Clinicamente Significativo
 
-Un tema fondamentale in psicologia clinica è stabilire se un individuo abbia effettivamente manifestato un *cambiamento clinicamente significativo* nel tempo. I metodi per valutarlo rientrano per lo più in due categorie: i metodi “basati su ancoraggi” e quelli “basati sulla distribuzione” [@blampied2022reliable].
+Un tema fondamentale in psicologia clinica è stabilire se un individuo abbia effettivamente manifestato un **cambiamento clinicamente significativo** nel tempo. I metodi per valutarlo rientrano per lo più in due categorie: i metodi “basati su ancoraggi” e quelli “basati sulla distribuzione” [@blampied2022reliable].
 
 - **Metodi basati su ancoraggi.** Stabiliscono che un cambiamento clinicamente significativo debba corrispondere a un evento o a un segnale “clinicamente rilevante” esterno allo strumento di misura. In altre parole, invece di concentrarsi solo su quanti punti sono cambiati in una scala, questi metodi pongono l’accento sulla **qualità** di quel cambiamento: la variazione di punteggio deve essere associata a un miglioramento (o peggioramento) tangibile nello stato clinico del paziente, tale da essere riconosciuto come rilevante dal punto di vista clinico o terapeutico.
 
@@ -44,55 +44,121 @@ Un tema fondamentale in psicologia clinica è stabilire se un individuo abbia ef
     
     Grazie a questo collegamento, l’approccio basato su ancoraggi permette di interpretare la variazione dei punteggi alla luce di uno scenario clinico reale e tangibile.
 
-- **Metodi basati sulla distribuzione.** Utilizzano gli indici di errore di misurazione per stabilire se la variazione del punteggio sia sufficientemente grande da non poter essere spiegata dal solo errore. Uno dei primi e più noti metodi di questo tipo è il *Reliable Change Index* (RCI), introdotto da Jacobson e Truax. Alla base dell’RCI vi è l’errore standard della differenza (SED), a sua volta derivato dall’errore standard di misura (SEM). Quest’ultimo si ottiene dalla seguente formula:
+- **Metodi basati sulla distribuzione.** Utilizzano gli indici di errore di misurazione per stabilire se la variazione del punteggio sia sufficientemente grande da non poter essere spiegata dal solo errore. Uno dei primi e più noti metodi di questo tipo è il **Reliable Change Index** (RCI), introdotto da Jacobson e Truax. Alla base dell’RCI vi è l’errore standard della differenza (SED), a sua volta derivato dall’errore standard di misura (SEM). Come abbiamo discusso, quest’ultimo si ottiene dalla seguente formula:
 
   $$
   SEM = s_x \sqrt{1 - r_{xx'}},
   $$
 
-  dove $s_x$ è la deviazione standard dei punteggi al pre-test e $r_{xx'}$ l’affidabilità dello strumento. Se la variazione osservata nel punteggio di un individuo supera l’errore di misurazione intrinseco, si può concludere che il cambiamento sia *clinicamente significativo* e non soltanto frutto della variabilità casuale legata alla misura.
+  dove $s_x$ è la deviazione standard dei punteggi al pre-test e $r_{xx'}$ l’affidabilità dello strumento. **Se la variazione osservata nel punteggio di un individuo supera l’errore di misurazione intrinseco**, si può concludere che il cambiamento sia **clinicamente significativo** e non soltanto frutto della variabilità casuale legata alla misura.
 
-### Calcolo del Reliable Change Index (RCI)
+### Calcolo del Reliable Change Index
 
-La logica dell’RCI si basa su una suddivisione di qualunque punteggio osservato ($X$) in due componenti: il *punteggio vero* ($T$) e un *errore di misurazione* ($E$):
+La logica dell’RCI si basa su una suddivisione di qualunque punteggio osservato ($X$) in due componenti: il punteggio vero ($T$) e un errore di misurazione ($E$):
 
 $$
 X = T \pm E.
 $$
 
-Se una persona subisce un vero cambiamento tra due tempi di osservazione ($t1$ e $t2$), ciò dovrebbe riflettersi in una differenza fra i relativi punteggi veri. Tuttavia, la presenza dell’errore di misurazione rende possibile osservare differenze anche in assenza di un mutamento reale. Di conseguenza, occorre stabilire *quanto* debba essere ampio un cambiamento per poterlo definire genuino e non dovuto a fluttuazioni casuali.
+Se una persona subisce un vero cambiamento tra due tempi di osservazione ($t1$ e $t2$), ciò dovrebbe riflettersi in una differenza fra i relativi **punteggi veri**. Tuttavia, la presenza dell’errore di misurazione rende possibile osservare differenze anche in assenza di un mutamento reale. Di conseguenza, occorre stabilire *quanto* debba essere ampio un cambiamento per poterlo definire genuino e non dovuto a fluttuazioni casuali.
 
-Jacobson e Truax (1991), riprendendo concetti introdotti da Jacobson e colleghi (1984), sfruttarono la distribuzione degli errori di misurazione (che ha media zero e varianza pari al $SEM^2$) per definire un indice che quantifica l’entità di un cambiamento in termini di *unità di errore standard*.
+Jacobson e Truax (1991), riprendendo concetti introdotti da Jacobson e colleghi (1984), sfruttarono la distribuzione degli errori di misurazione (che ha media zero e varianza pari al $SEM^2$) per definire un indice che quantifica l’entità di un cambiamento in termini di **unità di errore standard**.
 
 ### Calcolo della differenza tra punteggi e distribuzione di errore
 
-Il modo più diretto per rilevare un cambiamento consiste nel calcolare il *punteggio di differenza* (o *change score*) tra due tempi di misura:
+Il modo più diretto per rilevare un cambiamento consiste nel calcolare il **punteggio di differenza** (o *change score*) tra due tempi di misura:
 
 $$
 C_i = X_{t1} - X_{t2},
-$$
+$$ {#eq-change-score-def} 
 
-dove $C_i$ rappresenta il cambiamento per l’individuo $i$. Poiché ogni punteggio osservato comprende una componente di errore, il punteggio di differenza conterrà anche l’errore combinato delle due misurazioni.
+dove $C_i$ rappresenta il cambiamento per l’individuo $i$. Poiché ogni punteggio osservato comprende una componente di errore, il punteggio di differenza conterrà anche l’errore combinato delle due misurazioni (si veda la discussione precedente sull'affidabilità dei punteggi differenza).
 
-La distribuzione di questi *errori di differenza* ha anch’essa media zero, ma una deviazione standard più grande, chiamata deviazione standard della differenza ($SD_{Diff}$). Per due misure indipendenti o non correlate dal punto di vista dell’errore, essa è data da:
+La distribuzione di questi *errori di differenza* ha anch’essa media zero, ma una deviazione standard **più grande**, chiamata **deviazione standard della differenza** ($SD_{Diff}$). Per due misure indipendenti o non correlate dal punto di vista dell’errore, essa è data da:
 
 $$
-SD_{Diff} = \sqrt{2 \times SEM^2}.
-$$
+SD_{Diff} = \sqrt{2 \cdot SEM^2}.
+$$ {#eq-sd-diff-def}
 
 Questo nasce dalla proprietà secondo cui la varianza della differenza fra due variabili indipendenti si ottiene sommando le loro varianze. Anche se i punteggi veri al pre- e post- possono essere correlati (perché appartengono alla stessa persona), si assume in psicometria che gli *errori di misurazione* siano indipendenti fra loro.
 
 ### Definizione dell’RCI
 
-Una volta calcolati il punteggio di differenza $C_i$ e la sua deviazione standard $SD_{Diff}$, l’RCI è semplicemente il *punteggio di differenza standardizzato*:
+Una volta calcolati il punteggio di differenza $C_i$ e la sua deviazione standard $SD_{Diff}$, l’RCI è semplicemente il **punteggio di differenza standardizzato**:
 
 $$
 C_i(\text{Standardized}) = \frac{C_i}{SD_{Diff}}.
-$$
+$$ {#eq-rci-def}
 
 Analogamente a uno *z-score*, l’RCI indica di quante *unità di errore standard* differisce il cambiamento osservato dal valore zero (che corrisponderebbe a nessun cambiamento reale). Più alto è l’RCI in valore assoluto, più ci si può ragionevolmente aspettare che la variazione misurata rifletta un mutamento vero e non solo un artefatto della misura.  
 
 Un RCI che superi una determinata soglia (spesso ±1.96 per p < .05) suggerisce un cambiamento talmente ampio da poter essere considerato *clinicamente significativo*, cioè non spiegabile interamente dall’errore di misurazione.
+
+
+### Esempio in R
+
+```{r}
+# Simulazione di dati psicologici
+set.seed(123) # Per replicabilità
+dati <- data.frame(
+  ID = 1:100, # 100 partecipanti
+  t1 = rnorm(100, mean = 25, sd = 5), # Punteggi al tempo 1
+  t2 = rnorm(100, mean = 23, sd = 5) # Punteggi al tempo 2
+)
+
+# Supponiamo che l'affidabilità del test sia nota
+reliability <- 0.85 # Esempio di coefficiente di affidabilità
+sd_test <- 5 # Deviazione standard della misura
+```
+
+```{r}
+# Calcolo dell'errore standard di misura (SEM)
+SEM <- sd_test * sqrt(1 - reliability)
+```
+
+```{r}
+# Calcolo della deviazione standard della differenza tra le due misure
+SD_Diff <- sqrt(2 * SEM^2)
+```
+
+```{r}
+# Calcolo del punteggio di differenza
+dati$Change_Score <- dati$t1 - dati$t2
+```
+
+```{r}
+# Calcolo dell'RCI per ciascun individuo
+dati$RCI <- dati$Change_Score / SD_Diff
+```
+
+```{r}
+# Identificare i cambiamenti clinicamente significativi (soglia ±1.96)
+dati$Significativo <- abs(dati$RCI) > 1.96
+
+# Mostrare i primi risultati
+head(dati)
+```
+
+```{r}
+# Visualizzazione dei RCI
+ggplot(dati, aes(x = RCI)) +
+  geom_histogram(
+    binwidth = 0.5,
+    fill = "blue",
+    alpha = 0.5,
+    color = "black"
+  ) +
+  geom_vline(
+    xintercept = c(-1.96, 1.96),
+    linetype = "dashed",
+    color = "red"
+  ) +
+  labs(
+    title = "Distribuzione dell'RCI",
+    x = "Reliable Change Index",
+    y = "Frequenza"
+  )
+```
 
 ## Affidabilità e Lunghezza del Test
 
@@ -100,10 +166,11 @@ Un modo per determinare quanti item servano a raggiungere un dato livello di aff
 
 $$
 p = \frac{\rho_p (1 - \rho_1)}{\rho_1 (1 - \rho_p)}.
-\tag{1}
-$$
+$$ {#eq-spearman-brown-number-items}
 
-Supponiamo, per esempio, che un test composto da 5 item abbia un’affidabilità di 0.824 e che $\rho_1$ (affidabilità dell’item medio) sia pari a 0.479. Se desideriamo raggiungere un’affidabilità complessiva $\rho_p$ di 0.95, applicando la formula $(1)$ si ottiene un valore di $p$ di circa 21 item. In altre parole, servirebbe un totale di 21 item per raggiungere una stima di affidabilità pari a 0.95.
+### Esempio in R
+
+Supponiamo, per esempio, che un test composto da 5 item abbia un’affidabilità di 0.824 e che $\rho_1$ (affidabilità dell’item medio) sia pari a 0.479. Se desideriamo raggiungere un’affidabilità complessiva $\rho_p$ di 0.95, applicando l'@eq-spearman-brown-number-items si ottiene un valore di $p$ di circa 21 item. In altre parole, servirebbe un totale di 21 item per raggiungere una stima di affidabilità pari a 0.95.
 
 ```{r}
 # Esempio di calcolo in R
@@ -163,8 +230,10 @@ CI_upper_observed <- 0.6
 CI_lower_corrected <- CI_lower_observed / sqrt(rho_X * rho_Y)
 CI_upper_corrected <- CI_upper_observed / sqrt(rho_X * rho_Y)
 
-cat("Intervallo di confidenza corretto: da",
-    CI_lower_corrected, "a", CI_upper_corrected)
+cat(
+  "Intervallo di confidenza corretto: da",
+  CI_lower_corrected, "a", CI_upper_corrected
+)
 ```
 
 È importante sottolineare che, sebbene questa procedura offra una stima veloce dei limiti di confidenza disattenuati, non costituisce un metodo pienamente rigoroso per calcolare l’incertezza attorno alle correlazioni latenti.
@@ -230,43 +299,43 @@ theta <- rnorm(n_subj, .7, .1)
 
 # Funzione per stimare l'errore standard di misura (al quadrato)
 est_se2 <- function(x) {
-    p <- mean(x)
-    q <- 1 - p
-    n <- length(x)
-    # Varianza dell'errore per item binari
-    sig2_ep_i <- (p * q) / (n - 1)
-    sig2_ep_i
+  p <- mean(x)
+  q <- 1 - p
+  n <- length(x)
+  # Varianza dell'errore per item binari
+  sig2_ep_i <- (p * q) / (n - 1)
+  sig2_ep_i
 }
 
 # Simulazione
 dis_dat <- foreach(i = seq_along(n_items), .combine = "rbind") %do% {
-    # Genera dati osservati (binari) per ciascun soggetto
-    X_all <- foreach(t = seq_along(theta), .combine = "rbind") %do% {
-        rbinom(n_items[i], 1, prob = theta[t])
-    }
-    # Media di gruppo
-    X_bar <- mean(rowMeans(X_all))
+  # Genera dati osservati (binari) per ciascun soggetto
+  X_all <- foreach(t = seq_along(theta), .combine = "rbind") %do% {
+    rbinom(n_items[i], 1, prob = theta[t])
+  }
+  # Media di gruppo
+  X_bar <- mean(rowMeans(X_all))
 
-    # Calcolo dell'affidabilità
-    X <- rowMeans(X_all)
-    sig2_ep <- mean(apply(X_all, 1, est_se2))
-    sig2_X <- var(X)
-    rho <- 1 - (sig2_ep / sig2_X)
+  # Calcolo dell'affidabilità
+  X <- rowMeans(X_all)
+  sig2_ep <- mean(apply(X_all, 1, est_se2))
+  sig2_X <- var(X)
+  rho <- 1 - (sig2_ep / sig2_X)
 
-    # Stima dei punteggi veri secondo la formula di Kelley
-    foreach(t = seq_along(theta), .combine = "rbind") %do% {
-        X_i <- mean(X_all[t, ])
-        data.frame(
-            subj_num = t,
-            n_items = n_items[i],
-            theta = theta[t],
-            rho = rho,
-            X = X_i,
-            se_obs = sd(X) * sqrt(1 - rho),
-            se_hat = sd(X) * sqrt(1 - rho) * sqrt(rho),
-            theta_hat = (1 - rho) * X_bar + rho * X_i
-        )
-    }
+  # Stima dei punteggi veri secondo la formula di Kelley
+  foreach(t = seq_along(theta), .combine = "rbind") %do% {
+    X_i <- mean(X_all[t, ])
+    data.frame(
+      subj_num = t,
+      n_items = n_items[i],
+      theta = theta[t],
+      rho = rho,
+      X = X_i,
+      se_obs = sd(X) * sqrt(1 - rho),
+      se_hat = sd(X) * sqrt(1 - rho) * sqrt(rho),
+      theta_hat = (1 - rho) * X_bar + rho * X_i
+    )
+  }
 }
 
 # Visualizzazione
@@ -275,29 +344,33 @@ dis_dat %>%
   ggplot(aes(x = subj_num, y = theta)) +
   geom_point() +
   geom_point(aes(y = X),
-             color = "gray",
-             position = position_jitter(width = .2, height = 0, seed = 1)) +
+    color = "gray",
+    position = position_jitter(width = .2, height = 0, seed = 1)
+  ) +
   geom_linerange(
     aes(ymin = X - 1.96 * se_obs, ymax = X + 1.96 * se_obs),
     color = "gray",
     position = position_jitter(width = .2, height = 0, seed = 1)
   ) +
   geom_point(aes(y = theta_hat),
-             color = "red",
-             position = position_jitter(width = .2, height = 0, seed = 2)) +
+    color = "red",
+    position = position_jitter(width = .2, height = 0, seed = 2)
+  ) +
   geom_linerange(
     aes(ymin = theta_hat - 1.96 * se_hat, ymax = theta_hat + 1.96 * se_hat),
     color = "red",
     position = position_jitter(width = .2, height = 0, seed = 2)
   ) +
   geom_hline(yintercept = mean(dis_dat$X), linetype = 2, color = "black") +
-  facet_wrap(~ n_items, nrow = 1) +
+  facet_wrap(~n_items, nrow = 1) +
   ggtitle("Stime del punteggio vero basate sulla regressione di Kelley") +
   xlab("Soggetto") +
   ylab("Valore") +
   theme_minimal(base_size = 14) +
-  theme(panel.grid = element_blank(),
-        axis.text.x.bottom = element_blank())
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x.bottom = element_blank()
+  )
 ```
 
 Tre aspetti principali emergono da questo esempio:
@@ -379,7 +452,7 @@ Di seguito, uno schema in R che illustra il flusso di lavoro per un singolo sogg
 ```{r}
 #| output: false
 #| tags: [hide-output]
-#| 
+#|
 # Esempio semplificato: un soggetto e 30 item
 n_subj <- 1
 n_items <- 30
@@ -392,16 +465,16 @@ Y <- rbinom(n_items, 1, prob = theta)
 
 # Adattamento del modello in Stan (codice non mostrato qui)
 fit_bernoulli <- mod$sample(
-    data = list(
-        N = n_subj,
-        N_items = n_items,
-        Y = matrix(Y, nrow = 1)
-    ),
-    iter_sampling = 2500,
-    iter_warmup = 500,
-    chains = 4,
-    parallel_chains = 4,
-    seed = 43202
+  data = list(
+    N = n_subj,
+    N_items = n_items,
+    Y = matrix(Y, nrow = 1)
+  ),
+  iter_sampling = 2500,
+  iter_warmup = 500,
+  chains = 4,
+  parallel_chains = 4,
+  seed = 43202
 )
 
 # Estrazione stime a posteriori per p
@@ -411,12 +484,12 @@ hdi_bounds <- quantile(bayes_est_p, probs = c(0.025, 0.975))
 
 # Prepare the results with a single HDI for 'p'
 results <- data.frame(
-    subj_num = 1,
-    n_items = n_items,
-    theta = theta,
-    bayes_theta = bayes_theta_est,
-    bayes_lo = hdi_bounds[1], # Lower bound of HDI
-    bayes_hi = hdi_bounds[2] # Upper bound of HDI
+  subj_num = 1,
+  n_items = n_items,
+  theta = theta,
+  bayes_theta = bayes_theta_est,
+  bayes_lo = hdi_bounds[1], # Lower bound of HDI
+  bayes_hi = hdi_bounds[2] # Upper bound of HDI
 )
 ```
 
@@ -449,42 +522,42 @@ n_items_vec <- c(10, 30, 100)
 results <- list()
 
 for (n_items in n_items_vec) {
-    for (subj in 1:n_subj) {
-        # Generate "true" theta for the subject
-        theta <- rnorm(1, .7, .1)
+  for (subj in 1:n_subj) {
+    # Generate "true" theta for the subject
+    theta <- rnorm(1, .7, .1)
 
-        # Generate observed data for the subject using "true" theta
-        Y <- rbinom(n_items, 1, prob = theta)
+    # Generate observed data for the subject using "true" theta
+    Y <- rbinom(n_items, 1, prob = theta)
 
-        # Fit the model
-        fit_bernoulli <- mod$sample(
-            data = list(
-                N = 1,
-                N_items = n_items,
-                Y = matrix(Y, nrow = 1) # Ensure Y is a matrix
-            ),
-            iter_sampling = 2500,
-            iter_warmup = 500,
-            chains = 4,
-            parallel_chains = 4,
-            seed = 43202
-        )
+    # Fit the model
+    fit_bernoulli <- mod$sample(
+      data = list(
+        N = 1,
+        N_items = n_items,
+        Y = matrix(Y, nrow = 1) # Ensure Y is a matrix
+      ),
+      iter_sampling = 2500,
+      iter_warmup = 500,
+      chains = 4,
+      parallel_chains = 4,
+      seed = 43202
+    )
 
-        # Extract and process posterior samples for 'p'
-        bayes_est_p <- as.vector(fit_bernoulli$draws(variables = "p"))
-        bayes_theta_est <- mean(bayes_est_p)
-        hdi_bounds <- quantile(bayes_est_p, probs = c(0.025, 0.975))
+    # Extract and process posterior samples for 'p'
+    bayes_est_p <- as.vector(fit_bernoulli$draws(variables = "p"))
+    bayes_theta_est <- mean(bayes_est_p)
+    hdi_bounds <- quantile(bayes_est_p, probs = c(0.025, 0.975))
 
-        # Collect results
-        results[[paste(subj, n_items)]] <- data.frame(
-            subj_num = subj,
-            n_items = n_items,
-            theta = theta,
-            bayes_theta = bayes_theta_est,
-            bayes_lo = hdi_bounds[1],
-            bayes_hi = hdi_bounds[2]
-        )
-    }
+    # Collect results
+    results[[paste(subj, n_items)]] <- data.frame(
+      subj_num = subj,
+      n_items = n_items,
+      theta = theta,
+      bayes_theta = bayes_theta_est,
+      bayes_lo = hdi_bounds[1],
+      bayes_hi = hdi_bounds[2]
+    )
+  }
 }
 ```
 
@@ -499,12 +572,12 @@ Alla fine, possiamo riunire tutti i risultati in un unico `data.frame` e traccia
 
 ```{r}
 ggplot(all_results, aes(x = theta, y = bayes_theta)) +
-    geom_point() +
-    geom_errorbar(aes(ymin = bayes_lo, ymax = bayes_hi), width = 0.02) +
-    geom_hline(yintercept = 0.7, linetype = "dashed", color = "gray") +
-    facet_wrap(~ n_items, nrow = 1) +
-    labs(x = "True Theta", y = "Estimated p") +
-    ggtitle("Estimated p vs. True Theta\nfor Different Numbers of Items")
+  geom_point() +
+  geom_errorbar(aes(ymin = bayes_lo, ymax = bayes_hi), width = 0.02) +
+  geom_hline(yintercept = 0.7, linetype = "dashed", color = "gray") +
+  facet_wrap(~n_items, nrow = 1) +
+  labs(x = "True Theta", y = "Estimated p") +
+  ggtitle("Estimated p vs. True Theta\nfor Different Numbers of Items")
 ```
 
 ### Confronto con la Regressione di Kelley
