@@ -184,9 +184,9 @@ n_items_needed
 
 ### Attenuazione e Correlazioni Disattenuate
 
-Un fenomeno cruciale nell’analisi statistica è **l’attenuazione**, ovvero la riduzione della correlazione osservata fra due variabili dovuta alla presenza di errore di misurazione in una o entrambe le scale. Se l’errore di misurazione è elevato, la correlazione empirica tende a essere sottostimata rispetto a quella vera, dando luogo al cosiddetto *effetto di attenuazione*.
+Un fenomeno importante nell’analisi statistica è **l’attenuazione**, ovvero la riduzione della correlazione osservata fra due variabili dovuta alla presenza di errore di misurazione in una o entrambe le scale. Se l’errore di misurazione è elevato, la correlazione empirica tende a essere sottostimata rispetto a quella vera, dando luogo al cosiddetto *effetto di attenuazione*.
 
-Come discusso da Lord e Novick (1967), quando si creano scale di misura per rappresentare due costrutti e si vuole valutarne la relazione, l’errore inevitabilmente incluso in ciascuna scala fa sì che la correlazione osservata sia inferiore alla correlazione *vera* fra i costrutti. Per “recuperare” questa correlazione vera (o latente), si applicano formule di **correzione per l’attenuazione** che sfruttano i coefficienti di affidabilità delle due misure.
+Come discusso da @lord1968statistical, quando si creano scale di misura per rappresentare due costrutti e si vuole valutarne la relazione, l’errore incluso in ciascuna scala fa sì che la **correlazione osservata** sia inferiore alla **correlazione vera** fra i costrutti. Per stimare questa correlazione vera (o latente), si applicano formule di **correzione per l’attenuazione** che sfruttano i coefficienti di affidabilità delle due misure.
 
 Se $X$ e $Y$ sono i punteggi osservati e $T_X$ e $T_Y$ i punteggi veri di due costrutti, la **correlazione disattenuata** tra i punteggi veri si calcola come:
 
@@ -205,6 +205,113 @@ $$
 $$
 
 Queste formule, radicate nella Teoria Classica dei Test (CTT), permettono di “risalire” a quanto due costrutti latenti siano effettivamente correlati, depurando il contributo dell’errore di misurazione.
+
+
+::: {.callout-tip title="Dimostrazione" collapse="true"}
+Per dimostrare la formula della correlazione disattenuata, ci basiamo sulla **Teoria Classica dei Test (CTT)**, che postula che ogni punteggio osservato $X$ e $Y$ è la somma del rispettivo punteggio vero $T_X$ e $T_Y$ e di un errore casuale $E_X$ e $E_Y$:
+
+$$
+X = T_X + E_X ,
+$$
+$$
+Y = T_Y + E_Y ,
+$$
+
+dove si assume che:
+
+1. $E_X$ e $E_Y$ siano indipendenti dai punteggi veri $T_X$ e $T_Y$;
+2. gli errori abbiano media zero e varianza finita;
+3. la correlazione tra i punteggi veri è quella che vogliamo stimare.
+
+
+**Passo 1: Definizione della Correlazione Osservata.**
+
+La correlazione tra i punteggi osservati $X$ e $Y$ è:
+
+$$
+\rho_{XY} = \frac{\text{Cov}(X, Y)}{\sigma_X \sigma_Y}.
+$$
+
+Sostituendo $X = T_X + E_X$ e $Y = T_Y + E_Y$:
+
+$$
+\text{Cov}(X, Y) = \text{Cov}(T_X + E_X, T_Y + E_Y).
+$$
+
+Espandiamo la covarianza:
+
+$$
+\text{Cov}(X, Y) = \text{Cov}(T_X, T_Y) + \text{Cov}(T_X, E_Y) + \text{Cov}(E_X, T_Y) + \text{Cov}(E_X, E_Y).
+$$
+
+Poiché gli errori sono indipendenti dai punteggi veri, le covarianze miste si annullano:
+
+$$
+\text{Cov}(X, Y) = \text{Cov}(T_X, T_Y).
+$$
+
+Quindi,
+
+$$
+\rho_{XY} = \frac{\text{Cov}(T_X, T_Y)}{\sigma_X \sigma_Y}.
+$$
+
+
+**Passo 2: Relazione tra la Varianza Osservata e la Varianza Vera.**
+
+La varianza dei punteggi osservati è:
+
+$$
+\sigma_X^2 = \sigma_{T_X}^2 + \sigma_{E_X}^2.
+$$
+
+La **affidabilità** $\rho_{XX'}$ è definita come la proporzione della varianza del punteggio vero sulla varianza osservata:
+
+$$
+\rho_{XX'} = \frac{\sigma_{T_X}^2}{\sigma_X^2}.
+$$
+
+Analogamente,
+
+$$
+\rho_{YY'} = \frac{\sigma_{T_Y}^2}{\sigma_Y^2}.
+$$
+
+Dunque, la deviazione standard dei punteggi veri può essere scritta in funzione della deviazione standard osservata e dell’affidabilità:
+
+$$
+\sigma_{T_X} = \sigma_X \sqrt{\rho_{XX'}}, \quad \sigma_{T_Y} = \sigma_Y \sqrt{\rho_{YY'}}.
+$$
+
+
+**Passo 3: Espressione della Correlazione Vera.**
+
+Sostituendo nella formula della correlazione:
+
+$$
+\rho_{T_X T_Y} = \frac{\text{Cov}(T_X, T_Y)}{\sigma_{T_X} \sigma_{T_Y}}.
+$$
+
+Sostituendo la covarianza già calcolata:
+
+$$
+\rho_{T_X T_Y} = \frac{\rho_{XY} \sigma_X \sigma_Y}{\sigma_{T_X} \sigma_{T_Y}}.
+$$
+
+Ora sostituiamo $\sigma_{T_X} = \sigma_X \sqrt{\rho_{XX'}}$ e $\sigma_{T_Y} = \sigma_Y \sqrt{\rho_{YY'}}$:
+
+$$
+\rho_{T_X T_Y} = \frac{\rho_{XY} \sigma_X \sigma_Y}{\sigma_X \sqrt{\rho_{XX'}} \cdot \sigma_Y \sqrt{\rho_{YY'}}}.
+$$
+
+Semplificando,
+
+$$
+\rho_{T_X T_Y} = \frac{\rho_{XY}}{\sqrt{\rho_{XX'} \rho_{YY'}}}.
+$$
+
+Questa è la formula della correlazione disattenuata.
+:::
 
 #### Intervalli di confidenza per la correlazione corretta
 
@@ -248,44 +355,19 @@ McDonald (1999) sottolinea l’importanza di un uso cauto di queste correlazioni
 
 ## Usare l’Affidabilità per Migliorare l’Inferenza a Livello Individuale
 
-Un altro uso cruciale dell’affidabilità è il miglioramento delle stime dei *punteggi veri* di ciascun individuo. **Kelley** (1920; 1947) mostrò come tale stima possa essere effettuata regredendo i punteggi osservati sulla stima dell’affidabilità:
+Un altro uso cruciale dell’affidabilità è il miglioramento delle stime dei **punteggi veri** di ciascun individuo, come abbiamo visto nel @sec-ctt-true-score-estimate.
 
-$$
-\hat{T} = \bar{X} + r_{xx'} \,(X - \bar{X}),
-$$
+### Legami con gli stimatori di James-Stein, i Modelli Multilivello e l’Analisi Bayesiana
 
-dove:
-- $\bar{X}$ è la *media dei punteggi osservati* nel campione,
-- $r_{xx'}$ è il coefficiente di affidabilità tra i punteggi osservati e quelli veri.
+Le equazioni di @kelley1921reliability anticipano di molti anni i principi alla base degli **stimatori di James-Stein**, che prevedono anch’essi un aggiustamento delle stime individuali verso la media del gruppo per ottenere stime più accurate. Questo principio trova un parallelo nei **modelli multilivello**, che trattano i punteggi individuali come derivanti da una distribuzione di gruppo, attenuando le stime soggettive sulla base dell’incertezza associata.
 
-In sostanza, più lo strumento è affidabile (valore elevato di $r_{xx'}$), più il **punteggio osservato** $X$ avrà peso nel determinare la stima $\hat{T}$; viceversa, quando l’affidabilità è bassa, la stima $\hat{T}$ si avvicina maggiormente alla media del gruppo $\bar{X}$.
+In un’ottica bayesiana, se si assume che i punteggi veri seguano una distribuzione *a priori* (ad esempio, una normale centrata sulla media del campione), la **media a posteriori** coincide con la stima di Kelley (de Gruijter & van der Kamp, 2008). Questo suggerisce un forte legame concettuale tra la psicometria classica e l’inferenza bayesiana, mostrando come l’informazione di gruppo possa migliorare la stima dei punteggi individuali.
 
-### L’Errore Standard della Stima del Vero Punteggio
-
-Oltre a indicare come stimare il punteggio vero, Kelley fornì una formula per il relativo **errore standard**:
-
-$$
-\sigma_{\hat{T}} 
-= \sigma_X \,\sqrt{\rho_{XX^\prime}\,(1 - \rho_{XX^\prime})},
-$$
-
-dove $\sigma_X$ è la deviazione standard dei punteggi osservati e $\rho_{XX^\prime}$ l’affidabilità. Tale errore standard risulta inferiore all’errore standard di misura (SEM) dei semplici punteggi osservati:
-
-$$
-SE_{X} = \sigma_{X}\,\sqrt{1 - \rho_{XX'}},
-$$
-
-e dimostra come, conoscendo l’affidabilità, si possa ridurre l’incertezza della stima $\hat{T}$.
-
-### Legami con gli stimatori di James-Stein e i Metodi Bayesiani
-
-Le equazioni di Kelley anticipano di molti anni i principi alla base degli **stimatori di James-Stein**, che prevedono anch’essi un aggiustamento delle stime individuali verso la media del gruppo, in modo da ottenere stime complessivamente più accurate. In un’ottica bayesiana, se si assume che i punteggi veri seguano una distribuzione *a priori* (ad esempio, una normale centrata sulla media del campione), la **media a posteriori** coincide con la stima di Kelley (de Gruijter & van der Kamp, 2008). Ciò mostra un nesso concettuale fra la psicometria classica e l’inferenza bayesiana, sottolineando come l’informazione di gruppo possa migliorare significativamente la stima dei punteggi individuali.
-
-In pratica, lo stesso principio viene sfruttato nei modelli multilivello (per esempio tramite il pacchetto `lme4` in R), i quali, in modo “bayesiano empirico”, riducono l’errore di stima dei singoli soggetti integrando informazioni sull’intero gruppo.
+In pratica, lo stesso principio viene sfruttato nei modelli multilivello, implementabili ad esempio con il pacchetto `lme4` in R o tramite modelli bayesiani gerarchici con `brms` o `rstanarm`. Questi approcci riducono l’errore di stima dei singoli soggetti integrando informazioni sull’intero gruppo, analogamente alla regressione di Kelley, ma con maggiore flessibilità e rigore probabilistico.
 
 ### Simulazione: Stima dei Punteggi Veri con Pooling
 
-Per illustrare concretamente l’effetto di tale “pooling” verso la media, riportiamo un esempio in R, ispirato al codice di Nathaniel Haines. La simulazione genera dati per 20 soggetti con probabilità di successo media di 0.7, variando il numero di item (10, 30, 100) per osservare come cambia l’affidabilità (e di conseguenza la stima dei punteggi veri).
+Per illustrare concretamente l’effetto del **pooling** verso la media, riportiamo un esempio in R, ispirato al codice di Nathaniel Haines. La simulazione genera dati per 20 soggetti con probabilità di successo media di 0.7, variando il numero di item (10, 30, 100) per osservare come cambia l’affidabilità (e di conseguenza la stima dei punteggi veri).
 
 ```{r}
 set.seed(43202)
@@ -373,263 +455,36 @@ dis_dat %>%
   )
 ```
 
+
 Tre aspetti principali emergono da questo esempio:
 
-1. Le **stime puntuali** ottenute tramite la formula di Kelley ($\hat{T}$) si trovano sempre *più vicine alla media del gruppo* (linea tratteggiata) rispetto ai punteggi osservati.
-2. L’effetto di “**pooling**” verso la media è tanto più marcato quanto più bassa è l’affidabilità. Nel codice, la manipolazione dell’affidabilità avviene variando il numero di item.
-3. Gli **intervalli di confidenza** (IC) attorno a $\hat{T}$ risultano *più stretti* rispetto agli IC dei punteggi osservati, a conferma di come la stima di Kelley riduca effettivamente l’incertezza legata all’errore di misurazione.
+1. Le **stime puntuali** ottenute tramite la formula di Kelley ($\hat{T}$) si trovano sempre *più vicine alla media del gruppo* rispetto ai punteggi osservati.
+2. L’effetto di **pooling** è tanto più marcato quanto più bassa è l’affidabilità. Nel codice, la manipolazione dell’affidabilità avviene variando il numero di item.
+3. Gli **intervalli di confidenza** attorno a $\hat{T}$ risultano *più stretti* rispetto agli IC dei punteggi osservati, confermando come la stima di Kelley riduca l’incertezza legata all’errore di misurazione.
 
-Questa simulazione mette in luce come la *regressione verso la media* – unita alla conoscenza dell’affidabilità – permetta di ottenere stime più accurate dei punteggi veri, specialmente quando il numero di item (e dunque la precisione) è limitato. Allo stesso tempo, evidenzia come la disponibilità di un maggior numero di item o di misure più affidabili riduca la necessità di “shrinkage” verso la media, poiché i punteggi osservati rispecchiano più da vicino i punteggi veri.
+Questa simulazione evidenzia la stretta relazione tra la **regressione di Kelley** e i **modelli bayesiani gerarchici**. Infatti, la regressione di Kelley corrisponde alla media a posteriori di un modello bayesiano gerarchico normale con priori non informativi. In un modello multilivello bayesiano, i punteggi veri sono stimati utilizzando una distribuzione di gruppo, proprio come nella psicometria classica, ma con il vantaggio di una gestione probabilistica più raffinata e di intervalli di credibilità per le stime individuali.
 
-### Approccio Bayesiano
+In sintesi, l’approccio di Kelley trova una corrispondenza diretta nei moderni metodi bayesiani e multilivello, poiché tutti questi approcci condividono il principio della **regressione verso la media** per contrastare l’errore di misurazione. La differenza principale è che, nell’approccio bayesiano, la stima dell’errore di misurazione e la correzione verso la media avvengono in modo integrato, senza la necessità di calcolare separatamente un coefficiente di affidabilità. Questo rende il metodo bayesiano più generale e flessibile, consentendo l’applicazione a scenari più complessi e la possibilità di incorporare informazioni a priori nelle stime.
 
-In questa sezione mostreremo come i risultati ottenuti con la **regressione di Kelley** possano essere riprodotti mediante un **modello gerarchico bayesiano**, applicato a dati provenienti da questionari con risposte dicotomiche (vero/falso, corretto/errato).
+## Riflessioni Conclusive
 
-#### Introduzione: Modello Bernoulliano e Logit
+In questo capitolo, abbiamo approfondito le principali applicazioni della Teoria Classica dei Test (CTT), analizzando sia gli aspetti teorici sia le implicazioni pratiche nella misurazione psicologica. In particolare, abbiamo:
 
-Quando abbiamo un questionario a risposte dicotomiche, ogni risposta può essere vista come un *esperimento di Bernoulli*. Indichiamo con $X$ la variabile che vale 1 (successo) con probabilità $p$ e 0 (insuccesso) con probabilità $1-p$.
+- **Esaminato il problema dell’attenuazione**, dimostrando come l’errore di misurazione possa ridurre artificialmente la correlazione tra costrutti psicologici e influenzare l’interpretazione dei risultati.
+- **Analizzato la formula di Spearman-Brown**, strumento essenziale per stimare il numero di item necessario a garantire un livello desiderato di affidabilità, mettendo in evidenza il ruolo strategico della progettazione dei test.
+- **Confrontato diversi metodi per stimare i punteggi veri individuali**, includendo la regressione di Kelley, radicata nei principi della CTT, e l’approccio bayesiano gerarchico, che estende questi concetti in un quadro probabilistico più generale.
 
-Per collegare questa probabilità di successo a un parametro di “abilità” $\theta$, utilizziamo la **funzione logistica**:
+La CTT rappresenta una base essenziale per la costruzione e valutazione dei test psicometrici, fornendo strumenti chiari e affidabili per la progettazione e l’interpretazione dei risultati. Tuttavia, il parallelo con i modelli bayesiani e multilivello suggerisce che molti principi classici—come la regressione verso la media e la correzione dell’errore di misurazione—trovano una naturale estensione in approcci più avanzati, capaci di integrare l’incertezza e sfruttare al meglio l’informazione disponibile.
 
-$$
-p = \frac{1}{1 + e^{-\theta}},
-$$
+La comprensione di questi concetti è fondamentale per:
 
-dove $\theta$ può variare da $-\infty$ a $+\infty$. Inversamente,
+1. **Progettare strumenti di misura** con un livello di affidabilità adeguato agli obiettivi della ricerca o della pratica psicologica.
+2. **Evitare distorsioni nelle stime** delle relazioni tra variabili, grazie a una corretta gestione dell’errore di misurazione e delle procedure di attenuazione.
+3. **Migliorare l’inferenza sui punteggi veri**, adottando approcci statistici appropriati che bilancino precisione e robustezza.
 
-$$
-\theta = \log\biggl(\frac{p}{1 - p}\biggr).
-$$
+La CTT, pur rimanendo un fondamento imprescindibile per la psicometria, si integra oggi con metodologie più sofisticate—come la Teoria della Risposta all’Item (IRT) e i modelli di equazioni strutturali—che permettono di migliorare ulteriormente la qualità e la flessibilità delle misurazioni. L’evoluzione verso strumenti più avanzati consente di affinare la precisione delle valutazioni, con benefici concreti sia nella ricerca che nelle applicazioni cliniche e diagnostiche.
 
-Questo modello costituisce una forma molto semplificata della **Teoria della Risposta all’Item (IRT)**, in cui:
-- Ogni individuo è caratterizzato da un unico parametro di abilità $\theta$.
-- Tutti gli item hanno difficoltà e discriminazione uguali (per semplicità fissate a 1).
 
-#### Ipotesi di Gruppo e Distribuzione a Priori
-
-Nel contesto bayesiano, bisogna specificare come i parametri individuali $\theta_i$ siano generati a livello di gruppo. Possiamo assumere una distribuzione normale:
-
-$$
-\theta_i \sim \mathcal{N}(\mu,\sigma),
-$$
-
-dove $\mu$ e $\sigma$ sono i parametri di gruppo (rispettivamente media e deviazione standard). Ad esempio, in un modello semplice si potrebbe fissare $\mu = 0$ e porre $\sigma \sim \text{HalfNormal}(1)$, rendendo esplicito che $\sigma$ debba essere positiva.
-
-Il risultato è un **modello gerarchico**, in cui:
-
-1. Ogni individuo ha il proprio $\theta_i$.
-2. I $\theta_i$ a loro volta derivano da una distribuzione di gruppo definita da $\mu$ e $\sigma$.
-3. I dati osservati (risposte di ciascun soggetto) consentono di stimare simultaneamente i parametri a livello individuale e quelli di gruppo, migliorando la stabilità delle stime.
-
-Quest’idea rispecchia quanto avviene nella stima dei punteggi veri nella teoria classica dei test, dove i punteggi individuali vengono “shrinkati” (avvicinati) verso la media di gruppo, riducendo così la varianza dovuta all’errore di misurazione.
-
-### Parametrizzazione Non Centrata in Stan
-
-Nel codice Stan che segue, si usa una **parametrizzazione non centrata** per il livello di gruppo, opzione che tende a migliorare la convergenza delle catene MCMC (in particolare con Hamiltonian Monte Carlo):
-
-1. **Parametri di Gruppo**  
-   $\mu_\theta$ e $\sigma_\theta$, entrambi con priori appropriati (es. $\mu_\theta \sim \mathcal{N}(0,1)$, $\sigma_\theta \sim \text{HalfNormal}(1)$).
-2. **Parametri Non Centrati**  
-   $\theta_{pr}$ sono variabili standardizzate ($\mathcal{N}(0,1)$) che verranno poi trasformate in $\theta$ effettive con la formula
-   $$
-   \theta = \mu_\theta + \sigma_\theta \times \theta_{pr}.
-   $$
-3. **Verosimiglianza Bernoulliana**  
-   Ogni risposta $\text{Y}_{ij}$ (soggetto $i$, item $j$) segue Bernoulli$(p_{ij})$ con $p_{ij} = \text{logit}^{-1}(\theta_i)$.
-
-Questa strategia non cambia il modello statistico ma spesso ne rende più efficiente la stima.
-
-### Esempio di Simulazione (un solo soggetto)
-
-```{r}
-file <- file.path("hbern.stan")
-mod <- cmdstan_model(file)
-mod$print()
-```
-
-Di seguito, uno schema in R che illustra il flusso di lavoro per un singolo soggetto con 30 item:
-
-```{r}
-#| output: false
-#| tags: [hide-output]
-#|
-# Esempio semplificato: un soggetto e 30 item
-n_subj <- 1
-n_items <- 30
-
-# Generazione del "vero" theta
-theta <- rnorm(n_subj, 0.7, 0.1)
-
-# Risposte simulate in base a theta
-Y <- rbinom(n_items, 1, prob = theta)
-
-# Adattamento del modello in Stan (codice non mostrato qui)
-fit_bernoulli <- mod$sample(
-  data = list(
-    N = n_subj,
-    N_items = n_items,
-    Y = matrix(Y, nrow = 1)
-  ),
-  iter_sampling = 2500,
-  iter_warmup = 500,
-  chains = 4,
-  parallel_chains = 4,
-  seed = 43202
-)
-
-# Estrazione stime a posteriori per p
-bayes_est_p <- as.vector(fit_bernoulli$draws(variables = "p"))
-bayes_theta_est <- mean(bayes_est_p)
-hdi_bounds <- quantile(bayes_est_p, probs = c(0.025, 0.975))
-
-# Prepare the results with a single HDI for 'p'
-results <- data.frame(
-  subj_num = 1,
-  n_items = n_items,
-  theta = theta,
-  bayes_theta = bayes_theta_est,
-  bayes_lo = hdi_bounds[1], # Lower bound of HDI
-  bayes_hi = hdi_bounds[2] # Upper bound of HDI
-)
-```
-
-
-```{r}
-# Print the results
-print(results)
-```
-
-Il risultato fornisce la stima puntuale di $p$ (cioè la probabilità di successo) e un intervallo di credibilità al 95%.
-
-
-### Estensione a Più Soggetti e Diversi Numeri di Item
-
-Per illustrare come varia la stima di $\theta$ in base al numero di item e al numero di soggetti, possiamo ripetere la stessa procedura per:
-
-- $n_{subj} = 20$ soggetti.
-- Diversi valori di $n_{items}$ (ad es. 10, 30, 100).
-
-```{r}
-#| output: false
-#| tags: [hide-output]
-
-set.seed(43202)
-
-n_subj <- 20
-n_items_vec <- c(10, 30, 100)
-
-# Placeholder for results
-results <- list()
-
-for (n_items in n_items_vec) {
-  for (subj in 1:n_subj) {
-    # Generate "true" theta for the subject
-    theta <- rnorm(1, .7, .1)
-
-    # Generate observed data for the subject using "true" theta
-    Y <- rbinom(n_items, 1, prob = theta)
-
-    # Fit the model
-    fit_bernoulli <- mod$sample(
-      data = list(
-        N = 1,
-        N_items = n_items,
-        Y = matrix(Y, nrow = 1) # Ensure Y is a matrix
-      ),
-      iter_sampling = 2500,
-      iter_warmup = 500,
-      chains = 4,
-      parallel_chains = 4,
-      seed = 43202
-    )
-
-    # Extract and process posterior samples for 'p'
-    bayes_est_p <- as.vector(fit_bernoulli$draws(variables = "p"))
-    bayes_theta_est <- mean(bayes_est_p)
-    hdi_bounds <- quantile(bayes_est_p, probs = c(0.025, 0.975))
-
-    # Collect results
-    results[[paste(subj, n_items)]] <- data.frame(
-      subj_num = subj,
-      n_items = n_items,
-      theta = theta,
-      bayes_theta = bayes_theta_est,
-      bayes_lo = hdi_bounds[1],
-      bayes_hi = hdi_bounds[2]
-    )
-  }
-}
-```
-
-Otterremo una tabella con, per ogni soggetto e ogni condizione (numero di item), la stima bayesiana di $p$ o $\theta$, insieme ai relativi intervalli di credibilità.
-
-```{r}
-all_results <- bind_rows(results)
-all_results |> head()
-```
-
-Alla fine, possiamo riunire tutti i risultati in un unico `data.frame` e tracciarli con **ggplot2**, confrontando i valori “veri” $\theta$ con le stime ottenute dal modello. Per esempio:
-
-```{r}
-ggplot(all_results, aes(x = theta, y = bayes_theta)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = bayes_lo, ymax = bayes_hi), width = 0.02) +
-  geom_hline(yintercept = 0.7, linetype = "dashed", color = "gray") +
-  facet_wrap(~n_items, nrow = 1) +
-  labs(x = "True Theta", y = "Estimated p") +
-  ggtitle("Estimated p vs. True Theta\nfor Different Numbers of Items")
-```
-
-### Confronto con la Regressione di Kelley
-
-Proprio come nella teoria classica dei test, dove la **regressione di Kelley** stima i punteggi veri in base all’affidabilità e al punteggio osservato, un modello bayesiano gerarchico produce stime a posteriori che convergono a risultati analoghi, senza dover calcolare esplicitamente l’affidabilità.
-
-1. **Stima dei Punteggi Veri (Kelley)**  
-   $$
-   \text{Punteggio Vero} = \bar{X} + r_{xx'} \times (X - \bar{X}),
-   $$
-   dove $r_{xx'}$ è l’affidabilità, $\bar{X}$ la media campionaria e $X$ il punteggio osservato.
-
-2. **Intervallo di Confidenza di Kelley**  
-   Se $\sigma$ è la deviazione standard dei punteggi osservati,
-   $$
-   \text{SEM} = \sigma \sqrt{1 - r_{xx'}}, \quad
-   \text{CI}_{95\%} = \text{Punteggio Vero} \pm 1.96 \times \text{SEM}.
-   $$
-
-3. **Stima Bayesiana**  
-   Si basa su:
-   - Una **distribuzione a priori** per $\mu_\theta$ e $\sigma_\theta$.
-   - Una verosimiglianza Bernoulliana per i dati.
-   - L’uscita del modello sono le **medie a posteriori** (e intervalli di credibilità) per $\theta$.
-
-Quando si confrontano graficamente i due metodi, spesso si nota un’ottima sovrapposizione delle stime puntuali e una corrispondenza tra gli intervalli (di confidenza in Kelley, di credibilità in Bayes). Questo riflette il fondamento comune: *la regressione di Kelley corrisponde alla stima bayesiana in un semplice modello normale con priori non informativi*. 
-
-L’approccio bayesiano offre alcuni vantaggi:
-- Non richiede il calcolo esplicito dell’affidabilità.
-- Integra in modo naturale le informazioni di gruppo (pooling).
-- Fornisce un quadro pienamente probabilistico (inclusi gli intervalli di credibilità).
-
-In sintesi, l’esempio mostra come i **modelli gerarchici bayesiani** possano produrre stime di “punteggi veri” del tutto affini a quelle ottenute dalla teoria classica dei test (Kelley). La similitudine tra i due approcci non deve stupire: in entrambi i casi, si applica un principio di “regressione verso la media” per contrastare l’errore di misurazione. 
-
-La differenza principale è che, nell’approccio bayesiano, la *stima dell’errore di misurazione* e la correzione verso la media avvengono all’interno di un unico quadro gerarchico, evitando il calcolo di un coefficiente di affidabilità esterno. Inoltre, la modellazione bayesiana fornisce naturalmente stime posteriori, compresi gli intervalli di credibilità, che ne facilitano l’interpretazione probabilistica e la flessibilità in scenari più complessi.
-
-## Riflessioni Conclusive 
-
-In questo capitolo, abbiamo esaminato alcune tra le più rilevanti applicazioni della Teoria Classica dei Test (CTT), approfondendo sia aspetti teorici sia implicazioni pratiche nella misurazione psicologica. In particolare, abbiamo:
-
-- **Esplorato il problema dell’attenuazione** e mostrato come l’errore di misurazione possa “nascondere” la reale entità di una correlazione tra costrutti psicologici.  
-- **Analizzato la formula di Spearman-Brown**, utile per determinare il numero di item richiesto per raggiungere un livello desiderato di affidabilità, evidenziando così il ruolo strategico della progettazione dei test.  
-- **Confrontato due differenti modalità di stima dei punteggi veri individuali**: da un lato, la regressione di Kelley, che fa leva sui principi della CTT; dall’altro, un approccio bayesiano gerarchico, che offre un quadro probabilistico più generale pur arrivando, nei casi semplici, a risultati concettualmente simili.
-
-La prospettiva fornita dalla CTT rimane uno strumento fondamentale nella cassetta degli attrezzi dello psicometrista, consentendo di formulare regole chiare per la costruzione, la valutazione e l’uso dei test. Al tempo stesso, la sovrapposizione con il mondo bayesiano rivela come molti dei principi classici—quali la regressione verso la media e la correzione dell’errore di misurazione—trovino un corrispettivo naturale all’interno di modelli gerarchici e approcci statistici più evoluti.
-
-In definitiva, la padronanza di questi concetti fornisce basi solide per:
-1. **Progettare strumenti di misura** con un grado di affidabilità adeguato rispetto allo scopo dell’indagine.  
-2. **Evitare sottostime o sovrastime** delle relazioni tra variabili, grazie alla consapevolezza dell’errore e alla correzione per l’attenuazione.  
-3. **Migliorare la stima dei punteggi veri** in modo accurato e rigoroso, sia con procedure tradizionali sia tramite modelli bayesiani di ultima generazione.
-
-La CTT rappresenta dunque un punto di partenza indispensabile per chiunque desideri affrontare le sfide della misurazione in psicologia. La possibilità di integrare queste tecniche con metodologie avanzate—come la Teoria della Risposta all’Item (IRT) o i modelli di equazioni strutturali—apre a sviluppi futuri in cui l’accuratezza e la versatilità delle nostre misurazioni possono essere ulteriormente incrementate, a beneficio tanto della ricerca di base quanto dell’applicazione clinica.
 ## Session Info
 
 ```{r}
