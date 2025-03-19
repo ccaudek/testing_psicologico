@@ -182,9 +182,9 @@ Importiamo i dati:
 
 ```{r}
 df <- readRDS(
-    here::here("data", "mdd_sex.RDS")
+  here::here("data", "mdd_sex.RDS")
 ) |>
-    dplyr::select(-sex)
+  dplyr::select(-sex)
 ```
 
 Ci sono 750 osservazioni:
@@ -232,45 +232,7 @@ $$
 \sigma_E = \sigma_X \sqrt{1 - \rho_{XX^\prime}} .
 $$
 
-Per giungere a questa espressione, procederemo attraverso due passaggi fondamentali:
-
-1. Calcolare la varianza del punteggio vero.
-2. Rappresentare la varianza del punteggio osservato come somma della varianza del punteggio vero e della varianza dell'errore.
-
-**Primo passaggio:**  
-Partiamo dalla definizione del coefficiente di attendibilità:
-
-$$
-\rho_{XX^\prime} = \frac{\sigma^2_T}{\sigma^2_X} ,
-$$
-
-dove:
-
-- $\sigma^2_T$ indica la varianza del punteggio vero.
-- $\sigma^2_X$ indica la varianza del punteggio osservato.
-
-Esplicitando $\sigma^2_T$, otteniamo:
-
-$$
-\sigma^2_T = \rho_{XX^\prime}\sigma^2_X .
-$$
-
-Consideriamo ora due forme parallele dello stesso test, indicate con $X$ e $X^\prime$. Poiché per definizione di forme parallele abbiamo $\sigma_X = \sigma_{X^\prime}$, possiamo esprimere la covarianza tra le due misurazioni parallele come:
-
-$$
-\sigma_{XX^\prime} = \rho_{XX^\prime}\sigma_X\sigma_{X^\prime} = \rho_{XX^\prime}\sigma_X^2 .
-$$
-
-Ne consegue immediatamente che:
-
-$$
-\sigma^2_T = \sigma_{XX^\prime} .
-$$
-
-In altre parole, la varianza del punteggio vero coincide con la covarianza tra due forme parallele del test.
-
-**Secondo passaggio:**  
-Passiamo ora alla varianza del punteggio osservato. In base alla CTT, ogni punteggio osservato $X$ può essere scomposto come somma di due componenti: punteggio vero ($T$) ed errore di misurazione ($E$):
+In base alla CTT, ogni punteggio osservato $X$ può essere scomposto come somma di due componenti: punteggio vero ($T$) ed errore di misurazione ($E$):
 
 $$
 X = T + E .
@@ -314,21 +276,28 @@ Per estremizzare questo concetto:
 
 ## Intervallo di Confidenza e SEM
 
-All'interno della Teoria Classica dei Test, il **SEM** esprime la **dispersione stimata** dei punteggi osservati attorno al **punteggio vero** di un individuo. In altre parole, se potessimo somministrare infinite volte un test a una persona (senza effetti di apprendimento o stanchezza), la distribuzione dei suoi punteggi osservati avrebbe come media il punteggio vero e una deviazione standard pari al SEM.
+All'interno della CTT, il **SEM** esprime la **dispersione stimata** dei punteggi osservati attorno al **punteggio vero** di un individuo. In altre parole, se potessimo somministrare infinite volte un test a una persona (senza effetti di apprendimento o stanchezza), la distribuzione dei suoi punteggi osservati avrebbe come media il punteggio vero e una deviazione standard pari al SEM.
 
 ### Intervalli di Confidenza
 
 L'intervallo di confidenza basato sul SEM deve essere costruito **attorno al punteggio vero**, non attorno al punteggio osservato. Questo è fondamentale perché concettualmente è il punteggio osservato che varia attorno al punteggio vero, e non viceversa.
 
-- L'intervallo di confidenza corretto è quindi $\bigl[T \pm z \times \text{SEM}\bigr]$, dove $T$ è il punteggio vero e $z$ è il valore critico corrispondente al livello di confidenza desiderato.
-- **Non è appropriato** calcolare l'intervallo di confidenza attorno al punteggio osservato $X$ utilizzando il SEM, poiché questo non riflette correttamente la fonte dell'incertezza nella misurazione.
+- L'intervallo di confidenza è quindi 
+
+$$
+T \pm z \times \text{SEM} ,
+$$ {#eq-ci-sem}
+
+dove $T$ è il punteggio vero e $z$ è il valore critico corrispondente al livello di confidenza desiderato.
+
+**Non è invece appropriato** calcolare l'intervallo di confidenza attorno al punteggio osservato $X$ utilizzando il SEM, poiché questo non riflette correttamente la fonte dell'incertezza nella misurazione (ad es., Charter, 1996; Dudek, 1979).
 
 ### Applicazioni pratiche
 
-In contesti simulati dove conosciamo il punteggio vero, possiamo costruire direttamente l'intervallo attorno ad esso. Nella pratica, poiché il punteggio vero è sconosciuto, si deve ricorrere a metodi di stima appropriati:
+In contesti simulati dove conosciamo il punteggio vero, possiamo costruire direttamente l'intervallo attorno ad esso. Nella pratica, poiché il punteggio vero è sconosciuto, si deve ricorrere a **metodi di stima** appropriati:
 
-1. Il metodo di Kelly può essere utilizzato per stimare il punteggio vero a partire dal punteggio osservato
-2. Una volta stimato il punteggio vero, si può costruire l'intervallo di confidenza attorno a questa stima
+1. il metodo di Kelly può essere utilizzato per stimare il punteggio vero a partire dal punteggio osservato;
+2. una volta stimato il punteggio vero, si può costruire l'intervallo di confidenza attorno a questa stima, usando l'errore standard della stima.
 
 ### Esempio di Calcolo in R
 
@@ -361,8 +330,10 @@ errore_standard_intervallo <- SEM * z_critico
 intervallo_confidenza_inf <- punteggio_vero - errore_standard_intervallo
 intervallo_confidenza_sup <- punteggio_vero + errore_standard_intervallo
 
-cat("Intervallo di confidenza al 95%:",
-    "[", intervallo_confidenza_inf, ",", intervallo_confidenza_sup, "]\n")
+cat(
+  "Intervallo di confidenza al 95%:",
+  "[", intervallo_confidenza_inf, ",", intervallo_confidenza_sup, "]\n"
+)
 ```
 
 ### Affidabilità, SEM e Larghezza dell'Intervallo di Confidenza
@@ -373,13 +344,9 @@ Se un test è altamente affidabile, gran parte della varianza nei punteggi osser
 
 Specificare un intervallo di confidenza attorno al punteggio vero (o a una sua stima appropriata) permette di riconoscere l'incertezza intrinseca nella misurazione. Ad esempio, se Alice riporta un QI di 113, questo non dovrebbe essere considerato un dato "esatto", ma piuttosto un punto di partenza per stimare il suo punteggio vero, con un'opportuna quantificazione dell'incertezza.
 
-### Problema nel Calcolo dell'Intervallo di Confidenza sui Punteggi Osservati
-
-Calcolare un intervallo di confidenza direttamente attorno al **punteggio osservato** usando il SEM è concettualmente errato. Diversi autori (ad es. *Charter, 1996; Dudek, 1979*) evidenziano che quando si vuole costruire un intervallo di confidenza partendo dal punteggio osservato, sarebbe più appropriato impiegare l'**Errore Standard della Stima (SEE)**, che riflette meglio l'incertezza nella stima del punteggio vero a partire dall'osservato. Questo aspetto sarà affrontato in modo più approfondito nel capitolo successivo.
-
 ## Riflessioni Conclusive
 
-Nel quadro della Teoria Classica dei Test, i coefficienti di affidabilità forniscono una misura globale della **coerenza** di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare **l'Errore Standard di Misurazione (SEM)** e costruire correttamente gli intervalli di confidenza attorno al punteggio vero.
+Nel quadro della CTT, i coefficienti di affidabilità forniscono una misura globale della **coerenza** di uno strumento. Tuttavia, nel caso di decisioni mirate sul singolo individuo (ad esempio, stabilire se un candidato superi o meno un esame), diventa cruciale considerare **l'Errore Standard di Misurazione** (SEM) e costruire correttamente gli intervalli di confidenza attorno al punteggio vero.
 
 In definitiva, comprendere che l'intervallo di confidenza basato sul SEM si riferisce alla distribuzione dei punteggi osservati attorno al punteggio vero permette di interpretare i risultati del test in modo più consapevole e metodologicamente corretto.
 
