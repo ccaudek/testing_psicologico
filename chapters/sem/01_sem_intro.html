@@ -1331,11 +1331,11 @@ y_N
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">d_mr</span><span class="op">$</span><span class="va">scs_ts</span></span>
 <span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">y</span></span>
 <span><span class="va">beta</span></span>
-<span><span class="co">#&gt;               [,1]</span></span>
-<span><span class="co">#&gt; (Intercept) 91.361</span></span>
-<span><span class="co">#&gt; depression  -1.484</span></span>
-<span><span class="co">#&gt; anxiety      1.049</span></span>
-<span><span class="co">#&gt; stress      -0.973</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;                [,1]</span></span>
+<span><span class="co">#&gt; (Intercept) 91.3611</span></span>
+<span><span class="co">#&gt; depression  -1.4842</span></span>
+<span><span class="co">#&gt; anxiety      1.0493</span></span>
+<span><span class="co">#&gt; stress      -0.9733</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="verifica-dei-risultati-con-lm" class="level3" data-number="48.4.3"><h3 data-number="48.4.3" class="anchored" data-anchor-id="verifica-dei-risultati-con-lm">
 <span class="header-section-number">48.4.3</span> Verifica dei Risultati con <code>lm()</code>
@@ -1345,7 +1345,7 @@ y_N
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">scs_ts</span> <span class="op">~</span> <span class="va">depression</span> <span class="op">+</span> <span class="va">anxiety</span> <span class="op">+</span> <span class="va">stress</span>, data <span class="op">=</span> <span class="va">d_mr</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fm</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; (Intercept)  depression     anxiety      stress </span></span>
-<span><span class="co">#&gt;      91.361      -1.484       1.049      -0.973</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;     91.3611     -1.4842      1.0493     -0.9733</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I coefficienti stimati con il metodo matriciale e quelli calcolati da <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> devono coincidere.</p>
 </section><section id="valori-predetti-e-residui" class="level3" data-number="48.4.4"><h3 data-number="48.4.4" class="anchored" data-anchor-id="valori-predetti-e-residui">
@@ -1387,8 +1387,8 @@ y_N
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">var_e</span> <span class="op">&lt;-</span> <span class="va">RSS</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">var_e</span> </span>
-<span><span class="co">#&gt;      [,1]</span></span>
-<span><span class="co">#&gt; [1,]  247</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;       [,1]</span></span>
+<span><span class="co">#&gt; [1,] 246.6</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="errore-standard-della-regressione" class="level3" data-number="48.4.7"><h3 data-number="48.4.7" class="anchored" data-anchor-id="errore-standard-della-regressione">
 <span class="header-section-number">48.4.7</span> Errore Standard della Regressione</h3>
@@ -1482,17 +1482,17 @@ R^2 = \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2}.
 <p>Esaminiamo i parametri stimati:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">parameterEstimates</span><span class="op">(</span><span class="va">fit_mr</span><span class="op">)</span> </span>
-<span><span class="co">#&gt;           lhs op        rhs     est     se     z pvalue ci.lower ci.upper</span></span>
-<span><span class="co">#&gt; 1      scs_ts  ~    anxiety   1.049  0.209  5.01      0    0.639    1.460</span></span>
-<span><span class="co">#&gt; 2      scs_ts  ~ depression  -1.484  0.237 -6.27      0   -1.948   -1.020</span></span>
-<span><span class="co">#&gt; 3      scs_ts  ~     stress  -0.973  0.254 -3.83      0   -1.472   -0.475</span></span>
-<span><span class="co">#&gt; 4      scs_ts ~~     scs_ts 244.677 15.087 16.22      0  215.106  274.247</span></span>
-<span><span class="co">#&gt; 5     anxiety ~~    anxiety  32.082  0.000    NA     NA   32.082   32.082</span></span>
-<span><span class="co">#&gt; 6     anxiety ~~ depression  24.546  0.000    NA     NA   24.546   24.546</span></span>
-<span><span class="co">#&gt; 7     anxiety ~~     stress  24.538  0.000    NA     NA   24.538   24.538</span></span>
-<span><span class="co">#&gt; 8  depression ~~ depression  31.418  0.000    NA     NA   31.418   31.418</span></span>
-<span><span class="co">#&gt; 9  depression ~~     stress  25.662  0.000    NA     NA   25.662   25.662</span></span>
-<span><span class="co">#&gt; 10     stress ~~     stress  29.714  0.000    NA     NA   29.714   29.714</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;           lhs op        rhs     est     se      z pvalue ci.lower ci.upper</span></span>
+<span><span class="co">#&gt; 1      scs_ts  ~    anxiety   1.049  0.209  5.010      0    0.639    1.460</span></span>
+<span><span class="co">#&gt; 2      scs_ts  ~ depression  -1.484  0.237 -6.271      0   -1.948   -1.020</span></span>
+<span><span class="co">#&gt; 3      scs_ts  ~     stress  -0.973  0.254 -3.827      0   -1.472   -0.475</span></span>
+<span><span class="co">#&gt; 4      scs_ts ~~     scs_ts 244.677 15.087 16.217      0  215.106  274.247</span></span>
+<span><span class="co">#&gt; 5     anxiety ~~    anxiety  32.082  0.000     NA     NA   32.082   32.082</span></span>
+<span><span class="co">#&gt; 6     anxiety ~~ depression  24.546  0.000     NA     NA   24.546   24.546</span></span>
+<span><span class="co">#&gt; 7     anxiety ~~     stress  24.538  0.000     NA     NA   24.538   24.538</span></span>
+<span><span class="co">#&gt; 8  depression ~~ depression  31.418  0.000     NA     NA   31.418   31.418</span></span>
+<span><span class="co">#&gt; 9  depression ~~     stress  25.662  0.000     NA     NA   25.662   25.662</span></span>
+<span><span class="co">#&gt; 10     stress ~~     stress  29.714  0.000     NA     NA   29.714   29.714</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I parametri stimati includono:</p>
 <ol type="1">
@@ -1558,7 +1558,7 @@ R^2 = \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2}.
 <span>    <span class="va">beta_stress_scs_ts</span> <span class="op">*</span> <span class="va">cov_anxiety_stress</span></span>
 <span></span>
 <span><span class="va">predicted_cov_anxiety_scs_ts</span></span>
-<span><span class="co">#&gt; [1] -26.7</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] -26.65</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="verifica-del-modello" class="level3" data-number="48.6.4"><h3 data-number="48.6.4" class="anchored" data-anchor-id="verifica-del-modello">
 <span class="header-section-number">48.6.4</span> Verifica del Modello</h3>
@@ -1613,7 +1613,7 @@ R^2 = \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2}.
 <span><span class="va">anxiety</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">10</span>, <span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="va">motivation</span> <span class="op">&lt;-</span> <span class="fl">4.0</span> <span class="op">*</span> <span class="va">anxiety</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">3.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">anxiety</span>, <span class="va">motivation</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.862</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.8618</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La variabile <em>performance</em> è definita come una combinazione lineare di <em>motivation</em> e <em>anxiety</em>, con un effetto positivo ma piccolo della motivazione e un effetto negativo marcato dell’ansia:</p>
 <div class="cell" data-layout-align="center">
@@ -1640,7 +1640,7 @@ R^2 = \frac{\sum (\hat{y}_i - \bar{y})^2}{\sum (y_i - \bar{y})^2}.
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">performance</span> <span class="op">~</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">anxiety</span>, <span class="va">sim_dat2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fm1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; (Intercept)  motivation     anxiety </span></span>
-<span><span class="co">#&gt;       1.371       0.495      -5.105</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;      1.3712      0.4954     -5.1052</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Le stime dei coefficienti di regressione riflettono correttamente i parametri utilizzati per generare i dati.</p>
 </section><section id="modello-con-specificazione-errata" class="level4" data-number="48.7.1.2"><h4 data-number="48.7.1.2" class="anchored" data-anchor-id="modello-con-specificazione-errata">
@@ -1698,7 +1698,7 @@ b_1^\prime = b_1 + b_2 \frac{\text{Cov}(X_1, X_2)}{\text{Var}(X_1)}.
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">sim_dat2</span><span class="op">$</span><span class="va">motivation</span>, <span class="va">sim_dat2</span><span class="op">$</span><span class="va">anxiety</span><span class="op">)</span> <span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">sim_dat2</span><span class="op">$</span><span class="va">motivation</span><span class="op">)</span></span>
 <span><span class="co">#&gt; motivation </span></span>
-<span><span class="co">#&gt;     -0.437</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;    -0.4372</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il valore calcolato coincide con quello stimato dal modello <code>performance ~ motivation</code>, confermando che il coefficiente è distorto.</p>
 <p>Possiamo trarre le seguenti conclusioni:</p>
@@ -1852,28 +1852,28 @@ Ad esempio, una variabile può essere utile per “sopprimere” la varianza irr
 <p>Esaminiamo la soluzione ottenuta.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">standardizedSolution</span><span class="op">(</span><span class="va">fit_sc</span><span class="op">)</span> </span>
-<span><span class="co">#&gt;                    lhs op                 rhs est.std    se      z pvalue</span></span>
-<span><span class="co">#&gt; 1                   ED =~             anxiety   0.847 0.014  58.51      0</span></span>
-<span><span class="co">#&gt; 2                   ED =~          depression   0.909 0.011  82.50      0</span></span>
-<span><span class="co">#&gt; 3                   ED =~              stress   0.929 0.010  91.94      0</span></span>
-<span><span class="co">#&gt; 4                   SC =~       self_kindness   0.757 0.022  33.98      0</span></span>
-<span><span class="co">#&gt; 5                   SC =~     common_humanity   0.621 0.030  20.70      0</span></span>
-<span><span class="co">#&gt; 6                   SC =~         mindfulness   0.689 0.026  26.23      0</span></span>
-<span><span class="co">#&gt; 7                   SC =~       self_judgment  -0.770 0.022 -35.80      0</span></span>
-<span><span class="co">#&gt; 8                   SC =~           isolation  -0.770 0.022 -35.82      0</span></span>
-<span><span class="co">#&gt; 9                   SC =~ over_identification  -0.767 0.022 -35.41      0</span></span>
-<span><span class="co">#&gt; 10                  ED ~~                  SC  -0.476 0.038 -12.38      0</span></span>
-<span><span class="co">#&gt; 11             anxiety ~~             anxiety   0.282 0.025  11.49      0</span></span>
-<span><span class="co">#&gt; 12          depression ~~          depression   0.173 0.020   8.63      0</span></span>
-<span><span class="co">#&gt; 13              stress ~~              stress   0.136 0.019   7.25      0</span></span>
-<span><span class="co">#&gt; 14       self_kindness ~~       self_kindness   0.427 0.034  12.65      0</span></span>
-<span><span class="co">#&gt; 15     common_humanity ~~     common_humanity   0.615 0.037  16.53      0</span></span>
-<span><span class="co">#&gt; 16         mindfulness ~~         mindfulness   0.525 0.036  14.52      0</span></span>
-<span><span class="co">#&gt; 17       self_judgment ~~       self_judgment   0.407 0.033  12.29      0</span></span>
-<span><span class="co">#&gt; 18           isolation ~~           isolation   0.407 0.033  12.28      0</span></span>
-<span><span class="co">#&gt; 19 over_identification ~~ over_identification   0.411 0.033  12.36      0</span></span>
-<span><span class="co">#&gt; 20                  ED ~~                  ED   1.000 0.000     NA     NA</span></span>
-<span><span class="co">#&gt; 21                  SC ~~                  SC   1.000 0.000     NA     NA</span></span>
+<span><span class="co">#&gt;                    lhs op                 rhs est.std    se       z pvalue</span></span>
+<span><span class="co">#&gt; 1                   ED =~             anxiety   0.847 0.014  58.505      0</span></span>
+<span><span class="co">#&gt; 2                   ED =~          depression   0.909 0.011  82.503      0</span></span>
+<span><span class="co">#&gt; 3                   ED =~              stress   0.929 0.010  91.945      0</span></span>
+<span><span class="co">#&gt; 4                   SC =~       self_kindness   0.757 0.022  33.984      0</span></span>
+<span><span class="co">#&gt; 5                   SC =~     common_humanity   0.621 0.030  20.695      0</span></span>
+<span><span class="co">#&gt; 6                   SC =~         mindfulness   0.689 0.026  26.235      0</span></span>
+<span><span class="co">#&gt; 7                   SC =~       self_judgment  -0.770 0.022 -35.800      0</span></span>
+<span><span class="co">#&gt; 8                   SC =~           isolation  -0.770 0.022 -35.822      0</span></span>
+<span><span class="co">#&gt; 9                   SC =~ over_identification  -0.767 0.022 -35.415      0</span></span>
+<span><span class="co">#&gt; 10                  ED ~~                  SC  -0.476 0.038 -12.385      0</span></span>
+<span><span class="co">#&gt; 11             anxiety ~~             anxiety   0.282 0.025  11.495      0</span></span>
+<span><span class="co">#&gt; 12          depression ~~          depression   0.173 0.020   8.633      0</span></span>
+<span><span class="co">#&gt; 13              stress ~~              stress   0.136 0.019   7.246      0</span></span>
+<span><span class="co">#&gt; 14       self_kindness ~~       self_kindness   0.427 0.034  12.647      0</span></span>
+<span><span class="co">#&gt; 15     common_humanity ~~     common_humanity   0.615 0.037  16.527      0</span></span>
+<span><span class="co">#&gt; 16         mindfulness ~~         mindfulness   0.525 0.036  14.522      0</span></span>
+<span><span class="co">#&gt; 17       self_judgment ~~       self_judgment   0.407 0.033  12.285      0</span></span>
+<span><span class="co">#&gt; 18           isolation ~~           isolation   0.407 0.033  12.280      0</span></span>
+<span><span class="co">#&gt; 19 over_identification ~~ over_identification   0.411 0.033  12.360      0</span></span>
+<span><span class="co">#&gt; 20                  ED ~~                  ED   1.000 0.000      NA     NA</span></span>
+<span><span class="co">#&gt; 21                  SC ~~                  SC   1.000 0.000      NA     NA</span></span>
 <span><span class="co">#&gt;    ci.lower ci.upper</span></span>
 <span><span class="co">#&gt; 1     0.819    0.876</span></span>
 <span><span class="co">#&gt; 2     0.888    0.931</span></span>
@@ -1961,10 +1961,10 @@ Ad esempio, una variabile può essere utile per “sopprimere” la varianza irr
 <span><span class="co">#&gt; t = -10, df = 524, p-value &lt;2e-16</span></span>
 <span><span class="co">#&gt; alternative hypothesis: true correlation is not equal to 0</span></span>
 <span><span class="co">#&gt; 95 percent confidence interval:</span></span>
-<span><span class="co">#&gt;  -0.474 -0.331</span></span>
+<span><span class="co">#&gt;  -0.4742 -0.3311</span></span>
 <span><span class="co">#&gt; sample estimates:</span></span>
-<span><span class="co">#&gt;    cor </span></span>
-<span><span class="co">#&gt; -0.405</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;     cor </span></span>
+<span><span class="co">#&gt; -0.4051</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tuttavia, questo valore differisce in maniera rilevante da quello calcolato mediante il modello SEM, dove la correlazione stimata è <span class="math inline">\(r = -0.476\)</span>. Questa differenza evidenzia una distinzione fondamentale tra i due approcci:</p>
 <ol type="1">
@@ -2054,7 +2054,7 @@ E(\mathbf{y}) = \boldsymbol{\mu}_y = \boldsymbol{\tau} + \mathbf{\Lambda} \bolds
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -2072,30 +2072,30 @@ E(\mathbf{y}) = \boldsymbol{\mu}_y = \boldsymbol{\tau} + \mathbf{\Lambda} \bolds
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] effectsize_1.0.0   rsvg_2.6.1         DiagrammeRsvg_0.1 </span></span>
 <span><span class="co">#&gt;  [4] mvnormalTest_1.0.0 lavaanExtra_0.2.1  ggokabeito_0.1.0  </span></span>
-<span><span class="co">#&gt;  [7] see_0.10.0         MASS_7.3-65        viridis_0.6.5     </span></span>
+<span><span class="co">#&gt;  [7] see_0.11.0         MASS_7.3-65        viridis_0.6.5     </span></span>
 <span><span class="co">#&gt; [10] viridisLite_0.4.2  ggpubr_0.6.0       ggExtra_0.10.1    </span></span>
 <span><span class="co">#&gt; [13] gridExtra_2.3      patchwork_1.3.0    bayesplot_1.11.1  </span></span>
 <span><span class="co">#&gt; [16] semTools_0.5-6     semPlot_1.1.6      lavaan_0.6-19     </span></span>
 <span><span class="co">#&gt; [19] psych_2.4.12       scales_1.3.0       markdown_1.13     </span></span>
-<span><span class="co">#&gt; [22] knitr_1.49         lubridate_1.9.4    forcats_1.0.0     </span></span>
+<span><span class="co">#&gt; [22] knitr_1.50         lubridate_1.9.4    forcats_1.0.0     </span></span>
 <span><span class="co">#&gt; [25] stringr_1.5.1      dplyr_1.1.4        purrr_1.0.4       </span></span>
 <span><span class="co">#&gt; [28] readr_2.1.5        tidyr_1.3.1        tibble_3.2.1      </span></span>
 <span><span class="co">#&gt; [31] ggplot2_3.5.1      tidyverse_2.0.0    here_1.0.1        </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.0      datawizard_1.0.0   </span></span>
+<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.1      datawizard_1.0.1   </span></span>
 <span><span class="co">#&gt;   [4] magrittr_2.0.3      TH.data_1.1-3       estimability_1.5.1 </span></span>
-<span><span class="co">#&gt;   [7] farver_2.1.2        nloptr_2.1.1        rmarkdown_2.29     </span></span>
+<span><span class="co">#&gt;   [7] farver_2.1.2        nloptr_2.2.1        rmarkdown_2.29     </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.5         minqa_1.2.8         base64enc_0.1-3    </span></span>
 <span><span class="co">#&gt;  [13] rstatix_0.7.2       htmltools_0.5.8.1   curl_6.2.1         </span></span>
 <span><span class="co">#&gt;  [16] broom_1.0.7         Formula_1.2-5       htmlwidgets_1.6.4  </span></span>
-<span><span class="co">#&gt;  [19] plyr_1.8.9          sandwich_3.1-1      copula_1.1-5       </span></span>
+<span><span class="co">#&gt;  [19] plyr_1.8.9          sandwich_3.1-1      copula_1.1-6       </span></span>
 <span><span class="co">#&gt;  [22] emmeans_1.10.7      zoo_1.8-13          igraph_2.1.4       </span></span>
-<span><span class="co">#&gt;  [25] mime_0.12           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
-<span><span class="co">#&gt;  [28] Matrix_1.7-2        R6_2.6.1            fastmap_1.2.0      </span></span>
+<span><span class="co">#&gt;  [25] mime_0.13           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
+<span><span class="co">#&gt;  [28] Matrix_1.7-3        R6_2.6.1            fastmap_1.2.0      </span></span>
 <span><span class="co">#&gt;  [31] rbibutils_2.3       shiny_1.10.0        numDeriv_2016.8-1.1</span></span>
 <span><span class="co">#&gt;  [34] digest_0.6.37       OpenMx_2.21.13      fdrtool_1.2.18     </span></span>
-<span><span class="co">#&gt;  [37] colorspace_2.1-1    rprojroot_2.0.4     Hmisc_5.2-2        </span></span>
+<span><span class="co">#&gt;  [37] colorspace_2.1-1    rprojroot_2.0.4     Hmisc_5.2-3        </span></span>
 <span><span class="co">#&gt;  [40] pspline_1.0-21      timechange_0.3.0    abind_1.4-8        </span></span>
 <span><span class="co">#&gt;  [43] compiler_4.4.2      gsl_2.1-8           withr_3.0.2        </span></span>
 <span><span class="co">#&gt;  [46] glasso_1.11         htmlTable_2.4.3     backports_1.5.0    </span></span>
@@ -2105,23 +2105,23 @@ E(\mathbf{y}) = \boldsymbol{\mu}_y = \boldsymbol{\tau} + \mathbf{\Lambda} \bolds
 <span><span class="co">#&gt;  [58] nnet_7.3-20         glue_1.8.0          quadprog_1.5-8     </span></span>
 <span><span class="co">#&gt;  [61] stabledist_0.7-2    nlme_3.1-167        promises_1.3.2     </span></span>
 <span><span class="co">#&gt;  [64] lisrelToR_0.3       grid_4.4.2          checkmate_2.3.2    </span></span>
-<span><span class="co">#&gt;  [67] cluster_2.1.8       reshape2_1.4.4      generics_0.1.3     </span></span>
-<span><span class="co">#&gt;  [70] gtable_0.3.6        nortest_1.0-4       tzdb_0.4.0         </span></span>
+<span><span class="co">#&gt;  [67] cluster_2.1.8.1     reshape2_1.4.4      generics_0.1.3     </span></span>
+<span><span class="co">#&gt;  [70] gtable_0.3.6        nortest_1.0-4       tzdb_0.5.0         </span></span>
 <span><span class="co">#&gt;  [73] data.table_1.17.0   hms_1.1.3           car_3.1-3          </span></span>
 <span><span class="co">#&gt;  [76] sem_3.1-16          pillar_1.10.1       rockchalk_1.8.157  </span></span>
 <span><span class="co">#&gt;  [79] later_1.4.1         splines_4.4.2       moments_0.14.1     </span></span>
 <span><span class="co">#&gt;  [82] lattice_0.22-6      survival_3.8-3      kutils_1.73        </span></span>
 <span><span class="co">#&gt;  [85] tidyselect_1.2.1    ADGofTest_0.3       miniUI_0.1.1.1     </span></span>
-<span><span class="co">#&gt;  [88] pbapply_1.7-2       reformulas_0.4.0    V8_6.0.1           </span></span>
+<span><span class="co">#&gt;  [88] pbapply_1.7-2       reformulas_0.4.0    V8_6.0.2           </span></span>
 <span><span class="co">#&gt;  [91] stats4_4.4.2        xfun_0.51           qgraph_1.9.8       </span></span>
 <span><span class="co">#&gt;  [94] arm_1.14-4          stringi_1.8.4       pacman_0.5.1       </span></span>
 <span><span class="co">#&gt;  [97] boot_1.3-31         evaluate_1.0.3      codetools_0.2-20   </span></span>
 <span><span class="co">#&gt; [100] mi_1.1              cli_3.6.4           RcppParallel_5.1.10</span></span>
-<span><span class="co">#&gt; [103] rpart_4.1.24        parameters_0.24.1   xtable_1.8-4       </span></span>
-<span><span class="co">#&gt; [106] Rdpack_2.6.2        munsell_0.5.1       Rcpp_1.0.14        </span></span>
+<span><span class="co">#&gt; [103] rpart_4.1.24        parameters_0.24.2   xtable_1.8-4       </span></span>
+<span><span class="co">#&gt; [106] Rdpack_2.6.3        munsell_0.5.1       Rcpp_1.0.14        </span></span>
 <span><span class="co">#&gt; [109] coda_0.19-4.1       png_0.1-8           XML_3.99-0.18      </span></span>
 <span><span class="co">#&gt; [112] parallel_4.4.2      bayestestR_0.15.2   jpeg_0.1-10        </span></span>
-<span><span class="co">#&gt; [115] lme4_1.1-36         mvtnorm_1.3-3       insight_1.0.2      </span></span>
+<span><span class="co">#&gt; [115] lme4_1.1-36         mvtnorm_1.3-3       insight_1.1.0      </span></span>
 <span><span class="co">#&gt; [118] pcaPP_2.0-5         openxlsx_4.2.8      rlang_1.1.5        </span></span>
 <span><span class="co">#&gt; [121] multcomp_1.4-28     mnormt_2.1.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

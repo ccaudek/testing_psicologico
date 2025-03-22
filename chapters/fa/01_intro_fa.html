@@ -21,7 +21,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -945,9 +965,7 @@ window.Quarto = {
 </header>
 
 
-<div class="chapterintro">
 <p>L’analisi fattoriale è una tecnica statistica utilizzata per identificare la struttura latente sottostante a un insieme di variabili osservate, con lo scopo di ridurre la complessità del dato e individuare costrutti latenti che spiegano le relazioni tra le variabili. Le due principali forme di analisi fattoriale sono l’<strong>analisi fattoriale esplorativa (EFA)</strong> e l’<strong>analisi fattoriale confermativa (CFA)</strong>, che differiscono nel loro scopo e nel grado di definizione a priori della struttura da parte del ricercatore.</p>
-</div>
 <section id="analisi-fattoriale-esplorativa-efa" class="level2" data-number="27.1">
 <h2 data-number="27.1" class="anchored" data-anchor-id="analisi-fattoriale-esplorativa-efa"><span class="header-section-number">27.1</span> Analisi Fattoriale Esplorativa (EFA)</h2>
 <p>L’<strong>EFA</strong> viene utilizzata quando il ricercatore non ha ipotesi a priori su come un gruppo di variabili si strutturi. Il suo scopo è identificare empiricamente il modello che meglio si adatta ai dati, bilanciando precisione e semplicità. Questa tecnica esplora la struttura sottostante ai dati, permettendo di individuare fattori latenti che spiegano la varianza comune tra le variabili osservate. È particolarmente utile nei primi stadi di sviluppo di test psicometrici, quando si desidera identificare le dimensioni latenti sottostanti a un nuovo insieme di item. Tuttavia, la scelta di parametri e metodi di estrazione influisce pesantemente sul risultato finale.</p>
@@ -958,27 +976,27 @@ window.Quarto = {
 </section>
 <section id="struttura-e-componenti-dellanalisi-fattoriale" class="level2" data-number="27.3">
 <h2 data-number="27.3" class="anchored" data-anchor-id="struttura-e-componenti-dellanalisi-fattoriale"><span class="header-section-number">27.3</span> Struttura e Componenti dell’Analisi Fattoriale</h2>
-<p>Indipendentemente dal tipo di analisi, l’analisi fattoriale si basa sulla distinzione tra variabili <strong>osservate</strong> (o manifest) e variabili <strong>latenti</strong> (o fattori). Le variabili latenti rappresentano costrutti teorici non direttamente osservabili, mentre le variabili osservate sono i punteggi effettivi ottenuti da misure dirette. Un modello fattoriale può includere carichi fattoriali, errori, covarianze e percorsi di regressione.</p>
-<p>Un <strong>carico fattoriale</strong> rappresenta la forza della relazione tra una variabile osservata e il fattore latente, mentre il <strong>residuo</strong> o <strong>errore</strong> rappresenta la varianza non spiegata dal fattore latente. Le <strong>covarianze</strong> esprimono le relazioni tra le variabili o tra i fattori latenti. L’equazione generale di un indicatore osservato <span class="math inline">\(X\)</span> in relazione a un fattore latente <span class="math inline">\(F\)</span> può essere espressa come:</p>
+<p>Indipendentemente dal tipo di analisi, l’analisi fattoriale si basa sulla distinzione tra variabili <strong>osservate</strong> (o manifeste) e variabili <strong>latenti</strong> (o fattori). Le variabili latenti rappresentano costrutti teorici non direttamente osservabili, mentre le variabili osservate sono i punteggi effettivi ottenuti da misure dirette. Un modello fattoriale può includere carichi fattoriali, errori, covarianze e percorsi di regressione.</p>
+<p>Un <strong>carico fattoriale</strong> (o saturazione fattoriale) rappresenta la forza della relazione tra una variabile osservata e il fattore latente, mentre il <strong>residuo</strong> o <strong>errore</strong> rappresenta la varianza non spiegata dal fattore latente. Le <strong>covarianze</strong> esprimono le relazioni tra le variabili o tra i fattori latenti. L’equazione generale di un indicatore osservato <span class="math inline">\(X\)</span> in relazione a un fattore latente <span class="math inline">\(F\)</span> può essere espressa come:</p>
 <p><span class="math display">\[
-X = \lambda \cdot F + \text{Intercept} + \text{Errore}
+X = \text{Intercetta} + \lambda \cdot F + \text{Errore}
 \]</span></p>
 <p>dove:</p>
 <ul>
 <li><span class="math inline">\(X\)</span> è il valore osservato dell’indicatore;</li>
 <li><span class="math inline">\(\lambda\)</span> è il carico fattoriale;</li>
 <li><span class="math inline">\(F\)</span> è il valore del fattore latente;</li>
-<li>Intercept è il valore atteso dell’indicatore quando il fattore latente è zero;</li>
-<li>Errore è la parte di varianza non spiegata dal fattore latente.</li>
+<li>l’intercetta è il valore atteso dell’indicatore quando il fattore latente è zero;</li>
+<li>l’errore è la parte di varianza non spiegata dal fattore latente.</li>
 </ul>
 </section>
 <section id="modelli-fattoriali-gerarchici-e-bifattoriali" class="level2" data-number="27.4">
 <h2 data-number="27.4" class="anchored" data-anchor-id="modelli-fattoriali-gerarchici-e-bifattoriali"><span class="header-section-number">27.4</span> Modelli Fattoriali Gerarchici e Bifattoriali</h2>
-<p>Esistono varianti più avanzate dell’analisi fattoriale, come i <strong>modelli gerarchici</strong> e i <strong>modelli bifattoriali</strong>, che permettono di rappresentare strutture latenti più complesse. In particolare, i modelli bifattoriali sono utili quando si ritiene che un insieme di variabili possa essere spiegato sia da un fattore generale che da fattori specifici. Ad esempio, nel contesto della misurazione dell’intelligenza, un modello bifattoriale potrebbe includere un fattore generale (g) che spiega la varianza comune tra tutte le variabili, e fattori specifici che spiegano varianze più circoscritte a singoli domini cognitivi.</p>
+<p>Esistono varianti più avanzate dell’analisi fattoriale, come i <strong>modelli gerarchici</strong> e i <strong>modelli bifattoriali</strong>, che permettono di rappresentare strutture latenti più complesse. In particolare, i modelli bifattoriali sono utili quando si ritiene che un insieme di variabili possa essere spiegato sia da un fattore generale che da fattori specifici. Ad esempio, nel contesto della misurazione dell’intelligenza, un modello bifattoriale potrebbe includere un fattore generale (<span class="math inline">\(g\)</span>) che spiega la varianza comune tra tutte le variabili, e fattori specifici che spiegano varianze più circoscritte a singoli domini cognitivi.</p>
 </section>
 <section id="sviluppo-storico-dellanalisi-fattoriale" class="level2" data-number="27.5">
 <h2 data-number="27.5" class="anchored" data-anchor-id="sviluppo-storico-dellanalisi-fattoriale"><span class="header-section-number">27.5</span> Sviluppo Storico dell’Analisi Fattoriale</h2>
-<p>L’analisi fattoriale è stata sviluppata all’inizio del XX secolo da Charles Spearman per studiare la struttura dell’intelligenza. Spearman introdusse il concetto di <strong>fattore generale (g)</strong>, che rappresentava la dimensione comune che spiegava la covarianza tra diverse abilità cognitive. Successivamente, psicologi come Thurstone criticarono il modello unifattoriale di Spearman e proposero un modello <strong>multifattoriale</strong>, che permetteva di individuare più fattori specifici, ciascuno dei quali spiegava una dimensione distinta dell’intelligenza.</p>
+<p>L’analisi fattoriale è stata sviluppata all’inizio del XX secolo da Charles Spearman per studiare la struttura dell’intelligenza <span class="citation" data-cites="ch1904general">(<a href="#ref-ch1904general" role="doc-biblioref">Spearman, 1904</a>)</span>. Spearman introdusse il concetto di <strong>fattore generale (g)</strong>, che rappresentava la dimensione comune che spiegava la covarianza tra diverse abilità cognitive. Successivamente, psicologi come Thurstone criticarono il modello unifattoriale di Spearman e proposero un modello <strong>multifattoriale</strong>, che permetteva di individuare più fattori specifici, ciascuno dei quali spiegava una dimensione distinta dell’intelligenza.</p>
 <p>Negli anni ’60 e ’70, l’analisi fattoriale subì una trasformazione con lo sviluppo dei <strong>modelli di equazioni strutturali (SEM)</strong>, che combinavano l’analisi fattoriale con la <strong>path analysis</strong> per rappresentare relazioni più complesse tra variabili osservate e latenti. Questo sviluppo permise ai ricercatori di verificare ipotesi teoriche più articolate riguardanti la struttura di costrutti psicologici complessi.</p>
 </section>
 <section id="applicazioni-dellanalisi-fattoriale" class="level2" data-number="27.6">
@@ -987,6 +1005,11 @@ X = \lambda \cdot F + \text{Intercept} + \text{Errore}
 <p>Infine, l’analisi fattoriale è uno strumento fondamentale per individuare variabili latenti sottostanti e semplificare i dati complessi, consentendo ai ricercatori di ridurre grandi set di variabili osservate a un insieme più ristretto di fattori interpretabili. La sua applicazione, tuttavia, richiede attenzione nella scelta dei parametri e delle assunzioni, poiché le decisioni prese nel processo di analisi possono influenzare significativamente i risultati finali.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-ch1904general" class="csl-entry" role="listitem">
+Spearman, C. (1904). General intelligence objectively determined and measured. <em>American Journal of Psychology</em>, <em>15</em>, 201–293.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

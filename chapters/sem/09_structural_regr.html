@@ -1208,12 +1208,12 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># calculate factor reliability coefficients (semTools)</span></span>
 <span><span class="fu">semTools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/semTools/man/semTools-deprecated.html">reliability</a></span><span class="op">(</span><span class="va">worlandCFA</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        Cognitive Achieve Adjust  Risk</span></span>
-<span><span class="co">#&gt; alpha      0.846   0.809  0.725 0.568</span></span>
-<span><span class="co">#&gt; omega      0.851   0.821  0.730 0.577</span></span>
-<span><span class="co">#&gt; omega2     0.851   0.821  0.730 0.577</span></span>
-<span><span class="co">#&gt; omega3     0.852   0.823  0.733 0.577</span></span>
-<span><span class="co">#&gt; avevar     0.659   0.610  0.474 0.409</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;        Cognitive Achieve Adjust   Risk</span></span>
+<span><span class="co">#&gt; alpha     0.8463  0.8088 0.7249 0.5675</span></span>
+<span><span class="co">#&gt; omega     0.8514  0.8208 0.7296 0.5770</span></span>
+<span><span class="co">#&gt; omega2    0.8514  0.8208 0.7296 0.5770</span></span>
+<span><span class="co">#&gt; omega3    0.8516  0.8228 0.7327 0.5770</span></span>
+<span><span class="co">#&gt; avevar    0.6589  0.6101 0.4745 0.4095</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Secondo Passaggio nella modellazione in due fasi per un modello SR completo di rendimento scolastico e adattamento in classe</strong></p>
 <p>I risultati del Passaggio 1 del metodo in due fasi, che si concentrava sul modello di misurazione, consentono di procedere all’analisi del modello SR originale, che prevede cinque percorsi nella <a href="#fig-kline-15-3" class="quarto-xref">Figura&nbsp;<span>56.3</span></a>, nel Passaggio 2 del metodo. Anche questa seconda analisi ha portato a una soluzione ammissibile.</p>
@@ -1340,10 +1340,10 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <p>Esaminiamo i <em>modification indices</em>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">modificationIndices</span><span class="op">(</span><span class="va">worlandSRa</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, minimum.value <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         lhs op     rhs mi   epc sepc.lv sepc.all sepc.nox</span></span>
-<span><span class="co">#&gt; 125 Achieve  ~  Adjust 20 115.2    63.7   63.746   63.746</span></span>
-<span><span class="co">#&gt; 120  parent ~~     ses 20  32.6    32.6    0.361    0.361</span></span>
-<span><span class="co">#&gt; 126  Adjust  ~ Achieve 20  26.1    47.2   47.200   47.200</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;         lhs op     rhs    mi    epc sepc.lv sepc.all sepc.nox</span></span>
+<span><span class="co">#&gt; 125 Achieve  ~  Adjust 19.96 115.19   63.75   63.746   63.746</span></span>
+<span><span class="co">#&gt; 120  parent ~~     ses 19.96  32.62   32.62    0.361    0.361</span></span>
+<span><span class="co">#&gt; 126  Adjust  ~ Achieve 19.96  26.12   47.20   47.200   47.200</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I risultati dei <em>modification indices</em> mostrano che l’assenza di un percorso tra i fattori di rendimento e adattamento nella <a href="#fig-kline-15-3" class="quarto-xref">Figura&nbsp;<span>56.3</span></a> è chiaramente incoerente con i dati. Per aggiungere una covariazione tra i fattori di rendimento e adattamento abbiamo due opzioni: o aggiungere un effetto diretto tra i fattori o permettere alle loro perturbazioni di covariare. Ma sarebbe difficile giustificare un effetto diretto rispetto all’altro: scarse abilità scolastiche potrebbero peggiorare l’adattamento in classe tanto quanto i problemi comportamentali a scuola potrebbero influire negativamente sul rendimento. La specificazione di una causalità reciproca tra Rendimento e Adattamento renderebbe il modello strutturale non ricorsivo, ma il modello non sarebbe identificato senza imporre vincoli irrealistici. Riformuliamo dunque il modello della fig-kline-15-3 permettendo alle perturbazioni tra i fattori di rendimento e adattamento di covariare.</p>
 <div class="cell" data-layout-align="center">
@@ -1564,7 +1564,7 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -1580,28 +1580,28 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] lme4_1.1-36       Matrix_1.7-2      ggokabeito_0.1.0  see_0.10.0       </span></span>
+<span><span class="co">#&gt;  [1] lme4_1.1-36       Matrix_1.7-3      ggokabeito_0.1.0  see_0.11.0       </span></span>
 <span><span class="co">#&gt;  [5] MASS_7.3-65       viridis_0.6.5     viridisLite_0.4.2 ggpubr_0.6.0     </span></span>
 <span><span class="co">#&gt;  [9] ggExtra_0.10.1    gridExtra_2.3     patchwork_1.3.0   bayesplot_1.11.1 </span></span>
 <span><span class="co">#&gt; [13] semTools_0.5-6    semPlot_1.1.6     lavaan_0.6-19     psych_2.4.12     </span></span>
-<span><span class="co">#&gt; [17] scales_1.3.0      markdown_1.13     knitr_1.49        lubridate_1.9.4  </span></span>
+<span><span class="co">#&gt; [17] scales_1.3.0      markdown_1.13     knitr_1.50        lubridate_1.9.4  </span></span>
 <span><span class="co">#&gt; [21] forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4       purrr_1.0.4      </span></span>
 <span><span class="co">#&gt; [25] readr_2.1.5       tidyr_1.3.1       tibble_3.2.1      ggplot2_3.5.1    </span></span>
 <span><span class="co">#&gt; [29] tidyverse_2.0.0   here_1.0.1       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.0      magrittr_2.0.3     </span></span>
+<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.1      magrittr_2.0.3     </span></span>
 <span><span class="co">#&gt;   [4] TH.data_1.1-3       estimability_1.5.1  farver_2.1.2       </span></span>
-<span><span class="co">#&gt;   [7] nloptr_2.1.1        rmarkdown_2.29      vctrs_0.6.5        </span></span>
+<span><span class="co">#&gt;   [7] nloptr_2.2.1        rmarkdown_2.29      vctrs_0.6.5        </span></span>
 <span><span class="co">#&gt;  [10] minqa_1.2.8         base64enc_0.1-3     rstatix_0.7.2      </span></span>
 <span><span class="co">#&gt;  [13] htmltools_0.5.8.1   broom_1.0.7         Formula_1.2-5      </span></span>
 <span><span class="co">#&gt;  [16] htmlwidgets_1.6.4   plyr_1.8.9          sandwich_3.1-1     </span></span>
 <span><span class="co">#&gt;  [19] emmeans_1.10.7      zoo_1.8-13          igraph_2.1.4       </span></span>
-<span><span class="co">#&gt;  [22] mime_0.12           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
+<span><span class="co">#&gt;  [22] mime_0.13           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
 <span><span class="co">#&gt;  [25] R6_2.6.1            fastmap_1.2.0       rbibutils_2.3      </span></span>
 <span><span class="co">#&gt;  [28] shiny_1.10.0        digest_0.6.37       OpenMx_2.21.13     </span></span>
 <span><span class="co">#&gt;  [31] fdrtool_1.2.18      colorspace_2.1-1    rprojroot_2.0.4    </span></span>
-<span><span class="co">#&gt;  [34] Hmisc_5.2-2         timechange_0.3.0    abind_1.4-8        </span></span>
+<span><span class="co">#&gt;  [34] Hmisc_5.2-3         timechange_0.3.0    abind_1.4-8        </span></span>
 <span><span class="co">#&gt;  [37] compiler_4.4.2      withr_3.0.2         glasso_1.11        </span></span>
 <span><span class="co">#&gt;  [40] htmlTable_2.4.3     backports_1.5.0     carData_3.0-5      </span></span>
 <span><span class="co">#&gt;  [43] ggsignif_0.6.4      corpcor_1.6.10      gtools_3.9.5       </span></span>
@@ -1609,8 +1609,8 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <span><span class="co">#&gt;  [49] zip_2.3.2           httpuv_1.6.15       nnet_7.3-20        </span></span>
 <span><span class="co">#&gt;  [52] glue_1.8.0          quadprog_1.5-8      nlme_3.1-167       </span></span>
 <span><span class="co">#&gt;  [55] promises_1.3.2      lisrelToR_0.3       grid_4.4.2         </span></span>
-<span><span class="co">#&gt;  [58] checkmate_2.3.2     cluster_2.1.8       reshape2_1.4.4     </span></span>
-<span><span class="co">#&gt;  [61] generics_0.1.3      gtable_0.3.6        tzdb_0.4.0         </span></span>
+<span><span class="co">#&gt;  [58] checkmate_2.3.2     cluster_2.1.8.1     reshape2_1.4.4     </span></span>
+<span><span class="co">#&gt;  [61] generics_0.1.3      gtable_0.3.6        tzdb_0.5.0         </span></span>
 <span><span class="co">#&gt;  [64] data.table_1.17.0   hms_1.1.3           car_3.1-3          </span></span>
 <span><span class="co">#&gt;  [67] sem_3.1-16          pillar_1.10.1       rockchalk_1.8.157  </span></span>
 <span><span class="co">#&gt;  [70] later_1.4.1         splines_4.4.2       lattice_0.22-6     </span></span>
@@ -1621,7 +1621,7 @@ Figura&nbsp;56.3: Modello iniziale completo di regressione strutturale del rendi
 <span><span class="co">#&gt;  [85] pacman_0.5.1        boot_1.3-31         evaluate_1.0.3     </span></span>
 <span><span class="co">#&gt;  [88] codetools_0.2-20    mi_1.1              cli_3.6.4          </span></span>
 <span><span class="co">#&gt;  [91] RcppParallel_5.1.10 rpart_4.1.24        xtable_1.8-4       </span></span>
-<span><span class="co">#&gt;  [94] Rdpack_2.6.2        munsell_0.5.1       Rcpp_1.0.14        </span></span>
+<span><span class="co">#&gt;  [94] Rdpack_2.6.3        munsell_0.5.1       Rcpp_1.0.14        </span></span>
 <span><span class="co">#&gt;  [97] coda_0.19-4.1       png_0.1-8           XML_3.99-0.18      </span></span>
 <span><span class="co">#&gt; [100] parallel_4.4.2      jpeg_0.1-10         mvtnorm_1.3-3      </span></span>
 <span><span class="co">#&gt; [103] openxlsx_4.2.8      rlang_1.1.5         multcomp_1.4-28    </span></span>

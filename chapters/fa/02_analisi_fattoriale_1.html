@@ -985,12 +985,9 @@ window.Quarto = {
   
 
 
-</header><div class="chapterintro">
-<p>L’analisi fattoriale è un modello statistico che consente di spiegare le correlazioni tra variabili osservate mediante la loro saturazione in uno o più fattori generali. In questo modello, le <span class="math inline">\(p\)</span> variabili osservate (item) sono considerate condizionalmente indipendenti rispetto a <span class="math inline">\(m\)</span> variabili latenti chiamate fattori. L’obiettivo dell’analisi fattoriale è di interpretare questi fattori come costrutti teorici inosservabili. Ad esempio, l’analisi fattoriale può essere utilizzata per spiegare le correlazioni tra le prestazioni di un gruppo di individui in una serie di compiti mediante il concetto di intelligenza. In questo modo, l’analisi fattoriale aiuta a identificare i costrutti cui gli item si riferiscono e a stabilire in che misura ciascun item rappresenta il costrutto. Il modello può essere unifattoriale (<span class="math inline">\(m = 1\)</span>) o multifattoriale (<span class="math inline">\(m &gt; 1\)</span>), e in questo capitolo si introdurrà il modello unifattoriale che assume l’esistenza di un unico fattore comune latente.</p>
-</div>
-<p><strong>Prerequisiti</strong></p>
+</header><p><strong>Prerequisiti</strong></p>
 <ul>
-<li>Leggere il capitolo 6, <em>Factor Analysis and Principal Component Analysis</em>, del testo <em>Principles of psychological assessment</em> di <span class="citation" data-cites="petersen2024principles">Petersen (<a href="../../99-references.html#ref-petersen2024principles" role="doc-biblioref">2024</a>)</span>.</li>
+<li>Leggere il capitolo 6, <em>Factor Analysis and Principal Component Analysis</em>, del testo <em>Principles of psychological assessment</em> di <span class="citation" data-cites="petersen2024principles">Petersen (<a href="#ref-petersen2024principles" role="doc-biblioref">2024</a>)</span>.</li>
 </ul>
 <p><strong>Concetti e Competenze Chiave</strong></p>
 <ul>
@@ -999,15 +996,16 @@ window.Quarto = {
 <li>Annullamento della tetrade</li>
 </ul>
 <p><strong>Preparazione del Notebook</strong></p>
-<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carica il file _common.R per impostazioni di pacchetti e opzioni</span></span>
 <span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"code"</span>, <span class="st">"_common.R"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Carica pacchetti aggiuntivi</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">corrplot</span>, <span class="va">tidyr</span>, <span class="va">kableExtra</span>, <span class="va">lavaanPlot</span>, <span class="va">lavaanExtra</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">lavaan</span>, <span class="va">corrplot</span>, <span class="va">tidyr</span>, <span class="va">kableExtra</span>, <span class="va">lavaanPlot</span>, <span class="va">lavaanExtra</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="introduzione" class="level2" data-number="28.1"><h2 data-number="28.1" class="anchored" data-anchor-id="introduzione">
 <span class="header-section-number">28.1</span> Introduzione</h2>
+<p>L’analisi fattoriale è un modello statistico che consente di spiegare le correlazioni tra variabili osservate mediante la loro saturazione in uno o più fattori generali. In questo modello, le <span class="math inline">\(p\)</span> variabili osservate (item) sono considerate condizionalmente indipendenti rispetto a <span class="math inline">\(m\)</span> variabili latenti chiamate fattori. L’obiettivo dell’analisi fattoriale è di interpretare questi fattori come costrutti teorici inosservabili. Ad esempio, l’analisi fattoriale può essere utilizzata per spiegare le correlazioni tra le prestazioni di un gruppo di individui in una serie di compiti mediante il concetto di intelligenza. In questo modo, l’analisi fattoriale aiuta a identificare i costrutti cui gli item si riferiscono e a stabilire in che misura ciascun item rappresenta il costrutto. Il modello può essere unifattoriale (<span class="math inline">\(m = 1\)</span>) o multifattoriale (<span class="math inline">\(m &gt; 1\)</span>), e in questo capitolo si introdurrà il modello unifattoriale che assume l’esistenza di un unico fattore comune latente.</p>
 <p>Nel contesto dell’analisi fattoriale, i costrutti teorici di interesse vengono rappresentati da variabili latenti, che riflettono le comunanze sottostanti tra un insieme di variabili manifeste (ovvero misurabili). Le variabili manifeste, come gli item di un questionario o gli indici derivati da un compito comportamentale, sono direttamente osservabili e vengono solitamente rappresentate graficamente come quadrati. Al contrario, le variabili latenti descrivono costrutti ipotetici non direttamente osservabili, come un fattore latente di intelligenza o memoria, e sono rappresentate come cerchi nei diagrammi.</p>
 <p>Il legame tra variabili latenti e manifeste si esprime tramite i <em>carichi fattoriali</em>, cioè percorsi che collegano una variabile latente a una variabile osservabile. L’intensità di un carico fattoriale indica la quota di varianza osservata spiegata dal fattore latente. In altre parole, il carico fattoriale riflette la capacità di una data variabile manifesta di rappresentare il costrutto latente.</p>
 <p>Dal punto di vista matematico, l’analisi fattoriale descrive ogni misura osservabile <span class="math inline">\(y\)</span> come la combinazione lineare del punteggio latente <span class="math inline">\(\xi\)</span> relativo al costrutto di interesse e di un elemento di errore non osservato <span class="math inline">\(\delta\)</span>. In questo modello, il valore di <span class="math inline">\(y\)</span> è interpretato come il prodotto del punteggio latente, ponderato da un coefficiente di carico <span class="math inline">\(\lambda\)</span>, a cui si somma un termine di errore specifico <span class="math inline">\(\delta_y\)</span>:</p>
@@ -1043,7 +1041,7 @@ y_i -\mu_i = \lambda_i \xi + 1 \cdot \delta_i,
 Y_1 = b_{01} + b_{11}F + E_1.
 \tag{28.3}\]</span></span></p>
 <p>La componente di <span class="math inline">\(Y_1\)</span> linearmente indipendente da <span class="math inline">\(F\)</span> è quindi data dai residui <span class="math inline">\(E_1\)</span>. Possiamo eseguire un’operazione analoga per <span class="math inline">\(Y_2\)</span> per trovare la sua componente ortogonale a <span class="math inline">\(F\)</span>. Calcolando la correlazione tra le due componenti così ottenute si ottiene la correlazione parziale tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(Y_2\)</span> al netto dell’effetto lineare di <span class="math inline">\(F\)</span>.</p>
-<p>L’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span>28.4</span></a> consente di calcolare la correlazione parziale tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(Y_2\)</span> al netto dell’effetto di <span class="math inline">\(F\)</span> a partire dalle correlazioni semplici tra le tre variabili <span class="math inline">\(Y_1\)</span>, <span class="math inline">\(Y_2\)</span> e <span class="math inline">\(F\)</span>.</p>
+<p>L’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span class="quarto-unresolved-ref">eq-corr-parz</span></a> consente di calcolare la correlazione parziale tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(Y_2\)</span> al netto dell’effetto di <span class="math inline">\(F\)</span> a partire dalle correlazioni semplici tra le tre variabili <span class="math inline">\(Y_1\)</span>, <span class="math inline">\(Y_2\)</span> e <span class="math inline">\(F\)</span>.</p>
 <p><span id="eq-corr-parz"><span class="math display">\[
 \begin{equation}
 r_{1,2 \mid F} = \frac{r_{12} - r_{1F}r_{2F}}{\sqrt{(1-r_{1F}^2)(1-r_{2F}^2)}}.
@@ -1051,18 +1049,18 @@ r_{1,2 \mid F} = \frac{r_{12} - r_{1F}r_{2F}}{\sqrt{(1-r_{1F}^2)(1-r_{2F}^2)}}.
 \tag{28.4}\]</span></span></p>
 <p>In particolare, la correlazione parziale <span class="math inline">\(r_{1,2 \mid F}\)</span> è data dalla differenza tra la correlazione <span class="math inline">\(r_{12}\)</span> tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(Y_2\)</span> e il prodotto tra le correlazioni <span class="math inline">\(r_{1F}\)</span> e <span class="math inline">\(r_{2F}\)</span> tra ciascuna delle due variabili e <span class="math inline">\(F\)</span>, il tutto diviso per la radice quadrata del prodotto delle differenze tra 1 e i quadrati delle correlazioni tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(F\)</span> e tra <span class="math inline">\(Y_2\)</span> e <span class="math inline">\(F\)</span>. In altre parole, la formula tiene conto dell’effetto di <span class="math inline">\(F\)</span> sulle correlazioni tra <span class="math inline">\(Y_1\)</span> e <span class="math inline">\(Y_2\)</span> per ottenere una stima della relazione diretta tra le due variabili, eliminando l’effetto del fattore comune.</p>
 <p>Consideriamo un esempio numerico. Sia <span class="math inline">\(f\)</span> una variabile su cui misuriamo <span class="math inline">\(n\)</span> valori</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">24</span>, <span class="fl">12</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Siano <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> funzioni lineari di <span class="math inline">\(f\)</span>, a cui viene aggiunta una componente d’errore gaussiano:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y1</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="op">+</span> <span class="fl">7</span> <span class="op">*</span> <span class="va">f</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">50</span><span class="op">)</span></span>
 <span><span class="va">y2</span> <span class="op">&lt;-</span> <span class="fl">3</span>  <span class="op">+</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">f</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">0</span>, <span class="fl">50</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La correlazione tra <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> (<span class="math inline">\(r_{12}= 0.355\)</span>) deriva dal fatto che <span class="math inline">\(\hat{y}_1\)</span> e <span class="math inline">\(\hat{y}_2\)</span> sono entrambe funzioni lineari di <span class="math inline">\(f\)</span>:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">y1</span>, <span class="va">y2</span>, <span class="va">f</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
@@ -1072,39 +1070,38 @@ r_{1,2 \mid F} = \frac{r_{12} - r_{1F}r_{2F}}{\sqrt{(1-r_{1F}^2)(1-r_{2F}^2)}}.
 <span><span class="co">#&gt; f  0.867 0.423 1.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Eseguiamo le regressioni di <span class="math inline">\(y_1\)</span> su <span class="math inline">\(f\)</span> e di <span class="math inline">\(y_2\)</span> su <span class="math inline">\(F\)</span>:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y1</span> <span class="op">~</span> <span class="va">f</span><span class="op">)</span></span>
 <span><span class="va">fm2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y2</span> <span class="op">~</span> <span class="va">f</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nella regressione, ciascuna osservazione <span class="math inline">\(y_{i1}\)</span> viene scomposta in due componenti linearmente indipendenti, i valori adattati <span class="math inline">\(\hat{y}_{i}\)</span> e i residui, <span class="math inline">\(e_{i}\)</span>: <span class="math inline">\(y_i = \hat{y}_i + e_1\)</span>. Nel caso di <span class="math inline">\(y_1\)</span> abbiamo</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">y1</span>, y1.hat<span class="op">=</span><span class="va">fm1</span><span class="op">$</span><span class="va">fit</span>, e<span class="op">=</span><span class="va">fm1</span><span class="op">$</span><span class="va">res</span>, <span class="va">fm1</span><span class="op">$</span><span class="va">fit</span><span class="op">+</span><span class="va">fm1</span><span class="op">$</span><span class="va">res</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      y1 y1.hat       e      </span></span>
-<span><span class="co">#&gt; 1  81.1    131  -49.38  81.1</span></span>
-<span><span class="co">#&gt; 2 106.7    160  -53.04 106.7</span></span>
-<span><span class="co">#&gt; 3 308.0    318   -9.81 308.0</span></span>
-<span><span class="co">#&gt; 4 177.3    186   -8.97 177.3</span></span>
-<span><span class="co">#&gt; 5  61.4    191 -130.09  61.4</span></span>
-<span><span class="co">#&gt; 6 374.1    332   42.43 374.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;       y1 y1.hat        e       </span></span>
+<span><span class="co">#&gt; 1  81.13  130.5  -49.375  81.13</span></span>
+<span><span class="co">#&gt; 2 106.67  159.7  -53.037 106.67</span></span>
+<span><span class="co">#&gt; 3 308.03  317.8   -9.813 308.03</span></span>
+<span><span class="co">#&gt; 4 177.31  186.3   -8.971 177.31</span></span>
+<span><span class="co">#&gt; 5  61.39  191.5 -130.089  61.39</span></span>
+<span><span class="co">#&gt; 6 374.09  331.7   42.426 374.09</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lo stesso può dirsi di <span class="math inline">\(y_2\)</span>. La correlazione parziale <span class="math inline">\(r_{12 \mid f}\)</span> tra <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> dato <span class="math inline">\(f\)</span> è uguale alla correlazione di Pearson tra i residui <span class="math inline">\(e_1\)</span> e <span class="math inline">\(e_2\)</span> calcolati mediante i due modelli di regressione descritti sopra:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">fm1</span><span class="op">$</span><span class="va">res</span>, <span class="va">fm2</span><span class="op">$</span><span class="va">res</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0283</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.02829</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><br>
-La correlazione parziale tra <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> al netto di <span class="math inline">\(f\)</span> è .02829. Per i dati esaminati sopra, dunque, la correlazione parziale tra le variabili <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> diventa uguale a zero se la variabile <span class="math inline">\(f\)</span> viene controllata (ovvero, se escludiamo da <span class="math inline">\(y_1\)</span> e da <span class="math inline">\(y_2\)</span> l’effetto lineare di <span class="math inline">\(f\)</span>).</p>
+<p>La correlazione parziale tra <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> al netto di <span class="math inline">\(f\)</span> è .02829. Per i dati esaminati sopra, dunque, la correlazione parziale tra le variabili <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> diventa uguale a zero se la variabile <span class="math inline">\(f\)</span> viene controllata (ovvero, se escludiamo da <span class="math inline">\(y_1\)</span> e da <span class="math inline">\(y_2\)</span> l’effetto lineare di <span class="math inline">\(f\)</span>).</p>
 <p>Il fatto che la correlazione parziale sia zero significa che la correlazione che abbiamo osservato tra <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> (<span class="math inline">\(r = 0.355\)</span>) non dipendeva dall’effetto che una variabile <span class="math inline">\(y\)</span> esercitava sull’altra, ma bensì dal fatto che c’era una terza variabile, <span class="math inline">\(f\)</span>, che influenzava sia <span class="math inline">\(y_1\)</span> sia <span class="math inline">\(y_2\)</span>. In altre parole, le variabili <span class="math inline">\(y_1\)</span> e <span class="math inline">\(y_2\)</span> sono condizionalmente indipendenti dato <span class="math inline">\(f\)</span>. Ciò significa, come abbiamo visto sopra, che la componente di <span class="math inline">\(y_1\)</span> linearmente indipendente da <span class="math inline">\(f\)</span> è incorrelata con la componente di <span class="math inline">\(y_2\)</span> linearmente indipendente da <span class="math inline">\(f\)</span>.</p>
-<p>La correlazione che abbiamo calcolato tra i residui di due modelli di regressione è identica alla correlazione che viene calcolata applicando l’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span>28.4</span></a>:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<p>La correlazione che abbiamo calcolato tra i residui di due modelli di regressione è identica alla correlazione che viene calcolata applicando l’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span class="quarto-unresolved-ref">eq-corr-parz</span></a>:</p>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">R</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="va">R</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">*</span> <span class="va">R</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">R</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span> <span class="va">R</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0283</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.02828</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="principio-base-dellanalisi-fattoriale" class="level2" data-number="28.4"><h2 data-number="28.4" class="anchored" data-anchor-id="principio-base-dellanalisi-fattoriale">
 <span class="header-section-number">28.4</span> Principio base dell’analisi fattoriale</h2>
@@ -1194,7 +1191,7 @@ La correlazione parziale tra <span class="math inline">\(y_1\)</span> e <span cl
 <p>Un fattore è una variabile inosservabile in grado di rendere significativamente nulle tutte le correlazioni parziali tra le variabili manifeste.</p>
 </section><section id="vincoli-sulle-correlazioni" class="level2" data-number="28.5"><h2 data-number="28.5" class="anchored" data-anchor-id="vincoli-sulle-correlazioni">
 <span class="header-section-number">28.5</span> Vincoli sulle correlazioni</h2>
-<p>Come si può stabilire se esiste una variabile inosservabile in grado di rendere nulle tutte le correlazioni parziali tra le variabili osservate? Riscriviamo l’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span>28.4</span></a> per specificare la correlazione parziale tra le variabili <span class="math inline">\(y_i\)</span> e <span class="math inline">\(y_j\)</span> dato <span class="math inline">\(\xi\)</span>:</p>
+<p>Come si può stabilire se esiste una variabile inosservabile in grado di rendere nulle tutte le correlazioni parziali tra le variabili osservate? Riscriviamo l’<a href="#eq-corr-parz" class="quarto-xref">Equazione&nbsp;<span class="quarto-unresolved-ref">eq-corr-parz</span></a> per specificare la correlazione parziale tra le variabili <span class="math inline">\(y_i\)</span> e <span class="math inline">\(y_j\)</span> dato <span class="math inline">\(\xi\)</span>:</p>
 <p><span class="math display">\[
 \begin{align}
   r_{ij \mid \xi} &amp;= \frac{r_{ij} - r_{i\xi}r_{j\xi}}
@@ -1265,7 +1262,7 @@ r_{ij} = r_{i\xi}r_{j\xi}.
   \hline
 \end{array}
 \]</span></p>
-<p>Utilizzando l’<a href="#eq-tetradi" class="quarto-xref">Equazione&nbsp;<span>28.5</span></a>, mediante le correlazioni <span class="math inline">\(r_{cm}\)</span>, <span class="math inline">\(r_{em}\)</span>, e <span class="math inline">\(r_{ce}\)</span> fornite dalla tabella precedente, la saturazione <span class="math inline">\(\lambda_m\)</span> diventa uguale a:</p>
+<p>Utilizzando l’<a href="#eq-tetradi" class="quarto-xref">Equazione&nbsp;<span class="quarto-unresolved-ref">eq-tetradi</span></a>, mediante le correlazioni <span class="math inline">\(r_{cm}\)</span>, <span class="math inline">\(r_{em}\)</span>, e <span class="math inline">\(r_{ce}\)</span> fornite dalla tabella precedente, la saturazione <span class="math inline">\(\lambda_m\)</span> diventa uguale a:</p>
 <p><span class="math display">\[
 \begin{align}
   \hat{\lambda}_m &amp;= \sqrt{ \frac{r_{cm} r_{em}}{r_{ce}} } = \sqrt{
@@ -1378,19 +1375,19 @@ f1 ~ 1</code></pre>
 <pre><code>fit &lt;- cfa(model = my_model, data = my_data)</code></pre>
 </section><section id="un-esempio-concreto" class="level3" data-number="28.9.2"><h3 data-number="28.9.2" class="anchored" data-anchor-id="un-esempio-concreto">
 <span class="header-section-number">28.9.2</span> Un esempio concreto</h3>
-<p>Analizziamo nuovamente i dati di Spearman che abbiamo esaminato in precedenza usando <code>lavaan</code>. La matrice completa dei dati di Spearman è messa a disposizione da <span class="citation" data-cites="kan2019extending">Kan et al. (<a href="../../99-references.html#ref-kan2019extending" role="doc-biblioref">2019</a>)</span>.</p>
+<p>Analizziamo nuovamente i dati di Spearman che abbiamo esaminato in precedenza usando <code>lavaan</code>. La matrice completa dei dati di Spearman è messa a disposizione da <span class="citation" data-cites="kan2019extending">Kan et al. (<a href="#ref-kan2019extending" role="doc-biblioref">2019</a>)</span>.</p>
 <p>Specifichiamo il nome delle variabili manifeste</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">varnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Classics"</span>, <span class="st">"French"</span>, <span class="st">"English"</span>, <span class="st">"Math"</span>, <span class="st">"Pitch"</span>, <span class="st">"Music"</span></span>
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>e il loro numero</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ny</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">varnames</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Creiamo la matrice di correlazione:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">spearman_cor_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>    <span class="fl">1.00</span>,  <span class="fl">.83</span>,  <span class="fl">.78</span>,  <span class="fl">.70</span>,  <span class="fl">.66</span>,  <span class="fl">.63</span>,</span>
@@ -1414,17 +1411,17 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt; Music        0.63   0.57    0.51 0.51  0.40  1.00</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Specifichiamo l’ampiezza campionaria:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">33</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Definiamo il modello unifattoriale in <code>lavaan</code>. L’operatore <code>=~</code> si può leggere dicendo che la variabile latente a sinistra dell’operatore viene identificata dalle variabili manifeste elencate a destra dell’operatore e separate dal segno <code>+</code>. Per il caso presente, il modello dei due fattori di Spearman può essere specificato come segue.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">spearman_mod</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
 <span><span class="st">  g =~ Classics + French + English + Math + Pitch + Music</span></span>
 <span><span class="st">"</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Adattiamo il modello ai dati con la funzione <code>cfa()</code>:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu">lavaan</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span><span class="op">(</span></span>
 <span>  <span class="va">spearman_mod</span>,</span>
 <span>  sample.cov <span class="op">=</span> <span class="va">spearman_cor_mat</span>,</span>
@@ -1434,7 +1431,7 @@ f1 ~ 1</code></pre>
 </div>
 <p>La funzione <code>cfa()</code> è una funzione dedicata per adattare modelli di analisi fattoriale confermativa. Il primo argomento è il modello specificato dall’utente. Il secondo argomento è il dataset che contiene le variabili osservate. L’argomento <code>std.lv = TRUE</code> specifica che imponiamo una varianza pari a 1 a tutte le variabili latenti comuni (nel caso presente, solo una). Ciò consente di stimare le saturazioni fattoriali.</p>
 <p>Una volta adattato il modello, la funzione <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> ci consente di esaminare la soluzione ottenuta:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit1</span>, </span>
 <span>  fit.measures <span class="op">=</span> <span class="cn">TRUE</span>, </span>
@@ -1559,9 +1556,10 @@ f1 ~ 1</code></pre>
 <strong>Std.all</strong>: Fornisce le stime completamente standardizzate, considerando sia le variabili latenti sia quelle osservate, facilitando un confronto dei coefficienti in termini di deviazioni standard.</li>
 </ul>
 <p>Nella sezione delle <strong>Varianze</strong>, si osserva un punto prima dei nomi delle variabili osservate. Questo formato indica che sono variabili endogene, cioè predette dalle variabili latenti, e che il valore riportato rappresenta la varianza residua non spiegata dai predittori. Invece, le variabili latenti, che non hanno un punto prima del loro nome, sono considerate esogene; i valori riportati sono le loro varianze totali stimate.</p>
-<p>È possibile semplificare l’output dalla funzione <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> in maniera tale da stampare solo la tabella completa delle stime dei parametri e degli errori standard. Qui usiamo <code>coef(fit1)</code>.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span> </span>
+<p>È possibile semplificare l’output dalla funzione <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> in maniera tale da stampare solo la tabella completa delle stime dei parametri e degli errori standard.</p>
+<p>Usando <code><a href="https://rdrr.io/r/stats/coef.html">coef()</a></code>, l’output diventa il seguente.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        g=~Classics          g=~French         g=~English            g=~Math </span></span>
 <span><span class="co">#&gt;              0.942              0.857              0.795              0.732 </span></span>
 <span><span class="co">#&gt;           g=~Pitch           g=~Music Classics~~Classics     French~~French </span></span>
@@ -1570,22 +1568,22 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt;              0.338              0.434              0.510              0.556</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Usando <code>parameterEstimates</code>, l’output diventa il seguente.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">parameterEstimates</span><span class="op">(</span><span class="va">fit1</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         lhs op      rhs   est    se    z pvalue ci.lower ci.upper std.lv</span></span>
-<span><span class="co">#&gt; 1         g =~ Classics 0.942 0.129 7.31  0.000    0.689    1.194  0.942</span></span>
-<span><span class="co">#&gt; 2         g =~   French 0.857 0.137 6.24  0.000    0.588    1.127  0.857</span></span>
-<span><span class="co">#&gt; 3         g =~  English 0.795 0.143 5.54  0.000    0.514    1.076  0.795</span></span>
-<span><span class="co">#&gt; 4         g =~     Math 0.732 0.149 4.92  0.000    0.441    1.024  0.732</span></span>
-<span><span class="co">#&gt; 5         g =~    Pitch 0.678 0.153 4.44  0.000    0.379    0.978  0.678</span></span>
-<span><span class="co">#&gt; 6         g =~    Music 0.643 0.155 4.14  0.000    0.339    0.948  0.643</span></span>
-<span><span class="co">#&gt; 7  Classics ~~ Classics 0.083 0.051 1.63  0.103   -0.017    0.183  0.083</span></span>
-<span><span class="co">#&gt; 8    French ~~   French 0.234 0.072 3.24  0.001    0.093    0.376  0.234</span></span>
-<span><span class="co">#&gt; 9   English ~~  English 0.338 0.094 3.61  0.000    0.154    0.522  0.338</span></span>
-<span><span class="co">#&gt; 10     Math ~~     Math 0.434 0.115 3.77  0.000    0.208    0.659  0.434</span></span>
-<span><span class="co">#&gt; 11    Pitch ~~    Pitch 0.510 0.132 3.85  0.000    0.251    0.769  0.510</span></span>
-<span><span class="co">#&gt; 12    Music ~~    Music 0.556 0.143 3.89  0.000    0.276    0.836  0.556</span></span>
-<span><span class="co">#&gt; 13        g ~~        g 1.000 0.000   NA     NA    1.000    1.000  1.000</span></span>
+<span><span class="co">#&gt;         lhs op      rhs   est    se     z pvalue ci.lower ci.upper std.lv</span></span>
+<span><span class="co">#&gt; 1         g =~ Classics 0.942 0.129 7.314  0.000    0.689    1.194  0.942</span></span>
+<span><span class="co">#&gt; 2         g =~   French 0.857 0.137 6.239  0.000    0.588    1.127  0.857</span></span>
+<span><span class="co">#&gt; 3         g =~  English 0.795 0.143 5.545  0.000    0.514    1.076  0.795</span></span>
+<span><span class="co">#&gt; 4         g =~     Math 0.732 0.149 4.923  0.000    0.441    1.024  0.732</span></span>
+<span><span class="co">#&gt; 5         g =~    Pitch 0.678 0.153 4.438  0.000    0.379    0.978  0.678</span></span>
+<span><span class="co">#&gt; 6         g =~    Music 0.643 0.155 4.142  0.000    0.339    0.948  0.643</span></span>
+<span><span class="co">#&gt; 7  Classics ~~ Classics 0.083 0.051 1.629  0.103   -0.017    0.183  0.083</span></span>
+<span><span class="co">#&gt; 8    French ~~   French 0.234 0.072 3.244  0.001    0.093    0.376  0.234</span></span>
+<span><span class="co">#&gt; 9   English ~~  English 0.338 0.094 3.610  0.000    0.154    0.522  0.338</span></span>
+<span><span class="co">#&gt; 10     Math ~~     Math 0.434 0.115 3.773  0.000    0.208    0.659  0.434</span></span>
+<span><span class="co">#&gt; 11    Pitch ~~    Pitch 0.510 0.132 3.855  0.000    0.251    0.769  0.510</span></span>
+<span><span class="co">#&gt; 12    Music ~~    Music 0.556 0.143 3.893  0.000    0.276    0.836  0.556</span></span>
+<span><span class="co">#&gt; 13        g ~~        g 1.000 0.000    NA     NA    1.000    1.000  1.000</span></span>
 <span><span class="co">#&gt;    std.all</span></span>
 <span><span class="co">#&gt; 1    0.956</span></span>
 <span><span class="co">#&gt; 2    0.871</span></span>
@@ -1602,7 +1600,7 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt; 13   1.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Con opportuni parametri possiamo semplificare l’output nel modo seguente.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">parameterEstimates</span><span class="op">(</span><span class="va">fit1</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">op</span> <span class="op">==</span> <span class="st">"=~"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span></span>
@@ -1614,16 +1612,16 @@ f1 ~ 1</code></pre>
 <span>    <span class="st">"p-value"</span> <span class="op">=</span> <span class="va">pvalue</span>,</span>
 <span>    Beta <span class="op">=</span> <span class="va">std.all</span></span>
 <span>  <span class="op">)</span> </span>
-<span><span class="co">#&gt;   Latent.Factor Indicator     B    SE    Z p.value  Beta</span></span>
-<span><span class="co">#&gt; 1             g  Classics 0.942 0.129 7.31       0 0.956</span></span>
-<span><span class="co">#&gt; 2             g    French 0.857 0.137 6.24       0 0.871</span></span>
-<span><span class="co">#&gt; 3             g   English 0.795 0.143 5.54       0 0.807</span></span>
-<span><span class="co">#&gt; 4             g      Math 0.732 0.149 4.92       0 0.743</span></span>
-<span><span class="co">#&gt; 5             g     Pitch 0.678 0.153 4.44       0 0.689</span></span>
-<span><span class="co">#&gt; 6             g     Music 0.643 0.155 4.14       0 0.653</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;   Latent.Factor Indicator     B    SE     Z p.value  Beta</span></span>
+<span><span class="co">#&gt; 1             g  Classics 0.942 0.129 7.314       0 0.956</span></span>
+<span><span class="co">#&gt; 2             g    French 0.857 0.137 6.239       0 0.871</span></span>
+<span><span class="co">#&gt; 3             g   English 0.795 0.143 5.545       0 0.807</span></span>
+<span><span class="co">#&gt; 4             g      Math 0.732 0.149 4.923       0 0.743</span></span>
+<span><span class="co">#&gt; 5             g     Pitch 0.678 0.153 4.438       0 0.689</span></span>
+<span><span class="co">#&gt; 6             g     Music 0.643 0.155 4.142       0 0.653</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo la matrice delle correlazioni residue:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">fit1</span>, type <span class="op">=</span> <span class="st">"cor"</span><span class="op">)</span><span class="op">$</span><span class="va">cov</span> </span>
 <span><span class="co">#&gt;          Clsscs French Englsh   Math  Pitch  Music</span></span>
 <span><span class="co">#&gt; Classics  0.000                                   </span></span>
@@ -1634,7 +1632,7 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt; Music     0.005  0.001 -0.017  0.024 -0.050  0.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Creiamo un qq-plot dei residui:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">res1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html">residuals</a></span><span class="op">(</span><span class="va">fit1</span>, type <span class="op">=</span> <span class="st">"cor"</span><span class="op">)</span><span class="op">$</span><span class="va">cov</span></span>
 <span><span class="va">res1</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lower.tri.html">upper.tri</a></span><span class="op">(</span><span class="va">res1</span>, diag <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
 <span><span class="va">v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">res1</span><span class="op">)</span></span>
@@ -1654,7 +1652,7 @@ f1 ~ 1</code></pre>
 </section></section><section id="diagrammi-di-percorso" class="level2" data-number="28.10"><h2 data-number="28.10" class="anchored" data-anchor-id="diagrammi-di-percorso">
 <span class="header-section-number">28.10</span> Diagrammi di percorso</h2>
 <p>Il pacchetto <code>semPlot</code> consente di disegnare diagrammi di percorso per vari modelli SEM. La funzione <code>semPaths</code> prende in input un oggetto creato da <code>lavaan</code> e disegna il diagramma, con diverse opzioni disponibili. Il diagramma prodotto controlla le dimensioni dei caratteri/etichette, la visualizzazione dei residui e il colore dei percorsi/coefficienti. Sono disponibili queste e molte altre opzioni di controllo.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">semPaths</span><span class="op">(</span></span>
 <span>    <span class="va">fit1</span>,</span>
 <span>    <span class="st">"std"</span>,</span>
@@ -1683,13 +1681,13 @@ f1 ~ 1</code></pre>
 <span class="header-section-number">28.11</span> Analisi fattoriale esplorativa</h2>
 <p>Quando abbiamo un’unica variabile latente, l’analisi fattoriale confermativa si riduce al caso dell’analisi fattoriale esplorativa. Esaminiamo qui sotto la sintassi per l’analisi fattoriale esplorativa in <code>lavaan</code>.</p>
 <p>Specifichiamo il modello.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">efa_model</span> <span class="op">&lt;-</span> <span class="st">'</span></span>
 <span><span class="st">    efa("efa")*g =~ Classics + French + English + Math + Pitch + Music</span></span>
 <span><span class="st">'</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Adattiamo il modello ai dati.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu">lavaan</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/cfa.html">cfa</a></span><span class="op">(</span></span>
 <span>  <span class="va">efa_model</span>,</span>
 <span>  sample.cov <span class="op">=</span> <span class="va">spearman_cor_mat</span>,</span>
@@ -1698,7 +1696,7 @@ f1 ~ 1</code></pre>
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Esaminiamo la soluzione ottenuta.</p>
-<div class="cell" data-layout-align="center" data-lines_to_next_cell="2" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit2</span>, standardized <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
 <span><span class="co">#&gt; lavaan 0.6-19 ended normally after 3 iterations</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1746,7 +1744,7 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt;    .Music             0.556    0.143    3.893    0.000    0.556    0.573</span></span>
 <span><span class="co">#&gt;     g                 1.000                               1.000    1.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">semPaths</span><span class="op">(</span></span>
 <span>    <span class="va">fit2</span>,</span>
 <span>    <span class="st">"std"</span>,</span>
@@ -1770,11 +1768,11 @@ f1 ~ 1</code></pre>
 <p>L’analisi della dimensionalità di un insieme di indicatori rappresenta, quindi, una fase cruciale nel processo di costruzione di un test. Solitamente, questa valutazione viene effettuata attraverso l’analisi fattoriale. In questo capitolo, abbiamo descritto le proprietà di base del modello unifattoriale, gettando le fondamenta per una comprensione più approfondita della dimensionalità e dell’influenza di un singolo tratto latente sugli indicatori.</p>
 </section><section id="session-info" class="level2" data-number="28.13"><h2 data-number="28.13" class="anchored" data-anchor-id="session-info">
 <span class="header-section-number">28.13</span> Session Info</h2>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
+<div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.1</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -1791,28 +1789,28 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] lavaanExtra_0.2.1 lavaanPlot_0.8.1  kableExtra_1.4.0  corrplot_0.95    </span></span>
-<span><span class="co">#&gt;  [5] ggokabeito_0.1.0  see_0.10.0        MASS_7.3-65       viridis_0.6.5    </span></span>
+<span><span class="co">#&gt;  [5] ggokabeito_0.1.0  see_0.11.0        MASS_7.3-65       viridis_0.6.5    </span></span>
 <span><span class="co">#&gt;  [9] viridisLite_0.4.2 ggpubr_0.6.0      ggExtra_0.10.1    gridExtra_2.3    </span></span>
 <span><span class="co">#&gt; [13] patchwork_1.3.0   bayesplot_1.11.1  semTools_0.5-6    semPlot_1.1.6    </span></span>
 <span><span class="co">#&gt; [17] lavaan_0.6-19     psych_2.4.12      scales_1.3.0      markdown_1.13    </span></span>
-<span><span class="co">#&gt; [21] knitr_1.49        lubridate_1.9.4   forcats_1.0.0     stringr_1.5.1    </span></span>
+<span><span class="co">#&gt; [21] knitr_1.50        lubridate_1.9.4   forcats_1.0.0     stringr_1.5.1    </span></span>
 <span><span class="co">#&gt; [25] dplyr_1.1.4       purrr_1.0.4       readr_2.1.5       tidyr_1.3.1      </span></span>
 <span><span class="co">#&gt; [29] tibble_3.2.1      ggplot2_3.5.1     tidyverse_2.0.0   here_1.0.1       </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] RColorBrewer_1.1-3  rstudioapi_0.17.1   jsonlite_1.9.0     </span></span>
+<span><span class="co">#&gt;   [1] RColorBrewer_1.1-3  rstudioapi_0.17.1   jsonlite_1.9.1     </span></span>
 <span><span class="co">#&gt;   [4] magrittr_2.0.3      TH.data_1.1-3       estimability_1.5.1 </span></span>
-<span><span class="co">#&gt;   [7] farver_2.1.2        nloptr_2.1.1        rmarkdown_2.29     </span></span>
+<span><span class="co">#&gt;   [7] farver_2.1.2        nloptr_2.2.1        rmarkdown_2.29     </span></span>
 <span><span class="co">#&gt;  [10] vctrs_0.6.5         minqa_1.2.8         base64enc_0.1-3    </span></span>
 <span><span class="co">#&gt;  [13] rstatix_0.7.2       htmltools_0.5.8.1   broom_1.0.7        </span></span>
 <span><span class="co">#&gt;  [16] Formula_1.2-5       htmlwidgets_1.6.4   plyr_1.8.9         </span></span>
 <span><span class="co">#&gt;  [19] sandwich_3.1-1      emmeans_1.10.7      zoo_1.8-13         </span></span>
-<span><span class="co">#&gt;  [22] igraph_2.1.4        mime_0.12           lifecycle_1.0.4    </span></span>
-<span><span class="co">#&gt;  [25] pkgconfig_2.0.3     Matrix_1.7-2        R6_2.6.1           </span></span>
+<span><span class="co">#&gt;  [22] igraph_2.1.4        mime_0.13           lifecycle_1.0.4    </span></span>
+<span><span class="co">#&gt;  [25] pkgconfig_2.0.3     Matrix_1.7-3        R6_2.6.1           </span></span>
 <span><span class="co">#&gt;  [28] fastmap_1.2.0       rbibutils_2.3       shiny_1.10.0       </span></span>
 <span><span class="co">#&gt;  [31] numDeriv_2016.8-1.1 digest_0.6.37       OpenMx_2.21.13     </span></span>
 <span><span class="co">#&gt;  [34] fdrtool_1.2.18      colorspace_2.1-1    rprojroot_2.0.4    </span></span>
-<span><span class="co">#&gt;  [37] Hmisc_5.2-2         labeling_0.4.3      timechange_0.3.0   </span></span>
+<span><span class="co">#&gt;  [37] Hmisc_5.2-3         labeling_0.4.3      timechange_0.3.0   </span></span>
 <span><span class="co">#&gt;  [40] abind_1.4-8         compiler_4.4.2      withr_3.0.2        </span></span>
 <span><span class="co">#&gt;  [43] glasso_1.11         htmlTable_2.4.3     backports_1.5.0    </span></span>
 <span><span class="co">#&gt;  [46] carData_3.0-5       ggsignif_0.6.4      corpcor_1.6.10     </span></span>
@@ -1821,28 +1819,28 @@ f1 ~ 1</code></pre>
 <span><span class="co">#&gt;  [55] nnet_7.3-20         glue_1.8.0          quadprog_1.5-8     </span></span>
 <span><span class="co">#&gt;  [58] DiagrammeR_1.0.11   nlme_3.1-167        promises_1.3.2     </span></span>
 <span><span class="co">#&gt;  [61] lisrelToR_0.3       grid_4.4.2          checkmate_2.3.2    </span></span>
-<span><span class="co">#&gt;  [64] cluster_2.1.8       reshape2_1.4.4      generics_0.1.3     </span></span>
-<span><span class="co">#&gt;  [67] gtable_0.3.6        tzdb_0.4.0          data.table_1.17.0  </span></span>
-<span><span class="co">#&gt;  [70] hms_1.1.3           xml2_1.3.7          car_3.1-3          </span></span>
+<span><span class="co">#&gt;  [64] cluster_2.1.8.1     reshape2_1.4.4      generics_0.1.3     </span></span>
+<span><span class="co">#&gt;  [67] gtable_0.3.6        tzdb_0.5.0          data.table_1.17.0  </span></span>
+<span><span class="co">#&gt;  [70] hms_1.1.3           xml2_1.3.8          car_3.1-3          </span></span>
 <span><span class="co">#&gt;  [73] sem_3.1-16          pillar_1.10.1       rockchalk_1.8.157  </span></span>
 <span><span class="co">#&gt;  [76] later_1.4.1         splines_4.4.2       lattice_0.22-6     </span></span>
 <span><span class="co">#&gt;  [79] survival_3.8-3      kutils_1.73         tidyselect_1.2.1   </span></span>
 <span><span class="co">#&gt;  [82] miniUI_0.1.1.1      pbapply_1.7-2       reformulas_0.4.0   </span></span>
 <span><span class="co">#&gt;  [85] svglite_2.1.3       stats4_4.4.2        xfun_0.51          </span></span>
 <span><span class="co">#&gt;  [88] qgraph_1.9.8        arm_1.14-4          visNetwork_2.1.2   </span></span>
-<span><span class="co">#&gt;  [91] stringi_1.8.4       yaml_2.3.10         pacman_0.5.1       </span></span>
-<span><span class="co">#&gt;  [94] boot_1.3-31         evaluate_1.0.3      codetools_0.2-20   </span></span>
-<span><span class="co">#&gt;  [97] mi_1.1              cli_3.6.4           RcppParallel_5.1.10</span></span>
-<span><span class="co">#&gt; [100] rpart_4.1.24        systemfonts_1.2.1   xtable_1.8-4       </span></span>
-<span><span class="co">#&gt; [103] Rdpack_2.6.2        munsell_0.5.1       Rcpp_1.0.14        </span></span>
-<span><span class="co">#&gt; [106] coda_0.19-4.1       png_0.1-8           XML_3.99-0.18      </span></span>
-<span><span class="co">#&gt; [109] parallel_4.4.2      jpeg_0.1-10         lme4_1.1-36        </span></span>
-<span><span class="co">#&gt; [112] mvtnorm_1.3-3       openxlsx_4.2.8      rlang_1.1.5        </span></span>
-<span><span class="co">#&gt; [115] multcomp_1.4-28     mnormt_2.1.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  [91] stringi_1.8.4       pacman_0.5.1        boot_1.3-31        </span></span>
+<span><span class="co">#&gt;  [94] evaluate_1.0.3      codetools_0.2-20    mi_1.1             </span></span>
+<span><span class="co">#&gt;  [97] cli_3.6.4           RcppParallel_5.1.10 rpart_4.1.24       </span></span>
+<span><span class="co">#&gt; [100] systemfonts_1.2.1   xtable_1.8-4        Rdpack_2.6.3       </span></span>
+<span><span class="co">#&gt; [103] munsell_0.5.1       Rcpp_1.0.14         coda_0.19-4.1      </span></span>
+<span><span class="co">#&gt; [106] png_0.1-8           XML_3.99-0.18       parallel_4.4.2     </span></span>
+<span><span class="co">#&gt; [109] jpeg_0.1-10         lme4_1.1-36         mvtnorm_1.3-3      </span></span>
+<span><span class="co">#&gt; [112] openxlsx_4.2.8      rlang_1.1.5         multcomp_1.4-28    </span></span>
+<span><span class="co">#&gt; [115] mnormt_2.1.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-kan2019extending" class="csl-entry" role="listitem">
 Kan, K.-J., Maas, H. L. van der, &amp; Levine, S. Z. (2019). Extending psychometric network analysis: Empirical evidence against g in favor of mutualism? <em>Intelligence</em>, <em>73</em>, 52–62.
 </div>
