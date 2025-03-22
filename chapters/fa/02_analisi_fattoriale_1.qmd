@@ -1,9 +1,5 @@
 # Il modello unifattoriale {#sec-fa-unifactor-model}
 
-::: {.chapterintro data-latex=""}
-L'analisi fattoriale è un modello statistico che consente di spiegare le correlazioni tra variabili osservate mediante la loro saturazione in uno o più fattori generali. In questo modello, le $p$ variabili osservate (item) sono considerate condizionalmente indipendenti rispetto a $m$ variabili latenti chiamate fattori. L'obiettivo dell'analisi fattoriale è di interpretare questi fattori come costrutti teorici inosservabili. Ad esempio, l'analisi fattoriale può essere utilizzata per spiegare le correlazioni tra le prestazioni di un gruppo di individui in una serie di compiti mediante il concetto di intelligenza. In questo modo, l'analisi fattoriale aiuta a identificare i costrutti cui gli item si riferiscono e a stabilire in che misura ciascun item rappresenta il costrutto. Il modello può essere unifattoriale ($m = 1$) o multifattoriale ($m > 1$), e in questo capitolo si introdurrà il modello unifattoriale che assume l'esistenza di un unico fattore comune latente.
-:::
-
 **Prerequisiti**
 
 - Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
@@ -17,15 +13,16 @@ L'analisi fattoriale è un modello statistico che consente di spiegare le correl
 **Preparazione del Notebook**
 
 ```{r}
-#| vscode: {languageId: r}
 # Carica il file _common.R per impostazioni di pacchetti e opzioni
 here::here("code", "_common.R") |> source()
 
 # Carica pacchetti aggiuntivi
-pacman::p_load(corrplot, tidyr, kableExtra, lavaanPlot, lavaanExtra)
+pacman::p_load(lavaan, corrplot, tidyr, kableExtra, lavaanPlot, lavaanExtra)
 ```
 
 ## Introduzione
+
+L'analisi fattoriale è un modello statistico che consente di spiegare le correlazioni tra variabili osservate mediante la loro saturazione in uno o più fattori generali. In questo modello, le $p$ variabili osservate (item) sono considerate condizionalmente indipendenti rispetto a $m$ variabili latenti chiamate fattori. L'obiettivo dell'analisi fattoriale è di interpretare questi fattori come costrutti teorici inosservabili. Ad esempio, l'analisi fattoriale può essere utilizzata per spiegare le correlazioni tra le prestazioni di un gruppo di individui in una serie di compiti mediante il concetto di intelligenza. In questo modo, l'analisi fattoriale aiuta a identificare i costrutti cui gli item si riferiscono e a stabilire in che misura ciascun item rappresenta il costrutto. Il modello può essere unifattoriale ($m = 1$) o multifattoriale ($m > 1$), e in questo capitolo si introdurrà il modello unifattoriale che assume l'esistenza di un unico fattore comune latente.
 
 Nel contesto dell'analisi fattoriale, i costrutti teorici di interesse vengono rappresentati da variabili latenti, che riflettono le comunanze sottostanti tra un insieme di variabili manifeste (ovvero misurabili). Le variabili manifeste, come gli item di un questionario o gli indici derivati da un compito comportamentale, sono direttamente osservabili e vengono solitamente rappresentate graficamente come quadrati. Al contrario, le variabili latenti descrivono costrutti ipotetici non direttamente osservabili, come un fattore latente di intelligenza o memoria, e sono rappresentate come cerchi nei diagrammi.
 
@@ -94,7 +91,6 @@ In particolare, la correlazione parziale $r_{1,2 \mid F}$ è data dalla differen
 Consideriamo un esempio numerico. Sia $f$ una variabile su cui misuriamo $n$ valori
 
 ```{r}
-#| vscode: {languageId: r}
 set.seed(123)
 n <- 1000
 f <- rnorm(n, 24, 12)
@@ -103,7 +99,6 @@ f <- rnorm(n, 24, 12)
 Siano $y_1$ e $y_2$ funzioni lineari di $f$, a cui viene aggiunta una componente d'errore gaussiano:
 
 ```{r}
-#| vscode: {languageId: r}
 y1 <- 10 + 7 * f + rnorm(n, 0, 50)
 y2 <- 3  + 2 * f + rnorm(n, 0, 50)
 ```
@@ -111,7 +106,6 @@ y2 <- 3  + 2 * f + rnorm(n, 0, 50)
 La correlazione tra $y_1$ e $y_2$ ($r_{12}= 0.355$) deriva dal fatto che $\hat{y}_1$ e $\hat{y}_2$ sono entrambe funzioni lineari di $f$:
 
 ```{r}
-#| vscode: {languageId: r}
 Y <- cbind(y1, y2, f)
 cor(Y) |>
     round(3)
@@ -120,7 +114,6 @@ cor(Y) |>
 Eseguiamo le regressioni di $y_1$ su $f$ e di $y_2$ su $F$:
 
 ```{r}
-#| vscode: {languageId: r}
 fm1 <- lm(y1 ~ f)
 fm2 <- lm(y2 ~ f)
 ```
@@ -128,7 +121,6 @@ fm2 <- lm(y2 ~ f)
 Nella regressione, ciascuna osservazione $y_{i1}$ viene scomposta in due componenti linearmente indipendenti, i valori adattati $\hat{y}_{i}$ e i residui, $e_{i}$: $y_i = \hat{y}_i + e_1$. Nel caso di $y_1$ abbiamo
 
 ```{r}
-#| vscode: {languageId: r}
 cbind(y1, y1.hat=fm1$fit, e=fm1$res, fm1$fit+fm1$res) |>
     head() |>
     round(3)
@@ -140,11 +132,9 @@ residui $e_1$ e $e_2$ calcolati mediante i due modelli di regressione
 descritti sopra:
 
 ```{r}
-#| vscode: {languageId: r}
 cor(fm1$res, fm2$res)
 ```
 
-\
 La correlazione parziale tra $y_1$ e $y_2$ al netto di $f$ è .02829. Per i dati esaminati sopra, dunque, la correlazione parziale tra le variabili $y_1$ e $y_2$ diventa uguale a zero se la variabile $f$ viene controllata (ovvero, se escludiamo da $y_1$ e da $y_2$ l'effetto lineare
 di $f$). 
 
@@ -163,7 +153,6 @@ regressione è identica alla correlazione che viene calcolata
 applicando l'@eq-corr-parz:
 
 ```{r}
-#| vscode: {languageId: r}
 R <- cor(Y)
 
 (R[1, 2] - R[1, 3] * R[2, 3]) / 
@@ -457,7 +446,6 @@ Analizziamo nuovamente i dati di Spearman che abbiamo esaminato in precedenza us
 Specifichiamo il nome delle variabili manifeste
 
 ```{r}
-#| vscode: {languageId: r}
 varnames <- c(
   "Classics", "French", "English", "Math", "Pitch", "Music"
 )
@@ -466,14 +454,12 @@ varnames <- c(
 e il loro numero
 
 ```{r}
-#| vscode: {languageId: r}
 ny <- length(varnames)
 ```
 
 Creiamo la matrice di correlazione:
 
 ```{r}
-#| vscode: {languageId: r}
 spearman_cor_mat <- matrix(
   c(
     1.00,  .83,  .78,  .70,  .66,  .63,
@@ -493,14 +479,12 @@ spearman_cor_mat
 Specifichiamo l'ampiezza campionaria:
 
 ```{r}
-#| vscode: {languageId: r}
 n <- 33
 ```
 
 Definiamo il modello unifattoriale in `lavaan`. L'operatore `=~` si può leggere dicendo che la variabile latente a sinistra dell'operatore viene identificata dalle variabili manifeste elencate a destra dell'operatore e separate dal segno `+`. Per il caso presente, il modello dei due fattori di Spearman può essere specificato come segue.
 
 ```{r}
-#| vscode: {languageId: r}
 spearman_mod <- "
   g =~ Classics + French + English + Math + Pitch + Music
 "
@@ -509,7 +493,6 @@ spearman_mod <- "
 Adattiamo il modello ai dati con la funzione `cfa()`:
 
 ```{r}
-#| vscode: {languageId: r}
 fit1 <- lavaan::cfa(
   spearman_mod,
   sample.cov = spearman_cor_mat,
@@ -523,7 +506,6 @@ La funzione `cfa()` è una funzione dedicata per adattare modelli di analisi fat
 Una volta adattato il modello, la funzione `summary()` ci consente di esaminare la soluzione ottenuta:
 
 ```{r}
-#| vscode: {languageId: r}
 out = summary(
   fit1, 
   fit.measures = TRUE, 
@@ -559,24 +541,23 @@ L'output di `lavaan` si divide in tre sezioni principali:
 
 Nella sezione delle **Varianze**, si osserva un punto prima dei nomi delle variabili osservate. Questo formato indica che sono variabili endogene, cioè predette dalle variabili latenti, e che il valore riportato rappresenta la varianza residua non spiegata dai predittori. Invece, le variabili latenti, che non hanno un punto prima del loro nome, sono considerate esogene; i valori riportati sono le loro varianze totali stimate.
 
-È possibile semplificare l'output dalla funzione `summary()` in maniera tale da stampare solo la tabella completa delle stime dei parametri e degli errori standard. Qui usiamo `coef(fit1)`.
+È possibile semplificare l'output dalla funzione `summary()` in maniera tale da stampare solo la tabella completa delle stime dei parametri e degli errori standard. 
+
+Usando `coef()`, l'output diventa il seguente.
 
 ```{r}
-#| vscode: {languageId: r}
-coef(fit1) 
+coef(fit1)
 ```
 
 Usando `parameterEstimates`, l'output diventa il seguente.
 
 ```{r}
-#| vscode: {languageId: r}
 parameterEstimates(fit1, standardized = TRUE)
 ```
 
 Con opportuni parametri possiamo semplificare l'output nel modo seguente.
 
 ```{r}
-#| vscode: {languageId: r}
 parameterEstimates(fit1, standardized = TRUE) |>
   dplyr::filter(op == "=~") |>
   dplyr::select(
@@ -593,14 +574,12 @@ parameterEstimates(fit1, standardized = TRUE) |>
 Esaminiamo la matrice delle correlazioni residue:
 
 ```{r}
-#| vscode: {languageId: r}
 residuals(fit1, type = "cor")$cov 
 ```
 
 Creiamo un qq-plot dei residui:
 
 ```{r}
-#| vscode: {languageId: r}
 res1 <- residuals(fit1, type = "cor")$cov
 res1[upper.tri(res1, diag = TRUE)] <- NA
 v1 <- as.vector(res1)
@@ -617,7 +596,6 @@ tibble(v2) %>%
 Il pacchetto `semPlot` consente di disegnare diagrammi di percorso per vari modelli SEM. La funzione `semPaths` prende in input un oggetto creato da `lavaan` e disegna il diagramma, con diverse opzioni disponibili. Il diagramma prodotto controlla le dimensioni dei caratteri/etichette, la visualizzazione dei residui e il colore dei percorsi/coefficienti. Sono disponibili queste e molte altre opzioni di controllo. 
 
 ```{r}
-#| vscode: {languageId: r}
 semPaths(
     fit1,
     "std",
@@ -645,7 +623,6 @@ Quando abbiamo un'unica variabile latente, l'analisi fattoriale confermativa si 
 Specifichiamo il modello.
 
 ```{r}
-#| vscode: {languageId: r}
 efa_model <- '
     efa("efa")*g =~ Classics + French + English + Math + Pitch + Music
 '
@@ -654,7 +631,6 @@ efa_model <- '
 Adattiamo il modello ai dati.
 
 ```{r}
-#| vscode: {languageId: r}
 fit2 <- lavaan::cfa(
   efa_model,
   sample.cov = spearman_cor_mat,
@@ -666,13 +642,10 @@ fit2 <- lavaan::cfa(
 Esaminiamo la soluzione ottenuta.
 
 ```{r}
-#| lines_to_next_cell: 2
-#| vscode: {languageId: r}
 summary(fit2, standardized = TRUE) 
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 semPaths(
     fit2,
     "std",
@@ -695,7 +668,6 @@ L’analisi della dimensionalità di un insieme di indicatori rappresenta, quind
 ## Session Info
 
 ```{r}
-#| vscode: {languageId: r}
 sessionInfo()
 ```
 

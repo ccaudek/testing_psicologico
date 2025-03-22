@@ -1,99 +1,72 @@
 # I punteggi fattoriali {#sec-fa-factor-scores}
 
-**Prerequisiti**
+::: callout-important
+## In questo capitolo imparerai a
+
+- calcolare e interpretare i punteggi fattoriali.
+:::
+
+::: callout-tip
+## Prerequisiti
 
 - Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
 
-**Concetti e Competenze Chiave**
-
-**Preparazione del Notebook**
+::: callout-caution
+## Preparazione del Notebook
 
 ```{r}
-#| vscode: {languageId: r}
-# Carica il file _common.R per impostazioni di pacchetti e opzioni
-here::here("code", "_common.R") |> source()
+here::here("code", "_common.R") |> 
+  source()
 
-# Carica pacchetti aggiuntivi
+if (!requireNamespace("pacman")) install.packages("pacman")
 pacman::p_load(lavaan, semPlot, corrplot, tidyr, kableExtra)
 ```
+:::
 
-Uno dei momenti più difficili nel processo di sviluppo di un test
-psicometrico è quello dell'interpretazione dei fattori. La verifica del
-livello di affidabilità rivela il grado di precisione delle misure
-ottenute ma non fornisce alcuna informazione sulla natura di ciò che si
-sta misurando. Non esistono specifiche indicazioni che guidino il lavoro
-interpretativo. Dipende, perciò, dalla capacità e dall'esperienza del
-ricercatore cogliere il significato comune delle variabili confluite in
-un fattore, attenendosi alla realtà delle singole variabili senza
-fornire interpretazioni fantasiose. È importante rendersi conto che sia
-la scelta del metodo di estrazione dei fattori, sia il problema del
-numero dei fattori da estrarre, sia la scelta del metodo con cui
-effettuare la rotazione, rendono molto arbitraria l'interpretazione
-della soluzione fattoriale.
 
-I passaggi teorici necessari per interpretare una matrice fattoriale
-ruotata possono essere descritti nel modo seguente.
+## Introduzione
 
-1.  Si definisce un livello arbitrario per le saturazioni che ci indichi
-    il limite oltre il quale non riteniamo le variabili sufficientemente
-    importanti per caratterizzare quel determinato fattore. Solitamente
-    si sceglie la soglia di .40. In casi particolari è possibile usare
-    valori maggiori o minori di questo, a seconda che si abbia un numero
-    ristretto o troppo ampio di variabili da interpretare.
+Uno dei passaggi più complessi e delicati nello sviluppo di un test psicometrico è rappresentato dall’**interpretazione dei fattori**. Mentre la verifica dell’affidabilità consente di stimare la precisione delle misure ottenute (ossia, quanto sono stabili e coerenti), essa **non fornisce informazioni sul contenuto** o sulla natura psicologica delle dimensioni che il test intende misurare.
 
-2.  Si ordinano le saturazioni delle variabili del fattore in ordine
-    decrescente (in valore assoluto), fermandosi al livello prescelto.
+L’interpretazione dei fattori è un processo eminentemente **concettuale e teorico**, che non è guidato da regole univoche. Non esistono criteri oggettivi e definitivi per "leggere" i fattori: molto dipende dalla **competenza del ricercatore**, dalla sua conoscenza del dominio teorico, e dalla sua capacità di individuare un significato comune tra le variabili che saturano su ciascun fattore. È fondamentale, tuttavia, che tale interpretazione sia **ancorata ai dati** e non frutto di libere associazioni o intuizioni arbitrarie.
 
-3.  Si scrive accanto ad ogni saturazione la denominazione della
-    variabile corrispondente (o il testo dell'item).
+Va inoltre ricordato che **le scelte effettuate durante l’analisi fattoriale** — ad esempio, il metodo di estrazione, il numero di fattori da mantenere, il tipo di rotazione (ortogonale o obliqua) — **influenzano profondamente la soluzione ottenuta** e, di conseguenza, anche la sua interpretazione. Questo implica che l’intero processo sia in parte soggettivo e debba essere condotto con cautela.
 
-4.  Tenendo presente il dominio di indagine, le teorie di riferimento ed
-    eventuali risultati precedenti, si cerca di stabilire quale sia il
-    tratto, caratteristica o aspetto che queste variabili abbiano in
-    comune, in modo da poter in modo da poter "nominare" il fattore che
-    definisce questo tratto comune. In questo processo interpretativo
-    gli item con le saturazioni maggiori contribuiscono in misura
-    maggiore alla definizione del carattere comune del fattore e,
-    viceversa, ciò che è stato individuato come tratto comune delle
-    variabili deve comparire in maggior grado nelle variabili più
-    sature.
+### Passaggi per l'interpretazione di una matrice fattoriale ruotata
 
-5.  Il segno negativo di una saturazione indica solamente un'opposizione
-    rispetto alle saturazioni positive. Il tratto comune alle variabili
-    dovrebbe essere pensato come un continuum che passa dalla sua
-    massima presenza al suo opposto. Per procedere all'interpretazione
-    conviene iniziare dalle variabili il cui segno è più frequente e
-    considerarle come se fossero positive; di conseguenza, le altre
-    (siano esse di segno positivo o negativo) devono essere considerate
-    di segno opposto.
+La procedura per interpretare una matrice dei carichi fattoriali dopo una rotazione può essere articolata nei seguenti passaggi:
 
-6.  Nel caso in cui non si riesca a riscontrare nessun tratto comune
-    alle variabili del fattore, si dovrà concludere che il fattore non è
-    interpretabile e che le variabili sono state tra loro associate per
-    un errore attribuibile o al campione o alla misurazione delle
-    variabili stesse. Normalmente i "primi" fattori estratti sono
-    facilmente interpretabili mentre gli "ultimi", soprattutto se ne
-    sono stati estratti molti o se la matrice delle correlazioni
-    iniziale fra le variabili contiene molti valori bassi, sono spesso
-    difficilmente interpretabili o saturi di una sola variabile e quindi
-    fattori specifici di quella variabile. In linea di massima se i
-    fattori non interpretabili sono molti è meglio non considerare
-    affatto i risultati dell'analisi fattoriale.
+1. **Definizione di una soglia per i carichi fattoriali**  
+   Si stabilisce un valore soglia (ad esempio, |.40|) al di sotto del quale le saturazioni vengono considerate troppo deboli per contribuire significativamente alla definizione del fattore. Valori più alti (es. .50 o .60) o più bassi possono essere usati in base al numero di item e alla chiarezza della soluzione.
 
-### Esempio di interpretazione
+2. **Ordinamento dei carichi**  
+   Le saturazioni (in valore assoluto) vengono ordinate in senso decrescente per ciascun fattore, partendo da quelle più forti fino alla soglia stabilita.
 
-Il WISC-III (Wechsler Intelligence Scale For Children - III) valuta
-l'abilità intellettiva di soggetti dai 6 ai 16 anni e 11 mesi. I subtest
-sono stati selezionati per valutare diverse abilità mentali, che tutte
-insieme indicano l'abilità intellettiva generale del bambino. Alcuni gli
-richiedono un ragionamento astratto, altri si focalizzano sulla memoria,
-altri ancora richiedono certe abilità percettive e così via.
+3. **Identificazione delle variabili**  
+   A ciascun carico si associa la descrizione della variabile o dell’item corrispondente, per facilitare l’analisi del contenuto.
 
-Si consideri la matrice di correlazione tra i subtest della scala
-WISC-III riportata dal manuale.
+4. **Attribuzione di un’etichetta teorica al fattore**  
+   Considerando il contenuto degli item, il dominio teorico di riferimento e i risultati di studi precedenti, si cerca di individuare un tratto psicologico comune che li unisca. Tale tratto definisce l’etichetta interpretativa del fattore. Gli item con carichi più elevati contribuiscono maggiormente alla definizione di questo tratto.
+
+5. **Interpretazione del segno delle saturazioni**  
+   Il segno negativo di un carico indica semplicemente una direzione opposta rispetto alle saturazioni positive. Il tratto psicologico rappresentato dal fattore può essere visto come un **continuum**: le variabili con segno opposto si trovano alle estremità opposte di tale continuum. È spesso utile iniziare l’interpretazione considerando le saturazioni con il segno più frequente come “positive”, per poi interpretare le altre come opposte.
+
+6. **Fattori non interpretabili**  
+   Se non si riesce a identificare un tratto comune tra le variabili che saturano su un fattore, si può concludere che il fattore **non è interpretabile**. Questo può essere dovuto a errori di campionamento, rumore nella misurazione, o alla presenza di variabili che non condividono un contenuto psicologico coerente. È comune che i primi fattori estratti siano interpretabili, mentre gli ultimi — soprattutto se si sono estratti molti fattori o se la matrice delle correlazioni è debole — risultino ambigui o saturi di una sola variabile, diventando di fatto fattori “specifici”. Se molti fattori non risultano interpretabili, è preferibile **rivalutare l’intera analisi fattoriale**.
+
+
+## Esempio di interpretazione: la scala WISC-III
+
+Il **WISC-III** (*Wechsler Intelligence Scale for Children – III*) è uno strumento standardizzato per la valutazione dell’intelligenza nei bambini e adolescenti dai 6 ai 16 anni e 11 mesi. I **subtest** che lo compongono sono progettati per misurare differenti abilità cognitive, contribuendo alla stima del Quoziente Intellettivo globale.
+
+Alcuni subtest richiedono abilità verbali e di ragionamento astratto, altri valutano la memoria a breve termine, altri ancora sollecitano competenze visuo-percettive e di coordinazione motoria.
+
+### Matrice di correlazione tra i subtest
+
+Consideriamo ora la matrice di correlazione tra i subtest del WISC-III (tratta dal manuale italiano):
 
 ```{r}
-#| vscode: {languageId: r}
 lower <- '
 1
 .66      1
@@ -112,7 +85,6 @@ lower <- '
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 wisc_III_cov <- getCov(
   lower,
   names = c(
@@ -120,80 +92,66 @@ wisc_III_cov <- getCov(
     "CODING", "PICTARG", "BLOCK", "OBJECT", "SYMBOL", "MAZES"
   )
 )
+wisc_III_cov
 ```
 
-Eseguiamo l'analisi fattoriale con il metodo delle componenti principali
-e una rotazione Varimax:
+### Analisi fattoriale
+
+Applichiamo un’**analisi delle componenti principali** con **rotazione Varimax** (ortogonale), e scegliamo di estrarre 3 fattori:
 
 ```{r}
-#| vscode: {languageId: r}
 f_pc <- psych::principal(wisc_III_cov, nfactors = 3, rotate = "varimax")
 print(f_pc)
 ```
 
-Si noti che i primi cinque subtest possiedono saturazioni maggiori di $0.6$ sul primo fattore. Dato che questi test sono tutti presentati verbalmente e richiedono delle risposte verbali, tale fattore può essere denominato *Comprensione Verbale*.
+### Interpretazione dei fattori
 
-I subtest "Cifrario" e "Ricerca di simboli" saturano sul secondo fattore. Entrambi i subtest misurano la velocità dei processi di codifica o ricerca. Questo fattore, dunque, può essere denominato *Velocità di elaborazione*.
+Dai risultati:
 
-Infine, i subtest "Completamento di figure," "Disegno con i cubi," "Riordinamento di storie figurate" e "Labirinti" saturano sul terzo fattore. Tutti questi test condividono una componente geometrica o configurazionale: misurano infatti le abilità necessarie per la manipolazione o la disposizione di immagini, oggetti, blocchi. Questo fattore, dunque, può essere denominato *Organizzazione percettiva*.
+- I primi cinque subtest (“Informazioni”, “Somiglianze”, “Aritmetica”, “Vocabolario”, “Comprensione”) presentano **saturazioni elevate (oltre .60)** sul primo fattore. Questi item implicano la comprensione e produzione di linguaggio, e richiedono un buon livello di ragionamento verbale. È quindi coerente denominare questo fattore **Comprensione Verbale**.
 
-Nel caso di una rotazione ortogonale, la comunalità di ciascuna sottoscala è uguale alla somma delle saturazioni fattoriali al quadrato della sottoscala nei fattori. 
+- I subtest “Cifrario” e “Ricerca di simboli” saturano sul **secondo fattore**. Entrambi implicano rapidità nella codifica di simboli visivi e attenzione sostenuta. Il fattore può essere chiamato **Velocità di Elaborazione**.
 
-Per le 13 sottoscale del WISC-III abbiamo:
+- I subtest “Completamento di figure”, “Disegno con i cubi”, “Riordinamento di storie figurate” e “Labirinti” saturano sul **terzo fattore**. Questi subtest richiedono abilità visuo-spaziali e organizzazione percettiva. Il fattore può essere denominato **Organizzazione Percettiva**.
+
+### Calcolo delle comunalità
+
+Nel caso di una rotazione ortogonale, la **comunalità** di ciascuna variabile è data dalla somma dei quadrati dei suoi carichi sui fattori. Calcoliamole:
 
 ```{r}
-#| vscode: {languageId: r}
-h2 <- rep(0,13)
+h2 <- rep(0, 13)
 for (i in 1:13) {
   h2[i] <- sum(f_pc$loadings[i, ]^2)
 }
 round(h2, 2)
 ```
 
-Questi risultati replicano quelli riportati nel manuale del test
-WISC-III.
+Le comunalità rappresentano la **proporzione della varianza di ciascun subtest spiegata dai fattori** estratti. Valori elevati indicano che il fattore riesce a spiegare bene il comportamento della variabile. Questi risultati **riproducono quelli riportati nel manuale del WISC-III**, confermando la validità dell’interpretazione proposta.
+
 
 ## Punteggi fattoriali
 
-Fino ad ora abbiamo considerato le strategie di costruzione del modello
-basate sulla stima e sull'interpretazione delle saturazioni fattoriali e
-delle comunalità. Questo è il primo passo nella costruzione del modello
-fattoriale. È però possibile compiere un passo ulteriore, ovvero quello
-della stima dei punteggi fattoriali (*factor scores*) i quali risultano
-utili sia per interpretare i risultati dell'analisi fattoriale che per
-fare diagnostica. I punteggi fattoriali forniscono le previsioni dei
-livelli dei fattori latenti per ogni rispondente. Esistono vari metodi
-di stima dei punteggi fattoriali. Tra questi troviamo il metodo di
-Thomson basato sulla regressione e il metodo di Bartlett basato sulla
-massima verosimiglianza. Entrambi questi metodi sono implementati nel
-software .
+Finora ci siamo concentrati sulla costruzione del modello fattoriale attraverso la stima delle **saturazioni fattoriali** e delle **comunalità**. Questi passaggi rappresentano la base per comprendere la struttura latente che organizza le variabili osservate.
 
-### Stima dei punteggi fattoriali
+Tuttavia, è possibile compiere un passo ulteriore: la **stima dei punteggi fattoriali** (*factor scores*). I punteggi fattoriali rappresentano una **stima dei valori dei fattori latenti per ciascun partecipante** nel campione. Sono utili sia per un’interpretazione individualizzata dell’analisi fattoriale, sia per ulteriori analisi statistiche (es. regressioni, classificazioni o confronti di gruppo).
 
-Si definiscono punteggi fattoriali i valori assunti dai fattori comuni
-(inosservabili) in corrispondenza delle osservazioni campionarie. Il
-metodo di Thomson stima i punteggi fattoriali in base all'approccio
-della regressione multipla, ovvero, impiegando la matrice delle
-correlazioni tra le variabili e la matrice di struttura (ovvero, la
-matrice delle correlazioni delle variabili con i fattori). Per ottenere
-le stime dei punteggi fattoriali con il metodo di Thomson è necessario
-specificare nella funzione `factanal()` l'opzione
-`scores = "regression"`.
+### Metodi di stima
 
-### Dimostrazione di Thurstone
+Esistono diversi metodi per calcolare i punteggi fattoriali. I più comuni sono:
 
-Prima di descrivere il metodo della regressione, esaminiamo la
-dimostrazione che Thurstone (1947) ha fornito per illustrare il
-significato dei punteggi fattoriali (si veda Loehlin, 1987). L'idea è
-quella di esaminare la stima dei punteggi fattoriali in una situazione
-in cui i tali punteggi sono conosciuti, in maniera tale da potere
-controllare il risultato dell'analisi.
+- **Metodo di Thomson (regressione):** stima i punteggi come valori previsti in un modello di regressione lineare multipla, basandosi sulla matrice delle correlazioni tra le variabili osservate e sulla matrice delle saturazioni fattoriali.  
+- **Metodo di Bartlett:** si basa su un approccio di massima verosimiglianza e produce stime meno correlate tra i fattori ma più influenzate dall’assunzione di assenza di errore.
 
-Si consideri un insieme di 1000 scatole di cui conosciamo le dimensioni
-$x, y, z$:
+Entrambi i metodi sono implementati nella funzione `factanal()` di R. Il metodo di regressione si attiva specificando `scores = "regression"`.
+
+
+## Dimostrazione di Thurstone
+
+Per illustrare in modo intuitivo il significato dei punteggi fattoriali, riprendiamo un esempio proposto da **Thurstone (1947)** (citato in Loehlin, 1987), poi ripreso da Jennrich (2007). L’idea è di simulare un contesto in cui **i fattori latenti sono noti**, così da poter valutare la bontà della stima ottenuta dai punteggi fattoriali.
+
+Supponiamo di avere 1000 **scatole** le cui **dimensioni reali** ($x$, $y$, $z$) sono note:
 
 ```{r}
-#| vscode: {languageId: r}
 set.seed(123)
 n <- 1e3
 x <- rnorm(n, 100, 1.5)
@@ -201,13 +159,9 @@ y <- rnorm(n, 200, 1.5)
 z <- rnorm(n, 300, 1.5)
 ```
 
-Il problema è quello di stimare le dimensioni delle scatole disponendo
-soltanto di una serie di misure indirette, corrotte dal rumore di
-misura. Thurstone (1947) utilizzò le seguenti trasformazioni delle
-dimensioni delle scatole (si veda Jennrich, 2007).
+Ora immaginiamo di disporre **solo di misurazioni indirette e rumorose** delle scatole. Queste misurazioni sono derivate da trasformazioni non lineari e prodotti tra le dimensioni, più un errore casuale:
 
 ```{r}
-#| vscode: {languageId: r}
 s <- 40
 y1 <- rnorm(n, mean(x), s)
 y2 <- rnorm(n, mean(y), s)
@@ -229,22 +183,26 @@ y17 <- x / z + rnorm(n, 0, s)
 y18 <- z / x + rnorm(n, 0, s)
 y19 <- y / z + rnorm(n, 0, s)
 y20 <- z / y + rnorm(n, 0, s)
-y21 <- 2 * x + 2*y + rnorm(n, 0, s)
-y22 <- 2 * x + 2*z + rnorm(n, 0, s)
-y23 <- 2 * y + 2*z + rnorm(n, 0, s)
+y21 <- 2 * x + 2 * y + rnorm(n, 0, s)
+y22 <- 2 * x + 2 * z + rnorm(n, 0, s)
+y23 <- 2 * y + 2 * z + rnorm(n, 0, s)
 ```
 
-Eseguiamo l'analisi fattoriale con una soluzione a tre fattori sui dati
-così creati.
+Mettiamo insieme tutte queste variabili in una matrice:
 
 ```{r}
-#| vscode: {languageId: r}
 Y <- cbind(
   y1, y2, y3, y4, y5, y6, y7, y8, y9, 
   y10, y11, y12, y13, y14, y15, y16, 
   y17, y18, y19, y20, y21, y22, y23
 )
+```
 
+### Analisi fattoriale
+
+Eseguiamo ora un’**analisi fattoriale con tre fattori**, utilizzando il metodo di regressione per la stima dei punteggi:
+
+```{r}
 fa <- factanal(
   Y, 
   factors = 3, 
@@ -253,124 +211,241 @@ fa <- factanal(
 )
 ```
 
-L'opzione `scores = "regression"` richiede il calcolo dei punteggi
-fattoriali con il metodo della regressione. Nel caso di una rotazione
-Varimax (default della funzione `factanal()`), i punteggi fattoriali
-risultano ovviamente incorrelati:
+Con `scores = "regression"` chiediamo la stima dei punteggi fattoriali secondo il metodo di Thomson. Inoltre, poiché `factanal()` utilizza per default una **rotazione ortogonale Varimax**, i punteggi stimati risultano **incorrelati tra loro** (fatto che possiamo verificare con la matrice delle correlazioni tra fattori):
 
 ```{r}
-#| vscode: {languageId: r}
-cor(
-  cbind(fa$scores[, 1], fa$scores[, 2], fa$scores[, 3])
-  ) %>% 
-  round(3)
+cor(fa$scores) %>% round(3)
 ```
 
-Generiamo ora i diagrammi di dispersione che mettono in relazione le
-dimensioni originarie delle scatole ($x, y, z$) con i punteggi
-fattoriali sui tre fattori. Se l'analisi ha successo, ci aspettiamo
-un'alta correlazione tra i punteggi fattoriali di ogni fattore e una
-sola delle dimensioni delle scatole $x$, $y$, $z$.
+### Validazione dei punteggi: confronto con i fattori noti
+
+Se la procedura ha funzionato, ci aspettiamo che:
+
+- ciascun punteggio fattoriale sia **fortemente correlato con una sola delle dimensioni originarie** delle scatole ($x$, $y$, $z$),
+- le altre correlazioni siano molto più deboli.
+
+Possiamo visualizzare questi rapporti con dei diagrammi di dispersione:
 
 ```{r}
-#| vscode: {languageId: r}
-p1 <- tibble(x, fs1 = fa$scores[, 1]) %>% 
-  ggplot(aes(x, fs1)) +
-  geom_point(alpha = 0.2)
-p2 <- tibble(y, fs1 = fa$scores[, 1]) %>% 
-  ggplot(aes(y, fs1)) +
-  geom_point(alpha = 0.2)
-p3 <- tibble(z, fs1 = fa$scores[, 1]) %>% 
-  ggplot(aes(z, fs1)) +
-  geom_point(alpha = 0.2)
+# Primo fattore
+p1 <- ggplot(tibble(x, fs1 = fa$scores[, 1]), aes(x, fs1)) + geom_point(alpha = 0.2)
+p2 <- ggplot(tibble(y, fs1 = fa$scores[, 1]), aes(y, fs1)) + geom_point(alpha = 0.2)
+p3 <- ggplot(tibble(z, fs1 = fa$scores[, 1]), aes(z, fs1)) + geom_point(alpha = 0.2)
 
-p4 <- tibble(x, fs2 = fa$scores[, 2]) %>% 
-  ggplot(aes(x, fs2)) +
-  geom_point(alpha = 0.2)
-p5 <- tibble(y, fs2 = fa$scores[, 2]) %>% 
-  ggplot(aes(y, fs2)) +
-  geom_point(alpha = 0.2)
-p6 <- tibble(z, fs2 = fa$scores[, 2]) %>% 
-  ggplot(aes(z, fs2)) +
-  geom_point(alpha = 0.2)
+# Secondo fattore
+p4 <- ggplot(tibble(x, fs2 = fa$scores[, 2]), aes(x, fs2)) + geom_point(alpha = 0.2)
+p5 <- ggplot(tibble(y, fs2 = fa$scores[, 2]), aes(y, fs2)) + geom_point(alpha = 0.2)
+p6 <- ggplot(tibble(z, fs2 = fa$scores[, 2]), aes(z, fs2)) + geom_point(alpha = 0.2)
 
-p7 <- tibble(x, fs3 = fa$scores[, 3]) %>% 
-  ggplot(aes(x, fs3)) +
-  geom_point(alpha = 0.2)
-p8 <- tibble(y, fs3 = fa$scores[, 3]) %>% 
-  ggplot(aes(y, fs3)) +
-  geom_point(alpha = 0.2)
-p9 <- tibble(z, fs3 = fa$scores[, 3]) %>% 
-  ggplot(aes(z, fs3)) +
-  geom_point(alpha = 0.2)
+# Terzo fattore
+p7 <- ggplot(tibble(x, fs3 = fa$scores[, 3]), aes(x, fs3)) + geom_point(alpha = 0.2)
+p8 <- ggplot(tibble(y, fs3 = fa$scores[, 3]), aes(y, fs3)) + geom_point(alpha = 0.2)
+p9 <- ggplot(tibble(z, fs3 = fa$scores[, 3]), aes(z, fs3)) + geom_point(alpha = 0.2)
 ```
 
 ```{r}
 #| fig.asp: 1
 #| fig.height: 7
 #| fig.width: 7
-#| vscode: {languageId: r}
 (p1 | p2 | p3) /
 (p4 | p5 | p6) /
 (p7 | p8 | p9) 
 ```
 
-I risultati riportati nella figura confermano le aspettative.
+### Interpretazione
 
-Il metodo della regressione pone il problema della stima dei punteggi
-fattoriali nei termini di una ideale regressione di ogni fattore
-rispetto a tutte le variabili osservate. Per il fattore $j$-esimo, si
-può scrivere la seguente equazione: 
+I grafici confermano l’ipotesi: ciascun punteggio fattoriale è chiaramente associato a una sola delle dimensioni originali ($x$, $y$, o $z$), a conferma del fatto che l’analisi fattoriale è stata in grado di **recuperare le dimensioni latenti** a partire da misurazioni indirette e rumorose.
 
-$$
-\begin{aligned}
-F_j =& \beta_{1j}y_1 + \dots + \beta_{pm}y_p + \varepsilon_j
-\end{aligned}
-$$ 
+Questo esempio illustra molto bene:
 
-dove $F_j$ sono i punteggi fattoriali e $y$ sono le variabili osservate standardizzate $(Y-\bar{Y})/s$. In forma matriciale, il modello diventa
+- il significato dei punteggi fattoriali,
+- la loro interpretabilità,
+- e il modo in cui possono essere utilizzati per stimare valori latenti individuali.
 
-$$
-\textbf{F} = \textbf{y} \textbf{B} +
-\boldsymbol{\varepsilon}
-$$ 
 
-I coefficienti parziali di regressione **B** sono ignoti. Tuttavia, possono essere calcolati utilizzando i metodi della regressione lineare. Nel modello di regressione, infatti, i coefficienti dei minimi quadrati possono essere calcolati utilizzando due matrici di correlazioni: la matrice $\textbf{R}_{xx}$ (le
-correlazioni tra le variabili $X$) e la matrice $\textbf{R}_{xy}$ (le
-correlazioni tra le variabili $X$ e la variabile $Y$:
+## Il Metodo della Regressione per la stima dei punteggi fattoriali
+
+Una volta stimato un modello fattoriale (ovvero, una soluzione con un certo numero di fattori e una matrice dei pesi fattoriali $\hat{\boldsymbol{\Lambda}}$), è possibile stimare per ciascun individuo i **punteggi fattoriali**: si tratta di stime dei **livelli dei fattori latenti** per ogni rispondente. Il **metodo della regressione**, proposto da Thomson, è uno dei più diffusi per questo scopo.
+
+### L’idea di base
+
+Il metodo della regressione parte da un concetto semplice ma potente: possiamo considerare ciascun **fattore latente** come una **funzione lineare delle variabili osservate**. Cioè, immaginiamo che ciascun punteggio fattoriale derivi da una regressione delle variabili osservate sul fattore. Per esempio, per il fattore $F_j$ (il fattore $j$-esimo), possiamo scrivere:
 
 $$
-\hat{\textbf{B}} = \textbf{R}_{xx}^{-1}\textbf{R}_{xy}
-$$ 
-
-Nel caso dell'analisi fattoriale, $\textbf{R}_{xx}$ corrisponde alla
-matrice delle correlazioni tra le variabili osservate e
-$\textbf{R}_{xy}$ corrisponde alla matrice di struttura (la matrice
-delle correlazioni tra le variabili osservate e i fattori). Se i fattori
-sono ortogonali, la matrice di struttura coincide con la matrice dei
-pesi fattoriali $\hat{\boldsymbol{\Lambda}}$.
-
-I coefficienti **B** dell'equazione precedente possono dunque essere trovati nel modo seguente:
-
-$$
-\begin{equation}
-\hat{\textbf{B}} = \textbf{R}_{yy}^{-1}\textbf{R}_{xf}=
-\textbf{R}^{-1}\hat{\boldsymbol{\Lambda}}
-\end{equation}
+F_j = \beta_{1j} y_1 + \beta_{2j} y_2 + \dots + \beta_{pj} y_p + \varepsilon_j,
 $$
 
-Una volta stimati i coefficienti $\hat{\textbf{B}}$, i punteggi fattoriali si calcolano allo stesso modo dei punteggi teorici del modello di regressione:
+dove:
+
+- $y_1, y_2, \dots, y_p$ sono le variabili osservate **standardizzate** (cioè con media 0 e deviazione standard 1),
+- $\beta_{ij}$ sono i coefficienti di regressione da stimare,
+- $\varepsilon_j$ è l’errore di stima sul fattore $j$.
+
+Questa equazione indica che il fattore $F_j$ può essere **predetto** a partire da una combinazione lineare delle variabili osservate.
+
+### Forma matriciale del modello
+
+Per semplicità, possiamo scrivere tutto in forma matriciale. Supponiamo di avere $p$ variabili osservate e $m$ fattori.
+
+- $\mathbf{y}$ è il vettore riga delle variabili osservate standardizzate (lunghezza $p$),
+- $\mathbf{F}$ è il vettore riga dei fattori (lunghezza $m$),
+- $\mathbf{B}$ è la matrice dei coefficienti di regressione (dimensione $p \times m$),
+- $\boldsymbol{\varepsilon}$ è il vettore degli errori di regressione.
+
+Il modello diventa:
 
 $$
-\begin{equation}
-\hat{\textbf{F}} = \textbf{y} \hat{\textbf{B}} = \textbf{y}
-\textbf{R}^{-1}\hat{\boldsymbol{\Lambda}},
-\end{equation}
+\mathbf{F} = \mathbf{y} \mathbf{B} + \boldsymbol{\varepsilon}
 $$
 
-dove $\textbf{y}$ è la matrice delle variabili osservate standardizzate $(Y-\bar{Y})/s$.
+Il nostro obiettivo è stimare $\mathbf{B}$, cioè i pesi che ci permettono di **calcolare i punteggi fattoriali** a partire dalle osservazioni.
 
-**Esercizio.** Si utilizzino i dati `dass21.txt` che corrispondono alla somministrazione del test DASS-21 a 334 partecipanti. Lo schema di codifica si può trovare seguendo questo [link](https://maic.qld.gov.au/wp-content/uploads/2016/07/DASS-21.pdf). Ci si focalizzi sulla sottoscala Stress del DASS-21. Si trovino i punteggi fattoriali usando la funzione `factanal()` e si replichi il risultato seguendo la procedura delineata sopra.
+
+### Stima della matrice dei coefficienti di regressione
+
+Per stimare $\mathbf{B}$ si usa una formula ben nota dell’algebra della regressione lineare:
+
+$$
+\hat{\mathbf{B}} = \mathbf{R}_{yy}^{-1} \mathbf{R}_{yf}
+$$
+
+dove:
+
+- $\mathbf{R}_{yy}$ è la matrice delle **correlazioni tra le variabili osservate** (dimensione $p \times p$),
+- $\mathbf{R}_{yf}$ è la matrice delle **correlazioni tra le variabili osservate e i fattori** (dimensione $p \times m$).
+
+Quest’ultima matrice, $\mathbf{R}_{yf}$, è nota anche come **matrice di struttura fattoriale**, e coincide con la matrice dei **carichi fattoriali $\hat{\boldsymbol{\Lambda}}$** se i fattori sono **ortogonali** (cioè incorrelati tra loro, come nel caso di una rotazione Varimax).
+
+Pertanto, in presenza di fattori ortogonali:
+
+$$
+\hat{\mathbf{B}} = \mathbf{R}^{-1} \hat{\boldsymbol{\Lambda}},
+$$
+
+dove $\mathbf{R}$ è la matrice delle correlazioni tra le variabili osservate.
+
+### Calcolo dei punteggi fattoriali
+
+Una volta ottenuti i coefficienti di regressione $\hat{\mathbf{B}}$, possiamo calcolare i punteggi fattoriali per ciascun individuo applicando la formula del modello di regressione:
+
+$$
+\hat{\mathbf{F}} = \mathbf{y} \hat{\mathbf{B}} = \mathbf{y} \mathbf{R}^{-1} \hat{\boldsymbol{\Lambda}}
+$$
+
+dove:
+
+- $\mathbf{y}$ è la matrice delle variabili osservate **standardizzate** (righe = individui, colonne = variabili),
+- $\hat{\mathbf{F}}$ è la matrice dei punteggi fattoriali (righe = individui, colonne = fattori).
+
+### Interpretazione
+
+- Ogni **riga** di $\hat{\mathbf{F}}$ contiene i valori stimati dei fattori latenti per un individuo.
+- Ciascun **valore** rappresenta la posizione dell’individuo su uno specifico fattore, espressa su una scala con media zero (poiché ottenuta da variabili standardizzate).
+
+### Vantaggi del metodo della regressione
+
+- **Semplice da calcolare**: basta conoscere la matrice delle correlazioni e i carichi fattoriali.
+- **Punteggi stimati per tutti i soggetti**: anche se il numero di soggetti è diverso dal numero di variabili.
+- **Utilizzabile in ulteriori analisi**: ad esempio per confrontare gruppi sui fattori latenti, per costruire profili individuali o per analisi predittive.
+
+### Limiti
+
+- I punteggi stimati **non sono indipendenti** dagli errori di misura: il metodo minimizza l’errore medio quadratico, ma non fornisce stime "pure" dei fattori.
+- Se i fattori sono **obliqui** (cioè correlati), la formula deve essere modificata e il calcolo diventa più complesso.
+
+::: {#exm-}
+Esaminiamo ora un esempio pratico in cui calcoliamo i punteggi fattoriali del fattore **Comprensione Verbale** del WISC-III seguendo due strade:
+
+1. **utilizzando direttamente la formula della regressione** in forma matriciale: $\hat{\mathbf{F}} = \mathbf{Y} \, \mathbf{R}^{-1} \hat{\boldsymbol{\Lambda}}$; 
+2. **confrontando il risultato con quello ottenuto da `factanal()` in R** usando `scores = "regression"`.
+
+Utilizzeremo solo le prime **5 variabili** del test WISC-III, che saturano principalmente sul primo fattore (Comprensione Verbale): `INFO`, `SIM`, `ARITH`, `VOC`, `COMP`.
+
+```{r}
+wisc_names <- c(
+    "INFO", "SIM", "ARITH", "VOC", "COMP", "DIGIT", "PICTCOM",
+    "CODING", "PICTARG", "BLOCK", "OBJECT", "SYMBOL", "MAZES"
+  )
+
+wisc_III_cov <- getCov(lower, names = wisc_names)
+
+# solo le prime 5 variabili (Comprensione Verbale)
+R <- wisc_III_cov[1:5, 1:5]
+R
+```
+
+Simuliamo dati osservati standardizzati (media 0, sd 1):
+
+```{r}
+set.seed(123)
+n <- 100  # 100 soggetti
+Y_std <- mvrnorm(n = n, mu = rep(0, 5), Sigma = R)  # dati simulati coerenti con R
+
+Y_std |> head()
+```
+
+Standardizzazione ulteriore (già è standardizzato, ma è buono verificare):
+
+```{r}
+colnames(Y_std) <- colnames(R)
+Y_std <- scale(Y_std)  
+```
+
+Estraiamo 1 solo fattore (Comprensione Verbale):
+
+```{r}
+fa <- factanal(Y_std, factors = 1, scores = "regression")
+```
+
+La matrice dei carichi fattoriali:
+
+```{r}
+Lambda <- fa$loadings[, 1, drop = FALSE]  # matrice dei carichi (5x1)
+rownames(Lambda) <- colnames(R)
+Lambda
+```
+
+Calcolo manuale: B = R⁻¹ Λ:
+
+```{r}
+B_manual <- solve(R) %*% Lambda  # (5x5)^(-1) %*% (5x1) = (5x1)
+B_manual
+```
+
+Calcolo manuale dei punteggi fattoriali:
+
+```{r}
+F_manual <- Y_std %*% B_manual  # (100x5) %*% (5x1) = (100x1)
+colnames(F_manual) <- "Fattore1"
+
+F_manual |> head()
+```
+
+Confronto con punteggi ottenuti da factanal()
+
+```{r}
+F_factanal <- fa$scores[, 1, drop = FALSE]
+colnames(F_factanal) <- "Fattore1_factanal"
+
+F_factanal |> head()
+```
+
+```{r}
+cor(F_manual, F_factanal)
+```
+
+Il coefficiente di correlazione tra i due metodi sarà molto vicino a **1**, indicando che la formula $\hat{\mathbf{F}} = \mathbf{Y} \mathbf{R}^{-1} \hat{\boldsymbol{\Lambda}}$ è **equivalente** (entro errori numerici minimi) al metodo implementato da `factanal()` con l’opzione `scores = "regression"`.
+
+**In sintesi**,
+
+- abbiamo visto come calcolare **manualmente** i punteggi fattoriali utilizzando le **formule matriciali** di regressione;
+- abbiamo **confrontato** i risultati con quelli ottenuti da un pacchetto statistico (`factanal()` in R);
+- l'equivalenza tra i due risultati **conferma la validità teorica** delle formule presentate nel metodo della regressione per la stima dei punteggi fattoriali.
+:::
+
+## Riflessioni Conclusive
+
+L’analisi fattoriale non è solo una tecnica per ridurre la dimensionalità dei dati, ma un vero e proprio strumento per costruire *modelli psicologici latenti* a partire da manifestazioni osservabili. Se interpretata con rigore teorico e supportata da una stima accurata dei punteggi fattoriali, essa può favorire una comprensione più profonda dei costrutti psicologici e della loro struttura. Tuttavia, va ricordato che ogni decisione presa lungo il processo – dalla scelta del numero di fattori, al metodo di estrazione, alla rotazione e alla stima dei punteggi – introduce un certo grado di arbitrarietà. È proprio in questo spazio di arbitrarietà che la psicometria incontra la teoria: l’analisi fattoriale è tanto uno strumento tecnico quanto una *pratica epistemica*, in cui i dati non parlano da soli, ma vengono interrogati alla luce di ipotesi e modelli. Per questo motivo, lo sviluppo di test psicometrici validi richiede non solo padronanza tecnica, ma anche capacità critica e riflessività teorica.
 
 ## Session Info
 

@@ -1,143 +1,249 @@
 # Il modello statistico dell'analisi fattoriale {#sec-fa-statistical-model-fa}
 
-**Prerequisiti**
+::: callout-important
+## In questo capitolo imparerai a
+
+- Comprendere il modello statistico monofattoriale.
+- Eseguire l'analisi statistica per il modello monofattoriale con `lavaan`.
+:::
+
+::: callout-tip
+## Prerequisiti
 
 - Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
 
-**Concetti e Competenze Chiave**
-
-**Preparazione del Notebook**
+::: callout-caution
+## Preparazione del Notebook
 
 ```{r}
-#| vscode: {languageId: r}
-# Carica il file _common.R per impostazioni di pacchetti e opzioni
-here::here("code", "_common.R") |> source()
+here::here("code", "_common.R") |> 
+  source()
 
-# Carica pacchetti aggiuntivi
-pacman::p_load(lavaan)
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, semPlot, tidyr, ggdag, dagitty)
 ```
+:::
 
 ## Modello monofattoriale
 
-Il punto di partenza dell'*analisi fattoriale esplorativa* è
-rappresentato da una marice di dimensioni $p \times p$ (dove $p$ è il
-numero di variabili osservate) che contiene i coefficienti di
-correlazione (o di covarianza) tra le variabili. Il punto di arrivo è
-rappresentato da una matrice di dimensioni $p \times k$ (dove $k$) è il
-numero di fattori comuni che contiene i coefficienti (le *saturazioni*)
-che esprimono la relazione tra i fattori e le variabili osservate.
-Considereremo ora il modello matematico dell'analisi fattoriale
-esplorativa, con un solo fattore comune, che rappresenta il caso più
-semplice.
+L’analisi fattoriale esplorativa (AFE) parte da una matrice di
+dimensioni $p \times p$ (dove $p$ è il numero di variabili
+osservate) che contiene i coefficienti di correlazione (o, in alternativa,
+di covarianza) fra tali variabili. L’obiettivo dell’AFE è ottenere una
+matrice di dimensioni $p \times k$ (dove $k$ è il numero di fattori
+comuni) i cui elementi – chiamati *saturazioni fattoriali* – descrivono
+la relazione tra ciascun fattore comune e ogni variabile osservata.
 
-Con $p$ variabili manifeste $Y_i$, il modello ad un fattore comune può
-essere espresso algebricamente nel modo seguente:
-
-$$
-Y_i = \mu_i + \lambda_{i} \xi + \delta_i \qquad i=1, \dots, p
-$$ 
-
-dove $\xi$ rappresenta il fattore latente, chiamato anche *fattore comune*,
-poiché è comune a tutte le $Y_i$, i $\delta_i$ sono invece specifici di
-ogni variabile osservata e per tale ragione vengono chiamati *fattori
-specifici* o *unici*, e infine i $\lambda_i$ sono detti *saturazioni* (o
-*pesi*) fattoriali poiché consentono di valutare il peso del fattore
-latente su ciascuna variabile osservata. Si suole assumere per comodità
-che $\mu=0$, il che corrisponde a considerare le variabili $Y_i$ come
-ottenute dagli scarti dalle medie $\mu_i$ per $i = 1, \dots, p$:
+Nel caso più semplice, quello *monofattoriale*, si ipotizza
+l’esistenza di un unico fattore latente, $\xi$. In presenza di $p$
+variabili manifeste $Y_i$, il modello matematico di un solo fattore
+comune si può esprimere nel modo seguente:
 
 $$
-Y_i -\mu_i = \lambda_i \xi + \delta_i.
+Y_i = \mu_i + \lambda_{i} \,\xi + \delta_i ,
+\quad\text{per}\quad 
+i=1, \dots, p,
+$$ {#eq-fa-model-1f}
+
+dove:
+
+- $\xi$ è il fattore comune (o *fattore latente*), condiviso da tutte
+  le variabili $Y_i$;
+- $\delta_i$ è il *fattore specifico* (o *fattore unico*) associato
+  alla $i$-esima variabile osservata, cioè una componente di varianza
+  che non è condivisa con le altre variabili;
+- $\lambda_i$ è la *saturazione fattoriale* (o *peso*) della
+  $i$-esima variabile, ossia il coefficiente che quantifica il peso
+  esercitato dal fattore comune $\xi$ su $Y_i$.
+
+Per semplificare l’analisi, si assume spesso che $\mu_i = 0$,
+considerando le $Y_i$ già centrate (cioè prive della loro media).
+Questa convenzione rende possibile riscrivere il modello come:
+
 $$
+Y_i = \lambda_i \,\xi + \delta_i.
+$$ {#eq-fa-model-1f-noint}
 
-Si assume che il fattore comune abbia media zero, $\mathbb{E}(\xi)=0$, e
-varianza unitaria, $\mathbb{V}(\xi)=1$, che i fattori specifici abbiano media
-zero, $\mathbb{E}(\delta_j)=0$, e varianza $\mathbb{V}(\delta_j)=\psi_{i}$, che i
-fattori specifici siano incorrelati tra loro, $\mathbb{E}(\delta_i \delta_k)=0$, e che i fattori specifici siano incorrelati con il fattore comune, $\mathbb{E}(\delta_i \xi)=0$.
+In aggiunta a questa ipotesi di centratura, si stabilisce che:
 
-In questo modello, poiché i fattori specifici sono tra loro incorrelati,
-l'interdipendenza tra le variabili manifeste è completamente spiegata
-dal fattore comune. Dalle ipotesi precedenti è possibile ricavare la
-covarianza tra $Y_i$ e il fattore comune, la varianza della $i$-esima
-variabile manifesta $Y_i$ e la covarianza tra due variabili manifeste
-$Y_i$ e $Y_k$.
+1. il fattore comune $\xi$ abbia media nulla,
+   $\mathbb{E}(\xi) = 0$, e varianza unitaria,
+   $\mathbb{V}(\xi) = 1$;
+2. i fattori specifici $\delta_i$ abbiano media nulla,
+   $\mathbb{E}(\delta_i)=0$, e varianza $\psi_i$,
+   cioè $\mathbb{V}(\delta_i) = \psi_i$;
+3. i fattori specifici siano tra loro incorrelati:
+   $\mathbb{E}(\delta_i \,\delta_k) = 0$ per $i \neq k$;
+4. i fattori specifici siano incorrelati con il fattore comune:
+   $\mathbb{E}(\delta_i\,\xi) = 0$ per ogni $i$.
+
+Date queste ipotesi, l’interdipendenza (cioè le correlazioni) fra le
+variabili osservate $Y_i$ e $Y_k$ è interamente spiegata dal singolo
+fattore comune $\xi$. I termini $\delta_i$ riguardano solo la
+varianza *non condivisa* di ciascuna variabile.
+
+Sulla base di queste assunzioni, è possibile:
+
+- calcolare la *covarianza* tra $Y_i$ e il fattore comune $\xi$;
+- determinare la *varianza* di ciascuna variabile $Y_i$;
+- ottenere la *covarianza* tra due variabili manifeste $Y_i$ e
+  $Y_k$.
+
+Tali derivazioni consentono di comprendere a fondo come il fattore
+latente $\xi$ contribuisca a spiegare le relazioni fra le variabili
+osservate e quanta parte della varianza di ciascuna variabile sia invece
+imputabile a fattori specifici (non condivisi). Questo concetto è alla
+base di tutte le procedure di stima e di interpretazione nell’analisi
+fattoriale esplorativa con un solo fattore.
 
 ## Covarianza tra un indicatore e il fattore comune
 
-Dal modello monofattoriale è possibile determinare l'espressione della
-covarianza teorica tra una variabile manifesta $Y_i$ e il fattore comune
-$\xi$: 
+Nel modello monofattoriale, vogliamo determinare la covarianza teorica
+tra una variabile manifesta $Y_i$ e il fattore comune $\xi$. La
+definizione di covarianza è:
 
 $$
-Cov(Y_i,\xi)=\mathbb{E}(Y_i \xi)-\mathbb{E}(Y_i)\mathbb{E}(\xi).
-$$ 
+\mathrm{Cov}(Y_i, \xi) 
+= \mathbb{E}(Y_i \, \xi) 
+  - \mathbb{E}(Y_i)\,\mathbb{E}(\xi).
+$$
 
-Dato che $\mathbb{E}(\xi)=0$, possiamo scrivere 
+Poiché per semplicità assumiamo $\mathbb{E}(\xi) = 0$, la formula si
+riduce a:
 
 $$
-\begin{equation}
-\begin{aligned}
-  Cov(Y_i,\xi) &= \mathbb{E}(Y_i \xi)=\mathbb{E}[(\lambda_i \xi + \delta_i) \xi]\notag\\
-  &=\mathbb{E}(\lambda_i \xi^2 + \delta_i \xi)\notag\\
-  &=\lambda_i\underbrace{\mathbb{E}(\xi^2)}_{\mathbb{V}(\xi)=1} + \underbrace{\mathbb{E}(\delta_i \xi)}_{Cov(\delta_i, \xi)=0}\notag\\
-  &= \lambda_i.\notag
-\end{aligned}
-\end{equation}
+\mathrm{Cov}(Y_i, \xi) 
+= \mathbb{E}(Y_i \,\xi).
 $$
-  
-Nel modello a un solo fattore, dunque, la saturazione $\lambda_j$ rappresenta la covarianza la variabile manifesta $Y_i$ e il fattore comune $\xi$ e indica
-l'importanza del fattore nel determinare il punteggio osservato. Se le
-variabili $Y_i$ sono standardizzate, la saturazione fattoriale
-$\lambda_i$ corrisponde alla correlazione tra $Y_i$ e $\xi$.
+
+Usando il modello monofattoriale $Y_i = \lambda_i \xi + \delta_i$, si
+ottiene:
+
+$$
+\mathrm{Cov}(Y_i, \xi) 
+= \mathbb{E}\bigl((\lambda_i \,\xi + \delta_i)\xi\bigr)
+= \mathbb{E}(\lambda_i\,\xi^2 + \delta_i\,\xi).
+$$
+
+Il termine $\lambda_i$ è una costante (la *saturazione fattoriale*),
+perciò si può portare fuori dall’aspettazione:
+
+$$
+= \lambda_i \,\mathbb{E}(\xi^2) + \mathbb{E}(\delta_i \,\xi).
+$$
+
+A questo punto, valgono due ipotesi fondamentali:
+
+1. $\mathbb{E}(\xi^2) = \mathbb{V}(\xi) = 1$, cioè il fattore comune ha
+   varianza unitaria.
+2. $\mathrm{Cov}(\delta_i,\xi) = \mathbb{E}(\delta_i \,\xi) = 0$, poiché
+   il fattore specifico $\delta_i$ è incorrelato con il fattore comune
+   $\xi$.
+
+Applicando queste ipotesi si ha:
+
+$$
+\mathrm{Cov}(Y_i, \xi) 
+= \lambda_i \cdot 1 + 0 
+= \lambda_i.
+$$
+
+**In sintesi**: in un modello a singolo fattore, la *saturazione*
+$\lambda_i$ coincide con la covarianza tra la variabile manifesta
+$Y_i$ e il fattore comune $\xi$. Inoltre, se ogni variabile $Y_i$
+è stata *standardizzata*, ossia ha varianza pari a 1, allora
+$\lambda_i = \mathrm{Corr}(Y_i,\xi)$. In tal caso, $\lambda_i$
+esprime direttamente la *correlazione* tra la variabile $Y_i$ e il
+fattore comune $\xi$.
+
 
 ## Espressione fattoriale della varianza
 
-Nell'ipotesi che le variabili $Y_i$ abbiano media nulla, la varianza di $Y_i$
+Sotto l’ipotesi che $\mathbb{E}(Y_i) = 0$, la varianza di $Y_i$ è:
 
 $$
-\begin{equation}
-  \mathbb{V}(Y_i) = \mathbb{E}(Y_i^2) -[\mathbb{E}(Y_i)]^2 = \mathbb{E}(Y_i^2)\notag
-\end{equation}
+\mathbb{V}(Y_i) = \mathbb{E}(Y_i^2) - [\mathbb{E}(Y_i)]^2 
+                = \mathbb{E}(Y_i^2).
 $$
 
-è data da
+Usando di nuovo il modello monofattoriale $Y_i = \lambda_i \xi + \delta_i$:
 
 $$
-\begin{equation}
-\begin{aligned}
-  \mathbb{V}(Y_i) &= \mathbb{E}[(\lambda_i \xi + \delta_i)^2 ]\notag\\
-  &=\lambda_i^2 \underbrace{\mathbb{E}(\xi^2) }_{\mathbb{V}(\xi)=1} + \underbrace{\mathbb{E}(\delta_i^2) }_{\mathbb{V}(\delta_i)=\psi_{i}} + 2\lambda_i \underbrace{\mathbb{E}(\xi \delta_i) }_{Cov(\xi, \delta_{i})=0}\notag\\
-  &=\lambda^2_i + \psi_{i}.
-\end{aligned}
-\end{equation}
+\mathbb{V}(Y_i) 
+= \mathbb{E}\bigl((\lambda_i \,\xi + \delta_i)^2\bigr).
 $$
 
-La quantità $\lambda^2_i$ è denominata *comunalità* della $i$-esima variabile
-manifesta e corrisponde alla quota della varianza della $Y_i$ spiegata
-dal fattore comune. Di conseguenza $\psi_{i}$ è la parte residua della
-varianza di $Y_i$ non spiegata dal fattore comune ed è denominata
-*unicità* di $Y_i$. Nel caso di variabili standardizzate, l'unicità
-diventa uguale a 
+Sviluppando il quadrato:
 
 $$
-\psi_{i}=1-\lambda^2_i.
-$$ 
+= \mathbb{E}\bigl(\lambda_i^2 \,\xi^2 
+                  + 2\,\lambda_i\,\xi\,\delta_i
+                  + \delta_i^2\bigr).
+$$
 
-In definitiva, la varianza totale di una variabile osservata può essere divisa in una quota che ciascuna variabile condivide con le altre variabili ed è spiegata dal
-fattore comune (questa quota è chiamata *comunalità* ed è uguale uguale
-al quadrato della saturazione della variabile osservata nel fattore
-comune, ovvero $h^2_i = \lambda_i^2$), e in una quota che è spiegata dal
-fattore specifico (questa parte è chiamata *unicità* ed è
-uguale a $u_i = \psi_{i}$).
+Distinguiamo i tre termini all’interno dell’aspettazione:
 
-**Esempio.** Riprendiamo l'analisi della matrice di correlazioni di Spearman.
-Nell'output prodotto dalla funzione `factanal()` viene riportata la
-quantità denominata `SS loadings`. Tale quantità indica la porzione della varianza totale delle 4 variabili manifeste che viene spiegata dal fattore comune. Ciascuna variabile
-standardizzata contribuisce con un'unità di varianza; nel caso presente,
-dunque la varianza totale è uguale a 4. Si ricordi che, nella statistica multivariata, per *varianza totale* si intende la somma delle varianze delle variabili manifeste (nel linguaggio dell'algebra matriciale questa quantità corrisponde alla *traccia* della matrice di covarianze). La quota della varianza totale spiegata dal modello, invece, è data dalla somma delle comunalità delle quattro variabili, ovvero dalla somma delle saturazioni fattoriali innalzate al quadrato.
+1. $\mathbb{E}(\lambda_i^2 \,\xi^2) = \lambda_i^2 \,\mathbb{E}(\xi^2)$
+   poiché $\lambda_i^2$ è costante e
+   $\mathbb{E}(\xi^2) = \mathbb{V}(\xi) = 1$. Pertanto questo termine
+   diventa $\lambda_i^2$.
+2. $\mathbb{E}(2\,\lambda_i\,\xi\,\delta_i) = 2\,\lambda_i\,\mathbb{E}(\xi\,\delta_i)$.
+   Ma $\mathrm{Cov}(\xi, \delta_i) = 0$, dunque
+   $\mathbb{E}(\xi\,\delta_i) = 0$. Di conseguenza questo termine è
+   nullo.
+3. $\mathbb{E}(\delta_i^2) = \mathbb{V}(\delta_i) = \psi_i$, dato che
+   il fattore specifico $\delta_i$ ha varianza $\psi_i$.
+
+Mettendo insieme questi risultati, otteniamo:
+
+$$
+\mathbb{V}(Y_i) 
+= \lambda_i^2 + \psi_i.
+$$
+
+- $\lambda_i^2$ è detta *comunalità* della variabile $Y_i$ e indica
+  la parte di varianza spiegata dal fattore comune $\xi$.
+- $\psi_i$ rappresenta la parte di varianza non spiegata dal fattore
+  comune, detta *unicità* di $Y_i$.
+
+Nel caso in cui le $Y_i$ siano state *standardizzate* (quindi abbiano
+$\mathbb{V}(Y_i) = 1$), si ottiene:
+
+$$
+1 = \lambda_i^2 + \psi_i,
+$$
+
+da cui
+
+$$
+\psi_i = 1 - \lambda_i^2.
+$$
+
+In questo scenario, la comunalità $\lambda_i^2$ indica esattamente la
+percentuale di varianza di $Y_i$ spiegata dal fattore comune, mentre
+$\psi_i$ indica la percentuale rimanente, legata a fattori specifici
+o ad altri errori di misura.
+
+
+**In sintesi**, la varianza di una variabile osservata $Y_i$ può
+essere scomposta in:
+
+- $\lambda_i^2$, la parte *comune* che la variabile condivide con
+  tutte le altre (ossia la porzione di varianza attribuibile al fattore
+  comune $\xi$, chiamata *comunalità*);
+- $\psi_i$, la parte *specifica* o *residua*, non spiegata dal fattore
+  comune (chiamata *unicità*).
+
+Nei modelli fattoriali, l’obiettivo principale è proprio stimare
+correttamente $\lambda_i$ e $\psi_i$ per capire in che misura un
+fattore latente unico ($\xi$) spiega le relazioni tra le diverse
+variabili manifeste $Y_1, Y_2, \dots, Y_p$.
+
+::: {#exm-}
+Riprendiamo l’analisi della matrice di correlazioni di Spearman. 
 
 ```{r}
-#| vscode: {languageId: r}
 Spearman <- matrix(c(
   1.0, .78, .70, .66,
   .78, 1.0, .64, .54,
@@ -152,102 +258,155 @@ Spearman |>
   print()
 ```
 
-Eseguiamo l'analisi fattoriale:
+Quando eseguiamo una *analisi fattoriale* con la funzione `factanal()`, nello
+stesso output compare la quantità denominata `SS loadings`. 
 
 ```{r}
-#| vscode: {languageId: r}
 fm <- factanal(covmat = Spearman, factors = 1)
-fm |>
-    print()
+fm
 ```
 
-Le saturazioni fattoriali sono:
+Questa quantità indica quanta parte della *varianza totale* delle quattro
+variabili manifeste è spiegata dal fattore comune.
+
+Ricordiamo che, per *varianza totale* in statistica multivariata, si
+intende la somma delle varianze delle variabili osservate (cioè la
+*traccia* della matrice di covarianza). Se le variabili sono
+standardizzate, ciascuna contribuisce con 1 alla varianza complessiva,
+quindi, con quattro variabili, la varianza totale risulta 4.
+
+La *quota* della varianza totale spiegata dal modello fattoriale a un
+fattore è data dalla somma delle comunalità di ogni variabile, ossia
+dalle saturazioni fattoriali (loadings) *al quadrato*, sommate tra loro.
+Nell’esempio, il valore ottenuto è 2.587; perciò la proporzione di
+varianza spiegata è
+
+$$
+\frac{2.587}{4} \approx 0.647,
+$$
+
+che `factanal()` riporta come `Proportion Var`. 
+
+La parte di varianza di ciascuna variabile *non* spiegata dal fattore
+comune prende il nome di *unicità* (in inglese *uniqueness*). Nel
+risultato di `factanal()`, l’unicità di ogni variabile si ottiene con
+`fm$uniqueness`. La *comunalità* (ovvero la quota di varianza spiegata
+dal fattore comune) si ricava da `1 - fm$uniqueness`, oppure calcolando
+direttamente il quadrato di ogni saturazione fattoriale. 
 
 ```{r}
-#| vscode: {languageId: r}
 L <- c(fm$load[1], fm$load[2], fm$load[3], fm$load[4])
 print(L)
 ```
 
-Facendo il prodotto interno otteniamo:
+Eseguendo il prodotto interno `t(L) %*% L`, infatti, si ottiene la somma dei quadrati delle saturazioni (le cosiddette *squared loadings*), che fornisce la
+comunalità totale spiegata dal fattore per l’insieme delle variabili.
 
 ```{r}
-#| vscode: {languageId: r}
 t(L) %*% L 
 ```
-
-In termini proporzionali, la quota della varianza totale delle variabile manifeste che viene spiegata dal modello ad un fattore comune è dunque uguale a $2.587 / 4 = 0.647$. Questa quantità è indicata nell'output con la denominazione `Proportion Var`.
-
-Si dice unicità (*uniqueness*) la quota della varianza della variabile considerata che non viene spiegata dalla soluzione fattoriale:
-
-```{r}
-#| vscode: {languageId: r}
-round(fm$uniqueness, 3) |>
-    print()
-```
-
-La comunalità (ovvero, la quota di varianza di ciascuna variabile manifesta che viene spiegata dal fattore comune) può essere trovata come:
-
-```{r}
-#| vscode: {languageId: r}
-round(1 - fm$uniqueness, 3) |>
-    print()
-```
-
-oppure con
-
-```{r}
-#| lines_to_next_cell: 0
-#| vscode: {languageId: r}
-L^2 |>
-    round(3) |>
-    print()
-```
+:::
 
 ## Covarianza tra due variabili manifeste
 
-Nell'ipotesi che le variabili $Y_i$ abbiano media nulla, la covarianza
-tra $Y_i$ e $Y_k$
+Consideriamo due variabili manifeste $Y_i$ e $Y_k$ con media nulla,
+ossia $\mathbb{E}(Y_i) = \mathbb{E}(Y_k) = 0$. In questa ipotesi, la
+loro covarianza è data da:
 
 $$
-Cov(Y_i, Y_k)=\mathbb{E}(Y_i Y_k) -
-\mathbb{E}(Y_i)\mathbb{E}(Y_k)=\mathbb{E}(Y_i Y_k)
+\mathrm{Cov}(Y_i, Y_k) 
+= \mathbb{E}(Y_i \, Y_k) 
+  - \mathbb{E}(Y_i)\,\mathbb{E}(Y_k) 
+= \mathbb{E}(Y_i \, Y_k).
 $$
 
-è uguale al prodotto delle corrispondenti saturazioni fattoriali:
+Nel *modello monofattoriale*, ogni variabile si esprime come
+$Y_i = \lambda_i \,\xi + \delta_i$, dove $\xi$ è il fattore comune e
+$\delta_i$ è il fattore specifico. Sostituendo queste espressioni
+nella formula della covarianza, otteniamo:
 
 $$
-\begin{equation}
-\begin{aligned}
- Cov(Y_i, Y_k) &= \mathbb{E}(Y_i Y_k) \notag\\
-  & =\mathbb{E}[(\lambda_i \xi + \delta_i)(\lambda_k \xi +  \delta_k)]\notag\\
-  &=\mathbb{E}(\lambda_i\lambda_k\xi^2 + \lambda_i  \xi \delta_k + \lambda_k \delta_i \xi + \delta_i \delta_k)\notag\\
-  &=\lambda_i\lambda_k\underbrace{\mathbb{E}(\xi^2)}_{\mathbb{V}(\xi)=1}+\lambda_i\underbrace{\mathbb{E}(\xi \delta_k)}_{Cov(\xi, \delta_k) =0}+\notag\\ \;&+\lambda_k\underbrace{\mathbb{E}(\delta_i \xi)}_{Cov(\delta_i, \xi) =0} +\underbrace{\mathbb{E}(\delta_i \delta_k)}_{Cov(\delta_i, \delta_k)=0}\notag\\
-  &=\lambda_i\lambda_k.
-\end{aligned}
-\end{equation}
+\mathrm{Cov}(Y_i, Y_k) 
+= \mathbb{E}\bigl((\lambda_i \,\xi + \delta_i)
+                  (\lambda_k \,\xi + \delta_k)\bigr).
 $$
+
+Espandendo il prodotto dentro l’aspettazione:
+
+$$
+= \mathbb{E}\bigl(\lambda_i\,\lambda_k \,\xi^2 
+                + \lambda_i\,\xi\,\delta_k 
+                + \lambda_k\,\delta_i\,\xi 
+                + \delta_i\,\delta_k\bigr).
+$$
+
+A questo punto, si applicano le ipotesi del modello:
+
+1. $\mathbb{E}(\xi^2) = \mathbb{V}(\xi) = 1$.
+2. $\mathrm{Cov}(\xi, \delta_i) = 0$, dunque
+   $\mathbb{E}(\xi \,\delta_i) = 0$.
+3. $\mathrm{Cov}(\delta_i, \delta_k) = 0$, cioè
+   $\mathbb{E}(\delta_i \,\delta_k) = 0$.
+
+Applicandole ai termini sopra, abbiamo:
+
+$$
+\mathrm{Cov}(Y_i, Y_k)
+= \lambda_i\,\lambda_k\,\underbrace{\mathbb{E}(\xi^2)}_{=1}
+  + \lambda_i \,\underbrace{\mathbb{E}(\xi\,\delta_k)}_{=0}
+  + \lambda_k \,\underbrace{\mathbb{E}(\delta_i\,\xi)}_{=0}
+  + \underbrace{\mathbb{E}(\delta_i\,\delta_k)}_{=0}
+= \lambda_i \,\lambda_k.
+$$
+
+**In sintesi**, in un modello a singolo fattore, la covarianza tra due
+variabili manifeste $Y_i$ e $Y_k$ è interamente spiegata dal
+fattore comune $\xi$ e risulta pari al prodotto delle rispettive
+saturazioni fattoriali $\lambda_i$ e $\lambda_k$.
 
 ## Correlazioni osservate e correlazioni riprodotte dal modello
 
-In generale possiamo affermare che il modello monofattoriale è adeguato
-se si verifica che $Cov(Y_i, Y_k \mid \xi) = 0$
-($i, k = 1, \dots,p; \; i\neq k$), ossia se il fattore comune spiega
-tutta la covarianza tra le variabili osservate. La matrice di
-correlazioni riprodotte dal modello è chiamata $\boldsymbol{\Sigma}$ e
-può essere espressa come:
+Nel modello monofattoriale, l’ipotesi di base è che il *fattore comune*
+spieghi *tutta* la covarianza tra le variabili osservate. In altre
+parole, ci aspettiamo che, una volta noto il valore del fattore comune
+$\xi$, ogni variabile $Y_i$ sia incorrelata con le altre
+$(Y_k)$. Formalmente, ciò si traduce nell’uguaglianza:
 
 $$
-\boldsymbol{\Sigma} = \boldsymbol{\Lambda} \boldsymbol{\Lambda}^\prime + \boldsymbol{\Psi}
+\mathrm{Cov}(Y_i, Y_k \,\mid\, \xi) = 0
+\quad\text{per}\quad 
+i \neq k.
 $$
 
-In altri termini, il modello monofattoriale è adeguato se è nulla la
-differenza tra la matrice di correlazioni osservate e la matrice di
-correlazioni riprodotte dal modello. Per i dati di Spearman, le
-correlazioni riprodotte dal modello ad un fattore sono
+Se questa condizione risulta soddisfatta, il modello monofattoriale
+riproduce correttamente le *correlazioni* osservate fra le variabili.
+Con il termine $\boldsymbol{\Sigma}$ si indica la *matrice di
+correlazioni riprodotte* dal modello, che in forma matriciale si esprime
+come:
+
+$$
+\boldsymbol{\Sigma} 
+= \boldsymbol{\Lambda}\,\boldsymbol{\Lambda}^{\prime} 
+  + \boldsymbol{\Psi},
+$$
+
+dove $\boldsymbol{\Lambda}$ è la matrice delle *saturazioni
+fattoriali* (loadings) e $\boldsymbol{\Psi}$ è la matrice delle
+*unicità* (cioè le varianze specifiche non spiegate dal fattore
+comune). 
+
+Il modello monofattoriale si considera *adeguato* se la differenza tra
+la matrice di correlazioni empiricamente osservate e la matrice
+$\boldsymbol{\Sigma}$ prodotta dal modello risulta trascurabile.
+Quando tale differenza (chiamata spesso *misura di scostamento* o
+*misfit*) è prossima allo zero, possiamo concludere che il fattore
+comune riesce a spiegare in modo soddisfacente i rapporti di
+correlazione tra le variabili del nostro insieme di dati.
+
+::: {#exm-}
+Per i dati di Spearman, le correlazioni riprodotte dal modello ad un fattore sono
 
 ```{r}
-#| vscode: {languageId: r}
 round(L %*% t(L) + diag(fm$uniq), 3)
 ```
 
@@ -255,352 +414,470 @@ La matrice delle differenze tra le correlazioni campionarie e quelle
 riprodotte è
 
 ```{r}
-#| vscode: {languageId: r}
 round(Spearman - (L %*% t(L) + diag(fm$uniq)), 3) 
 ```
 
 Lo scarto maggiore tra le correlazioni campionarie e quelle riprodotte è
 uguale a 0.049. Si può dunque concludere che il modello monofattoriale
 spiega in maniera ragionevole i dati di Spearman.
+:::
 
 ## Bontà di adattamento del modello ai dati
 
-La verifica della bontà di adattamento del modello ai dati si determina
-mediante un test statistico che valuta la differenza tra la matrice di
-correlazioni (o di covarianze) osservata e la matrice di correlazioni (o
-covarianze) predetta dal modello fattoriale. L'ipotesi nulla che viene
-valutata è che la matrice delle correlazioni residue sia dovuta
-semplicemente agli errori di campionamento, ovvero che la matrice di
-correlazioni predetta dal modello $\boldsymbol{\Sigma}(\theta)$ sia
-uguale alla matrice di correlazioni $\boldsymbol{\Sigma}$ nella
-popolazione.
+Un aspetto fondamentale nell’analisi fattoriale è valutare se la
+*matrice di correlazioni* (o *covarianze*) prevista dal modello
+rispecchia adeguatamente i dati empirici. A tal scopo, si conduce un
+test statistico che confronta la matrice di correlazioni/covarianze
+*osservata* con quella *predetta* dal modello fattoriale.
 
-La statistica test $v$ è una funzione della differenza tra la matrice
-riprodotta $\boldsymbol{S}(\theta)$ e quella osservata $\boldsymbol{S}$
+### L’ipotesi nulla del test
 
-$$
-v = f\left[\boldsymbol{S}(\theta) - \boldsymbol{S}\right]
-$$
+L’ipotesi nulla ($H_0$) afferma che le differenze tra le correlazioni
+osservate e quelle riprodotte dal modello siano dovute soltanto agli
+errori di campionamento. In altre parole, il modello è considerato
+“corretto” a livello di popolazione, ossia
+$\boldsymbol{\Sigma}(\theta) = \boldsymbol{\Sigma}$, dove:
 
-e si distribuisce come una $\chi^2$ con $\nu$ gradi di libertà
+- $\boldsymbol{\Sigma}$ è la matrice di correlazioni (o covarianze)
+  nella *popolazione*;
+- $\boldsymbol{\Sigma}(\theta)$ è la matrice di correlazioni (o
+  covarianze) riprodotta dal modello in base ai parametri $\theta$.
 
-$$
-\nu = p(p+1)/ 2 - q,
-$$
+### La statistica $\chi^2$
 
-dove $p$ è il numero di variabili manifeste e
-$q$ è il numero di parametri stimati dal modello fattoriale (ovvero,
-$\lambda$ e $\psi$). 
-
-La statistica $v$ assume valore 0 se i parametri del modello riproducono esattamente la matrice di correlazioni tra le variabili nella popolazione. Tanto maggiore è la statistica $v$ tanto maggiore è la discrepanza tra le correlazioni osservate e quelle
-predette dal modello fattoriale. 
-
-Un risultato statisticamente significativo (es., $p$ \< .05) -- il quale suggerisce che una tale differenza *non* è uguale a zero -- rivela dunque una discrepanza tra il modello e i dati. Il test del modello fattoriale mediante la statistica $\chi^2$
-segue dunque una logica diversa da quella utilizzata nei normali test di
-ipotesi statistiche: *un risultato statisticamente significativo indica una mancanza di adattamento del modello ai dati*.
-
-L'applicazione del test $\chi^2$ per valutare la bontà di adattamento del modello ai dati richiede che ciascuna variabile manifesta sia distribuita normalmente -- più precisamente, richiede che le variabili manifeste siano un campione casuale che deriva da una normale
-multivariata. Questo requisito non è facile da rispettare in pratica.
-
-Tuttavia, il limite principale della statistica $\chi^2$ è che essa dipende fortemente dalle dimensioni del campione: al crescere delle dimensioni campionarie è più facile ottenere un risultato statisticamente significativo (ovvero, concludere che vi è un cattivo adattamento del modello ai dati). Per questa ragione, la bontà di adattamento del modello ai dati viene valutata da molteplici indici, non soltanto dalla statistica $\chi^2$. Più comune è calcolare il rapporto $\chi^2 / \nu$ e usare tale rapporto per valutare la bontà dell'adattamento. Valori minori di 3 o 4 suggeriscono che il modello ben si adatta ai dati.
-
-## L'errore standard della misurazione e il modello fattoriale
-
-In questa sezione, approfondiamo la connessione tra l'errore standard di misurazione, un concetto fondamentale della Classical Test Theory (CTT), e l'applicazione del modello fattoriale. Questa connessione ci permette di reinterpretare l'errore standard di misurazione attraverso il prisma dell'analisi fattoriale. Procediamo con un'esposizione dettagliata.
-
-All'interno della CTT, si afferma che il punteggio ottenuto ($X$) in un test corrisponde alla somma del valore vero ($T$) e dell'errore di misurazione ($E$), dove $E$ è considerato una variabile casuale indipendente da $T$. Se focalizziamo l'attenzione sul soggetto $i$-esimo, la formula diventa $X_i = T_i + E_i$, con $T_i$ rappresentante il valore vero e $E_i$ l'errore di misurazione, quest'ultimo avente media zero.
-
-Trasformiamo questa relazione nel contesto di un modello fattoriale monofattoriale che coinvolge $p$ variabili osservate (o item). Per ogni item, la relazione è espressa come:
+La statistica usata per il test, indicata come $v$ (o più
+comunemente $\chi^2$), è funzione della differenza tra
+$\boldsymbol{S}$ (la matrice osservata) e
+$\boldsymbol{S}(\theta)$ (la matrice riprodotta dal modello):
 
 $$
-\begin{equation}
-\begin{aligned}
- Y_{1i} &=  \lambda_1 \xi_i + \delta_{1i} \notag\\
- Y_{2i} &=  \lambda_2 \xi_i + \delta_{2i} \notag\\
-  \dots\notag\\
- Y_{pi} &=  \lambda_p \xi_i + \delta_{pi}, \notag
- \end{aligned}
- \end{equation}
- $$
+v = f\bigl[\boldsymbol{S}(\theta) - \boldsymbol{S}\bigr].
+$$ {#eq-chisq-gof}
 
-dove $Y_{ji}$ rappresenta il punteggio osservato per l'item $j$ del soggetto $i$, $\lambda_j$ è il carico fattoriale dell'item $j$ sul fattore comune $\xi_i$, e $\delta_{ji}$ è l'errore unico associato all'item $j$ per il soggetto $i$.
-
-Il punteggio totale $X_i$ per il soggetto $i$-esimo deriva dalla somma dei punteggi di ciascun item, il che si traduce in:
+Quando l’ipotesi nulla è vera (cioè la *discrepanza* tra le due matrici
+è solo casuale), $v$ si distribuisce approssimativamente come una
+$\chi^2$ con $\nu$ gradi di libertà, dove
 
 $$
-\begin{equation}
-\begin{aligned}
- X_i &= \sum_{j=1}^p Y_{ji} = \sum_{j=1}^p \lambda_j \xi_i + \sum_{j=1}^p \delta_{ji}\notag\\[12pt]
-  &=  \left( \sum_{j=1}^p \lambda_j \right) \xi_i  +  \sum_{j=1}^p \delta_{ji} \notag\\[12pt]
-  &= T_i + E_i\notag
-\end{aligned}
-\end{equation}
+\nu = \frac{p(p+1)}{2} \;-\; q.
+$$ {#eq-chisq-gof-nu}
+
+- $p$ è il numero di variabili manifeste;
+- $q$ è il numero di parametri stimati dal modello (ad esempio,
+  $\lambda$ e $\psi$ nel modello monofattoriale).
+
+Il valore di $v$ è *tanto maggiore quanto più le correlazioni/covarianze
+previste dal modello differiscono da quelle effettivamente osservate*.
+Se $v=0$, i parametri del modello ricostruiscono *esattamente* la
+matrice di correlazioni della popolazione.
+
+### Interpretazione del test
+
+Il test $\chi^2$ di adattamento del modello fattoriale segue la logica
+inversa rispetto ai test più comuni (dove un risultato significativo
+indica evidenza per l’ipotesi alternativa):
+
+- se il test *non* è significativo (es., $p\geq 0{,}05$), non si può
+  escludere che la discrepanza tra matrice osservata e matrice stimata
+  sia dovuta al caso: in tal caso, il modello è considerato adeguato;
+- al contrario, un risultato *significativo* (es., $p < 0{,}05$)
+  indica che la differenza non si spiega solo con l’errore di
+  campionamento e che il modello presenta *carenze di adattamento* ai
+  dati.
+
+### Assunzioni e limiti
+
+1. **Normalità multivariata**: il test $\chi^2$ richiede che le
+   variabili siano distribuite (almeno approssimativamente) come un
+   campione casuale tratto da una distribuzione normale multivariata.
+   Nella pratica, non sempre questa condizione è soddisfatta.
+2. **Dimensioni campionarie**: la statistica $\chi^2$ è *sensibile* al
+   numero di osservazioni. Con campioni di grandi dimensioni, anche
+   piccole discrepanze tra il modello e i dati tendono a produrre
+   risultati statisticamente significativi, suggerendo un *falso* cattivo
+   adattamento.
+
+Per questi motivi, la bontà di adattamento del modello non si giudica
+solo in base alla significatività del test $\chi^2$. Un criterio
+alternativo è ad esempio valutare il **rapporto $\chi^2/\nu$**, dove
+$\nu$ sono i gradi di libertà del test. Valori di
+$\chi^2/\nu \leq 3$ (o talvolta $\leq 4$) sono spesso considerati
+indicativi di un adattamento accettabile. Inoltre, in letteratura
+esistono molti altri indici (*fit indices*) che completano la valutazione
+della bontà di adattamento del modello fattoriale.
+
+## L’errore standard della misurazione nel modello fattoriale
+
+In questa sezione, mostriamo come il *concetto di errore standard di misurazione*, tipico della CTT, possa essere reinterpretato tramite il *modello fattoriale*.
+
+### Collegamento tra CTT e analisi fattoriale
+
+Secondo la CTT, il punteggio osservato $X$ di un test si scompone in
+due parti:
+
+$$
+X = T + E,
 $$
 
-Rispettando la struttura della CTT, la varianza del punteggio osservato $X_i$ si decompone in due componenti fondamentali: la varianza del valore vero $\sigma^2_{T_i}$ e la varianza dell'errore $\sigma^2_{E_i}$. Nel contesto dell'analisi fattoriale, $\sigma^2_{T_i}$ corrisponde al quadrato della somma dei carichi fattoriali:
+dove:
+
+- $T$ è il *valore vero* del soggetto,
+- $E$ è l’*errore di misurazione*, considerato una variabile casuale
+  con media zero, indipendente da $T$.
+
+Se consideriamo un modello fattoriale *monofattoriale* con $p$ item
+(variabili osservate), la relazione che descrive ciascun item $j$ per
+il soggetto $i$ è:
 
 $$
-\begin{equation}
-\begin{aligned}
- \sigma^2_{T_i} &= \mathbb{V}\left[ \left( \sum_{j=1}^p \lambda_j \right) \xi_i \right]\notag\\
- &= \left( \sum_{j=1}^p \lambda_j \right)^2 \mathbb{V}(\xi_i)\notag\\
- &= \left( \sum_{j=1}^p \lambda_j \right)^2 \notag
-\end{aligned}
-\end{equation}
+Y_{ji} = \lambda_j \,\xi_i + \delta_{ji},
 $$
 
-Inoltre, considerando la varianza dell'errore di misurazione $\sigma^2_{E_i}$ nel contesto fattoriale, questa è equivalente alla somma delle varianze degli errori unici ($\delta_{ji}$), ovvero le unicità:
+dove:
+
+- $Y_{ji}$ è il punteggio osservato nell’item $j$,
+- $\xi_i$ è il fattore comune (latente) per il soggetto $i$,
+- $\lambda_j$ è il *carico fattoriale* dell’item $j$ sul fattore
+  $\xi$,
+- $\delta_{ji}$ è l’errore unico (o fattore specifico) relativo
+  all’item $j$.
+
+Il **punteggio totale** $X_i$ del soggetto $i$ si ottiene sommando i
+punteggi dei singoli item:
 
 $$
-\begin{equation}
-\begin{aligned}
- \sigma^2_{E_i} &= \mathbb{V}\left( \sum_{j=1}^p \delta_{ji} \right)\notag\\
- &= \sum_{j=1}^p \mathbb{V}\left( \delta_{ji} \right)\notag\\
- &= \sum_{j=1}^p \Psi_j\notag
-\end{aligned}
-\end{equation}
+X_i 
+= \sum_{j=1}^p Y_{ji}
+= \sum_{j=1}^p (\lambda_j \,\xi_i + \delta_{ji})
+= \biggl(\sum_{j=1}^p \lambda_j\biggr)\,\xi_i 
+  + \sum_{j=1}^p \delta_{ji}.
 $$
 
-Pertanto, nel contesto dell'analisi fattoriale, l'errore standard di misurazione per il punteggio totale del test è quantificabile come la radice quadrata della somma delle unicità:
+Notiamo che questa formula rispecchia la struttura della CTT [@mcdonald2013test]:
 
 $$
-\begin{equation}
-\sigma_{E} = \sqrt{\sum_{j=1}^p \Psi_j}
-\end{equation}
-$$(eq-err-stnd-meas-FA)
+X_i = T_i + E_i,
+$$
 
-Questo collegamento tra la CTT e l'analisi fattoriale offre una prospettiva rinnovata sull'errore standard di misurazione, arricchendo la nostra comprensione della precisione dei test psicometrici.
+dove il *valore vero* $T_i$ è
+$\bigl(\sum_{j=1}^p \lambda_j\bigr)\,\xi_i$ (la parte del punteggio
+dovuta al fattore comune) e l’*errore* $E_i$ è
+$\sum_{j=1}^p \delta_{ji}$ (la somma degli errori unici).
+
+### Decomposizione della varianza
+
+Nella CTT, la varianza del punteggio osservato $\sigma^2_{X_i}$ si
+scompone nella varianza del valore vero ($\sigma^2_{T_i}$) e nella
+varianza dell’errore ($\sigma^2_{E_i}$):
+
+$$
+\sigma^2_{X_i} 
+= \sigma^2_{T_i} + \sigma^2_{E_i}.
+$$
+
+All’interno del modello fattoriale, la *varianza del valore vero*
+($\sigma^2_{T_i}$) corrisponde alla varianza del termine
+$\bigl(\sum_{j=1}^p \lambda_j\bigr)\,\xi_i$. Poiché $\xi_i$ ha
+varianza unitaria ($\mathbb{V}(\xi_i)=1$), si ha:
+
+$$
+\sigma^2_{T_i}
+= \mathbb{V}\Biggl[\biggl(\sum_{j=1}^p \lambda_j\biggr)\,\xi_i\Biggr]
+= \biggl(\sum_{j=1}^p \lambda_j\biggr)^2 \,\mathbb{V}(\xi_i)
+= \biggl(\sum_{j=1}^p \lambda_j\biggr)^2.
+$$
+
+La *varianza dell’errore* ($\sigma^2_{E_i}$), invece, è la varianza
+della somma degli errori unici $\sum_{j=1}^p \delta_{ji}$. Nel
+modello fattoriale, si assume che gli errori $\delta_{ji}$ siano
+incorrelati tra loro, per cui:
+
+$$
+\sigma^2_{E_i}
+= \mathbb{V}\Biggl(\sum_{j=1}^p \delta_{ji}\Biggr)
+= \sum_{j=1}^p \mathbb{V}(\delta_{ji})
+= \sum_{j=1}^p \Psi_j,
+$$
+
+dove $\Psi_j$ è la varianza (unicità) associata all’errore dell’item
+$j$. 
+
+### Errore standard di misurazione
+
+Nella CTT, *l’errore standard di misurazione* di un test quantifica, in
+media, quanto il punteggio osservato può differire dal valore vero
+$T_i$. Nel modello fattoriale, **l’errore standard di misurazione del
+punteggio totale** è la radice quadrata della somma delle varianze degli
+errori unici:
+
+$$
+\sigma_E 
+= \sqrt{\sigma^2_{E_i}}
+= \sqrt{\sum_{j=1}^p \Psi_j}.
+$$
+
+Questo fornisce una visione fattoriale dell’errore di misurazione: la
+precisione di un test (intesa come minore ampiezza dell’errore) aumenta
+al diminuire della somma delle unicità dei singoli item.
+
+**In sintesi**, il modello fattoriale arricchisce il tradizionale concetto di errore standard di misurazione della CTT, mostrando che l’errore
+(*specifico* o *unico*) di ciascun item influisce cumulativamente sulla
+precisione del punteggio totale. In altre parole, **gli item che
+presentano carichi fattoriali elevati** contribuiscono a ridurre
+l’errore complessivo di misurazione, mentre **le loro corrispettive
+unicità** (varianze specifiche non spiegate dal fattore comune)
+aumentano l’incertezza del punteggio totale. Questo legame tra CTT e
+analisi fattoriale offre *un’ottica ulteriore* per comprendere e
+quantificare la precisione dei test psicometrici.
+
 
 ## Un esempio concreto
 
-Applichiamo ora il risultato precedente ad un caso concreto. Consideriamo i dati utilizzati nella validazione italiana del *Cognitive Style Questionnaire - Short Form* (CSQ-SF, Meins et al. 2012). Il CSQ-SF viene utilizzato per misurare la vulnerabilità all'ansia e alla depressione. È costituito da cinque sottoscale: *Internality*, *Globality*, *Stability*, *Negative consequences* e *Self-worth*. 
+Vediamo ora come applicare i concetti del modello monofattoriale e
+dell’errore standard di misurazione a un caso reale. Utilizzeremo i dati
+raccolti per la validazione italiana del *Cognitive Style Questionnaire
+– Short Form* (CSQ-SF, Meins et al. 2012). Questo questionario, volto a
+misurare la vulnerabilità all’ansia e alla depressione, comprende cinque
+sottoscale: *Internality* (`I`), *Globality* (`G`), *Stability* (`S`),
+*Negative consequences* (`N`) e *Self-worth* (`W`). Sebbene la
+sottoscala di *Internality* risulti problematica, la includiamo
+nell’analisi per illustrare la procedura completa.
 
-Leggiamo i dati in $\textsf{R}$:
+
+### Lettura e ispezione preliminare dei dati
+
+In $\textsf{R}$, carichiamo il dataset e ne verifichiamo la dimensione
+($n$, numero di partecipanti). Per una prima esplorazione, calcoliamo
+le statistiche descrittive (`psych::describe(...)`) e visualizziamo la
+matrice di correlazione con `psych::pairs.panels(...)`.
 
 ```{r}
-#| vscode: {languageId: r}
 csq <- rio::import(here::here("data", "csq540.csv"))
+n <- nrow(csq)                 # Numero di partecipanti
+psych::describe(csq, type = 2) # Statistiche descrittive
 ```
 
-Il numero di partecipanti è
-
 ```{r}
-#| vscode: {languageId: r}
-n <- nrow(csq)
-n
+#| fig-asp: 1
+psych::pairs.panels(csq)       # Matrice di correlazione
 ```
 
-Le statistiche descrittive si ottengono con la seguente istruzione:
+
+Ne emerge che la sottoscala *Internality* (`I`) presenta alcune criticità
+— aspetto già segnalato in letteratura.
+
+### Specifica e stima di un modello unifattoriale
+
+Per analizzare i dati secondo un modello fattoriale a un solo fattore,
+usiamo la sintassi del pacchetto `lavaan`:
 
 ```{r}
-#| vscode: {languageId: r}
-psych::describe(csq, type = 2) 
-```
-
-Esaminiamo la matrice di correlazione:
-
-```{r}
-#| vscode: {languageId: r}
-psych::pairs.panels(csq) 
-```
-
-La sottoscala di *Internality* è problematica, come messo anche in evidenza dall'autore del test. La consideriamo comunque in questa analisi statistica.
-
-Specifichiamo il modello unifattoriale nella sintassi di `lavaan`:
-
-```{r}
-#| vscode: {languageId: r}
 mod_csq <- "
-   F =~ NA*I + G + S + N + W
-   F ~~ 1*F
-" 
+  F =~ NA*I + G + S + N + W
+  F ~~ 1*F
+"
+fit <- lavaan:::cfa(mod_csq, data = csq)
 ```
 
-Adattiamo il modello ai dati:
+- Nella prima riga, `F =~ NA*I + G + S + N + W` indichiamo che il fattore
+  `F` è definito dai cinque item/sottoscale (`I, G, S, N, W`), con
+  parametro `NA` per lasciare libera la stima della prima saturazione.
+- Nella seconda riga, `F ~~ 1*F` impone varianza unitaria per il fattore
+  `F`.
+
+Otteniamo il resoconto completo con:
 
 ```{r}
-#| vscode: {languageId: r}
-fit <- lavaan:::cfa(
-  mod_csq,
-  data = csq
-)
+summary(fit, standardized = TRUE, fit.measures = TRUE)
 ```
 
-Esaminiamo i risultati:
+e le stime dei parametri con:
 
 ```{r}
-#| vscode: {languageId: r}
-summary(
-  fit, 
-  standardized = TRUE,
-  fit.measures = TRUE
-) |>
-  print()
+parameterEstimates(fit)
 ```
 
-Esaminiamo solo le stime dei parametri del modello:
+In particolare, ci soffermiamo sulle *unicità* (varianze specifiche di
+ciascuna sottoscala), accessibili da:
 
 ```{r}
-#| vscode: {languageId: r}
-parameterEstimates(fit) |>
-    print()
-```
-
-Recuperiamo le specificità:
-
-```{r}
-#| vscode: {languageId: r}
 psi <- parameterEstimates(fit)$est[7:11]
-psi |>
-    print()
+psi
 ```
 
-Stimiamo l'errore standard della misurazione con la \@ref(eq:err-stnd-meas-FA):
+
+### Stima dell’errore standard di misurazione tramite il modello fattoriale
+
+Nel modello fattoriale monofattoriale, *l’errore standard di
+misurazione* di un punteggio totale è la radice quadrata della somma
+delle varianze specifiche (unicità). Con le stime ottenute da lavaan,
+basta sommare i valori $\psi_j$ e prenderne la radice quadrata:
 
 ```{r}
-#| vscode: {languageId: r}
-sqrt(sum(psi)) |>
-    print()
+sqrt(sum(psi))
 ```
 
-Applichiamo ora la formula della TCT:
+Questo valore rappresenta l’errore standard complessivo del *punteggio
+totale* calcolato sui cinque item (sottoscale).
+
+
+### Confronto con la formula della CTT
+
+Ricordiamo la *formula classica* per l’errore standard di misurazione
+nella **Classical Test Theory (CTT)**:
 
 $$
-\sigma_E = \sigma_X \sqrt{1 -\rho_{XX^\prime}}.
+\sigma_E = \sigma_X \sqrt{1 - \rho_{XX'}},
 $$
 
-Per trovare $\sigma$ calcoliamo prima il punteggio totale:
+dove $\sigma_X$ è la *deviazione standard del punteggio totale* e
+$\rho_{XX'}$ è l’*attendibilità* (affidabilità) del test.
+
+1. Calcoliamo il **punteggio totale** come somma delle sottoscale:
+
+   ```{r}
+   tot_score <- rowSums(csq)
+   ```
+
+2. Otteniamo la **deviazione standard** di `tot_score`:
+
+   ```{r}
+   sigma <- sd(tot_score)
+   sigma
+   ```
+
+3. Stimiamo l’**attendibilità** $\rho_{XX'}$ (qui indicata da
+   $\Omega$) con la funzione `semTools::reliability()` applicata
+   all’oggetto `fit` prodotto da `lavaan`:
+
+   ```{r}
+   rel <- semTools::reliability(fit)
+   rel
+   ```
+
+   Il valore di $\Omega$ è tipicamente riportato nella seconda riga di
+   `rel`.
+
+4. Applichiamo la formula:
+
+   ```{r}
+   sigma * sqrt(1 - rel[2])
+   ```
+
+Il valore ottenuto risulta molto simile all’errore standard di
+misurazione calcolato con la formula di derivazione fattoriale
+$\sqrt{\sum_{j=1}^p \Psi_j}$, a conferma della coerenza tra il
+modello fattoriale e la CTT.
+
+
+### Correlazioni riprodotte dal modello
+
+Per ispezionare *come* il modello unifattoriale “ricostruisce” le
+correlazioni tra le variabili, possiamo estrarre:
+
+- La **matrice di correlazione riprodotta**:
+
+  ```{r}
+  cor_mat <- lavInspect(fit, "cor.ov")
+  cor_mat
+  ```
+
+- Le **saturazioni fattoriali standardizzate** (loadings):
+
+  ```{r}
+  l <- inspect(fit, what="std")$lambda
+  l
+  ```
+
+Nel modello monofattoriale, la **correlazione predetta** tra due
+variabili manifeste (ad esempio `I` e `G`) è data dal *prodotto* delle
+loro saturazioni. Se `l[1]` è la saturazione di `I` e `l[2]` quella di
+`G`, allora:
 
 ```{r}
-#| vscode: {languageId: r}
-tot_score <- rowSums(csq)
+l[1] * l[2]
 ```
 
-La deviazione standard di `tot_score` ci fornisce una stima di $\sigma_X$:
+restituisce la correlazione stimata per queste due sottoscale. Per
+visualizzare la *matrice completa* delle correlazioni riprodotte dal
+modello, calcoliamo:
 
 ```{r}
-#| vscode: {languageId: r}
-sigma <- sd(tot_score)
-sigma |>
-    print()
+l %*% t(l) |> round(3)
 ```
 
-Per applicare la formula della TCT abbiamo bisogno dell'attendibilità. La stimiamo usando la funzione `reliability` del pacchetto `semTools` dall'oggetto creato da `lavaan:::cfa()`:
+
+### Varianza riprodotta di una variabile
+
+Prendiamo a esempio la variabile $`W`$ e confrontiamo:
+
+- La **varianza osservata**:  
+
+  ```{r}
+  var(csq$W)
+  ```
+  
+- La **varianza riprodotta** dal modello: somma della varianza spiegata
+  dal fattore e della varianza residua. Poiché il caricamento fattoriale
+  standardizzato per `W` (ad esempio `-11.598` nel caso di non
+  standardizzazione, o un valore $\lambda_W$ in quello standardizzato)
+  misura l’effetto di `F` su `W`, la parte spiegata è $\lambda_W^2$.
+  Sommando poi la specificità (residuo), ricostruiamo la varianza
+  totale. Se prendiamo la proporzione di varianza residua rispetto a
+  quella osservata:
+
+  ```{r}
+  1 - (l^2 / var(csq$W))
+  ```
+
+  otteniamo un valore simile all’unicità stimata per `W`.
+
+Procedendo nello stesso modo per le altre sottoscale (`G`, `I`, ecc.)
+possiamo verificare la corrispondenza fra la varianza empirica e la
+varianza spiegata dal modello unifattoriale.
+
+**In sintesi**, questo esempio illustra come, in un modello unifattoriale, sia possibile
+collegare:
+
+1. **errori standard di misurazione** (CTT) e **somme di unicità** degli
+   item (analisi fattoriale);
+2. **correlazioni osservate** e **correlazioni riprodotte** dal modello
+   mediante il prodotto dei carichi fattoriali;
+3. **varianza osservata** e **varianza ricostruita** come somma di
+   varianza comune (fattore) e varianza residua (unicità).
+
+La coerenza dei risultati fra CTT e analisi fattoriale ribadisce la loro
+stretta complementarità nello studio dell’affidabilità e della struttura
+latente di un test psicometrico.
+
+
+## Correlazione tra variabili manifeste e fattore comune
+
+Nel *modello unifattoriale*, la *saturazione fattoriale* $\lambda_i$
+della variabile manifesta $Y_i$ corrisponde teoricamente alla
+*correlazione* tra $Y_i$ e il *fattore comune* $\xi$. Tuttavia,
+perché ciò risulti evidente in un’applicazione reale, è necessario poter
+disporre di una *stima* dei punteggi fattoriali per ciascun
+partecipante, cioè i valori (stimati) del fattore comune $\xi_i$. In
+$\textsf{R}$, con `lavaan` possiamo ricavare i **punteggi fattoriali**
+usando la funzione `lavPredict(fit)`.
 
 ```{r}
-#| vscode: {languageId: r}
-rel <- semTools::reliability(fit)
-rel |>
-    print()
-```
-
-Utilizzando $\Omega$ otteniamo:
-
-```{r}
-#| vscode: {languageId: r}
-sigma * sqrt(1- rel[2]) |>
-    print()
-```
-
-Si noti come il risultato sia molto simile a quello trovato con la formula della TCT.
-
-### Correlazioni osservate e riprodotte
-
-Le correlazioni riprodotte dal modello si ottengono nel modo seguente dall'oggetto `fit`.
-
-```{r}
-#| vscode: {languageId: r}
-cor_mat <- lavInspect(fit, "cor.ov")
-cor_mat |>
-    print()
-```
-
-Abbiamo visto come il modello unifattoriale predice che la correlazione tra due variabili manifeste sia il prodotto delle rispettive correlazioni fattoriali. Estraiamo le saturazioni fattoriali.
-
-```{r}
-#| vscode: {languageId: r}
-l <- inspect(fit, what="std")$lambda
-l |>
-    print()
-```
-
-Per esempio, se consideriamo `I` e `G`, la correlazione predetta dal modello fattoriale tra queste due sottoscale è data dal prodotto delle rispettive saturazioni fattoriali.
-
-```{r}
-#| vscode: {languageId: r}
-l[1] * l[2] 
-```
-
-La matrice di correlazioni riprodotte riportata sopra mostra il risultato di questo prodotto per ciascuna coppia di variabili manifeste.
-
-```{r}
-#| vscode: {languageId: r}
-l %*% t(l) |> round(3) |>
-    print()
-```
-
-### Scomposizione della varianza
-
-Consideriamo la variabile manifesta `W`. Calcoliamo la varianza.
-
-```{r}
-#| vscode: {languageId: r}
-var(csq$W) |> print()
-```
-
-La varianza *riprodotta* di questa variabile, secondo il modello fattoriale, dovrebbe esere uguale alla somma di due componenti: la varianza predetta dall'effetto causale del fattore latente e la varianza residua.  La varianza predetta dall'effetto causale del fattore latente è uguale alla saturazione elevata al quadrato:
-
-```{r}
-#| vscode: {languageId: r}
-(-11.598)^2 
-```
-
-Calcolo ora la proporzione di varianza residua normalizzando rispetto alla varianza osservata (non a quella riprodotta dal modello):
-
-```{r}
-#| vscode: {languageId: r}
-1 - (-11.598)^2 / var(csq$W) 
-```
-
-Il valore così ottenuto è molto simile al valore della varianza residua di `W`. 
-
-Ripeto i calcoli per la variabile `G`
-
-```{r}
-#| vscode: {languageId: r}
-1 - (-11.322)^2 / var(csq$G) 
-```
-
-e per la variabile `I`
-
-```{r}
-#| vscode: {languageId: r}
-1 - (0.725)^2 / var(csq$I) 
-```
-
-In tutti i casi, i valori ottenuti sono molto simili alle varianze residue ipotizzate dal modello unifattoriale.
-
-### Correlazione tra variabili manifeste e fattore comune
-
-Un modo per verificare il fatto che, nel modello unifattoriale, la saturazione fattoriale della $i$-esima variabile manifesta è uguale alla correlazione tra i punteggi osservati sulla i$-esima variabile manifesta e il fattore latente è quella di calcolare le correlazioni tra le variabili manifeste e i punteggi fattoriali. I punteggi fattoriali rappresentano una *stima* del punteggio "vero", ovvero del punteggio che ciascun rispondente otterrebbe in assenza di errori di misurazione. Vedremo in seguito come si possono stimare i punteggi fattoriali. Per ora ci limitiamo a calcolarli usando `lavaan`.
-
-```{r}
-#| vscode: {languageId: r}
-head(lavPredict(fit)) |>
-    print()
-```
-
-Abbiamo un punteggio diverso per ciascuno dei 540 individui che appartengono al campione di dati esaminato.
-
-```{r}
-#| vscode: {languageId: r}
+head(lavPredict(fit)) |> print()
 dim(lavPredict(fit))
 ```
 
-Calcoliamo ora le correlazioni tra i valori osservati su ciascuna delle cinque scale del CSQ e le stime dei punteggi veri.
+- `head(lavPredict(fit))` mostra le prime righe dei punteggi fattoriali
+  stimati per i soggetti.
+- `dim(lavPredict(fit))` conferma che abbiamo un punteggio per ognuno
+  dei 540 soggetti nel dataset.
+
+Per verificare in concreto la relazione tra $\lambda_i$ e la
+correlazione di $Y_i$ con il fattore comune, calcoliamo la
+*correlazione* tra i valori osservati su ciascuna sottoscala del CSQ e
+le stime dei punteggi fattoriali (ossia $\hat{\xi}$):
 
 ```{r}
-#| vscode: {languageId: r}
 c(
   cor(csq$I, lavPredict(fit)),
   cor(csq$G, lavPredict(fit)),
@@ -608,23 +885,26 @@ c(
   cor(csq$N, lavPredict(fit)),
   cor(csq$W, lavPredict(fit))
 ) |> 
-  round(3) |>
-    print()
+  round(3)
 ```
 
-Si noti che i valori ottenui sono molto simili ai valori delle saturazioni fattoriali. La piccola differenza tra le correlazioni ottenute e i valori delle saturazioni fattoriali dipende dal fatto che abbiamo *stimato* i punteggi fattoriali.
+I risultati ottenuti sono molto *simili* (ma non necessariamente
+identici) alle saturazioni fattoriali riportate in:
 
 ```{r}
-#| lines_to_next_cell: 0
-#| vscode: {languageId: r}
-inspect(fit, what="std")$lambda |>
-    print()
+inspect(fit, what="std")$lambda
 ```
+
+La piccola differenza riscontrata è dovuta al fatto che i punteggi
+fattoriali $\hat{\xi}_i$ sono *stime* e non i valori reali del fattore
+latente, quindi non coincidono esattamente con $\xi_i$. Ciò nonostante,
+se il modello è ben specificato e i dati si adattano in modo
+soddisfacente, le correlazioni tra punteggi osservati e fattore stimato
+risulteranno prossime alle saturazioni fattoriali teoriche.
 
 ## Session Info
 
 ```{r}
-#| vscode: {languageId: r}
 sessionInfo()
 ```
 
