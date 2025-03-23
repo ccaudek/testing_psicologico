@@ -1021,7 +1021,7 @@ window.Quarto = {
 <a href="#simulazione-di-una-regressione-lineare-semplice-in-r" id="toc-simulazione-di-una-regressione-lineare-semplice-in-r" class="nav-link" data-scroll-target="#simulazione-di-una-regressione-lineare-semplice-in-r"><span class="header-section-number">25.8.2</span> Simulazione di una Regressione Lineare Semplice in R</a>
   <ul>
 <li><a href="#definizione-dei-dati-e-calcolo-dei-coefficienti-dei-minimi-quadrati" id="toc-definizione-dei-dati-e-calcolo-dei-coefficienti-dei-minimi-quadrati" class="nav-link" data-scroll-target="#definizione-dei-dati-e-calcolo-dei-coefficienti-dei-minimi-quadrati"><span class="header-section-number">25.8.2.1</span> Definizione dei dati e calcolo dei coefficienti dei minimi quadrati</a></li>
-  <li><a href="#calcolo-delle-previsioni-e-del-coefficiente-di-determinazione-r2" id="toc-calcolo-delle-previsioni-e-del-coefficiente-di-determinazione-r2" class="nav-link" data-scroll-target="#calcolo-delle-previsioni-e-del-coefficiente-di-determinazione-r2"><span class="header-section-number">25.8.2.2</span> Calcolo delle previsioni e del coefficiente di determinazione (<span class="math inline">\(R^2\)</span>)</a></li>
+  <li><a href="#calcolo-dei-valori-predetti-e-del-coefficiente-di-determinazione-r2" id="toc-calcolo-dei-valori-predetti-e-del-coefficiente-di-determinazione-r2" class="nav-link" data-scroll-target="#calcolo-dei-valori-predetti-e-del-coefficiente-di-determinazione-r2"><span class="header-section-number">25.8.2.2</span> Calcolo dei valori predetti e del coefficiente di determinazione (<span class="math inline">\(R^2\)</span>)</a></li>
   <li><a href="#rappresentazione-grafica-dei-dati-e-della-regressione" id="toc-rappresentazione-grafica-dei-dati-e-della-regressione" class="nav-link" data-scroll-target="#rappresentazione-grafica-dei-dati-e-della-regressione"><span class="header-section-number">25.8.2.3</span> Rappresentazione Grafica dei Dati e della Regressione</a></li>
   <li><a href="#analisi-con-il-pacchetto-lm" id="toc-analisi-con-il-pacchetto-lm" class="nav-link" data-scroll-target="#analisi-con-il-pacchetto-lm"><span class="header-section-number">25.8.2.4</span> Analisi con il Pacchetto <code>lm</code></a></li>
   </ul>
@@ -1673,7 +1673,7 @@ e_n
 <li>Il prodotto <span class="math inline">\(\mathbf{Xb}\)</span> rappresenta i valori previsti (o stimati) del modello come combinazione lineare delle colonne della matrice di design <span class="math inline">\(\mathbf{X}\)</span>, ponderata dai coefficienti <span class="math inline">\(\mathbf{b}\)</span>.</li>
 <li>Il vettore <span class="math inline">\(\mathbf{e}\)</span> rappresenta gli errori o residui, che sono le differenze tra i valori osservati <span class="math inline">\(\mathbf{y}\)</span> e i valori previsti <span class="math inline">\(\mathbf{Xb}\)</span>.</li>
 </ul>
-<p>Questa forma compatta e ordinata consente un’efficiente analisi statistica e facilita i calcoli necessari per stimare i coefficienti del modello di regressione <span class="citation" data-cites="caudek2001statistica">(<a href="#ref-caudek2001statistica" role="doc-biblioref">Caudek &amp; Luccio, 2001</a>)</span>.</p>
+<p>Questa forma compatta e ordinata consente un’efficiente analisi statistica e facilita i calcoli necessari per stimare i coefficienti del modello di regressione <span class="citation" data-cites="caudek2001statistica">(<a href="../../99-references.html#ref-caudek2001statistica" role="doc-biblioref">Caudek &amp; Luccio, 2001</a>)</span>.</p>
 </section></section><section id="stima-dei-coefficienti-con-il-metodo-dei-minimi-quadrati" class="level2" data-number="25.8"><h2 data-number="25.8" class="anchored" data-anchor-id="stima-dei-coefficienti-con-il-metodo-dei-minimi-quadrati">
 <span class="header-section-number">25.8</span> Stima dei Coefficienti con il Metodo dei Minimi Quadrati</h2>
 <p>Per ogni osservazione <span class="math inline">\(i\)</span>, l’errore (o residuo) è definito come la differenza tra il valore osservato <span class="math inline">\(y_i\)</span> e il valore predetto <span class="math inline">\(\hat{y}_i\)</span> dal modello:</p>
@@ -1774,32 +1774,38 @@ e_i = y_i - \hat{y}_i,
 <span><span class="co"># Aggiungi rumore gaussiano</span></span>
 <span><span class="va">noise_mean</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">noise_sd</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
-<span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">noise_mean</span>, sd <span class="op">=</span> <span class="va">noise_sd</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Simula i valori di y</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span> <span class="op">+</span> <span class="va">e</span></span>
-<span></span>
-<span><span class="co"># Calcola i coefficienti stimati (minimi quadrati)</span></span>
-<span><span class="va">b_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">y</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Valori veri di b:\n"</span><span class="op">)</span></span>
+<span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, mean <span class="op">=</span> <span class="va">noise_mean</span>, sd <span class="op">=</span> <span class="va">noise_sd</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simula i valori di y</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b</span> <span class="op">+</span> <span class="va">e</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcola i coefficienti stimati (minimi quadrati)</span></span>
+<span><span class="va">b_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">y</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Valori veri di b:\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Valori veri di b:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  3.40 12.35</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Stima di b:\n"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  3.40 12.35</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Stima di b:\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Stima di b:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">b_hat</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       [,1]</span></span>
 <span><span class="co">#&gt;       4.26</span></span>
 <span><span class="co">#&gt; data 11.68</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="calcolo-delle-previsioni-e-del-coefficiente-di-determinazione-r2" class="level4" data-number="25.8.2.2"><h4 data-number="25.8.2.2" class="anchored" data-anchor-id="calcolo-delle-previsioni-e-del-coefficiente-di-determinazione-r2">
-<span class="header-section-number">25.8.2.2</span> Calcolo delle previsioni e del coefficiente di determinazione (<span class="math inline">\(R^2\)</span>)</h4>
+</section><section id="calcolo-dei-valori-predetti-e-del-coefficiente-di-determinazione-r2" class="level4" data-number="25.8.2.2"><h4 data-number="25.8.2.2" class="anchored" data-anchor-id="calcolo-dei-valori-predetti-e-del-coefficiente-di-determinazione-r2">
+<span class="header-section-number">25.8.2.2</span> Calcolo dei valori predetti e del coefficiente di determinazione (<span class="math inline">\(R^2\)</span>)</h4>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Previsioni</span></span>
-<span><span class="va">y_hat</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b_hat</span></span>
-<span></span>
-<span><span class="co"># Calcola R^2</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Valori predetti</span></span>
+<span><span class="va">y_hat</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b_hat</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calcola R^2</span></span>
 <span><span class="va">SS_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="va">y_hat</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>  <span class="co"># Somma dei residui al quadrato</span></span>
 <span><span class="va">SS_tot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>  <span class="co"># Somma totale dei quadrati</span></span>
 <span><span class="va">r2</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="op">(</span><span class="va">SS_res</span> <span class="op">/</span> <span class="va">SS_tot</span><span class="op">)</span></span>
@@ -1810,33 +1816,40 @@ e_i = y_i - \hat{y}_i,
 </section><section id="rappresentazione-grafica-dei-dati-e-della-regressione" class="level4" data-number="25.8.2.3"><h4 data-number="25.8.2.3" class="anchored" data-anchor-id="rappresentazione-grafica-dei-dati-e-della-regressione">
 <span class="header-section-number">25.8.2.3</span> Rappresentazione Grafica dei Dati e della Regressione</h4>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Grafico dei dati</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span></span>
-<span>  <span class="va">data</span>, </span>
-<span>  <span class="va">y</span>, </span>
-<span>  main <span class="op">=</span> <span class="st">"Regressione Lineare Semplice"</span>, </span>
-<span>  xlab <span class="op">=</span> <span class="st">"x"</span>, </span>
-<span>  ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
-<span>  pch <span class="op">=</span> <span class="fl">16</span>, </span>
-<span>  col <span class="op">=</span> <span class="st">"blue"</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Costruiamo un data.frame</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">data</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Data frame per le due linee</span></span>
+<span><span class="va">lines_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span></span>
+<span>  intercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">b_hat</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  slope     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">b_hat</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  tipo      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Valori veri"</span>, <span class="st">"Stima"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span></span>
-<span>  a <span class="op">=</span> <span class="va">b</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, </span>
-<span>  col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span>  <span class="co"># Linea con valori veri</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span></span>
-<span>  a <span class="op">=</span> <span class="va">b_hat</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, b <span class="op">=</span> <span class="va">b_hat</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, </span>
-<span>  col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span>  <span class="co"># Linea stimata</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span></span>
-<span>  <span class="st">"topleft"</span>, </span>
-<span>  legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Valori veri"</span>, <span class="st">"Stima"</span><span class="op">)</span>, </span>
-<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>, </span>
-<span>   lty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_abline</span><span class="op">(</span>data <span class="op">=</span> <span class="va">lines_df</span>,</span>
+<span>              <span class="fu">aes</span><span class="op">(</span>intercept <span class="op">=</span> <span class="va">intercept</span>, slope <span class="op">=</span> <span class="va">slope</span>, </span>
+<span>                  color <span class="op">=</span> <span class="va">tipo</span>, linetype <span class="op">=</span> <span class="va">tipo</span><span class="op">)</span>,</span>
+<span>              linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Valori veri"</span> <span class="op">=</span> <span class="st">"black"</span>, <span class="st">"Stima"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_linetype_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Valori veri"</span> <span class="op">=</span> <span class="st">"dashed"</span>, <span class="st">"Stima"</span> <span class="op">=</span> <span class="st">"solid"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Regressione Lineare Semplice"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"x"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"Linea"</span>,</span>
+<span>    linetype <span class="op">=</span> <span class="st">"Linea"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,                 </span>
+<span>    legend.box <span class="op">=</span> <span class="st">"horizontal"</span>,                 </span>
+<span>    legend.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
@@ -1845,7 +1858,7 @@ e_i = y_i - \hat{y}_i,
 <span class="header-section-number">25.8.2.4</span> Analisi con il Pacchetto <code>lm</code>
 </h4>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modello di regressione con lm()</span></span>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Modello di regressione con lm()</span></span>
 <span><span class="va">lm_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">data</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_model</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -1896,7 +1909,7 @@ tr(\boldsymbol{A}) = \sum_{i=1}^{n} a_{ii}.
 tr(\boldsymbol{A}) = 7 + 8 + 9 = 24.
 \]</span></p>
 <div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span>,<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">8</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">9</span><span class="op">)</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  byrow <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -1908,7 +1921,7 @@ tr(\boldsymbol{A}) = 7 + 8 + 9 = 24.
 <span><span class="co">#&gt; [3,]    2    3    9</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">A</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">A</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 24</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="dipendenza-lineare" class="level3" data-number="25.8.4"><h3 data-number="25.8.4" class="anchored" data-anchor-id="dipendenza-lineare">
@@ -1959,9 +1972,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span class="header-section-number">25.9</span> Radici e vettori latenti</h2>
 <p>Dal determinante di una matrice si possono ricavare le <em>radici latenti</em> o <em>autovalori</em> (denotati da <span class="math inline">\(\lambda_i\)</span>) e i <em>vettori latenti</em> o <em>autovettori</em> della matrice. Alle nozioni di autovalore e autovettore verrà qui fornita un’interpretazione geometrica.</p>
 <p>Simuliamo di dati di due variabili associate tra loro:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>repr.plot.width <span class="op">=</span> <span class="fl">8</span>, repr.plot.height <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">npoints</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">npoints</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -1974,8 +1986,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co">#&gt; [1] 0.8291</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Disegnamo il diagramma di dispersione con un ellisse che contiene la nube di punti:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
 <span><span class="fu">car</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/car/man/Ellipses.html">dataEllipse</a></span><span class="op">(</span></span>
 <span>  <span class="va">Y</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">Y</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>,</span>
 <span>  levels <span class="op">=</span> <span class="fl">0.95</span>,</span>
@@ -1985,15 +1997,15 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Se racchiudiamo le osservazioni (<span class="math inline">\(v_1, v_2\)</span>) con un’ellisse, allora la lunghezza dei semiassi maggiori e minori dell’ellisse sarà proporzionale a <span class="math inline">\(\sqrt{\lambda_1}\)</span> e <span class="math inline">\(\sqrt{\lambda_2}\)</span>. L’asse maggiore è la linea passante per il punto (<span class="math inline">\(\bar{v_1}, \bar{v_2}\)</span>) nella direzione determinata dal primo autovettore <span class="math inline">\(\boldsymbol{a}_1'\)</span> con pendenza uguale a <span class="math inline">\(a_{12}/a_{11}\)</span>. L’asse minore è la linea passante per il punto (<span class="math inline">\(\bar{v_1}, \bar{v_2}\)</span>) nella direzione determinata dal secondo autovettore <span class="math inline">\(\boldsymbol{a}_2\)</span>.</p>
 <p>Calcoliamo ora gli autovettori e gli autovalori:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span></span>
 <span><span class="va">ee</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html">eigen</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></span>
 <span><span class="va">ee</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; eigen() decomposition</span></span>
@@ -2005,8 +2017,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co">#&gt; [1,] 0.7071 -0.7071</span></span>
 <span><span class="co">#&gt; [2,] 0.7071  0.7071</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># First eigenvector </span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># First eigenvector </span></span>
 <span><span class="va">ev_1</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Slope of the first eigenvector</span></span>
@@ -2018,8 +2030,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co"># Slope of the second eigenvector</span></span>
 <span><span class="va">ev2_m</span> <span class="op">&lt;-</span> <span class="va">ev_2</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="va">ev_2</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatter plot showing the span of both eigenvectors </span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Scatter plot showing the span of both eigenvectors </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>zx<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, zy<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>  <span class="op">|&gt;</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">zx</span>, y <span class="op">=</span> <span class="va">zy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2029,21 +2041,21 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span>  <span class="fu">geom_abline</span><span class="op">(</span>slope <span class="op">=</span> <span class="va">ev2_m</span>, color <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span> </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Gli autovettori sono ortogonali:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Multiply both eigenvectors </span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Multiply both eigenvectors </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ev_1</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">ev_2</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           [,1]</span></span>
 <span><span class="co">#&gt; [1,] 2.237e-17</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Generiamo uno Scree Plot.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calculate the estimated variance for each eigenvalue</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calculate the estimated variance for each eigenvalue</span></span>
 <span><span class="va">e_var</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">values</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Data frame with variance percentages</span></span>
@@ -2059,23 +2071,23 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Percentage of variation (%)"</span><span class="op">)</span> </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Verifichiamo che la somma degli autovalori sia uguale alla varianza totale.</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ee</span><span class="op">$</span><span class="va">values</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ee</span><span class="op">$</span><span class="va">values</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 2</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Gli autovettori ottenuti utilizzando la funzione <code><a href="https://rdrr.io/r/base/eigen.html">eigen()</a></code> sono normalizzati. Ciò significa che la loro lunghezza è uguale a 1:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> </span>
 <span><span class="co">#&gt;      [,1]</span></span>
 <span><span class="co">#&gt; [1,]    1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2084,8 +2096,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <li>gli autovettori determinano la direzione degli assi;</li>
 <li>la radice quadrata degli autovalori è proporzionale alla lunghezza degli assi dell’ellisse.</li>
 </ul>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">car</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/car/man/Ellipses.html">dataEllipse</a></span><span class="op">(</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">car</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/car/man/Ellipses.html">dataEllipse</a></span><span class="op">(</span></span>
 <span>  <span class="va">Y</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">Y</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>,</span>
 <span>  levels <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  lty <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -2111,7 +2123,7 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="01_linear_algebra_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 </div>
@@ -2135,8 +2147,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 \boldsymbol{\Lambda},\]</span></p>
 <p>da cui l’affermazione che la matrice degli autovettori diagonalizza <span class="math inline">\(\boldsymbol{A}\)</span>.</p>
 <p>Per esempio,</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">1.25</span><span class="op">)</span>, </span>
 <span>  nrow <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>  ncol <span class="op">=</span> <span class="fl">2</span></span>
@@ -2146,8 +2158,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co">#&gt; [1,]  1.0 0.50</span></span>
 <span><span class="co">#&gt; [2,]  0.5 1.25</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html">eigen</a></span><span class="op">(</span><span class="va">sigma</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html">eigen</a></span><span class="op">(</span><span class="va">sigma</span><span class="op">)</span></span>
 <span><span class="va">out</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; eigen() decomposition</span></span>
 <span><span class="co">#&gt; $values</span></span>
@@ -2158,22 +2170,22 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co">#&gt; [1,] 0.6154 -0.7882</span></span>
 <span><span class="co">#&gt; [2,] 0.7882  0.6154</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">)</span></span>
 <span><span class="va">Lambda</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      [,1]   [,2]</span></span>
 <span><span class="co">#&gt; [1,] 1.64 0.0000</span></span>
 <span><span class="co">#&gt; [2,] 0.00 0.6096</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">U</span> <span class="op">&lt;-</span> <span class="va">out</span><span class="op">$</span><span class="va">vectors</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">U</span> <span class="op">&lt;-</span> <span class="va">out</span><span class="op">$</span><span class="va">vectors</span></span>
 <span><span class="va">U</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        [,1]    [,2]</span></span>
 <span><span class="co">#&gt; [1,] 0.6154 -0.7882</span></span>
 <span><span class="co">#&gt; [2,] 0.7882  0.6154</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">U</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">Lambda</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">U</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">Lambda</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">U</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      [,1] [,2]</span></span>
 <span><span class="co">#&gt; [1,]  1.0 0.50</span></span>
 <span><span class="co">#&gt; [2,]  0.5 1.25</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2188,8 +2200,8 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <p><span class="math display">\[\begin{aligned}
     tr(\boldsymbol{A}) &amp;= \sum_{i=1}^{p} \lambda_i. \notag
     \end{aligned}\]</span></p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">sigma</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      [,1] [,2]</span></span>
 <span><span class="co">#&gt; [1,]  1.0  0.5</span></span>
@@ -2207,13 +2219,13 @@ r(\boldsymbol{A}_{m \times n}) \leq min(m,n).
 <span><span class="co">#&gt; [2,] 0.9239  0.3827</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>La traccia di una matrice è uguale alla somma degli autovalori:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 3</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il determinante di una matrice è il prodotto degli autovalori:</p>
-<div class="cell" data-layout-align="center" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/det.html">det</a></span><span class="op">(</span><span class="va">sigma</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/det.html">det</a></span><span class="op">(</span><span class="va">sigma</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.75</span></span>
 <span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="va">out</span><span class="op">$</span><span class="va">values</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.75</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -2409,7 +2421,7 @@ d_E(\mathbf{x}, \mathbf{y}) = \sqrt{ (-3)^2 + (-4)^2 } = \sqrt{9 + 16} = \sqrt{2
 <p><strong>Nota:</strong> È importante assicurarsi che la matrice di covarianza <span class="math inline">\(\mathbf{S}\)</span> sia non singolare (invertibile). In pratica, quando si lavora con campioni di dati, <span class="math inline">\(\mathbf{S}\)</span> viene stimata dai dati stessi.</p>
 </section></section><section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
@@ -2477,7 +2489,7 @@ d_E(\mathbf{x}, \mathbf{y}) = \sqrt{ (-3)^2 + (-4)^2 } = \sqrt{9 + 16} = \sqrt{2
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
 <div id="ref-caudek2001statistica" class="csl-entry" role="listitem">
 Caudek, C., &amp; Luccio, R. (2001). <em>Statistica per psicologi</em> (III rist. 2023, Vol. 11, p. 320). Laterza.
 </div>
