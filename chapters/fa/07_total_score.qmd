@@ -1,64 +1,77 @@
 # Punteggio totale e modello fattoriale {#sec-fa-total-score}
 
-**Prerequisiti**
+::: callout-important
+## In questo capitolo imparerai a
+
+- comprendere le condizioni che giustificano l'uso del punteggio totale del test.
+:::
+
+::: callout-tip
+## Prerequisiti
 
 - Leggere il capitolo 6, *Factor Analysis and Principal Component Analysis*, del testo *Principles of psychological assessment* di @petersen2024principles. 
+:::
 
-**Concetti e Competenze Chiave**
-
-**Preparazione del Notebook**
+::: callout-caution
+## Preparazione del Notebook
 
 ```{r}
-#| vscode: {languageId: r}
-# Carica il file _common.R per impostazioni di pacchetti e opzioni
-here::here("code", "_common.R") |> source()
+here::here("code", "_common.R") |> 
+  source()
 
-# Carica pacchetti aggiuntivi
+if (!requireNamespace("pacman")) install.packages("pacman")
 pacman::p_load(lavaan, modelsummary)
 ```
+:::
 
-In questo capitolo discute l'uso del punteggio totale del test quale misura del costrutto latente. Questa è una pratica largamente usata, ma solo in parte giustificata. Esamineremo a questo proposito le considerazioni di McNeish e Wolf (2020).
+
+## Introduzione
+
+In questo capitolo affrontiamo una questione centrale nella costruzione e interpretazione dei test psicometrici: **è corretto utilizzare il punteggio totale come misura del costrutto latente che il test intende rilevare?**
+
+L’uso del punteggio totale (cioè la semplice somma dei punteggi degli item) è una pratica diffusissima nella ricerca psicologica e nelle applicazioni cliniche. Tuttavia, tale uso è **giustificabile solo in circostanze ben precise**. Come mostrano @mcneish2020thinking, è necessario verificare che i dati raccolti rispettino determinate assunzioni. In caso contrario, il punteggio totale può essere **una misura fuorviante del costrutto**.
+
+Per comprendere quando il punteggio totale può essere considerato una misura adeguata del costrutto latente, dobbiamo considerare il legame tra il punteggio totale e i modelli di misura fattoriali, in particolare il modello parallelo e il modello congenerico.
 
 ## Punteggio totale e modello fattoriale parallelo
 
-McNeish e Wolf (2020) richiamano l'attenzione sul fatto che usare il punteggio totale quale misura di un costrutto è possibile solo quando i dati soddisfano i vincoli di un modello fattoriale parallelo.
+### Il modello parallelo
 
-Consideriamo l'esempio seguente, nel quale McNeish e Wolf (2020) esaminano i dati "classici" di Holzinger and Swineford (1939), i quali si riferiscono ai seguenti item:
+Secondo @mcneish2020thinking, il punteggio totale può essere considerato una misura valida del costrutto solo se gli item soddisfano i requisiti del **modello fattoriale parallelo**. Questo modello implica:
 
-- Paragraph comprehension
-- Sentence completion
-- Word definitions
-- Speeded addition
-- Speeded dot counting
+- **saturazioni fattoriali uguali per tutti gli item** (ad esempio, tutte uguali a 1);
+- **varianze residue uguali tra gli item**.
+
+In termini psicometrici, questo significa assumere che **ogni item contribuisce nella stessa misura alla valutazione del costrutto**, e che ha lo stesso livello di "rumore" o errore.
+
+### Esempio: Dati di Holzinger e Swineford (1939)
+
+@mcneish2020thinking illustrano il problema usando i dati classici di Holzinger e Swineford. Gli item considerati sono:
+
+- Paragraph comprehension  
+- Sentence completion  
+- Word definitions  
+- Speeded addition  
+- Speeded dot counting  
 - Discrimination between curved and straight letters
 
-Leggiamo i dati in R.
+Importiamo i dati in R:
 
 ```{r}
-#| vscode: {languageId: r}
-d <- rio::import(
-  here::here("data", "1_Factor_Parallel.csv")
-)
+d <- rio::import(here::here("data", "1_Factor_Parallel.csv"))
 ```
 
-McNeish e Wolf (2020) sottolineano il fatto che il punteggio totale 
+Supponiamo ora di voler stimare il costrutto sottostante utilizzando il punteggio totale:
 
 $$
 \text{Punteggio totale} = \text{Item 1 + Item 2 + Item 3 + Item 4 + Item 5 + Item 6}
 $$
 
-rappresenta l'idea che ciasun item fornisca la stessa quantità di informazione relativamente alla misura del costrutto. Ciò può essere specificato da un modello fattoriale nel quale le saturazioni fattoriali degli item sono tutte uguali a 1. Questo corrisponde al modello parallelo che abbiamo discusso in precedenza. In tali circostanze, i punteggi fattoriali del test risultano perfettamente associati al punteggio totale (correlazione uguale a 1). Dunque, se tale modello fattoriale è giustificato dai dati, questo giustifica l'uso del punteggio totale del test quale misura del costrutto.
-
-È facile verificare tali affermazioni.  Implementiamo il modello parallelo.
+Questo equivale ad assumere che **ogni item fornisca esattamente la stessa quantità di informazione** sul costrutto. Formalmente, ciò può essere espresso da un modello parallelo nel quale tutte le saturazioni fattoriali sono fissate a 1 e tutte le varianze residue sono uguali.
 
 ```{r}
-#| vscode: {languageId: r}
-m_parallel <-
-  "
-  # all loadings are fixed to one
+m_parallel <- "
   f1 =~ 1*X4 + 1*X5 + 1*X6 + 1*X7 + 1*X8 + 1*X9
-  
-  # all residual variances constrained to same value
   X4 ~~ theta*X4
   X5 ~~ theta*X5
   X6 ~~ theta*X6
@@ -68,74 +81,54 @@ m_parallel <-
 "
 ```
 
-Adattiamo il modello parallelo ai dati forniti dagli autori.
-
 ```{r}
-#| vscode: {languageId: r}
-fit_parallel <- sem(m_parallel, data=d)
+fit_parallel <- sem(m_parallel, data = d)
 ```
 
-Calcoliamo il punteggio totale.
+
+### Confronto tra punteggio totale e punteggio fattoriale
+
+Calcoliamo ora il punteggio totale e i punteggi fattoriali stimati dal modello:
 
 ```{r}
-#| vscode: {languageId: r}
-d$ts <- with(
-  d,
-  X4 + X5 + X6 + X7 + X8 + X9
-)
+d$ts <- with(d, X4 + X5 + X6 + X7 + X8 + X9)
+d$scores <- as.numeric(lavPredict(fit_parallel, method="regression"))
 ```
 
-Calcoliamo i punteggi fattoriali.
+Visualizziamo la relazione tra i due:
 
 ```{r}
-#| vscode: {languageId: r}
-scores <- lavPredict(fit_parallel, method="regression")
-d$scores <- as.numeric(scores)
+ggplot(d, aes(x = ts, y = scores)) + geom_point()
 ```
 
-Un diagramma a dispersione tra il punteggio totale e i punteggi fattoriali conferma che i due sono perfettamente associati. Quindi, usare il punteggio totale o i punteggi fattoriali è equivalente.
+Se il modello parallelo fosse corretto, il punteggio totale e il punteggio fattoriale dovrebbero essere **perfettamente correlati**. Tuttavia, l’output di `lavaan` mostra che il modello parallelo **non si adatta bene ai dati**:
 
 ```{r}
-#| vscode: {languageId: r}
-d |> 
-  ggplot(aes(x=ts, y=scores)) + 
-  geom_point()
+summary(fit_parallel, fit.measures = TRUE, standardized = TRUE)
 ```
 
-Tuttavia, questa conclusione è valida solo se il modello parallelo è giustificato per i dati.  Se esaminiamo l'output di lavaan vediamo che, nel caso presente, questo non è vero.
+In questo caso, **l’uso del punteggio totale non è giustificato**: gli item non contribuiscono in modo uniforme alla misura del costrutto, e le ipotesi del modello parallelo non sono rispettate.
+
+## Punteggio totale e modello congenerico
+
+### Il modello congenerico
+
+Il modello congenerico è una generalizzazione del modello parallelo. Qui si **ammette che gli item possano avere saturazioni fattoriali differenti** e varianze residue differenti. In pratica, si riconosce che alcuni item sono più informativi di altri.
 
 ```{r}
-#| vscode: {languageId: r}
-# report output with fit measures and standardized estimates
-out = summary(fit_parallel, fit.measures = TRUE, standardized = TRUE)
-print(out)
-```
-
-Dunque, per questi dati, il punteggio totale può ovviamente essere calcolato. Ma *non fornisce una misura adeguata del costrutto*. Dunque, il punteggio totale non dovrebbe essere usato nel caso dei dati ottenuti con questo test.
-
-## Punteggio totale e modello fattoriale congenerico
-
-Gli autori adattano ai dati un modello congenerico.
-
-```{r}
-#| vscode: {languageId: r}
-m_congeneric <- 
-'
-  #all loadings are uniquely estimated
+m_congeneric <- "
   f1 =~ NA*X4 + X5 + X6 + X7 + X8 + X9
-  #constrain factor variance to 1
   f1 ~~ 1*f1
-'
+"
 ```
 
 ```{r}
-#| vscode: {languageId: r}
-# Fit above model
-fit_congeneric <- sem(m_congeneric, data=d)
+fit_congeneric <- sem(m_congeneric, data = d)
 ```
 
+Analizziamo le saturazioni fattoriali:
+
 ```{r}
-#| vscode: {languageId: r}
 parameterEstimates(fit_congeneric, standardized = TRUE) %>%
   dplyr::filter(op == "=~") %>%
   dplyr::select(
@@ -153,84 +146,60 @@ parameterEstimates(fit_congeneric, standardized = TRUE) %>%
   )
 ```
 
-Si noti che le saturazioni fattoriali sono molto diverse tra loro, suggerendo che il punteggio del costrutto si relaziona in modo diverso con ciascun item e che sarebbe inappropriato stimare il punteggio del costrutto assegnando un peso unitario agli item.
+Come si osserva, le saturazioni sono eterogenee. Ciò significa che **il costrutto latente si riflette diversamente nei vari item**. In tali casi, il punteggio totale—che attribuisce lo stesso peso a ciascun item—**è una misura distorta del costrutto**.
 
-McNeish e Wolf (2020) calcolano poi i punteggi fattoriali del modello congenerico.
+### Confronto con i punteggi fattoriali del modello congenerico
 
-```{r}
-#| vscode: {languageId: r}
-scores_cong <- lavPredict(fit_congeneric, method="regression")
-d$scores_cong <- as.numeric(scores_cong)
-```
-
-Il grafico seguente mostra la relazione tra i punteggi fattoriali e il punteggio totale.
+Esaminiamo la relazione tra i punteggi fattoriali del modello congenerico e il punteggio totale del test.
 
 ```{r}
-#| vscode: {languageId: r}
+d$scores_cong <- as.numeric(lavPredict(fit_congeneric, method="regression"))
+
 d |> 
-  ggplot(aes(x=ts, y=scores_cong)) + 
+  ggplot(aes(x = ts, y = scores_cong)) + 
   geom_point()
-```
 
-Nel caso presente, il coefficiente di determinazione tra punteggio totale e punteggi fattoriali è 0.77.
-
-```{r}
-#| vscode: {languageId: r}
 cor(d$ts, d$scores_cong)^2
 ```
 
-Secondo gli autori, ciò significa che due persone con un punteggio totale identico potrebbero avere punteggi di modello congenerico potenzialmente diversi perché hanno raggiunto il loro particolare punteggio totale approvando item diversi. Poiché il modello congenerico assegna pesi diversi agli item, ciascun item contribuisce in modo diverso al punteggio fattoriale del modello congenerico, il che non è vero per il punteggio totale. 
+Qui il coefficiente di determinazione è circa 0.77, il che implica che **due persone con lo stesso punteggio totale possono avere punteggi fattoriali molto diversi**, a seconda degli item approvati. Questo è un limite importante del punteggio totale, che non tiene conto del contributo specifico di ciascun item.
 
-Si noti che, per i dati di Holzinger and Swineford (1939), neppure un modello congenerico ad un fattore si dimostra adeguato.
-
-```{r}
-#| vscode: {languageId: r}
-out = summary(fit_congeneric, fit.measures = TRUE, standardized = TRUE)
-print(out)
-```
-
-Se trascuriamo le considerazioni sulla struttura fattoriale e esaminiamo (per esempio) unicamente il coefficiente omega, finiamo per trovare una risposta accettabile, ma sbagliata.
+Se ignoriamo le assunzioni del modello e guardiamo solo a un indice globale come l'**omega**, possiamo essere tratti in inganno:
 
 ```{r}
-#| lines_to_next_cell: 2
-#| vscode: {languageId: r}
 psych::omega(d[, 1:6])
 ```
 
-È invece necessario ipotizzare un modello congenerico a due fattori.
+L’omega può risultare “accettabile” (`Omega Total  0.84`), ma ciò **non garantisce che il punteggio totale sia una misura valida del costrutto**.
+
+## Necessità di un modello a due fattori
+
+I dati suggeriscono invece la presenza di **due costrutti distinti**. Adattiamo quindi un **modello congenerico a due fattori**:
 
 ```{r}
-#| vscode: {languageId: r}
-m2f_cong <- '
-  # all loadings are uniquely estimated on each factor
+m2f_cong <- "
   f1 =~ NA*X4 + X5 + X6
   f2 =~ NA*X7 + X8 + X9
-  
-  # constrain factor variancse to 1
   f1 ~~ 1*f1
   f2 ~~ 1*f2
-  
-  # estimate factor covariance
   f1 ~~ f2
-'
+"
+fit_2f_congeneric <- sem(m2f_cong, data = d)
+summary(fit_2f_congeneric, fit.measures = TRUE, standardized = TRUE)
 ```
 
-```{r}
-#| vscode: {languageId: r}
-# Fit above model
-fit_2f_congeneric <- sem(m2f_cong, data=d)
-```
+Il modello mostra un buon adattamento. In questo scenario, **il punteggio totale aggrega item che misurano costrutti diversi**, perdendo così validità come indicatore di un singolo costrutto.
 
-Solo questo modello fornisce un adattamento adeguato ai dati.
+## Conclusione
 
-```{r}
-#| lines_to_next_cell: 2
-#| vscode: {languageId: r}
-out = summary(fit_2f_congeneric, fit.measures = TRUE, standardized = TRUE)
-print(out)
-```
+L’uso del punteggio totale come stima del costrutto latente è una semplificazione che **deve essere giustificata empiricamente**: 
 
-Nel contesto di questi dati, l'utilizzo di un modello congenerico non è sufficiente a giustificare l'impiego del punteggio totale, che rappresenta la somma dei punteggi degli item. Questo perché, nel caso specifico, sommando i punteggi di tutti gli item, finiremmo per includere misurazioni di due costrutti distinti.
+- é giustificato **solo se il modello parallelo è supportato dai dati**;
+- nel caso in cui gli item abbiano saturazioni diverse (modello congenerico), il punteggio totale **perde validità**;
+- se esistono **più costrutti latenti**, l’uso del punteggio totale può **introdurre errori sistematici**.
+
+**In sintesi:** prima di usare o interpretare un punteggio totale, è essenziale testare il modello fattoriale sottostante. I punteggi totali, per quanto comodi, possono essere ingannevoli [@mcneish2020thinking].
+
 
 ## Session Info
 
