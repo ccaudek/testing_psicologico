@@ -26,26 +26,29 @@ pacman::p_load(readr)
 ```
 :::
 
+
 ## Introduzione
 
-L'Analisi delle Componenti Principali (PCA) è una tecnica di riduzione dei dati che permette di semplificare analisi complesse riducendo un grande numero di variabili correlate a un insieme più piccolo di **componenti principali**. Queste componenti sono nuove variabili calcolate come combinazioni lineari delle variabili originali, progettate per spiegare la massima varianza possibile nei dati.
+L'**Analisi delle Componenti Principali (PCA)** è una tecnica statistica utilizzata per **ridurre la dimensionalità di un insieme di dati**. Il suo obiettivo è quello di semplificare analisi complesse **conservando quanta più informazione possibile**, cioè spiegando la maggior parte della **varianza** presente nei dati originali.
 
-In psicologia, la PCA è ampiamente utilizzata per:
+La PCA trasforma un insieme di variabili iniziali, spesso **correlate tra loro**, in un nuovo insieme di variabili **non correlate** dette **componenti principali**. Queste componenti sono **combinazioni lineari** delle variabili originali e sono ordinate in base alla quantità di varianza che riescono a spiegare.
 
-- ridurre il numero di variabili in studi con molti questionari o test psicometrici;
-- identificare le dimensioni sottostanti a un set di item (ad esempio, esplorare le dimensioni latenti di una scala);
-- preparare i dati per analisi successive (ad esempio, in regressioni o modelli strutturali).
+## Perché Usare la PCA in Psicologia?
 
-### Perché Usare la PCA in Psicologia?
+In psicologia, ci troviamo spesso a lavorare con dati ad alta dimensionalità: questionari con decine di item, batterie di test, o set di dati raccolti tramite studi longitudinali. La PCA è utile perché:
 
-Quando un grande numero di variabili è fortemente correlato, può essere difficile interpretare i dati. In questi casi, la PCA permette di semplificare l'analisi mantenendo gran parte dell'informazione originale:
+- **semplifica l’interpretazione dei dati**, riducendo molte variabili a poche dimensioni latenti;
+- **elimina ridondanze**: se due o più variabili sono altamente correlate, la PCA può rappresentarle con un'unica componente;
+- **favorisce la visualizzazione**, soprattutto nei casi in cui si riescano a ridurre i dati a 2 o 3 componenti principali;
+- **prepara i dati per analisi successive** come regressioni o modelli strutturali, evitando collinearità tra predittori.
 
-- le **componenti principali** catturano la varianza condivisa tra le variabili, fornendo un riepilogo efficace dei dati;
-- se le prime componenti principali spiegano una quota sostanziale della **varianza totale**, possiamo ridurre il numero di variabili senza perdere significative informazioni.
+> 🧩 *Esempio tipico*: un questionario su tratti di personalità con 50 item può essere ridotto a 5 componenti principali che riflettono le dimensioni dei Big Five.
 
-### Cos'è la Varianza Totale?
+## Cos'è la Varianza Totale?
 
-La varianza totale rappresenta la quantità complessiva di variabilità nei dati. Nella PCA, è definita come la somma delle varianze delle variabili originali. Ad esempio, se abbiamo un dataset con tre variabili, la varianza totale è:
+La **varianza totale** rappresenta la somma della variabilità presente in ciascuna variabile del dataset.
+
+Se abbiamo tre variabili, la varianza totale sarà:
 
 $$
 \text{Varianza Totale} = \sigma_1^2 + \sigma_2^2 + \sigma_3^2 ,
@@ -55,413 +58,402 @@ dove $\sigma_i^2$ è la varianza della variabile $i$-esima.
 
 Nella PCA:
 
-- gli **autovalori** (eigenvalues) rappresentano la varianza spiegata da ciascuna componente principale;
-- la somma degli autovalori corrisponde alla varianza totale dei dati:
+- ogni **autovalore** (o *eigenvalue*) rappresenta la quantità di varianza spiegata da una componente principale;
+- la **somma degli autovalori** è pari alla varianza totale del dataset (dopo la standardizzazione, essa sarà uguale al numero di variabili).
+
+
+## Un Nuovo Sistema di Coordinate
+
+La PCA può essere intesa come una **rotazione del sistema di riferimento** nello spazio delle variabili:
+
+1. la **prima componente principale (PC1)** è la direzione lungo cui la varianza dei dati è massima;
+2. la **seconda componente (PC2)** è perpendicolare alla prima (cioè ortogonale) e spiega la massima varianza residua;
+3. le successive componenti seguono lo stesso principio.
+
+Questo nuovo sistema è costruito in modo tale che le componenti siano **non correlate tra loro** (ortogonali) e spiegano, progressivamente, meno varianza.
+
+> 💡 *Nota importante*: la PCA non elimina variabili, ma le **riorganizza** in modo da ridurre la complessità informativa.
+
+## Riduzione della Dimensionalità
+
+La PCA consente di rappresentare i dati originali in un nuovo spazio, più compatto, ma informativamente ricco.
+
+### Cosa significa "ridurre la dimensionalità"?
+
+- **Riduzione**: da *p* variabili iniziali (es. 30 item), possiamo ottenere *k* componenti principali (es. 3 o 5), dove *k < p*;
+- **Obiettivo**: mantenere una soglia prefissata di varianza spiegata, ad esempio il 70% o l’80%.
+
+> 🎯 *Esempio concreto*: In uno studio sui Big Five, la PCA può ridurre un set di 100 item a 5 componenti, ciascuna interpretabile come una delle dimensioni di personalità.
+
+
+## Interpretazione dei Risultati della PCA
+
+La PCA produce due insiemi principali di risultati:
+
+1. **Punteggi delle componenti principali (scores)**  
+Per ogni partecipante (o unità osservata), si ottiene un punteggio per ciascuna componente. Questi punteggi possono essere utilizzati come **nuove variabili sintetiche**.
+
+2. **Varianza spiegata (eigenvalues)**  
+L’importanza di ciascuna componente è misurata dalla proporzione di varianza che essa spiega:
 
 $$
-\text{Somma degli autovalori} = \text{Varianza Totale}
+\text{Proporzione di varianza spiegata dalla PC}_i = \frac{\lambda_i}{\sum_{j=1}^{p} \lambda_j} ,
 $$
 
-### Un Nuovo Sistema di Coordinate
+  dove $\lambda_i$ è l'autovalore della componente *i*.
 
-La PCA può essere interpretata come una **ridescrizione dei dati** in un nuovo sistema di assi coordinati. Questi nuovi assi (le componenti principali) sono calcolati come segue:
+> 🔍 *Interpretazione tipica*: Se la PC1 spiega il 50% della varianza e la PC2 un ulteriore 30%, possiamo dire che **le prime due componenti spiegano l'80% della variabilità totale**.
 
-1. le componenti principali sono orientate lungo le direzioni di massima varianza nei dati;
-2. la **prima componente principale (PC1)** è la direzione che spiega la massima quantità di varianza;
-3. la **seconda componente principale (PC2)** è ortogonale alla prima e spiega la successiva maggiore quantità di varianza, e così via.
 
-Questo significa che la PCA non elimina le variabili, ma le ricombina in modo tale da rappresentare i dati in un sistema più semplice e interpretabile.
+## Geometria della PCA: Assi, Autovalori e Autovettori
 
-::: {#exm-}
-Supponiamo di avere 10 variabili in un questionario psicologico, molte delle quali sono fortemente correlate. Con la PCA, potremmo scoprire che le prime due componenti principali spiegano l’80% della varianza totale. In questo caso, potremmo ridurre l’analisi a queste due componenti, semplificando notevolmente l’interpretazione.
-:::
+La PCA si basa su concetti fondamentali dell’algebra lineare:
 
-### Riduzione della Dimensionalità
+- **autovalori (eigenvalues)**: quantificano la varianza spiegata da ogni componente;
+- **autovettori (eigenvectors)**: definiscono le direzioni lungo cui si osserva la varianza massima nei dati.
 
-L’obiettivo principale della PCA è dunque quello di identificare il **minor numero di componenti** che spiegano la maggior parte della varianza nei dati. In psicologia, questo è particolarmente utile quando:
+Nel piano bidimensionale:
 
-- si vuole ridurre il numero di variabili per facilitare l'interpretazione;
-- si cerca di individuare dimensioni sottostanti (ad esempio, in uno studio sui tratti di personalità).
+- ogni autovettore è un **asse di una nuova base ortogonale**;
+- la **lunghezza dell’asse** è proporzionale alla **radice quadrata dell’autovalore** corrispondente;
+- le osservazioni vengono **proiettate ortogonalmente** su questi assi per ottenere i punteggi delle componenti principali.
 
-Ad esempio, in uno studio sui Big Five, la PCA potrebbe ridurre centinaia di item iniziali alle cinque dimensioni principali.
 
-### Interpretazione dei Risultati
+## Visualizzazione: Scree Plot e Biplot
 
-La PCA produce due risultati principali:
+### Scree Plot
 
-1. **Punteggi delle Componenti Principali**:
-   Ogni osservazione ottiene un punteggio per ciascuna componente principale, che rappresenta la sua posizione nel nuovo spazio.
+Lo **Scree Plot** è un grafico che mostra gli autovalori ordinati per componente:
 
-2. **Varianza Spiegata**:
-   La proporzione di varianza spiegata da ciascuna componente principale è un indicatore della sua importanza: $\text{Varianza Spiegata per PC} = \text{Autovalore della PC} / \text{Somma degli autovalori}$. 
+- permette di **determinare quante componenti mantenere**;
+- un "gomito" nel grafico indica il punto oltre il quale le componenti aggiuntive spiegano poca varianza.
 
-Se, ad esempio, la PC1 spiega il 60% della varianza e la PC2 il 20%, possiamo concludere che le prime due componenti rappresentano l’80% della variabilità nei dati.
+### Biplot
 
-In sintesi, la PCA è uno strumento potente per semplificare e interpretare dataset complessi in psicologia, soprattutto quando ci troviamo di fronte a molte variabili correlate. Questo metodo non solo facilita l'analisi, ma può anche fornire una nuova prospettiva sulle relazioni tra le variabili, evidenziando dimensioni latenti che altrimenti potrebbero non essere immediatamente evidenti.
+Il **biplot** mostra simultaneamente:
 
-## Tutorial
+- **i punteggi delle osservazioni** (punti);
+- **i contributi delle variabili originali** (frecce).
 
-Esaminiamo qui di seguito l'analisi delle componenti principali passo passo.
+> 🎓 *Guida all'interpretazione del biplot*:  
+> - **Correlazione positiva**: variabili con frecce vicine tra loro (angolo piccolo tra i vettori);  
+> - **Correlazione negativa**: variabili con frecce dirette in versi opposti (angolo ≈ 180°);  
+> - **Nessuna correlazione**: variabili con frecce quasi perpendicolari (angolo ≈ 90°).  
+> 
+> *Ogni angolo riflette l'intensità della relazione tra le variabili analizzate.*
+
+
+## Tutorial in R 
+
+### Obiettivo del tutorial
+
+Applicare la PCA passo dopo passo su un dataset simulato con due variabili correlate, comprendendo ogni fase del processo:
+
+- creazione dei dati e visualizzazione;
+- standardizzazione;
+- calcolo della PCA con algebra lineare;
+- interpretazione geometrica (autovalori, autovettori);
+- visualizzazioni: ellissi, componenti, scree plot;
+- proiezione dei dati nello spazio delle componenti;
+- verifica con `prcomp()`;
+- costruzione del biplot.
 
 ### Passo 1: Creare un dataset
 
-Per cominciare, generiamo un dataset di esempio per applicare la PCA.
+Generiamo un dataset con due variabili correlate.
 
 ```{r}
-# Generare un dataset con due variabili correlate
+# Generiamo due variabili correlate
 set.seed(123)
 X <- data.frame(
   x1 = rnorm(100, mean = 5, sd = 2),
   x2 = rnorm(100, mean = 10, sd = 3)
 )
-X$x2 <- 0.8 * X$x1 + rnorm(100, mean = 0, sd = 1)  # Introduciamo correlazione
+
+# Aggiungiamo una correlazione lineare tra x1 e x2
+X$x2 <- 0.8 * X$x1 + rnorm(100, mean = 0, sd = 1)
 ```
 
 ### Passo 2: Standardizzare i dati
 
-Prima di calcolare la PCA, è importante standardizzare le variabili (sottrarre la media e dividere per la deviazione standard) per garantire che abbiano lo stesso peso.
+La standardizzazione è essenziale nella PCA quando le variabili hanno scale diverse. Dopo la standardizzazione, ogni variabile ha media = 0 e deviazione standard = 1.
 
 ```{r}
-#| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Centrare e scalare le variabili
+# Standardizziamo le variabili
 X_scaled <- scale(X)
-
-# Plot con aspect ratio 1
-plot(X_scaled[, 1], X_scaled[, 2], asp = 1, 
-     col = "blue", pch = 19, 
-     main = "Dati standardizzati con aspect ratio = 1",
-     xlab = "Variabile x1 standardizzata",
-     ylab = "Variabile x2 standardizzata")
 ```
 
+Visualizziamo i dati standardizzati:
+
+```{r}
+#| fig.asp: 1
+#| fig.height: 6
+#| fig.width: 6
+#| 
+ggplot(X_scaled, aes(x = x1, y = x2)) +
+  geom_point(shape = 19) +
+  coord_fixed(ratio = 1) + # Imposta l'aspect ratio a 1
+  labs(
+    x = "x1 standardizzata",
+    y = "x2 standardizzata",
+    title = "Dati standardizzati (asp = 1)"
+  )
+```
+
+Aggiungiamo un’ellisse di confidenza per mostrare la distribuzione:
+
 ```{r}
 #| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
+#| fig.height: 6
+#| fig.width: 6
 #| 
 car::dataEllipse(
   X_scaled[, 1], X_scaled[, 2],
-  levels = 0.95,
-  lty = 2,
-  ylim = c(-3, 3),
-  xlim = c(-3, 3),
-  asp = 1, 
+  levels = 0.95, lty = 2,
+  asp = 1,
+  xlab = "x1", ylab = "x2"
 )
 ```
 
 ### Passo 3: Calcolare la matrice di covarianza
 
-La PCA utilizza la matrice di covarianza per calcolare le componenti principali.
-
 ```{r}
 cov_matrix <- cov(X_scaled)
-print(cov_matrix)
+cov_matrix
 ```
 
 ### Passo 4: Calcolare autovalori e autovettori
 
-Utilizziamo l'algebra lineare per ottenere gli autovalori e gli autovettori della matrice di covarianza.
-
 ```{r}
 eigen_decomp <- eigen(cov_matrix)
-eigenvalues <- eigen_decomp$values       # Autovalori
-eigenvectors <- eigen_decomp$vectors     # Autovettori
-print(eigenvalues)
+eigenvalues <- eigen_decomp$values       # Varianza spiegata (autovalori)
+eigenvectors <- eigen_decomp$vectors     # Direzioni principali (autovettori)
+```
+
+Stampiamo i risultati:
+
+```{r}
+eigenvalues
 ```
 
 ```{r}
-print(eigenvectors)
+eigenvectors
 ```
 
-Gli autovalori rappresentano la varianza spiegata dalle componenti principali, mentre gli autovettori indicano le direzioni delle componenti principali.
+Verifichiamo che gli autovettori siano ortogonali (prodotto scalare = 0):
 
 ```{r}
-# First eigenvector 
-ev_1 <- eigen_decomp$vectors[, 1]
-
-# Slope of the first eigenvector
-ev1_m <- ev_1[2] / ev_1[1]
-
-# Second eigenvector 
-ev_2 <- eigen_decomp$vectors[, 2]
-
-# Slope of the second eigenvector
-ev2_m <- ev_2[2] / ev_2[1]
+t(eigenvectors[,1]) %*% eigenvectors[,2]
 ```
+
+### Visualizzare le direzioni principali
+
+Calcoliamo le pendenze degli autovettori:
+
+```{r}
+ev1_slope <- eigenvectors[2, 1] / eigenvectors[1, 1]
+ev2_slope <- eigenvectors[2, 2] / eigenvectors[1, 2]
+```
+
+Visualizziamo il grafico con gli autovettori sovrapposti:
 
 ```{r}
 #| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
+#| fig.height: 6
+#| fig.width: 6
 #| 
-# Scatter plot showing the span of both eigenvectors 
-data.frame(zx=X_scaled[, 1], zy= X_scaled[, 2])  |>
-ggplot(aes(x = zx, y = zy)) +
-  geom_point(color = "blue", size = 2) +
+data.frame(zx = X_scaled[, 1], zy = X_scaled[, 2]) |>
+  ggplot(aes(x = zx, y = zy)) +
+  geom_point(size = 2) +
   geom_vline(xintercept = 0, linewidth = .5) +
   geom_hline(yintercept = 0, linewidth = .5) +
-  geom_abline(slope = ev1_m, color = "blue", linewidth = 0.7) +
-  geom_abline(slope = ev2_m, color = "red", linewidth = 0.7) 
+  geom_abline(slope = ev1_slope, color = "red", linewidth = 1.2) +
+  geom_abline(slope = ev2_slope, color = "blue", linewidth = 1.2) +
+  ggtitle("Autovettori: direzioni delle componenti principali") 
 ```
 
-Gli autovettori sono ortogonali:
-
-```{r}
-print(ev_1 %*% ev_2)
-```
-
-Generiamo uno Scree Plot.
+### Scree Plot – Percentuale di varianza spiegata
 
 ```{r}
 #| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
+#| fig.height: 6
+#| fig.width: 6
 #| 
-# Calculate the estimated variance for each eigenvalue
-e_var <- eigen_decomp$values / (length(X_scaled[, 1]) - 1)
-
-# Data frame with variance percentages
+# Percentuale di varianza spiegata
 var_per <- tibble(
-  PC  = c("PC1", "PC2"),
-  PER = c(e_var) * 100 / sum(e_var) # Calculate the percentage
-    )
+  PC = c("PC1", "PC2"),
+  Percent = eigenvalues / sum(eigenvalues) * 100
+)
 
-# Scree plot 
-ggplot(var_per, aes(x = PC, y = PER)) +
-  geom_col(width = 0.5, color = "black") +
-  xlab("Principal component") +
-  ylab("Percentage of variation (%)") 
+ggplot(var_per, aes(x = PC, y = Percent)) +
+  geom_col(fill = "skyblue", color = "black", width = 0.5) +
+  ylab("Varianza spiegata (%)") +
+  xlab("Componente Principale") +
+  ggtitle("Scree Plot") 
 ```
 
-Verifichiamo che la somma degli autovalori sia uguale alla varianza totale.
+Verifica: somma degli autovalori ≈ somma delle varianze
 
 ```{r}
-var(X_scaled[, 1]) + var(X_scaled[, 2])
+sum(eigenvalues)
+sum(apply(X_scaled, 2, var))  # Varianza totale
 ```
 
-```{r}
-eigen_decomp$values |> sum()
-```
-
-Gli autovettori ottenuti utilizzando la funzione `eigen()` sono normalizzati. Ciò significa che la loro lunghezza è uguale a 1:
-
-```{r}
-t(as.matrix(eigen_decomp$vectors[, 1])) %*% 
-  as.matrix(eigen_decomp$vectors[, 1]) 
-```
-
-Utilizziamo le informazioni degli autovettori e degli autovalori per disegnare gli assi dell'ellisse: 
-
-- gli autovettori determinano la direzione degli assi; 
-- la radice quadrata degli autovalori è proporzionale alla lunghezza degli assi dell'ellisse.
+### Passo 5: Visualizzazione geometrica (ellisse + assi principali)
 
 ```{r}
 #| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
+#| fig.height: 6
+#| fig.width: 6
 #| 
 car::dataEllipse(
   X_scaled[, 1], X_scaled[, 2],
-  levels = 0.95,
-  lty = 2,
-  ylim = c(-3, 3),
-  xlim = c(-3, 3), 
-  asp = 1
+  levels = 0.95, lty = 2,
+  xlim = c(-3, 3), ylim = c(-3, 3),
+  asp = 1,
+  xlab = "x1", ylab = "x2"
 )
+
+# Disegniamo gli assi in base agli autovettori
 k <- 2.5
-arrows(
-  0, 0, 
-  k * sqrt(eigen_decomp$values[1]) * eigen_decomp$vectors[1],
-  k * sqrt(eigen_decomp$values[1]) * eigen_decomp$vectors[2],
-  code = 2, 
-  col = "red", 
-  lwd = 2
-)
-arrows(
-  0, 0, 
-  k * sqrt(eigen_decomp$values[2]) * eigen_decomp$vectors[1],
-  k * sqrt(eigen_decomp$values[2]) * -eigen_decomp$vectors[2],
-  code = 2, 
-  col = "red", 
-  lwd = 2
-)
+arrows(0, 0,
+       k * sqrt(eigenvalues[1]) * eigenvectors[1, 1],
+       k * sqrt(eigenvalues[1]) * eigenvectors[2, 1],
+       col = "red", lwd = 2, code = 2)
+
+arrows(0, 0,
+       k * sqrt(eigenvalues[2]) * eigenvectors[1, 2],
+       k * sqrt(eigenvalues[2]) * eigenvectors[2, 2],
+       col = "red", lwd = 2, code = 2)
 ```
 
-Tale analisi si può estendere a qualunque numero di variabili. Per
-esempio, nel caso di tre variabili, possiamo pensare di disegnare un
-ellisoide attorno ad una nube di punti nello spazio tridimensionale.
-Anche in questo caso, gli autovalori e gli associati autovettori
-corrisponderanno agli assi dell'elissoide.
-
-### Passo 5: Proiettare i dati sulle componenti principali 
-
-Per calcolare i punteggi delle Componenti Principali, dobbiamo **proiettare ortogonalmente** i punti originali del dataset sulle nuove coordinate, definite dalle direzioni principali (autovettori). Questo processo ci permette di rappresentare ogni osservazione nello spazio delle componenti principali.
-
-Nell'algebra lineare, la **proiezione ortogonale** consiste nel trovare la posizione di un punto su una retta o un piano, in modo che il vettore risultante sia **perpendicolare** alla direzione di proiezione. 
-
-Nel contesto della PCA:
-
-1. Gli **autovettori** rappresentano le direzioni principali (componenti principali) lungo cui la varianza dei dati è massimizzata.
-2. Proiettare un punto sui componenti principali significa calcolare la sua posizione lungo queste nuove direzioni.
-
-#### Formulazione Matematica
-
-Consideriamo le seguenti matrici:
-
-- **$\mathbf{X}_{\text{scaled}}$**: la matrice dei dati standardizzati, in cui ogni riga rappresenta un'osservazione e ogni colonna una variabile.
-- **$\mathbf{V}$**: la matrice degli autovettori, le cui colonne rappresentano le nuove direzioni principali.
-
-La proiezione dei dati nello spazio delle componenti principali si calcola come:
-
-$$
-\mathbf{Z} = \mathbf{X}_{\text{scaled}} \cdot \mathbf{V}
-$$
-
-dove:
-
-- **$\mathbf{Z}$** è la matrice dei **punteggi delle componenti principali**.
-- Ogni riga di $\mathbf{Z}$ rappresenta un'osservazione trasformata nello spazio delle componenti principali.
-- Ogni colonna di $\mathbf{Z}$ corrisponde a una componente principale (ad esempio, PC1, PC2).
-
-#### Implementazione in R
-
-In R, questo calcolo può essere realizzato attraverso il prodotto matrice-matrice. Ecco il codice per calcolare i punteggi delle componenti principali:
+### Passo 6: Proiezione dei dati (calcolo dei punteggi)
 
 ```{r}
-# Calcolo dei punteggi delle componenti principali
 pc_scores <- as.matrix(X_scaled) %*% eigenvectors
-colnames(pc_scores) <- c("PC1", "PC2")  # Etichettare le componenti principali
+colnames(pc_scores) <- c("PC1", "PC2")
+
+head(pc_scores)  # Mostra le prime osservazioni nel nuovo spazio
 ```
 
-Per verificare i risultati, possiamo visualizzare i primi punteggi calcolati:
+Visualizziamo le osservazioni nello spazio delle componenti:
 
 ```{r}
-# Stampare i primi punteggi delle componenti principali
-print(head(pc_scores))
+pc_df <- as.data.frame(pc_scores)
+
+# Grafico ggplot dei punteggi delle componenti principali
+ggplot(pc_df, aes(x = PC1, y = PC2)) +
+  geom_point(color = "blue", size = 2) +
+  labs(
+    title = "Punteggi delle Componenti Principali",
+    x = "PC1",
+    y = "PC2"
+  ) +
+  coord_fixed()
 ```
 
-#### Interpretazione dei Punteggi
-
-Ogni valore in `pc_scores` rappresenta la posizione dell'osservazione nello spazio trasformato delle componenti principali:
-
-- La **PC1** è la direzione lungo cui si osserva la massima varianza dei dati.
-- La **PC2** è la direzione ortogonale successiva con la seconda massima varianza, e così via.
-
-## Passo 6: Confrontare con l'output di `prcomp`
-
-Utilizziamo la funzione prcomp di R per confermare i risultati.
+### Passo 7: Confronto con `prcomp`
 
 ```{r}
-pca <- prcomp(X, scale. = TRUE)
-print(pca)
+# Calcolo automatico della PCA
+pca_auto <- prcomp(X, scale. = TRUE)
+summary(pca_auto)
+```
+
+Verifica: confronta punteggi calcolati a mano con quelli di `prcomp`
+
+```{r}
+head(pca_auto$x)  # Punteggi calcolati da prcomp
 ```
 
 ```{r}
-# Confronto tra i punteggi calcolati manualmente e quelli di prcomp
-print(head(pca$x))
+head(pc_scores)   # Punteggi calcolati a mano
 ```
 
-### Passo 7: Visualizzare la proiezione dei dati
+### Passo 8: Biplot
 
-Possiamo visualizzare i punti originali proiettati sulle componenti principali.
+Il **biplot** permette di visualizzare contemporaneamente:
 
-```{r}
-#| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Grafico del dataset originale
-plot(
-  X_scaled, 
-  col = "blue", pch = 19, 
-  main = "Dati originali e componenti principali",
-  asp = 1
-)
-abline(0, eigenvectors[2,1] / eigenvectors[1,1], col = "red", lwd = 2)  
-# Prima componente
-abline(0, eigenvectors[2,2] / eigenvectors[1,2], col = "green", lwd = 2)  
-# Seconda componente
-```
+- le **osservazioni** (rappresentate da numeri), proiettate nello spazio delle componenti principali;
+- le **variabili originali** (`x1`, `x2`), rappresentate come **frecce rosse**, che indicano come ciascuna variabile contribuisce alla definizione delle componenti.
 
 ```{r}
 #| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Grafico delle componenti principali
-plot(
-  pc_scores, 
-  col = "blue", pch = 19, 
-  main = "Punteggi delle componenti principali",
-  asp = 1)
+biplot(pca_auto, scale = 0,
+       main = "Biplot delle Componenti Principali",
+       xlab = "PC1", ylab = "PC2")
 ```
 
-## Biplot
+**Distribuzione delle osservazioni**
 
-Il **biplot** è uno strumento grafico che combina la visualizzazione dei punteggi delle componenti principali e delle variabili originali in un unico grafico. Questo permette di:
+- I numeri neri rappresentano le 100 osservazioni.
+- Le osservazioni si distribuiscono principalmente **lungo la direzione della prima componente principale (PC1)**, che si estende orizzontalmente.
+- C’è **relativamente poca variabilità lungo la seconda componente (PC2)**, che è verticale. Questo conferma che **quasi tutta la varianza** è catturata da PC1, come osservato nei passaggi precedenti (Scree Plot, autovalori).
 
-- Interpretare la relazione tra le variabili originali.
-- Visualizzare come le osservazioni (campioni) si distribuiscono nello spazio delle componenti principali.
-- Identificare cluster, outlier, o pattern nei dati.
+**Frecce delle variabili originali**
 
-Un biplot combina due tipi di informazioni:
+Nel biplot vediamo due frecce:
 
-1. **I punteggi delle componenti principali** (proiezioni delle osservazioni sulle componenti principali), rappresentati come punti.
-2. **I carichi delle variabili originali** sulle componenti principali (autovettori), rappresentati come frecce.
+- la freccia **x1** punta verso l’alto a destra;
+- la freccia **x2** punta verso il basso a destra;
+- entrambe le frecce sono **allineate in parte con l'asse orizzontale (PC1)**, ma puntano in **direzioni opposte lungo PC2**.
 
-Le frecce indicano:
+Interpretazione geometrica:
 
-- La direzione della variabilità spiegata da ciascuna variabile.
-- La correlazione tra le variabili e le componenti principali.
+- **Entrambe le variabili contribuiscono positivamente a PC1**, perché le componenti orizzontali delle frecce sono entrambe > 0.
+- La componente **verticale di x1 è positiva**, quella di **x2 è negativa**, quindi le due variabili sono **positivamente correlate in generale**, ma **divergono leggermente lungo PC2**.
 
-### Come Creare un Biplot in R
+Questo pattern è coerente con i coefficienti degli autovettori:
 
-Per creare un biplot in R possiamo utilizzare `prcomp`. Supponiamo di avere già calcolato la PCA con la funzione `prcomp`:
-
-```{r}
-# PCA con prcomp
-pca <- prcomp(X, scale. = TRUE)
+```r
+pca_auto$rotation
 ```
 
-Il biplot si visualizza nel modo seguente.
+Es.:
 
-```{r}
-#| fig-asp: 1
-#| fig-width: 6
-#| fig-height: 6
-#| 
-# Creare un biplot
-biplot(
-  pca, scale = 0, 
-  main = "Biplot delle Componenti Principali", 
-  xlab = "PC1", ylab = "PC2"
-)
+```
+           PC1      PC2
+x1       0.71     0.71
+x2       0.71    -0.71
 ```
 
-- **`scale = 0`**: Evita di ridimensionare le frecce e i punteggi per semplificare l'interpretazione.
+Cosa significa?
 
-Nel grafico:
+- La **PC1** è la somma bilanciata di `x1` e `x2`, e rappresenta la **dimensione comune** tra le due variabili.
+- La **PC2** è la loro differenza: rappresenta una direzione lungo cui `x1` e `x2` si muovono in modo opposto. Ma in questo caso, la varianza lungo PC2 è molto piccola → **questo secondo asse è poco informativo**.
 
-- **I punti** rappresentano le osservazioni, proiettate sulle componenti principali.
-- **Le frecce** rappresentano le variabili originali, con:
-  - La lunghezza della freccia che indica la forza della correlazione con le componenti principali.
-  - L’angolo tra due frecce che rappresenta la correlazione tra le due variabili:
-    - Un angolo piccolo indica una correlazione positiva.
-    - Un angolo di 90° indica una correlazione nulla.
-    - Un angolo ampio (vicino a 180°) indica una correlazione negativa.
+Lunghezza delle frecce:
 
-### Interpretazione
+- le frecce hanno **lunghezza simile** → entrambe le variabili sono **ben rappresentate** dallo spazio PC1–PC2;
+- in un biplot, la lunghezza di una freccia indica **quanto bene quella variabile è spiegata dalle componenti principali**.
 
-In psicologia, il biplot è particolarmente utile per:
 
-1. **Identificare pattern nei dati**: Ad esempio, come i partecipanti si distribuiscono lungo dimensioni psicologiche latenti (es. tratti di personalità).
-2. **Esaminare le relazioni tra variabili**: Le frecce possono evidenziare cluster di variabili correlate che rappresentano dimensioni psicologiche (es. ansia, stress, depressione).
-3. **Valutare l'adeguatezza della PCA**: Se le frecce delle variabili sono lunghe e ben distribuite lungo le componenti principali, ciò suggerisce che la PCA sta spiegando bene la varianza delle variabili.
+**Conclusioni sull'interpretazione del biplot.**
 
-In sostanza, il biplot è uno strumento grafico che semplifica l'interpretazione della PCA. Combina in un unico diagramma sia le informazioni sulle variabili originali che sulla loro proiezione nello spazio delle componenti principali, offrendo una visione d'insieme chiara e immediata dei dati.
+- Il biplot mostra che la struttura dei dati può essere **riassunta da una sola dimensione latente (PC1)**.
+- Le due variabili `x1` e `x2` sono **entrambe fortemente associate a PC1**, e **debolmente differenziate** da PC2.
+
+
+## Riflessioni Conclusive
+
+Abbiamo completato un'analisi PCA manuale e automatica, verificando ogni passaggio attraverso:
+
+- algebra lineare (autovalori/autovettori);
+- visualizzazione geometrica (ellisse, autovettori);
+- scree plot;
+- proiezione dei dati;
+- biplot.
+
+Questa struttura permette di **collegare i concetti teorici alla loro implementazione pratica**, fornendo agli studenti una comprensione più profonda della PCA.
+
+
+## ✍️ Suggerimenti per gli Studenti
+
+- Quando standardizzare? **Sempre**, se le variabili sono su scale diverse (es. punteggi da 0 a 10, da 1 a 100);
+- Quando usare la PCA? Quando **l’obiettivo è descrittivo**, esplorare la struttura latente o semplificare l’analisi;
+- Quando non usarla? Se le variabili **non sono correlate**: la PCA non sarà utile;
+- Come interpretare le componenti? Serve **analizzare i coefficienti** degli autovettori per capire il contributo delle variabili originali a ciascuna componente.
+
 
 ## Informazioni sull'Ambiente di Sviluppo {.unnumbered} 
 

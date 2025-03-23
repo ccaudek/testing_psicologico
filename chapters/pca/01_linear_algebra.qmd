@@ -782,25 +782,36 @@ x <- cbind(1, data)  # Matrice di design
 noise_mean <- 0
 noise_sd <- 5
 e <- rnorm(n, mean = noise_mean, sd = noise_sd)
+```
 
+```{r}
 # Simula i valori di y
 y <- x %*% b + e
+```
 
+```{r}
 # Calcola i coefficienti stimati (minimi quadrati)
 b_hat <- solve(t(x) %*% x) %*% t(x) %*% y
+```
 
+```{r}
 cat("Valori veri di b:\n")
 print(b)
+```
+
+```{r}
 cat("Stima di b:\n")
 print(b_hat)
 ```
 
-#### Calcolo delle previsioni e del coefficiente di determinazione ($R^2$)
+#### Calcolo dei valori predetti e del coefficiente di determinazione ($R^2$)
 
 ```{r}
-# Previsioni
+# Valori predetti
 y_hat <- x %*% b_hat
+```
 
+```{r}
 # Calcola R^2
 SS_res <- sum((y - y_hat)^2)  # Somma dei residui al quadrato
 SS_tot <- sum((y - mean(y))^2)  # Somma totale dei quadrati
@@ -812,30 +823,37 @@ cat("Coefficiente di determinazione (R^2):", r2, "\n")
 #### Rappresentazione Grafica dei Dati e della Regressione
 
 ```{r}
-# Grafico dei dati
-plot(
-  data, 
-  y, 
-  main = "Regressione Lineare Semplice", 
-  xlab = "x", 
-  ylab = "y", 
-  pch = 16, 
-  col = "blue"
+# Costruiamo un data.frame
+df <- data.frame(x = data, y = y)
+
+# Data frame per le due linee
+lines_df <- data.frame(
+  intercept = c(b[1], b_hat[1]),
+  slope     = c(b[2], b_hat[2]),
+  tipo      = c("Valori veri", "Stima")
 )
-abline(
-  a = b[1], b = b[2], 
-  col = "black", lwd = 2, lty = 2
-)  # Linea con valori veri
-abline(
-  a = b_hat[1], b = b_hat[2], 
-  col = "red", lwd = 2
-)  # Linea stimata
-legend(
-  "topleft", 
-  legend = c("Valori veri", "Stima"), 
-  col = c("black", "red"), 
-   lty = c(2, 1), lwd = 2
-)
+
+ggplot(df, aes(x = x, y = y)) +
+  geom_point(color = "blue", size = 2) +
+  geom_abline(data = lines_df,
+              aes(intercept = intercept, slope = slope, 
+                  color = tipo, linetype = tipo),
+              linewidth = 1) +
+  scale_color_manual(values = c("Valori veri" = "black", "Stima" = "red")) +
+  scale_linetype_manual(values = c("Valori veri" = "dashed", "Stima" = "solid")) +
+  labs(
+    title = "Regressione Lineare Semplice",
+    x = "x",
+    y = "y",
+    color = "Linea",
+    linetype = "Linea"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",                 
+    legend.box = "horizontal",                 
+    legend.title = element_text(face = "bold")
+  )
 ```
 
 #### Analisi con il Pacchetto `lm` 
@@ -850,10 +868,6 @@ summary(lm_model)
 - La funzione `solve()` calcola i coefficienti dei minimi quadrati usando l'equazione $(X'X)^{-1}X'Y$.
 - La somma dei quadrati residui ($SS_{res}$) e la somma totale dei quadrati ($SS_{tot}$) sono calcolate manualmente per derivare $R^2$.
 - La funzione `lm()` offre un modo alternativo e diretto per ottenere il modello di regressione e i relativi output statistici.
-
-
-
-
 
 ### Traccia di una matrice
 
@@ -999,9 +1013,7 @@ verrà qui fornita un'interpretazione geometrica.
 Simuliamo di dati di due variabili associate tra loro:
 
 ```{r}
-#| vscode: {languageId: r}
 set.seed(123456)
-options(repr.plot.width = 8, repr.plot.height = 8)
 
 npoints <- 20
 x <- as.numeric(scale(rnorm(npoints, 0, 1)))
@@ -1015,10 +1027,10 @@ Disegnamo il diagramma di dispersione con un ellisse che contiene la
 nube di punti:
 
 ```{r}
-#| fig.asp: 1.1
-#| fig.height: 4
-#| fig.width: 4
-#| vscode: {languageId: r}
+#| fig.asp: 1
+#| fig.height: 6
+#| fig.width: 6
+#| 
 Y <- cbind(x, y)
 car::dataEllipse(
   Y[, 1], Y[, 2],
@@ -1041,14 +1053,12 @@ autovettore $\boldsymbol{a}_2$.
 Calcoliamo ora gli autovettori e gli autovalori:
 
 ```{r}
-#| vscode: {languageId: r}
 s <- cov(Y)
 ee <- eigen(s)
 ee |> print()
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 # First eigenvector 
 ev_1 <- ee$vectors[, 1]
 
@@ -1063,7 +1073,10 @@ ev2_m <- ev_2[2] / ev_2[1]
 ```
 
 ```{r}
-#| vscode: {languageId: r}
+#| fig.asp: 1
+#| fig.height: 6
+#| fig.width: 6
+#| 
 # Scatter plot showing the span of both eigenvectors 
 data.frame(zx=scale(x), zy=scale(y))  |>
 ggplot(aes(x = zx, y = zy)) +
@@ -1077,7 +1090,6 @@ ggplot(aes(x = zx, y = zy)) +
 Gli autovettori sono ortogonali:
 
 ```{r}
-#| vscode: {languageId: r}
 # Multiply both eigenvectors 
 print(ev_1 %*% ev_2)
 ```
@@ -1085,7 +1097,6 @@ print(ev_1 %*% ev_2)
 Generiamo uno Scree Plot.
 
 ```{r}
-#| vscode: {languageId: r}
 # Calculate the estimated variance for each eigenvalue
 e_var <- ee$values / (length(x) - 1)
 
@@ -1105,20 +1116,17 @@ ggplot(var_per, aes(x = PC, y = PER)) +
 Verifichiamo che la somma degli autovalori sia uguale alla varianza totale.
 
 ```{r}
-#| vscode: {languageId: r}
 var(x) + var(y)
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 ee$values |> sum()
 ```
 
 Gli autovettori ottenuti utilizzando la funzione `eigen()` sono normalizzati. Ciò significa che la loro lunghezza è uguale a 1:
 
 ```{r}
-#| vscode: {languageId: r}
-t(as.matrix(ee$vectors[, 1])) %*% as.matrix(ee$vectors[, 1]) |> print()
+t(as.matrix(ee$vectors[, 1])) %*% as.matrix(ee$vectors[, 1]) 
 ```
 
 Utilizziamo le informazioni degli autovettori e degli autovalori per disegnare gli assi dell'ellisse: 
@@ -1127,10 +1135,10 @@ Utilizziamo le informazioni degli autovettori e degli autovalori per disegnare g
 - la radice quadrata degli autovalori è proporzionale alla lunghezza degli assi dell'ellisse.
 
 ```{r}
-#| fig.asp: 1.1
-#| fig.height: 4
-#| fig.width: 4
-#| vscode: {languageId: r}
+#| fig.asp: 1
+#| fig.height: 6
+#| fig.width: 6
+#| 
 car::dataEllipse(
   Y[, 1], Y[, 2],
   levels = 0.95,
@@ -1194,7 +1202,6 @@ da cui l'affermazione che la matrice degli autovettori diagonalizza $\boldsymbol
 Per esempio,
 
 ```{r}
-#| vscode: {languageId: r}
 sigma <- matrix(
   data = c(1, 0.5, 0.5, 1.25), 
   nrow = 2, 
@@ -1204,25 +1211,21 @@ sigma |> print()
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 out <- eigen(sigma)
 out |> print()
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 Lambda <- diag(out$values)
 Lambda |> print()
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 U <- out$vectors
 U |> print()
 ```
 
 ```{r}
-#| vscode: {languageId: r}
 U %*% Lambda %*% t(U) |> print()
 ```
 
@@ -1241,7 +1244,6 @@ $$\begin{aligned}
     \end{aligned}$$
 
 ```{r}
-#| vscode: {languageId: r}
 sigma <- matrix(data = c(1, 0.5, 0.5, 2), nrow = 2, ncol = 2)
 sigma |> print()
 
@@ -1252,14 +1254,12 @@ out |> print()
 La traccia di una matrice è uguale alla somma degli autovalori:
 
 ```{r}
-#| vscode: {languageId: r}
 sum(out$values) |> print()
 ```
 
 Il determinante di una matrice è il prodotto degli autovalori:
 
 ```{r}
-#| vscode: {languageId: r}
 det(sigma) |> print()
 (out$values[1] * out$values[2]) |> print()
 ```
