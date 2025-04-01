@@ -1,0 +1,715 @@
+# Determinare il numero dei fattori {#sec-extraction-number-factors}
+
+::: callout-important
+## In questo capitolo imparerai:
+
+- 
+:::
+
+::: callout-tip
+## Prerequisiti
+
+- Leggere l'articolo *How many factors to retain in exploratory factor analysis? A critical overview of factor retention methods* [@goretzko2025many].
+:::
+
+::: callout-caution
+## Preparazione del Notebook
+
+```{r}
+# library(devtools)
+# install_github("jmbh/fspe")
+here::here("code", "_common.R") |> 
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(
+  lavaan, psych, paran, fspe, nFactors, semTools, EFAtools, MASS,
+  EFAfactors, EGAnet, latentFactoR, REFA
+)
+```
+:::
+
+
+## Introduzione
+
+L’Analisi Fattoriale Esplorativa (EFA) è uno strumento fondamentale nella costruzione e valutazione di test psicologici. Essa consente di esplorare la struttura latente sottostante a un insieme di variabili osservate. Uno degli aspetti più delicati dell'EFA è la **determinazione del numero di fattori da estrarre**, nota anche come *factor retention*. Una scelta errata può compromettere l’intera analisi, portando a:
+
+- **Sottofattorizzazione**: sottostimare il numero di fattori, rischiando di distorcere la struttura latente e generare caricamenti spurii (cross-loadings);
+- **Sovrafattorizzazione**: estrarre più fattori del necessario, introducendo elementi poco interpretabili. Questo errore è meno grave, purché venga riconosciuto e gestito opportunamente.
+
+### Tre domande fondamentali sulla dimensionalità di un test
+
+1. **Quante dimensioni?** Alcuni test misurano un solo costrutto latente, altri ne misurano diversi.
+2. **Le dimensioni sono correlate?** Se sì, è opportuno utilizzare metodi di rotazione obliqua.
+3. **Cosa significano le dimensioni?** L’interpretazione teorica dei fattori è cruciale per l’applicazione pratica del test.
+
+Questo capitolo presenta e confronta i principali approcci proposti per determinare il numero ottimale di fattori, illustrandone i presupposti, i punti di forza e le limitazioni.
+
+## Metodi basati sugli autovalori
+
+### Kaiser-Guttman Rule
+
+Retiene i fattori con autovalore > 1 (solo per matrici di correlazione). Anche se molto diffuso, è fortemente sconsigliato: ha una tendenza sistematica alla **sovrafattorizzazione**. È inappropriato per dati non standardizzati o con bassa comunalità.
+
+### Scree Test (Cattell)
+
+Grafico degli autovalori decrescenti: il numero di fattori corrisponde al punto prima del "gomito". Soggettivo e a bassa affidabilità.
+
+### Valore medio degli autovalori
+
+Retiene i fattori con autovalore maggiore della media degli autovalori. Alternativa alla regola di Kaiser, ma ancora euristica.
+
+### Metodi Avanzati
+
+- **Empirical Kaiser Criterion (EKC)**: corregge per numerosità campionaria e varianza cumulata. Buona performance solo in strutture semplici e unidimensionali.
+- **STOC** e **STAF**: automatizzano lo scree test via algoritmi (es. accelerazione della pendenza) -- implementate in `nFactors`.
+
+## Metodi Basati sulla Simulazione
+
+### Parallel Analysis (PA)
+
+Considerata lo "standard aureo". Confronta gli autovalori empirici con quelli derivati da dati casuali:
+
+- variante standard: usa la media degli autovalori simulati;
+- variante di Glorfeld: usa il 95° percentile per essere più conservativa;
+- funzioni: `fa.parallel()` del pacchetto `psych`.
+
+### Comparison Data (CD)
+
+Usa bootstrap e riproduce la matrice di correlazione. Confronta soluzioni adiacenti con un test di Mann-Whitney sugli RMSE. Utile con fattori correlati, ma tende a sovrafattorizzare se non ben calibrato. Implementato in `EFAtools`.
+
+## Approcci basati sul confronto tra modelli
+
+### Criteri Informativi: AIC, BIC
+
+Utilizzano la verosimiglianza e penalizzano la complessità del modello.
+
+- AIC: tende a selezionare modelli più complessi;
+- BIC: più conservativo.
+
+### Indici di Fit: 
+
+Gli indicici di fit come RMSEA, CFI, SRMR, ecc. sono usati più comunemente in CFA, ma sono meno affidabili in EFA a causa della dipendenza da dimensione campionaria e altri fattori.
+
+### Metodo Hull
+
+Il **metodo Hull** (Lorenzo-Seva, Timmerman, & Kiers, 2011) è un approccio grafico per la determinazione del numero ottimale di fattori. L’idea di base è bilanciare **bontà dell’adattamento** e **parsimonia del modello** (cioè la semplicità).
+
+Come funziona:
+
+1. si adattano diversi modelli fattoriali con un numero crescente di fattori;
+2. per ciascun modello, si registra un indice di fit (es. CFI) e i **gradi di libertà**;
+3. si costruisce il **"convex hull"**, ovvero il contorno convesso che racchiude i punti CFI ~ gradi di libertà;
+4. si identifica il punto sul contorno del hull che rappresenta il miglior compromesso tra **fit accettabile** e **modello semplice** (cioè con più gradi di libertà).
+
+Vantaggi:
+
+- tende a evitare la **sovrafattorizzazione**, comune in altri metodi;
+- ha buone prestazioni quando il modello è **ben sovradeterminato** (cioè ogni fattore è misurato da molte variabili);
+- è adatto anche in presenza di **fattori correlati**.
+
+## Minimum Average Partial (MAP)
+
+Test che valuta la media delle correlazioni parziali residue dopo estrazione di i componenti. Retiene il numero di componenti che minimizza questa media. È implementato in `vss()` del pacchetto `psych`.
+
+## Approcci moderni
+
+### Analisi Esplorativa della Rete (EGA)
+
+L’**Exploratory Graph Analysis (EGA)** è un metodo alternativo all’analisi fattoriale esplorativa (EFA), che non si basa sull’ipotesi di **fattori latenti comuni**, ma sull’identificazione di **comunità di variabili** all’interno di un **modello a rete**.
+
+- In EGA, le **variabili osservate** (es. item di un test) sono rappresentate come **nodi** di una rete.
+- Le **connessioni** (archi) tra i nodi riflettono **correlazioni parziali** standardizzate, cioè relazioni tra due variabili controllando per tutte le altre.
+- Il modello statistico di base è il **Gaussian Graphical Model (GGM)**, stimato con un metodo di **massima verosimiglianza penalizzata** (regularization), che tende ad annullare le correlazioni più deboli, producendo reti **sparse** (con pochi collegamenti).
+- All’interno di questa rete, le variabili **fortemente collegate tra loro** tendono a raggrupparsi in **comunità** (clusters), che vengono interpretate come **fattori**.
+
+Vantaggi dell’EGA:
+
+- è particolarmente utile in condizioni in cui:
+  - le **comunalità sono basse** (cioè le variabili condividono poca varianza comune),
+  - i dati sono **ordinali** o non normalmente distribuiti.
+- rispetto all’EFA tradizionale, EGA è più robusto a **strutture complesse o deboli**.
+
+Come viene determinato il numero di fattori?
+
+Il numero di comunità (e quindi di fattori) viene identificato attraverso **algoritmi di rilevamento delle comunità**, come il **walktrap algorithm**, che cerca sottogruppi fortemente interconnessi all’interno della rete.
+
+In sintesi, EGA fornisce una rappresentazione grafica e interpretabile della struttura fattoriale dei dati, e può essere usato per **decidere quanti fattori estrarre** in un’analisi esplorativa.
+
+## Metodi Basati su Machine Learning
+
+### Factor Forest (ML)
+
+Approccio machine learning addestrato su dati simulati. Molto preciso, ma dipende da modelli preaddestrati. Implementato in `latentFactoR`.
+
+### Comparison Data Forest (CDF)
+
+Versione più leggera del Factor Forest basata su CD + Random Forest. Meno accurata ma più accessibile. Implementazione disponibile su OSF.
+
+### Regularized EFA (REFA)
+
+Utilizza penalizzazioni (LASSO, Ridge, MC+) per ottenere strutture sparse. Può essere utile per l’identificazione automatica dei fattori. Implementazioni: `fanc`, `regsem`, `lslx`.
+
+
+## Implementazione in R
+
+Per confrontare i metodi discussi per la scelta del numero $m$ di fattori usiamo una matrice di correlazioni calcolata sulle sottoscale della WAIS. Le 11 sottoscale del test sono le seguenti:
+
+- X1 = Information
+- X2 = Comprehension
+- X3 = Arithmetic
+- X4 = Similarities
+- X5 = Digit.span
+- X6 = Vocabulary
+- X7 = Digit.symbol
+- X8 = Picture.completion
+- X9 = Block.design
+- X10 = Picture.arrangement
+- X11 = Object.
+
+I dati sono stati ottenuti dal manuale della III edizione.
+
+```{r}
+varnames <- c(
+    "IN", "CO", "AR", "SI", "DS", "VO", "SY", "PC",
+    "BD", "PA", "OA", "AG", "ED"
+)
+temp <- matrix(c(
+    1, 0.67, 0.62, 0.66, 0.47, 0.81, 0.47, 0.60, 0.49, 0.51, 0.41,
+    -0.07, 0.66, .67, 1, 0.54, 0.60, 0.39, 0.72, 0.40, 0.54, 0.45,
+    0.49, 0.38, -0.08, 0.52, .62, .54, 1, 0.51, 0.51, 0.58, 0.41,
+    0.46, 0.48, 0.43, 0.37, -0.08, 0.49, .66, .60, .51, 1, 0.41,
+    0.68, 0.49, 0.56, 0.50, 0.50, 0.41, -0.19, 0.55, .47, .39, .51,
+    .41, 1, 0.45, 0.45, 0.42, 0.39, 0.42, 0.31, -0.19, 0.43,
+    .81, .72, .58, .68, .45, 1, 0.49, 0.57, 0.46, 0.52, 0.40, -0.02,
+    0.62, .47, .40, .41, .49, .45, .49, 1, 0.50, 0.50, 0.52, 0.46,
+    -0.46, 0.57, .60, .54, .46, .56, .42, .57, .50, 1, 0.61, 0.59,
+    0.51, -0.28, 0.48, .49, .45, .48, .50, .39, .46, .50, .61, 1,
+    0.54, 0.59, -0.32, 0.44, .51, .49, .43, .50, .42, .52, .52, .59,
+    .54, 1, 0.46, -0.37, 0.49, .41, .38, .37, .41, .31, .40, .46, .51,
+    .59, .46, 1, -0.28, 0.40, -.07, -.08, -.08, -.19, -.19, -.02,
+    -.46, -.28, -.32, -.37, -.28, 1, -0.29, .66, .52, .49, .55, .43,
+    .62, .57, .48, .44, .49, .40, -.29, 1
+), nrow = 13, ncol = 13, byrow = TRUE)
+
+colnames(temp) <- varnames
+rownames(temp) <- varnames
+
+wais_cor <- temp[1:11, 1:11]
+wais_cor
+```
+
+##  Metodi basati sugli autovalori
+
+```{r}
+# Calcola gli autovalori della matrice di correlazione WAIS
+wais_eigen <- eigen(wais_cor)
+eigenvalues <- wais_eigen$values
+print(eigenvalues)
+```
+
+### Kaiser-Guttman Rule
+
+```{r}
+kaiser_rule <- sum(eigenvalues > 1)
+cat("Numero di fattori secondo la regola di Kaiser:", kaiser_rule, "\n")
+```
+
+**Spiegazione**: la regola di Kaiser suggerisce di mantenere i fattori con autovalori maggiori di 1.  
+*Problema*: è noto che **sovrastima** il numero di fattori, specialmente in campioni piccoli o quando le comunalità sono basse.
+
+### Scree Plot (Cattell)
+
+```{r}
+# Scree plot
+plot(eigenvalues, type = "b", pch = 19, main = "Scree plot (Cattell)", 
+     xlab = "Numero di fattori", ylab = "Autovalore")
+abline(h = 1, col = "red", lty = 2)
+```
+
+**Spiegazione**: Il numero ottimale di fattori corrisponde al punto **prima del "gomito"** nella curva degli autovalori decrescenti.  
+*Problema*: il metodo è **visivo e soggettivo**, quindi ha bassa affidabilità.
+
+### Regola del valore medio degli autovalori
+
+```{r}
+mean_val <- mean(eigenvalues)
+mean_rule <- sum(eigenvalues > mean_val)
+cat("Numero di fattori secondo la regola del valore medio:", mean_rule, "\n")
+```
+
+**Spiegazione**: mantiene solo i fattori con autovalori superiori alla media.  
+Questa è una **variante della regola di Kaiser**, meno estrema, ma comunque euristica.
+
+### Metodi avanzati con il pacchetto `nFactors`
+
+```{r}
+# Metodo EKC (Empirical Kaiser Criterion)
+ekc_result <- efa.ekc(sample.cov = wais_cor, sample.nobs = 300)  # Specificare N = numerosità stimata
+ekc_result
+```
+
+**Spiegazione**: EKC è una versione empiricamente corretta della regola di Kaiser, che **tiene conto del campione**, della **forma della distribuzione**, e della **varianza spiegata cumulativa**.  
+È più affidabile, soprattutto in strutture semplici.
+
+### STOC e STAF (versioni automatizzate dello Scree Test)
+
+```{r}
+# Calcola autovalori simulati
+nfac <- nFactors::nScree(x = eigenvalues)
+summary(nfac)
+
+# Plot per confronto
+plotnScree(nfac)
+```
+
+**Spiegazione**:
+
+- **STOC** = Optimal Coordinate
+- **STAF** = Acceleration Factor  
+Sono versioni **statistiche** dello scree test, che usano variazioni nella pendenza degli autovalori.
+
+
+## Metodi basati sulla simulazione
+
+### Parallel Analysis (PA)
+
+```{r}
+# Variante standard: confronto con media degli autovalori simulati
+set.seed(123)  # Per replicabilità
+fa.parallel(wais_cor, n.obs = 300, fa = "fa", fm = "ml", 
+            main = "Parallel Analysis (media simulata)")
+```
+
+
+### Spiegazione
+
+- Confronta gli **autovalori osservati** con quelli ottenuti da **dati casuali**.
+- Se l’autovalore osservato > simulato → **mantieni** il fattore.
+- Il metodo è **molto affidabile**, specie se il numero di soggetti (`n.obs`) è corretto.
+- La **variante di Glorfeld** (non mostrata) è più **conservativa** (riduce il rischio di sovrafattorizzare).
+
+
+### Comparison Data (CD)
+
+```{r}
+# Metodo Comparison Data
+# Richiede che i dati siano in formato "raw" (non solo matrice di correlazione)
+# Quindi, simuliamo dati coerenti con la matrice di correlazione per scopi didattici:
+
+set.seed(123)
+N <- 300  # ipotetica numerosità campionaria
+wais_sim <- mvrnorm(N, mu = rep(0, 11), Sigma = wais_cor)
+colnames(wais_sim) <- colnames(wais_cor)
+
+# Applica il metodo Comparison Data
+cd_result <- EFAtools::CD(
+  x = wais_sim,
+  n_factors_max = 6,        # Numero massimo di fattori da testare
+  N_pop = 10000,             # Dimensione della popolazione simulata
+  N_samples = 500,           # Numero di campioni bootstrap
+  alpha = 0.3,               # Soglia per il test di Mann-Whitney
+  use = "pairwise.complete.obs",  # Gestione dei dati mancanti
+  cor_method = "pearson",    # Metodo di correlazione
+  max_iter = 50              # Iterazioni massime
+)
+
+# Mostra il riepilogo dei risultati
+cd_result
+```
+
+### Spiegazione
+
+- Il metodo **Comparison Data (CD)** simula set di dati "riprodotti" con un certo numero di fattori.
+- Confronta il **RMSE** delle soluzioni successive con un **test di Mann-Whitney**.
+- Il numero ottimale di fattori è quello **oltre il quale non si osserva un miglioramento significativo**.
+- *Attenzione*: può **sovrafattorizzare** se `max_factors` è troppo alto o se i dati sono rumorosi.
+- Molto utile con **fattori correlati** e **strutture complesse**.
+
+**In sintesi**:
+
+- **PA (Parallel Analysis)** è il metodo di riferimento, raccomandato dalla maggior parte delle linee guida (es. Fabrigar et al., 1999).
+- **CD (Comparison Data)** è utile in presenza di **fattori obliqui** o **bassa comunalità**, ma può richiedere **parametri aggiustati** per una stima più accurata.
+-  Evita di usare **un solo criterio**: combina i risultati con quelli basati sugli **autovalori** e sulle **analisi di bontà di adattamento** (RMSEA, BIC, ecc.).
+
+## Indici di informazione
+
+Consideriamo ora un'implementazione in R per determinare il numero di fattori da estrarre dalla matrice di correlazione WAIS utilizzando metodi basati sugli indici di informazione.
+
+```{r}
+dim(wais_cor)  # Dovrebbe essere 11x11
+```
+
+1. **Criteri Informativi AIC e BIC**:
+
+   - Calcolo di AIC e BIC per modelli con 1-5 fattori.
+   - Visualizzazione grafica per identificare il punto di minimo.
+
+```{r}
+# Calcolo il numero di fattori usando AIC e BIC
+fa_fit <- function(nfactors, x, n.obs = 100) {
+  fit <- fa(x, nfactors = nfactors, fm = "ml", n.obs = n.obs)
+  chi <- fit$STATISTIC
+  df <- fit$dof
+  pval <- fit$PVAL
+  aic <- chi - 2 * df
+  bic <- chi - df * log(n.obs)
+  list(nfactors = nfactors, chi = chi, df = df, pval = pval, aic = aic, bic = bic)
+}
+```
+
+```{r}
+# Assumiamo una dimensione campionaria di 100 
+n.obs <- 100
+
+# Calcoliamo AIC e BIC per diversi numeri di fattori
+results <- data.frame()
+for (i in 1:5) {
+  res <- fa_fit(i, wais_cor, n.obs)
+  results <- rbind(results, data.frame(
+    nfactors = i,
+    chi_square = res$chi,
+    df = res$df,
+    p_value = res$pval,
+    aic = res$aic,
+    bic = res$bic
+  ))
+}
+```
+
+```{r}
+# Visualizziamo i risultati
+print(results)
+```
+
+```{r}
+# Grafici per AIC e BIC
+par(mfrow = c(1, 2))
+plot(results$nfactors, results$aic, type = "b", main = "AIC per numero di fattori", 
+     xlab = "Numero di fattori", ylab = "AIC", xaxt = "n")
+axis(1, at = 1:5)
+abline(v = which.min(results$aic), col = "red", lty = 2)
+
+plot(results$nfactors, results$bic, type = "b", main = "BIC per numero di fattori", 
+     xlab = "Numero di fattori", ylab = "BIC", xaxt = "n")
+axis(1, at = 1:5)
+abline(v = which.min(results$bic), col = "red", lty = 2)
+par(mfrow = c(1, 1))
+```
+
+2. **Indici di Fit da CFA**:
+
+   - Implementazione di CFI, TLI, RMSEA e SRMR.
+   - Grafici per valutare quando questi indici raggiungono valori accettabili.
+   - Criteri di riferimento: CFI > 0.95, RMSEA < 0.05.
+
+```{r}
+# Definiamo i modelli CFA per diversi numeri di fattori
+fit_indices <- data.frame()
+
+for (i in 1:5) {
+  # Estraiamo prima i fattori con analisi fattoriale esplorativa
+  fa_result <- fa(wais_cor, nfactors = i, fm = "ml", rotate = "varimax")
+  
+  # Creiamo il modello CFA basato sui loadings più alti
+  model_syntax <- ""
+  for (j in 1:i) {
+    # Seleziona le variabili con i loadings più alti per ciascun fattore
+    vars <- names(sort(abs(fa_result$loadings[, j]), decreasing = TRUE)[1:ceiling(11/i)])
+    model_syntax <- paste0(model_syntax, "F", j, " =~ ", paste(vars, collapse = " + "), "\n")
+  }
+  
+  # Eseguiamo la CFA
+  try({
+    fit <- cfa(model_syntax, sample.cov = wais_cor, sample.nobs = n.obs)
+    indices <- fitMeasures(fit, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr", "aic", "bic"))
+    
+    fit_indices <- rbind(fit_indices, data.frame(
+      nfactors = i, 
+      chisq = indices["chisq"], 
+      df = indices["df"], 
+      pvalue = indices["pvalue"],
+      cfi = indices["cfi"], 
+      tli = indices["tli"], 
+      rmsea = indices["rmsea"], 
+      srmr = indices["srmr"],
+      aic = indices["aic"], 
+      bic = indices["bic"]
+    ))
+  }, silent = TRUE)
+}
+```
+
+```{r}
+# Visualizziamo gli indici di fit
+print(fit_indices)
+```
+
+```{r}
+# Visualizziamo graficamente gli indici di fit
+if (nrow(fit_indices) > 0) {
+  par(mfrow = c(2, 2))
+  plot(fit_indices$nfactors, fit_indices$cfi, type = "b", main = "CFI per numero di fattori", 
+       xlab = "Numero di fattori", ylab = "CFI", xaxt = "n")
+  axis(1, at = 1:5)
+  abline(h = 0.95, col = "red", lty = 2)
+  
+  plot(fit_indices$nfactors, fit_indices$rmsea, type = "b", main = "RMSEA per numero di fattori", 
+       xlab = "Numero di fattori", ylab = "RMSEA", xaxt = "n")
+  axis(1, at = 1:5)
+  abline(h = 0.05, col = "red", lty = 2)
+  
+  plot(fit_indices$nfactors, fit_indices$aic, type = "b", main = "AIC (CFA) per numero di fattori", 
+       xlab = "Numero di fattori", ylab = "AIC", xaxt = "n")
+  axis(1, at = 1:5)
+  
+  plot(fit_indices$nfactors, fit_indices$bic, type = "b", main = "BIC (CFA) per numero di fattori", 
+       xlab = "Numero di fattori", ylab = "BIC", xaxt = "n")
+  axis(1, at = 1:5)
+  par(mfrow = c(1, 1))
+}
+```
+
+3. **Test del Chi-Quadrato**:
+
+   - Confronto incrementale tra modelli con diverso numero di fattori.
+   - Test della significatività della differenza di fit.
+
+```{r}
+# Calcoliamo la differenza di chi-quadrato tra modelli consecutivi
+if (nrow(results) > 1) {
+  chi_diff <- data.frame(
+    comparison = character(),
+    chi_diff = numeric(),
+    df_diff = numeric(),
+    p_value = numeric()
+  )
+  
+  for (i in 2:nrow(results)) {
+    chi_diff_val <- results$chi_square[i-1] - results$chi_square[i]
+    df_diff_val <- results$df[i-1] - results$df[i]
+    p_val <- 1 - pchisq(chi_diff_val, df_diff_val)
+    
+    chi_diff <- rbind(chi_diff, data.frame(
+      comparison = paste(i-1, "vs", i),
+      chi_diff = chi_diff_val,
+      df_diff = df_diff_val,
+      p_value = p_val
+    ))
+  }
+  
+  print("Test del chi-quadrato per confronto di modelli:")
+  print(chi_diff)
+}
+```
+
+4. **Sintesi dei Risultati**:
+
+   - Riepilogo delle indicazioni dai vari indici.
+   - Raccomandazione sul numero ottimale di fattori.
+
+```{r}
+cat("\nSintesi dei risultati:\n")
+cat("Numero di fattori suggerito da AIC:", which.min(results$aic), "\n")
+cat("Numero di fattori suggerito da BIC:", which.min(results$bic), "\n")
+
+if (nrow(fit_indices) > 0) {
+  # Per CFI vogliamo valori > 0.95
+  good_cfi <- which(fit_indices$cfi > 0.95)
+  if (length(good_cfi) > 0) {
+    cat("Numero minimo di fattori con CFI > 0.95:", min(good_cfi), "\n")
+  }
+  
+  # Per RMSEA vogliamo valori < 0.05
+  good_rmsea <- which(fit_indices$rmsea < 0.05)
+  if (length(good_rmsea) > 0) {
+    cat("Numero minimo di fattori con RMSEA < 0.05:", min(good_rmsea), "\n")
+  }
+}
+
+if (nrow(chi_diff) > 0) {
+  # Per il test chi-quadrato, cerchiamo il primo confronto non significativo
+  non_sig <- which(chi_diff$p_value > 0.05)
+  if (length(non_sig) > 0) {
+    cat("Basato sul test del chi-quadrato, il numero ottimale di fattori è:", as.numeric(substr(chi_diff$comparison[min(non_sig)], 1, 1)), "\n")
+  }
+}
+```
+
+## Metodo Hull
+
+Il metodo è implementato nel pacchetto [`EFAtools`](https://cran.r-project.org/web/packages/EFAtools/index.html) in R (Steiner & Gruber, 2020).
+
+Nel grafico risultante, si osserva la curva dei valori di CFI in funzione dei gradi di libertà. Il metodo Hull seleziona il punto "di gomito", dove il modello ha ancora un buon fit ma con la massima parsimonia. In alcuni casi, il metodo può suggerire ad esempio che **una soluzione a un fattore è preferibile**, se l’aggiunta di ulteriori fattori non migliora significativamente l’adattamento.
+
+```{r}
+Hull(
+  wais_sim,
+  fa = "fa",
+  nfact = 6,
+  cor.type = "pearson",
+  use = "pairwise.complete.obs",
+  vis = TRUE,
+  plot = TRUE
+)
+```
+
+## Metodo MAP 
+
+Il **MAP test** valuta, per ogni possibile numero di componenti estratti, quanto rimane di correlazione "spuria" nei residui. Il numero ottimale è quello che **minimizza la media delle correlazioni parziali residue**, cioè quello che riesce a "pulire" meglio la matrice di correlazione iniziale.
+
+```{r}
+# Applica il metodo MAP con la funzione vss()
+vss_map <- vss(
+  x = wais_cor,
+  n = 6,          # numero massimo di fattori/componenti da testare
+  n.obs = 100,     # numero di osservazioni
+  rotate = "none", # nessuna rotazione per mantenere interpretabilità
+  plot = FALSE     # non mostrare il grafico automaticamente
+)
+vss_map
+```
+
+
+### Sintesi dei principali risultati
+
+| Metodo                           | Numero ottimale di fattori | Valore ottimale |
+|----------------------------------|-----------------------------|------------------|
+| **MAP (Velicer)**                | **2**                       | 0.03 (minimo)    |
+| **BIC**                          | **2**                       | -140.3 (minimo)  |
+| **BIC corretto per n (SABIC)**   | **2**                       | -32.93 (minimo)  |
+| **VSS complessità 1**            | 2                           | 0.92 (massimo)   |
+| **VSS complessità 2**            | 5                           | 0.95 (massimo)   |
+
+
+### Velicer MAP
+
+- Valuta la **media delle correlazioni parziali residue**.
+- L’obiettivo è minimizzare la varianza residua non spiegata dai fattori.
+- **Risultato**: minimo a **2 fattori**, con valore 0.03 → suggerisce **2 fattori**.
+
+### BIC e SABIC
+
+- Criteri informativi che bilanciano bontà del fit e parsimonia.
+- Più basso è il valore, meglio è.
+- Entrambi i criteri (sia BIC classico che SABIC) raggiungono il **minimo a 2 fattori**.
+
+### SS (Very Simple Structure)
+
+- Misura quanto bene una struttura semplice (con pochi caricamenti per variabile) si adatta ai dati.
+- Due versioni:
+  - **Complessità 1**: solo il caricamento maggiore per ogni variabile.
+  - **Complessità 2**: primi due caricamenti per variabile.
+- Complessità 1 → massimo a **2 fattori** (0.92)
+- Complessità 2 → massimo a **5 fattori** (0.95)
+
+🔎 *Nota*: VSS complessità 2 è più permissiva e tende a favorire strutture più complesse.
+
+**Interpretazione complessiva.**
+
+Tutti i criteri **basati su residui o penalizzazione della complessità** (MAP, BIC, SABIC, VSS-1) **concordano nel suggerire una soluzione a 2 fattori**.
+
+Solo VSS-2 (più permissivo) suggerisce **5 fattori**, ma questa soluzione è meno parsimoniosa e più soggetta a sovrafattorizzazione.
+
+In sintesi, sulla base di criteri oggettivi e parsimoniosi come **MAP**, **BIC**, **SABIC**, e **VSS a complessità 1**, una soluzione a **2 fattori** sembra ottimale per questi dati WAIS. L’adozione di criteri informativi e basati sui residui, come MAP e BIC, è fortemente raccomandata rispetto a metodi più soggettivi o sovraestimanti come Kaiser o Scree test.
+
+
+## Exploratory Graph Analysis (EGA)
+
+L’**Exploratory Graph Analysis (EGA)** è un metodo innovativo per identificare la struttura latente dei dati basato su modelli a rete, piuttosto che sui tradizionali modelli fattoriali. È implementato nel pacchetto [`EGAnet`](https://cran.r-project.org/package=EGAnet), sviluppato da Golino e colleghi. Il metodo è stato introdotto da **Golino & Epskamp (2017)** e perfezionato in studi successivi (Christensen, Golino & Silvia, 2020; Golino et al., 2020).
+
+### Caratteristiche principali di EGA:
+
+- Utilizza il **graphical lasso** per stimare le correlazioni parziali tra variabili, costruendo così una rete sparsa (solo le relazioni più forti restano).
+- Identifica **comunità di variabili** all’interno della rete, che corrispondono a **fattori latenti**.
+- È particolarmente utile quando:
+  - le **comunalità sono basse**,
+  - la **struttura fattoriale non è ben definita**,
+  - si lavora con **dati ordinali o non normali**.
+
+Applichiamo l’EGA alla matrice di correlazione delle **11 sottoscale della WAIS**.
+
+```{r}
+# Applica l'EGA alla matrice di correlazione WAIS
+ega_result <- EGA(
+  data = wais_cor,        # Matrice di correlazione tra le 11 sottoscale
+  n = 300,                # Numero di soggetti nel campione
+  model = "glasso",       # Metodo di stima: graphical lasso
+  type = "correlation",   # Specifica che stiamo passando una matrice di correlazione
+  plot.EGA = TRUE         # Visualizza il grafo delle comunità (dimensioni)
+)
+```
+
+- **`model = "glasso"`**: applica una penalizzazione (lasso) per ridurre il numero di connessioni deboli tra variabili.
+- **`plot.EGA = TRUE`**: mostra un grafo con le sottoscale collegate in base alla loro correlazione condizionale.
+- **`ega_result$wc`**: contiene l’assegnazione di ciascuna variabile a una **comunità**, interpretata come un **fattore latente**.
+
+**Interpretazione dei risultati**:
+
+```{r}
+# Riepilogo generale
+summary(ega_result)
+```
+
+```{r}
+# Numero di dimensioni individuate (cioè di comunità)
+length(unique(ega_result$wc))
+```
+
+**Vantaggi:**
+
+- **non richiede ipotesi forti sulla distribuzione dei dati**;
+- **più robusto** dei metodi classici (EFA, PA) in presenza di **comunalità basse**;
+- offre una **visualizzazione intuitiva** delle relazioni tra variabili.
+
+> 💡 *EGA può essere utilizzato sia per esplorare la dimensionalità di un set di item sia per decidere quanti fattori mantenere prima di una conferma con CFA.*
+
+
+## Riflessioni Conclusive
+
+Determinare il numero di fattori da estrarre in un'Analisi Fattoriale Esplorativa (EFA) rappresenta una delle sfide metodologiche più complesse nella costruzione di strumenti psicometrici. Nessun metodo è infallibile o universalmente valido: ogni tecnica presenta vantaggi, limiti e assunzioni specifiche. Per questo motivo, la **triangolazione** di più metodi e la riflessione teorica guidano le scelte più solide.
+
+### 1. La scelta del numero di fattori: tra tecniche classiche e moderne
+
+Le tecniche tradizionali, come la regola di Kaiser e lo scree test, sono state largamente impiegate per la loro semplicità, ma risultano oggi superate per via della loro tendenza sistematica alla **sovra- o sotto-fattorizzazione**. In particolare:
+
+- La **Parallel Analysis (PA)** si conferma il metodo più raccomandato, grazie alla sua capacità di distinguere fattori reali da quelli generati dal rumore;
+- Il metodo **Comparison Data (CD)** si dimostra utile con strutture complesse o fattori correlati, ma va calibrato attentamente;
+- I criteri **informativi** (AIC, BIC) e gli **indici di adattamento del modello** (RMSEA, CFI) aggiungono elementi preziosi per valutare la bontà della soluzione, specialmente quando integrati con la CFA;
+- Metodi recenti come **MAP**, **Hull**, **EGA** o **Factor Forest** offrono soluzioni promettenti, soprattutto in contesti con comunalità basse, dati non normali o ordinali.
+
+### 2. Replicabilità: validare ciò che si scopre
+
+Identificare una struttura fattoriale coerente è solo il primo passo. Per attribuire **validità e generalizzabilità** a una soluzione esplorativa, occorre valutarne la **replicabilità**:
+
+- **Replicazione in campioni indipendenti** e **validazione incrociata** servono a testare la stabilità della struttura in sottogruppi differenti;
+- La **CFA** permette di verificare, in modo formale, se una struttura fattoriale individuata in EFA è confermata da nuovi dati;
+- Tecniche di **ricampionamento** (come il bootstrap) offrono ulteriori strumenti per stimare l’incertezza legata alla soluzione ottenuta.
+
+Una struttura replicabile è più probabilmente una rappresentazione fedele dei costrutti latenti piuttosto che un artefatto del campione specifico.
+
+### 3. Cosa fare con i fattori: applicazioni e criticità
+
+Dopo aver identificato i fattori, è cruciale decidere **come utilizzarli**:
+
+- Nei **Modelli di Equazioni Strutturali (SEM)**, i fattori possono essere usati come predittori, mediatori, moderatori o esiti, con il vantaggio di modellare esplicitamente l’errore di misura;
+- Al di fuori dei SEM, l’uso di **punteggi fattoriali** (calcolati come media, somma o compositi ponderati) va considerato con cautela, poiché può trascurare errori di misura o differenze di importanza tra variabili;
+- In certi casi, **compositi a pesi unitari** possono essere preferibili a quelli ponderati, specialmente per garantire maggiore generalizzabilità e robustezza cross-campione.
+
+La scelta operativa su come rappresentare e usare i fattori dovrebbe sempre essere coerente con le finalità della ricerca e con le caratteristiche dei dati.
+
+### 4. Una visione integrata
+
+In definitiva, la **determinazione del numero di fattori**, la **replicabilità** della soluzione e il **modo in cui i fattori vengono utilizzati** sono aspetti interdipendenti di un processo rigoroso e cumulativo. Una buona pratica psicometrica non si limita a identificare la struttura che “funziona meglio” nel proprio campione, ma valuta la stabilità della soluzione, il suo significato teorico e la sua applicazione pratica.
+
+> ✏️ *La validità di uno strumento psicologico non si esaurisce nella bontà del suo adattamento al campione corrente, ma nella sua capacità di riflettere stabilmente e in modo interpretabile i costrutti che intende misurare.*
+
+
+## Session Info
+
+```{r}
+#| vscode: {languageId: r}
+sessionInfo()
+```
+
