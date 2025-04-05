@@ -1,0 +1,522 @@
+# La rotazione fattoriale {#sec-extraction-rotation}
+
+
+**Prerequisiti**
+
+**Concetti e Competenze Chiave**
+
+**Preparazione del Notebook**
+
+```{r}
+here::here("code", "_common.R") |>
+  source()
+
+# Load packages
+if (!requireNamespace("pacman")) install.packages("pacman")
+pacman::p_load(lavaan, psych, GPArotation)
+```
+
+## Introduzione
+
+Una volta stabilito il numero ottimale di fattori comuni (come illustrato nel @sec-extraction-number-factors), ci si trova spesso davanti a una **soluzione iniziale non ruotata**, che può apparire poco chiara e di difficile interpretazione. A questo punto, per rendere più agevole l’identificazione di un **pattern fattoriale** interpretabile, è prassi comune procedere a una **rotazione** degli assi nello spazio dei fattori. Lo scopo principale di questa rotazione è semplificare la struttura delle **saturazioni fattoriali**, individuando gruppi di variabili che mostrino saturazioni elevate su un singolo fattore e saturazioni molto basse (o nulle) sugli altri.
+
+Tale processo nasce dall’esigenza di affrontare la cosiddetta **indeterminatezza rotazionale**, ovvero il fatto che, fissato un determinato numero di fattori, sono possibili infinite soluzioni alternative ugualmente in grado di riprodurre la matrice di correlazioni osservata. Per scegliere in modo consapevole tra queste soluzioni si fa ricorso all’idea di “parsimonia”: i fattori vengono ruotati in modo da ottenere la cosiddetta **struttura semplice**, dove ogni fattore tende a “caricare” nettamente su un sottoinsieme limitato di variabili, facilitandone così l’interpretazione psicologica. In passato, questa operazione veniva eseguita a mano; oggi, si utilizzano metodi automatizzati che rendono molto più rapida l’individuazione di una configurazione fattoriale interpretabile.
+
+## Indeterminatezza della soluzione fattoriale
+
+La necessità di effettuare la rotazione deriva dal fatto che la matrice delle saturazioni non possiede un’unica soluzione. Attraverso trasformazioni matematiche, è possibile ottenere infinite matrici dello stesso ordine, tutte in grado di riprodurre allo stesso modo la matrice di correlazioni originale. Questo fenomeno prende il nome di **indeterminatezza della soluzione fattoriale**.
+
+In altri termini, la matrice delle saturazioni fattoriali $\boldsymbol{\Lambda}$ non è univoca, perché una singola matrice di correlazioni $\boldsymbol{R}$ può dar luogo a più configurazioni fattoriali alternative. Ciò significa che, a parità di numero di fattori, si possono ottenere differenti configurazioni delle saturazioni fattoriali, oppure, in alcuni casi, soluzioni con un diverso numero di fattori comuni ma ugualmente capaci di riprodurre la matrice di correlazioni (o di covarianza) osservata.
+
+### Esempio di indeterminatezza con lo stesso numero di fattori
+
+Di seguito, viene mostrato come due diverse matrici di saturazioni ($\boldsymbol{\Lambda}_1$ e $\boldsymbol{\Lambda}_2$) possano restituire la medesima matrice di correlazioni riprodotte, pur avendo la stessa dimensionalità (cioè lo stesso numero di fattori).
+
+```{r}
+# Matrice di saturazioni fattoriali Lambda_1
+l1 <- matrix(
+  c(
+    0.766,  -0.232,
+    0.670,  -0.203,
+    0.574,  -0.174,
+    0.454,   0.533,
+    0.389,   0.457,
+    0.324,   0.381
+  ),
+  byrow = TRUE, ncol = 2
+)
+
+# Matrice di saturazioni fattoriali Lambda_2
+l2 <- matrix(
+  c(
+    0.783,  0.163,
+    0.685,  0.143,
+    0.587,  0.123,
+    0.143,  0.685,
+    0.123,  0.587,
+    0.102,  0.489
+  ),
+  byrow = TRUE, ncol = 2
+)
+
+# Matrici di correlazioni riprodotte da Lambda_1 e Lambda_2
+l1 %*% t(l1) |> round(2)
+l2 %*% t(l2) |> round(2)
+```
+
+Entrambe le matrici di correlazioni riprodotte risultano identiche, pur derivando da matrici di saturazioni diverse.
+
+### Esempio di indeterminatezza con un diverso numero di fattori
+
+È possibile mostrare che la stessa matrice di correlazioni riprodotte può derivare anche da soluzioni con un diverso numero di fattori comuni. Consideriamo due matrici $\boldsymbol{\Lambda}_1$ e $\boldsymbol{\Lambda}_2$ con lo stesso numero di righe (cioè, con lo stesso numero di variabili manifeste) ma un numero di colonne differente (quindi, un diverso numero di fattori):
+
+```{r}
+# Matrice di saturazioni a 1 fattore
+l1 <- matrix(
+  c(
+    0.9,
+    0.7,
+    0.5,
+    0.3
+  ),
+  byrow = TRUE, ncol = 1
+)
+
+# Matrice di saturazioni a 2 fattori
+l2 <- matrix(
+  c(
+    0.78, 0.45,
+    0.61, 0.35,
+    0.43, 0.25,
+    0.25, 0.15
+  ),
+  byrow = TRUE, ncol = 2
+)
+
+# Matrici di correlazioni riprodotte
+l1 %*% t(l1) |> round(2)
+l2 %*% t(l2) |> round(2)
+```
+
+Anche in questo caso, il prodotto delle due nuove matrici restituisce la stessa matrice di correlazioni riprodotte, nonostante $\boldsymbol{\Lambda}_1$ preveda un solo fattore comune mentre $\boldsymbol{\Lambda}_2$ ne preveda due.
+
+## Parsimonia e semplicità
+
+Per ovviare al problema dell’indeterminatezza fattoriale, solitamente ci si affida a due criteri fondamentali:
+
+1. **Parsimonia**: si preferisce il modello con **minor** numero di fattori che spieghi adeguatamente la covarianza tra le variabili.  
+   - Se più soluzioni con un diverso numero di fattori riproducono parimenti la matrice di correlazione, si sceglie quella con il minor numero di fattori.
+
+2. **Semplicità**: tra diverse soluzioni fattoriali con lo stesso numero $m$ di fattori, si preferisce la trasformazione (rotazione) che renda i fattori **più interpretabili**, ossia che abbia il maggior numero possibile di saturazioni nulle o prossime allo zero, e saturazioni elevate concentrate su poche variabili.
+
+Le rotazioni dei fattori possono essere di due tipi:
+
+- **ortogonali** (i fattori rimangono non correlati tra di loro);
+- **oblique** (i fattori possono essere correlati).
+
+Indipendentemente dal tipo di rotazione, l’obiettivo è rendere più agevole l’interpretazione dei fattori, identificando in maniera più chiara quali variabili “caricano” su ciascun fattore.
+
+### Il Criterio della Struttura Semplice nell’Analisi Fattoriale
+
+Thurstone (1947) introdusse il concetto di **struttura semplice**, un insieme di criteri che mirano a far emergere fattori facilmente interpretabili. In breve, l’ideale di struttura semplice è una configurazione in cui ogni variabile ha saturazioni elevate su un solo fattore (o su pochi fattori) e saturazioni nulle (o molto basse) sugli altri.
+
+Le condizioni fondamentali per una struttura semplice includono:
+
+1. ciascuna variabile dovrebbe avere saturazioni prossime allo zero con la maggior parte dei fattori (ad eccezione di uno o pochi di essi);
+2. per ogni fattore, ci si aspetta di trovare almeno $m$ saturazioni prossime allo zero (dove $m$ è il numero di fattori).
+
+Se queste condizioni sono soddisfatte, i fattori risultano di immediata interpretazione: si possono raggruppare le variabili in base alle saturazioni elevate su ciascun fattore, interpretando poi i fattori come caratteristiche o dimensioni psicologiche comuni alle variabili che vi saturano.
+
+## Rotazione nello Spazio Geometrico
+
+### Rotazione Ortogonale
+
+La rotazione ortogonale può essere vista come una **“rotazione rigida”** degli assi in uno spazio cartesiano, in cui si mantengono **inalterate le distanze** tra i punti (cioè tra le variabili, rappresentate dalle loro saturazioni fattoriali). L’unica cosa che cambia è l’orientamento degli assi stessi. 
+
+I metodi di rotazione ortogonale (come Varimax, Quartimax, Equamax, ecc.) cercano di massimizzare la “semplicità” della matrice ruotata, rendendo più evidenti i fattori. In particolare:
+
+- **Varimax** massimizza la **varianza** dei quadrati dei loadings entro ciascun fattore (colonna);  
+- **Quartimax** massimizza la varianza dei loadings entro ogni variabile (riga);  
+- **Equamax** cerca un compromesso tra Varimax e Quartimax.
+
+Questo tipo di rotazione si adatta bene quando si ritiene, sulla base di considerazioni teoriche, che i fattori siano **incorrelati**.
+
+Nella rotazione ortogonale, essendo i fattori mantenuti a **90°** l’uno rispetto all’altro, le comunalità rimangono inalterate (perché le distanze geometriche nel diagramma fattoriale non cambiano).
+
+### Metodo Grafico per la Rotazione dei Fattori
+
+Quando il numero di fattori $m=2$, è possibile rappresentare **graficamente** la soluzione di analisi fattoriale. Ogni variabile manifesta è un punto nello spazio bidimensionale, con coordinate date dalle saturazioni sui due fattori $(\hat{\lambda}_{i1}, \hat{\lambda}_{i2})$. 
+
+**Esempio** (Brown, Williams e Barlow, 1984, discusso in @rencher10methods):  
+Una ragazza di dodici anni valuta sette suoi conoscenti su cinque attributi: *gentilezza*, *intelligenza*, *felicità*, *simpatia* e *giustizia*. Dalla matrice di correlazione $R$ di questi attributi, si estrae una soluzione a due fattori con il **metodo delle componenti principali**, senza rotazione. Spesso, questa soluzione non ruotata ha un primo fattore che “assorbe” gran parte della varianza (saturazioni elevate su tutte le variabili) e un secondo fattore meno chiaro, con saturazioni positive o negative concentrate in modo non facilmente interpretabile.
+
+Tramite una **rotazione ortogonale** si cerca un angolo $\phi$ (nel caso di due fattori) che “allinei” i nuovi assi ai punti che rappresentano i dati. Matematicamente, le saturazioni ruotate $\hat{\boldsymbol{\Lambda}}^*$ si ottengono moltiplicando $\hat{\boldsymbol{\Lambda}}$ per la matrice di rotazione ortogonale $\mathbf{T}$, ad esempio:
+
+$$
+\mathbf{T} = 
+\begin{bmatrix}
+\cos{\phi} & -\sin{\phi}\\
+\sin{\phi} & \cos{\phi}
+\end{bmatrix}.
+$$
+
+Questo approccio grafico è molto intuitivo per $m=2$, poiché consente di “ruotare” fisicamente un diagramma di dispersione di punti attorno all’origine, in modo da ricavare un sistema di assi più vicino alla cosiddetta “struttura semplice”.
+
+### Metodi di rotazione ortogonale
+
+- **Varimax**:  
+  Massimizza la varianza tra i quadrati dei loadings in ciascun fattore. Se i loadings di un fattore sono tutti simili, la varianza dei quadrati è bassa; se invece alcuni loadings sono prossimi a zero e altri prossimi a 1, la varianza è alta, e questo facilita l’interpretazione (un fattore “carica” fortemente solo su certe variabili).
+
+- **Quartimax**:  
+  Concentra l’attenzione sulla semplificazione delle variabili (righe di $\hat{\boldsymbol{\Lambda}}$) piuttosto che dei fattori (colonne).
+
+Entrambi i metodi, così come altri (Equamax, Orthomax, ecc.), sono disponibili in R attraverso diverse funzioni (`factanal()`, `principal()`, `factor.pa()`, ecc.).
+
+### Metodi di Rotazione Obliqua
+
+Si parla di **rotazione obliqua** quando si **consente** ai fattori di **correlare** tra loro. Più precisamente, sarebbe più corretto il termine “trasformazione obliqua” [@rencher10methods], perché una rotazione in senso geometrico implica il mantenimento dell’ortogonalità degli assi. Tuttavia, in letteratura il termine “rotazione obliqua” è universalmente accettato.
+
+Nei metodi obliqui, gli assi che rappresentano i fattori possono **non** essere ad angolo retto, così da allinearsi meglio ai “cluster” di variabili che saturano su più fattori correlati. Esistono varie forme di rotazione obliqua (Direct Oblimin, Promax, Geomin, ecc.). Un vantaggio dell’obliquità è che può fornire soluzioni più realistiche in quei casi, molto comuni in psicologia, dove i costrutti latenti sono **naturalmente correlati** tra loro.
+
+## Matrice dei Pesi Fattoriali e Matrice di Struttura
+
+### Rotazione Ortogonale
+
+In presenza di fattori considerati **non correlati**, la matrice delle saturazioni fattoriali $\hat{\boldsymbol{\Lambda}}$ coincide, di fatto, con i **coefficienti di correlazione** tra i fattori e le variabili. Se i fattori sono ortogonali ($\text{corr}(\xi_1, \xi_2) = 0$), ciascuna variabile manifesta $y_i$ è collegata a ciascun fattore $\xi_j$ tramite un solo percorso: la saturazione fattoriale (in termini di path analysis, è come un coefficiente di regressione). Di conseguenza, le loadings fattoriali si possono interpretare direttamente come i cosiddetti “pesi beta” di regressione (Tabachnick & Fidell, 2001).
+
+### Rotazione Obliqua
+
+Se i fattori sono **correlati** ($\text{corr}(\xi_1, \xi_2) \neq 0$), la situazione si complica perché ciascuna variabile manifesta si collegherà a ciascun fattore tramite **percorsi diretti** e **percorsi indiretti** (che passano attraverso la correlazione con l’altro fattore). In questo caso, la matrice delle saturazioni fattoriali $\hat{\boldsymbol{\Lambda}}$ non rappresenta più le semplici correlazioni tra fattori e variabili; occorre distinguere:
+
+1. **Matrice Pattern** ($\hat{\boldsymbol{\Lambda}}$): contiene i **coefficienti di regressione parziali** delle variabili manifeste sui fattori. Ciascuna riga della matrice indica quanto una variabile è influenzata “direttamente” da ogni fattore, escludendo l’effetto dell’eventuale correlazione con gli altri fattori.
+
+2. **Matrice di Struttura**: contiene le **correlazioni** tra i fattori e le variabili, includendo sia gli effetti diretti sia quelli indiretti dovuti alla correlazione tra fattori.
+
+3. **Matrice di Intercorrelazione Fattoriale** ($\hat{\boldsymbol{\Phi}}$): specifica il grado di correlazione tra fattori (per es. $\phi_{12} = \text{corr}(\xi_1, \xi_2)$).
+
+In un contesto di rotazione obliqua, l’interpretazione dei fattori richiede di guardare sia alla **matrice Pattern** (per comprendere gli effetti diretti) sia alla **matrice di Struttura** (per valutare l’effetto congiunto diretto+indiretto dei fattori sulle variabili).
+
+Di seguito è riportato un esempio pratico per mettere a confronto, in modo sia numerico sia grafico, le soluzioni **ortogonali** e **oblique** in un’Analisi Fattoriale Esplorativa (EFA). L’obiettivo è mostrare come cambia la configurazione dei fattori e come, nella soluzione obliqua, i fattori risultino correlati, rendendo necessaria la distinzione tra **matrice Pattern** e **matrice di Struttura**.
+
+## Esempio con Metodi Ortogonali e Obliqui in R
+
+Di seguito utilizziamo una piccola matrice di correlazione tratta da un esempio proposto da @rencher10methods. Consideriamo un caso studiato da Brown, Williams e Barlow (1984), analizzato in @rencher10methods. Ad una ragazza di dodici anni è stato chiesto di valutare sette suoi conoscenti su cinque attributi: *gentilezza*, *intelligenza*, *felicità*, *simpatia* e *giustizia*. Di seguito è presentata la matrice di correlazione tra le variabili misurate:
+
+```{r}
+R <- matrix(
+  c(
+    1.00, .296, .881, .995, .545,
+    .296, 1.000, -.022, .326, .837,
+    .881, -.022, 1.000, .867, .130,
+    .995, .326, .867, 1.000, .544,
+    .545, .837, .130, .544, 1.00
+  ),
+  ncol = 5, byrow = TRUE, dimnames = list(
+    c("K", "I", "H", "L", "J"), c("K", "I", "H", "L", "J")
+  )
+)
+
+print(R)
+```
+
+Eseguiamo l'analisi fattoriale con 2 fattori con il metodo principale (`principal`). Imponiamo una rotazione ortogonale Varimax:
+
+```{r}
+f1_pc <- principal(R, 2, rotate = "varimax")
+f1_pc
+```
+
+Le saturazioni fattoriali (loadings) mostrano quanto ciascuna variabile sia associata ai due fattori, ma l’angolo tra i fattori è mantenuto a 90°.
+
+Consideriamo ora una rotazione obliqua (Oblimin):
+
+```{r}
+pr_oblimin <- principal(R, 2, rotate = "oblimin")
+pr_oblimin
+```
+
+Qui i fattori possono correlare tra loro: la matrice `pr_oblimin$Phi` mostra i valori di correlazione tra i due fattori, che risultano diversi da zero. Di conseguenza, la matrice Pattern (che contiene i coefficienti di regressione parziali dei fattori sulle variabili) non coincide con la matrice di Struttura (che riporta le correlazioni fattore-variabile, considerando anche gli effetti indiretti).
+
+Per approfondire:
+
+- **Matrice Pattern (saturazioni parziali)**
+
+  ```{r}
+cbind(pr_oblimin$load[, 1], pr_oblimin$load[, 2])
+  ```
+
+- **Matrice di inter-correlazione fattoriale** ($\boldsymbol{\Phi}$)
+
+  ```{r}
+pr_oblimin$Phi
+  ```
+
+- **Matrice di Struttura** (correlazioni fattore-variabile)
+
+  ```{r}
+pr_oblimin$load %*% pr_oblimin$Phi %>% round(3)
+  ```
+
+Di seguito presento due esempi grafici che mostrano come variano i punti (le saturazioni fattoriali) e gli assi quando si effettua una **rotazione ortogonale** e una **rotazione obliqua**. In entrambi i casi, si parte dalla stessa soluzione “non ruotata” (unrotated), in cui si dispone dei loadings iniziali su due fattori. Nel grafico, gli **assi originali** (quelli della soluzione non ruotata) vengono mantenuti e, successivamente, **aggiunti** gli assi della soluzione ruotata, in modo da evidenziare il cambiamento di orientamento.
+
+Per queste variabili, la matrice di correlazione $R$ è stata analizzata per estrarre due fattori mediante il metodo delle componenti principali, senza rotazione iniziale.  Si osserva che i fattori risultano difficili da interpretare: il primo fattore mostra alte saturazioni positive su tutte le variabili manifeste, mentre il secondo fattore si caratterizza per alte saturazioni positive su una variabile e negative sulle altre.
+
+```{r}
+f.pc <- principal(R, 2, rotate = FALSE)
+f.pc
+```
+
+In un grafico delle saturazioni fattoriali, i punti rappresentano le cinque coppie di saturazioni (una per ciascun fattore):
+
+```{r fig.asp=1}
+plot(
+  f.pc$load[, 1], f.pc$load[, 2],
+  bty = "n", xaxt = "n",
+  xlab = "Primo Fattore", ylab = "Secondo Fattore",
+  ylim = c(-.6, 1), xlim = c(0, 1), pch = 19, asp = 1
+)
+abline(0, 0)
+```
+
+@rencher10methods suggerisce che una rotazione ortogonale di $-35^\circ$ avvicinerebbe efficacemente gli assi ai punti nel diagramma di dispersione. Per verificarlo, si può disegnare i nuovi assi nel grafico dopo una rotazione di $-35^\circ$.
+
+```{r fig.asp=1}
+plot(
+  f.pc$load[, 1], f.pc$load[, 2],
+  bty = "n", xaxt = "n",
+  xlab = "Primo Fattore", ylab = "Secondo Fattore",
+  ylim = c(-.6, 1), xlim = c(0, 1), pch = 19, asp = 1
+)
+axis(1, pos = c(0, 0))
+abline(0, 0)
+
+ar <- matrix(c(
+  0, 0,
+  0, 1,
+  0, 0,
+  1, 0
+), ncol = 2, byrow = TRUE)
+
+angle <- 35
+rad <- angle * pi / 180
+T <- matrix(c(
+  cos(rad), -sin(rad),
+  sin(rad),  cos(rad)
+), ncol = 2, byrow = TRUE)
+
+round(ar %*% T, 3)
+
+arrows(0, 0, 0.574, 0.819, lwd = 2)
+arrows(0, 0, 0.819, -0.574, lwd = 2)
+```
+
+Nella figura, le due frecce rappresentano gli assi ruotati. La rotazione di $-35^{\circ}$ ha effettivamente avvicinato gli assi ai punti del diagramma. Se usiamo dunque il valore $\phi = -35^{\circ}$ nella matrice di rotazione, possiamo
+calcolare le saturazioni fattoriali della soluzione ruotata
+$\hat{\boldsymbol{\Lambda}}^* = \hat{\boldsymbol{\Lambda}} \textbf{T}$.
+
+Le saturazioni fattoriali ruotate corrispondono alla proiezione
+ortogonale dei punti sugli assi ruotati:
+
+```{r}
+angle <- -35
+rad <- angle * pi / 180
+T <- matrix(c(
+  cos(rad), -sin(rad),
+  sin(rad),  cos(rad)
+), ncol = 2, byrow = TRUE)
+round(f.pc$load %*% T, 3)
+```
+
+La soluzione ottenuta in questo modo riproduce quanto riportato da @rencher10methods.
+
+Nella **rotazione obliqua**, invece, gli assi dei fattori non sono più perpendicolari: si inclinano per adattarsi meglio ai dati, consentendo ai fattori di essere **correlati**. Il grafico può quindi mostrare **assi non ortogonali**.
+
+```{r fig.asp=1}
+# Estrai i loadings non ruotati
+f_unrot <- principal(R, nfactors = 2, rotate = "none")
+L_unrot <- unclass(f_unrot$loadings)
+
+# Calcola la rotazione obliqua e ottieni la matrice T
+rot_result <- oblimin(L_unrot) # usa GPArotation
+Tmat <- rot_result$Th # matrice di trasformazione obliqua
+
+# Ruota i due assi canonici
+e1 <- c(1, 0) # asse F1
+e2 <- c(0, 1) # asse F2
+
+# Rotazione degli assi
+axis1_rot <- Tmat %*% e1
+axis2_rot <- Tmat %*% e2
+
+# Punti: loadings non ruotati
+x <- L_unrot[, 1]
+y <- L_unrot[, 2]
+
+# Plot
+plot(
+  x, y,
+  xlab = "Primo Fattore (non ruotato)",
+  ylab = "Secondo Fattore (non ruotato)",
+  xlim = c(-1, 1), ylim = c(-1, 1),
+  asp = 1, pch = 19, bty = "n"
+)
+text(x, y, labels = rownames(R), pos = 3)
+
+# Assi originali
+arrows(0, 0, 1, 0, col = "gray", lty = 2)
+arrows(0, 0, 0, 1, col = "gray", lty = 2)
+
+# Assi ruotati
+arrows(0, 0, axis1_rot[1], axis1_rot[2], col = "red", lwd = 2)
+arrows(0, 0, axis2_rot[1], axis2_rot[2], col = "blue", lwd = 2)
+
+legend("bottomright",
+  legend = c("Asse F1 ruotato (obliquo)", "Asse F2 ruotato (obliquo)"),
+  col = c("red", "blue"), lwd = 2, bty = "n"
+)
+```
+
+Nel caso presente, l'angolo tra gli assi si discosta poco da 90 gradi 
+
+```{r}
+axis1_rot <- Tmat %*% c(1, 0) # asse F1 ruotato
+axis2_rot <- Tmat %*% c(0, 1) # asse F2 ruotato
+
+# Calcola l’angolo tra i due vettori ruotati
+cos_theta <- sum(axis1_rot * axis2_rot) /
+  (sqrt(sum(axis1_rot^2)) * sqrt(sum(axis2_rot^2)))
+
+# Assicura che il valore sia nel range [-1, 1] (per evitare errori numerici)
+cos_theta <- max(min(cos_theta, 1), -1)
+
+# Calcola l’angolo in radianti
+theta_rad <- acos(cos_theta)
+
+# Converti in gradi
+theta_deg <- theta_rad * 180 / pi
+
+# Mostra il risultato
+theta_deg
+```
+
+ma in altri casi la differenza può essere sostanziale.
+
+### Osservazioni
+
+1. **Nel caso ortogonale**, i fattori restano a 90°: la rotazione è una semplice “rotazione rigida” dello spazio fattoriale. Le comunalità delle variabili non cambiano, e i fattori rimangono incorrelati.  
+2. **Nel caso obliquo**, i fattori possono acquisire correlazioni. La matrice di inter-correlazione fattoriale $\boldsymbol{\Phi}$ presenta valori $\neq 0$. In questa situazione:
+   - La **matrice Pattern** (coeff. di regressione parziali) diverge dalla **matrice di Struttura** (correlazioni fattore-variabile).  
+   - Geometricamente, gli assi non risultano più ortogonali, né necessariamente di lunghezza unitaria.
+
+Con questi due esempi, si evidenzia in modo sia numerico sia grafico la differenza fra una **rotazione ortogonale** e una **rotazione obliqua**: nella prima i fattori vengono “ruotati” ma restano indipendenti, nella seconda emerge la possibilità di correlazione fra i fattori, dando spesso una soluzione più aderente alla realtà psicologica (dove i costrutti latenti sono raramente del tutto indipendenti).
+
+**In sintesi**, il confronto tra **Varimax** (ortogonale) e **Oblimin** (obliqua) mette in luce come l’angolo tra i fattori e le saturazioni delle variabili cambino a seconda che si ipotizzi o meno la presenza di una correlazione tra fattori. Nella soluzione obliqua:
+
+- i fattori risultano correlati, come evidenziato dalla matrice $\boldsymbol{\Phi}$ con valori $\neq 0$; 
+- la **matrice Pattern** differisce dalla **matrice di Struttura**, perché le correlazioni tra variabili e fattori includono non solo l’effetto diretto del fattore su una variabile, ma anche gli effetti “indiretti” mediati dalla correlazione con altri fattori.
+
+In pratica, l’uso di una rotazione obliqua è più appropriato quando i costrutti che i fattori misurano sono ragionevolmente attesi come **correlati** (evento frequente in psicologia). Al contrario, una rotazione ortogonale può risultare utile se si ritiene che i fattori siano realmente indipendenti o se, per esigenze di interpretazione, si preferisce mantenerli tali.
+
+## Esempio con `semTools` (Geomin, Quartimin, Varimax, ecc.)
+
+Qui si mostra un esempio di uso del pacchetto **semTools** per l’analisi fattoriale esplorativa (EFA) del classico dataset di **Holzinger e Swineford (1939)**, contenente i punteggi di test di abilità mentale di bambini di seconda e terza media di due diverse scuole. In letteratura, spesso si utilizza un subset di 9 variabili.
+
+Nel nostro esempio, estraiamo **3 fattori** utilizzando il metodo `mlr`:
+
+> *Maximum likelihood estimation with robust (Huber-White) standard errors and a scaled test statistic that is (asymptotically) equal to the Yuan-Bentler test statistic. For both complete and incomplete data.*
+
+1. **Soluzione non ruotata**:
+
+```{r}
+unrotated <- efaUnrotate(
+  HolzingerSwineford1939,
+  nf = 3,
+  varList = paste0("x", 1:9),
+  estimator = "mlr"
+)
+out <- summary(unrotated)
+print(out)
+```
+
+2. **Rotazione ortogonale Varimax**:
+
+```{r}
+out_varimax <- orthRotate(
+  unrotated,
+  method = "varimax"
+)
+summary(out_varimax, sort = FALSE, suppress = 0.3)
+```
+
+3. **Rotazione ortogonale Quartimin**:
+
+```{r}
+out_quartimin <- orthRotate(
+  unrotated,
+  method = "quartimin"
+)
+summary(out_quartimin, sort = FALSE, suppress = 0.3)
+```
+
+4. **Rotazione obliqua Quartimin**:
+
+```{r}
+out_oblq <- oblqRotate(
+  unrotated,
+  method = "quartimin"
+)
+summary(out_oblq, sort = FALSE, suppress = 0.3)
+```
+
+5. **Rotazione ortogonale Geomin**:
+
+```{r}
+out_geomin_orh <- orthRotate(
+  unrotated,
+  method = "geomin"
+)
+summary(out_geomin_orh, sort = FALSE, suppress = 0.3)
+```
+
+6. **Rotazione obliqua Geomin**:
+
+```{r}
+out_geomin_obl <- oblqRotate(
+  unrotated,
+  method = "geomin"
+)
+summary(out_geomin_obl, sort = FALSE, suppress = 0.3)
+```
+
+La **rotazione Geomin** è molto popolare perché minimizza la media geometrica dei quadrati delle saturazioni fattoriali, forzando in un certo senso i loadings a polarizzarsi (alti o bassi), favorendo nuovamente la struttura semplice. In Mplus, per esempio, Geomin è il default per la rotazione obliqua.
+
+## Interpretazione dei fattori latenti nell’analisi fattoriale
+
+L’interpretazione dei fattori è un passaggio cruciale dell’analisi fattoriale. È importante comprendere la differenza tra:
+
+1. **Matrice Pattern**: 
+   - mostra le saturazioni **dirette**, come coefficienti di regressione parziali;  
+   - indica quanto un fattore influenza una data variabile, **al netto** degli altri fattori;
+   - è particolarmente utile per l’**etichettamento** dei fattori, perché fa vedere “quale fattore spiega cosa” in modo più puro.
+
+2. **Matrice di Struttura**: 
+   - mostra le **correlazioni** tra fattori e variabili;  
+   - includendo anche gli effetti indiretti dovuti alle correlazioni tra i fattori (in caso di rotazione obliqua), fornisce un quadro della covariazione complessiva;  
+   - può essere più utile rispetto alla Pattern quando ci sono correlazioni tra fattori, ma non fornisce sempre l’interpretazione “pulita” delle relazioni dirette.
+
+In molti manuali di psicologia e di analisi dei dati (Tabachnick & Fidell, 2001; Hair et al., 2010), si consiglia di utilizzare in primo luogo la **matrice Pattern** per assegnare le etichette fattoriali, poiché i loadings diretti riflettono il contributo specifico di ciascun fattore. In ogni caso, la **matrice di Struttura** rimane utile per capire come varia ciascuna variabile in relazione complessiva con ogni fattore, comprendendo anche eventuali effetti condivisi tra i fattori.
+
+## Riflessioni Conclusive
+
+- **L’indeterminatezza** della soluzione fattoriale implica che non esiste una sola matrice di saturazioni in grado di spiegare una data matrice di correlazioni.
+- Per gestire l’indeterminatezza, si adottano i criteri di **parsimonia** (minimo numero di fattori adeguati a spiegare la struttura dei dati) e di **semplicità** (rotazione per favorire un pattern di saturazioni più interpretabile).
+- Le **rotazioni ortogonali** (es. Varimax) mantengono i fattori non correlati, semplificando l’interpretazione ma a volte restringendo eccessivamente il modello se in realtà i costrutti sono correlati.
+- Le **rotazioni oblique** (es. Promax, Oblimin, Geomin) consentono ai fattori di correlare, spesso fornendo soluzioni più aderenti alla realtà psicologica, ma che richiedono di distinguere tra la **matrice Pattern** (saturazioni dirette) e la **matrice di Struttura** (correlazioni globali).
+- L’**interpretazione** dei fattori dovrebbe basarsi prevalentemente sui coefficienti diretti della matrice Pattern, ricordando comunque di consultare la matrice di Struttura per una comprensione più ampia dell’influenza dei fattori sulle variabili.
+
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
