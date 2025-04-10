@@ -990,12 +990,16 @@ window.Quarto = {
   <li><a href="#limiti-2" id="toc-limiti-2" class="nav-link" data-scroll-target="#limiti-2"><span class="header-section-number">27.6.3</span> Limiti</a></li>
   </ul>
 </li>
-  <li><a href="#esempio-pratico-in-r-confronto-tra-metodi-di-estrazione" id="toc-esempio-pratico-in-r-confronto-tra-metodi-di-estrazione" class="nav-link" data-scroll-target="#esempio-pratico-in-r-confronto-tra-metodi-di-estrazione"><span class="header-section-number">27.7</span> Esempio pratico in R: Confronto tra metodi di estrazione</a></li>
-  <li><a href="#metodo-delle-componenti-principali-pca-1" id="toc-metodo-delle-componenti-principali-pca-1" class="nav-link" data-scroll-target="#metodo-delle-componenti-principali-pca-1"><span class="header-section-number">27.8</span> Metodo delle Componenti Principali (PCA)</a></li>
-  <li><a href="#metodo-dei-fattori-principali-1" id="toc-metodo-dei-fattori-principali-1" class="nav-link" data-scroll-target="#metodo-dei-fattori-principali-1"><span class="header-section-number">27.9</span> Metodo dei Fattori Principali</a></li>
-  <li><a href="#metodo-dei-fattori-principali-iterato-1" id="toc-metodo-dei-fattori-principali-iterato-1" class="nav-link" data-scroll-target="#metodo-dei-fattori-principali-iterato-1"><span class="header-section-number">27.10</span> Metodo dei Fattori Principali Iterato</a></li>
-  <li><a href="#metodo-di-massima-verosimiglianza-ml" id="toc-metodo-di-massima-verosimiglianza-ml" class="nav-link" data-scroll-target="#metodo-di-massima-verosimiglianza-ml"><span class="header-section-number">27.11</span> Metodo di Massima Verosimiglianza (ML)</a></li>
-  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">27.12</span> Riflessioni Conclusive</a></li>
+  <li>
+<a href="#esempio-in-r-confronto-tra-metodi-di-estrazione" id="toc-esempio-in-r-confronto-tra-metodi-di-estrazione" class="nav-link" data-scroll-target="#esempio-in-r-confronto-tra-metodi-di-estrazione"><span class="header-section-number">27.7</span> Esempio in R: Confronto tra Metodi di Estrazione</a>
+  <ul>
+<li><a href="#metodo-delle-componenti-principali-pca-1" id="toc-metodo-delle-componenti-principali-pca-1" class="nav-link" data-scroll-target="#metodo-delle-componenti-principali-pca-1"><span class="header-section-number">27.7.1</span> Metodo delle Componenti Principali (PCA)</a></li>
+  <li><a href="#metodo-dei-fattori-principali-1" id="toc-metodo-dei-fattori-principali-1" class="nav-link" data-scroll-target="#metodo-dei-fattori-principali-1"><span class="header-section-number">27.7.2</span> Metodo dei Fattori Principali</a></li>
+  <li><a href="#metodo-dei-fattori-principali-iterato-1" id="toc-metodo-dei-fattori-principali-iterato-1" class="nav-link" data-scroll-target="#metodo-dei-fattori-principali-iterato-1"><span class="header-section-number">27.7.3</span> Metodo dei Fattori Principali Iterato</a></li>
+  </ul>
+</li>
+  <li><a href="#metodo-di-massima-verosimiglianza-ml" id="toc-metodo-di-massima-verosimiglianza-ml" class="nav-link" data-scroll-target="#metodo-di-massima-verosimiglianza-ml"><span class="header-section-number">27.8</span> Metodo di Massima Verosimiglianza (ML)</a></li>
+  <li><a href="#riflessioni-conclusive" id="toc-riflessioni-conclusive" class="nav-link" data-scroll-target="#riflessioni-conclusive"><span class="header-section-number">27.9</span> Riflessioni Conclusive</a></li>
   <li><a href="#informazioni-sullambiente-di-sviluppo" id="toc-informazioni-sullambiente-di-sviluppo" class="nav-link" data-scroll-target="#informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</a></li>
   </ul></nav>
     </div>
@@ -1068,7 +1072,7 @@ Preparazione del Notebook
 <span></span>
 <span><span class="co"># Load packages</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span></span>
-<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">lavaan</span>, <span class="va">psych</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">lavaan</span>, <span class="va">psych</span>, <span class="va">GPArotation</span><span class="op">)</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -1285,12 +1289,12 @@ Preparazione del Notebook
 <li>Può non convergere in presenza di dati problematici.</li>
 </ul>
 <blockquote class="blockquote">
-<p>🎓 <em>Suggerimento didattico:</em><br>
+<p>🎓 <em>Suggerimento:</em><br>
 Se l’obiettivo è <strong>identificare costrutti psicologici latenti</strong>, scegliete metodi coerenti con il modello fattoriale, come la <strong>massima verosimiglianza</strong>.<br>
 Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi descrittivi o pratici, allora la <strong>PCA può essere sufficiente</strong>.</p>
 </blockquote>
-</section></section><section id="esempio-pratico-in-r-confronto-tra-metodi-di-estrazione" class="level2" data-number="27.7"><h2 data-number="27.7" class="anchored" data-anchor-id="esempio-pratico-in-r-confronto-tra-metodi-di-estrazione">
-<span class="header-section-number">27.7</span> Esempio pratico in R: Confronto tra metodi di estrazione</h2>
+</section></section><section id="esempio-in-r-confronto-tra-metodi-di-estrazione" class="level2" data-number="27.7"><h2 data-number="27.7" class="anchored" data-anchor-id="esempio-in-r-confronto-tra-metodi-di-estrazione">
+<span class="header-section-number">27.7</span> Esempio in R: Confronto tra Metodi di Estrazione</h2>
 <p>Per illustrare i principali metodi di estrazione dei fattori, useremo un semplice esempio tratto da Rencher (2010). Una ragazza ha valutato 7 persone su 5 tratti personali:</p>
 <ul>
 <li>
@@ -1328,8 +1332,8 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 <span><span class="co">#&gt; L 0.995  0.326  0.867 1.000 0.544</span></span>
 <span><span class="co">#&gt; J 0.545  0.837  0.130 0.544 1.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="metodo-delle-componenti-principali-pca-1" class="level2" data-number="27.8"><h2 data-number="27.8" class="anchored" data-anchor-id="metodo-delle-componenti-principali-pca-1">
-<span class="header-section-number">27.8</span> Metodo delle Componenti Principali (PCA)</h2>
+<section id="metodo-delle-componenti-principali-pca-1" class="level3" data-number="27.7.1"><h3 data-number="27.7.1" class="anchored" data-anchor-id="metodo-delle-componenti-principali-pca-1">
+<span class="header-section-number">27.7.1</span> Metodo delle Componenti Principali (PCA)</h3>
 <p><strong>1. Calcolo degli autovalori e autovettori.</strong></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html">eigen</a></span><span class="op">(</span><span class="va">R</span><span class="op">)</span></span>
@@ -1396,50 +1400,62 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 <span><span class="co">#&gt; J  0.016 -0.067 -0.030  0.001  0.060</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se i <strong>residui</strong> (cioè la differenza tra <span class="math inline">\(\mathbf{R}\)</span> e <span class="math inline">\(\hat{\Lambda} \hat{\Lambda}^\mathsf{T}\)</span>) sono piccoli, la soluzione a 2 fattori è soddisfacente.</p>
-</section><section id="metodo-dei-fattori-principali-1" class="level2" data-number="27.9"><h2 data-number="27.9" class="anchored" data-anchor-id="metodo-dei-fattori-principali-1">
-<span class="header-section-number">27.9</span> Metodo dei Fattori Principali</h2>
-<p>Il metodo dei fattori principali estrae <strong>solo la varianza comune</strong>, escludendo la varianza specifica.</p>
-<p><strong>1. Stima iniziale delle comunalità.</strong></p>
-<p>Una stima semplice: <strong>il valore massimo della correlazione per ogni variabile</strong> (approssimazione):</p>
+</section><section id="metodo-dei-fattori-principali-1" class="level3" data-number="27.7.2"><h3 data-number="27.7.2" class="anchored" data-anchor-id="metodo-dei-fattori-principali-1">
+<span class="header-section-number">27.7.2</span> Metodo dei Fattori Principali</h3>
+<p>Il metodo dei fattori principali (o <strong>principal factor method</strong>) mira a estrarre <strong>solo la varianza comune</strong> tra le variabili, escludendo la varianza specifica (quella unica di ciascuna variabile).</p>
+<p><strong>Stima iniziale delle comunalità.</strong></p>
+<p>Per avere una stima iniziale delle comunalità, qui si propone di prendere, per ciascuna variabile, il <strong>massimo valore di correlazione</strong> in valore assoluto, <strong>escludendo la diagonale principale</strong> della matrice delle correlazioni (che rappresenta la correlazione di ogni variabile con sé stessa, pari a 1). In R si può fare così:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">h.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">R</span><span class="op">)</span>, <span class="fl">1</span>, <span class="va">max</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Copiamo la matrice di correlazione</span></span>
+<span><span class="va">R_no_diag</span> <span class="op">&lt;-</span> <span class="va">R</span></span>
+<span></span>
+<span><span class="co"># Mettiamo 0 sulla diagonale (anziché 1)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">R_no_diag</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span></span>
+<span><span class="co"># Calcoliamo il massimo (in valore assoluto) per ogni riga</span></span>
+<span><span class="va">h.hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">R_no_diag</span><span class="op">)</span>, <span class="fl">1</span>, <span class="va">max</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Arrotondiamo a 3 cifre decimali</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">h.hat</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; K I H L J </span></span>
-<span><span class="co">#&gt; 1 1 1 1 1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;     K     I     H     L     J </span></span>
+<span><span class="co">#&gt; 0.995 0.837 0.881 0.995 0.837</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>2. Matrice ridotta.</strong></p>
-<p>Sostituiamo le varianze sulla diagonale con le comunalità stimate:</p>
+<p>Questa stima della comunalità (per ogni variabile) è volutamente molto semplificata e potrebbe risultare meno accurata di altre procedure (ad esempio, <strong>correlazione multipla al quadrato</strong>). Tuttavia, si usa spesso a scopo didattico per illustrare l’algoritmo.</p>
+<p><strong>Matrice ridotta.</strong></p>
+<p>Creiamo la <strong>matrice ridotta</strong> sostituendo la diagonale di <span class="math inline">\(R\)</span> (che vale 1, in quanto matrice di correlazione) con i valori stimati di comunalità:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">R1</span> <span class="op">&lt;-</span> <span class="va">R</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">R1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">h.hat</span></span>
 <span><span class="va">R1</span></span>
 <span><span class="co">#&gt;       K      I      H     L     J</span></span>
-<span><span class="co">#&gt; K 1.000  0.296  0.881 0.995 0.545</span></span>
-<span><span class="co">#&gt; I 0.296  1.000 -0.022 0.326 0.837</span></span>
-<span><span class="co">#&gt; H 0.881 -0.022  1.000 0.867 0.130</span></span>
-<span><span class="co">#&gt; L 0.995  0.326  0.867 1.000 0.544</span></span>
-<span><span class="co">#&gt; J 0.545  0.837  0.130 0.544 1.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; K 0.995  0.296  0.881 0.995 0.545</span></span>
+<span><span class="co">#&gt; I 0.296  0.837 -0.022 0.326 0.837</span></span>
+<span><span class="co">#&gt; H 0.881 -0.022  0.881 0.867 0.130</span></span>
+<span><span class="co">#&gt; L 0.995  0.326  0.867 0.995 0.544</span></span>
+<span><span class="co">#&gt; J 0.545  0.837  0.130 0.544 0.837</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>3. Decomposizione della matrice ridotta.</strong></p>
+<p><strong>Decomposizione della matrice ridotta.</strong></p>
+<p>Calcoliamo gli autovalori e gli autovettori della matrice ridotta:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ee</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html">eigen</a></span><span class="op">(</span><span class="va">R1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">values</span>, <span class="fl">3</span><span class="op">)</span>  <span class="co"># autovalori</span></span>
-<span><span class="co">#&gt; [1] 3.263 1.538 0.168 0.030 0.000</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1]  3.202  1.394  0.029  0.000 -0.080</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>4. Saturazioni fattoriali.</strong></p>
+<p><strong>Saturazioni fattoriali.</strong></p>
+<p>Infine, estraiamo le <strong>saturazioni fattoriali</strong> per i fattori desiderati (ad esempio, i primi due). Le saturazioni (<span class="math inline">\(\mathbf{L}\)</span>) indicano la relazione tra le variabili originali e i fattori latenti, <strong>considerando solo la varianza comune</strong>:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="va">ee</span><span class="op">$</span><span class="va">vectors</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">ee</span><span class="op">$</span><span class="va">values</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">L</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt;        [,1]   [,2]</span></span>
-<span><span class="co">#&gt; [1,] -0.970 -0.231</span></span>
-<span><span class="co">#&gt; [2,] -0.519  0.807</span></span>
-<span><span class="co">#&gt; [3,] -0.785 -0.588</span></span>
-<span><span class="co">#&gt; [4,] -0.971 -0.210</span></span>
-<span><span class="co">#&gt; [5,] -0.704  0.667</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;       [,1]   [,2]</span></span>
+<span><span class="co">#&gt; [1,] 0.981 -0.209</span></span>
+<span><span class="co">#&gt; [2,] 0.487  0.774</span></span>
+<span><span class="co">#&gt; [3,] 0.772 -0.544</span></span>
+<span><span class="co">#&gt; [4,] 0.982 -0.187</span></span>
+<span><span class="co">#&gt; [5,] 0.667  0.648</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Le saturazioni qui rappresentano la <strong>relazione tra variabili e fattori latenti</strong>, tenendo conto solo della <strong>varianza comune</strong>.</p>
-</section><section id="metodo-dei-fattori-principali-iterato-1" class="level2" data-number="27.10"><h2 data-number="27.10" class="anchored" data-anchor-id="metodo-dei-fattori-principali-iterato-1">
-<span class="header-section-number">27.10</span> Metodo dei Fattori Principali Iterato</h2>
+<p><strong>Conclusione</strong>: questa procedura illustra il metodo dei fattori principali e mostra come escludere correttamente la diagonale principale dal calcolo delle comunalità iniziali, utilizzando il massimo (in valore assoluto) delle correlazioni di ogni variabile con le altre.</p>
+</section><section id="metodo-dei-fattori-principali-iterato-1" class="level3" data-number="27.7.3"><h3 data-number="27.7.3" class="anchored" data-anchor-id="metodo-dei-fattori-principali-iterato-1">
+<span class="header-section-number">27.7.3</span> Metodo dei Fattori Principali Iterato</h3>
 <p>Questo metodo <strong>aggiorna iterativamente</strong> le stime delle comunalità finché le saturazioni non cambiano più (convergenza).</p>
 <p><strong>Esecuzione in R con il pacchetto <code>psych</code>.</strong></p>
 <div class="cell" data-layout-align="center">
@@ -1485,8 +1501,8 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 </li>
 </ul>
 <p>⚠️ Se una <strong>unicità &gt; 1</strong> o negativa → <strong>soluzione impropria</strong> (<em>caso di Heywood</em>).</p>
-</section><section id="metodo-di-massima-verosimiglianza-ml" class="level2" data-number="27.11"><h2 data-number="27.11" class="anchored" data-anchor-id="metodo-di-massima-verosimiglianza-ml">
-<span class="header-section-number">27.11</span> Metodo di Massima Verosimiglianza (ML)</h2>
+</section></section><section id="metodo-di-massima-verosimiglianza-ml" class="level2" data-number="27.8"><h2 data-number="27.8" class="anchored" data-anchor-id="metodo-di-massima-verosimiglianza-ml">
+<span class="header-section-number">27.8</span> Metodo di Massima Verosimiglianza (ML)</h2>
 <p>Questo è il metodo più coerente con l’analisi fattoriale teorica: <strong>assume normalità multivariata</strong> e consente <strong>test formali di adattamento</strong>.</p>
 <p><strong>Esecuzione con <code><a href="https://rdrr.io/r/stats/factanal.html">factanal()</a></code>.</strong></p>
 <div class="cell" data-layout-align="center">
@@ -1537,6 +1553,163 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 </li>
 <li>p basso → il modello è <strong>insufficiente</strong> (i residui sono troppo grandi).</li>
 </ul>
+<p>Se vogliamo usare <code>lavaan</code> dobbiamo introdurre una rotazione obliqua:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ml2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/factanal.html">factanal</a></span><span class="op">(</span></span>
+<span>  covmat <span class="op">=</span> <span class="va">R</span>,</span>
+<span>  factors <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  rotation <span class="op">=</span> <span class="st">"oblimin"</span>,</span>
+<span>  n.obs <span class="op">=</span> <span class="fl">225</span>  </span>
+<span><span class="op">)</span></span>
+<span><span class="va">ml2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Call:</span></span>
+<span><span class="co">#&gt; factanal(factors = 2, covmat = R, n.obs = 225, rotation = "oblimin")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Uniquenesses:</span></span>
+<span><span class="co">#&gt;     K     I     H     L     J </span></span>
+<span><span class="co">#&gt; 0.005 0.268 0.055 0.008 0.005 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Loadings:</span></span>
+<span><span class="co">#&gt;   Factor1 Factor2</span></span>
+<span><span class="co">#&gt; K  0.927   0.192 </span></span>
+<span><span class="co">#&gt; I          0.875 </span></span>
+<span><span class="co">#&gt; H  1.011  -0.257 </span></span>
+<span><span class="co">#&gt; L  0.925   0.193 </span></span>
+<span><span class="co">#&gt; J  0.116   0.959 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                Factor1 Factor2</span></span>
+<span><span class="co">#&gt; SS loadings      2.759   1.827</span></span>
+<span><span class="co">#&gt; Proportion Var   0.552   0.365</span></span>
+<span><span class="co">#&gt; Cumulative Var   0.552   0.917</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Factor Correlations:</span></span>
+<span><span class="co">#&gt;         Factor1 Factor2</span></span>
+<span><span class="co">#&gt; Factor1   1.000  -0.277</span></span>
+<span><span class="co">#&gt; Factor2  -0.277   1.000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Test of the hypothesis that 2 factors are sufficient.</span></span>
+<span><span class="co">#&gt; The chi square statistic is 648.1 on 1 degree of freedom.</span></span>
+<span><span class="co">#&gt; The p-value is 5.81e-143</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Replichiamo ora i risultati con <code>lavaan</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">efa</span><span class="op">(</span>sample.cov <span class="op">=</span> <span class="va">R</span>, </span>
+<span>           sample.nobs <span class="op">=</span> <span class="fl">225</span>,</span>
+<span>           nfactors <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>           rotation <span class="op">=</span> <span class="st">"geomin"</span>,</span>
+<span>           rotation.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>geomin.epsilon <span class="op">=</span> <span class="fl">0.01</span>, rstarts <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span>, nd <span class="op">=</span> <span class="fl">3L</span>, cutoff <span class="op">=</span> <span class="fl">0.2</span>, dot.cutoff <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="co">#&gt; This is lavaan 0.6-19 -- running exploratory factor analysis</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Estimator                                         ML</span></span>
+<span><span class="co">#&gt;   Rotation method                       GEOMIN OBLIQUE</span></span>
+<span><span class="co">#&gt;   Geomin epsilon                                  0.01</span></span>
+<span><span class="co">#&gt;   Rotation algorithm (rstarts)                 GPA (1)</span></span>
+<span><span class="co">#&gt;   Standardized metric                             TRUE</span></span>
+<span><span class="co">#&gt;   Row weights                                     None</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Number of observations                           225</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Overview models:</span></span>
+<span><span class="co">#&gt;                 aic  bic sabic  chisq df pvalue   cfi rmsea</span></span>
+<span><span class="co">#&gt;   nfactors = 1 1734 1768  1737 1227.0  5      0 0.546 1.042</span></span>
+<span><span class="co">#&gt;   nfactors = 2 1122 1170  1126  607.1  1      0 0.775 1.641</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Eigenvalues correlation matrix:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;        ev1        ev2        ev3        ev4        ev5 </span></span>
+<span><span class="co">#&gt;   3.263377   1.538382   0.167969   0.030030   0.000242 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of factors:  1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Standardized loadings: (* = significant at 1% level)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       f1       unique.var   communalities</span></span>
+<span><span class="co">#&gt; K  1.000            0.000           1.000</span></span>
+<span><span class="co">#&gt; I  0.296*           0.912           0.088</span></span>
+<span><span class="co">#&gt; H  0.881*           0.224           0.776</span></span>
+<span><span class="co">#&gt; L  0.995*           0.010           0.990</span></span>
+<span><span class="co">#&gt; J  0.545*           0.703           0.297</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                            f1</span></span>
+<span><span class="co">#&gt; Sum of squared loadings 3.151</span></span>
+<span><span class="co">#&gt; Proportion of total     1.000</span></span>
+<span><span class="co">#&gt; Proportion var          0.630</span></span>
+<span><span class="co">#&gt; Cumulative var          0.630</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of factors:  2 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Standardized loadings: (* = significant at 1% level)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       f1      f2       unique.var   communalities</span></span>
+<span><span class="co">#&gt; K  0.967*      .*           0.000           1.000</span></span>
+<span><span class="co">#&gt; I      .*  0.876*           0.263           0.737</span></span>
+<span><span class="co">#&gt; H  1.031* -0.360*           0.049           0.951</span></span>
+<span><span class="co">#&gt; L  0.961*      .*           0.010           0.990</span></span>
+<span><span class="co">#&gt; J      .*  0.933*           0.000           1.000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                               f1    f2 total</span></span>
+<span><span class="co">#&gt; Sum of sq (obliq) loadings 2.922 1.755 4.678</span></span>
+<span><span class="co">#&gt; Proportion of total        0.625 0.375 1.000</span></span>
+<span><span class="co">#&gt; Proportion var             0.584 0.351 0.936</span></span>
+<span><span class="co">#&gt; Cumulative var             0.584 0.936 0.936</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Factor correlations: (* = significant at 1% level)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;        f1      f2 </span></span>
+<span><span class="co">#&gt; f1  1.000         </span></span>
+<span><span class="co">#&gt; f2  0.325   1.000</span></span>
+<span><span class="fu">fitMeasures</span><span class="op">(</span><span class="va">fit</span>, fit.measures <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                         nfct=1   nfct=2</span></span>
+<span><span class="co">#&gt; npar                     9.000   14.000</span></span>
+<span><span class="co">#&gt; fmin                     2.727    1.349</span></span>
+<span><span class="co">#&gt; chisq                 1226.984  607.148</span></span>
+<span><span class="co">#&gt; df                       5.000    1.000</span></span>
+<span><span class="co">#&gt; pvalue                   0.000    0.000</span></span>
+<span><span class="co">#&gt; baseline.chisq        2700.426 2700.426</span></span>
+<span><span class="co">#&gt; baseline.df             10.000   10.000</span></span>
+<span><span class="co">#&gt; baseline.pvalue          0.000    0.000</span></span>
+<span><span class="co">#&gt; cfi                      0.546    0.775</span></span>
+<span><span class="co">#&gt; tli                      0.092   -1.253</span></span>
+<span><span class="co">#&gt; nnfi                     0.092   -1.253</span></span>
+<span><span class="co">#&gt; rfi                      0.091    1.000</span></span>
+<span><span class="co">#&gt; nfi                      0.546    0.775</span></span>
+<span><span class="co">#&gt; pnfi                     0.273    0.078</span></span>
+<span><span class="co">#&gt; ifi                      0.547    0.775</span></span>
+<span><span class="co">#&gt; rni                      0.546    0.775</span></span>
+<span><span class="co">#&gt; logl                  -857.079 -547.161</span></span>
+<span><span class="co">#&gt; unrestricted.logl     -243.587 -243.587</span></span>
+<span><span class="co">#&gt; aic                   1734.159 1122.323</span></span>
+<span><span class="co">#&gt; bic                   1768.320 1170.148</span></span>
+<span><span class="co">#&gt; ntotal                 225.000  225.000</span></span>
+<span><span class="co">#&gt; bic2                  1736.628 1125.779</span></span>
+<span><span class="co">#&gt; rmsea                    1.042    1.641</span></span>
+<span><span class="co">#&gt; rmsea.ci.lower           0.994    1.533</span></span>
+<span><span class="co">#&gt; rmsea.ci.upper           1.092    1.752</span></span>
+<span><span class="co">#&gt; rmsea.ci.level           0.900    0.900</span></span>
+<span><span class="co">#&gt; rmsea.pvalue             0.000    0.000</span></span>
+<span><span class="co">#&gt; rmsea.close.h0           0.050    0.050</span></span>
+<span><span class="co">#&gt; rmsea.notclose.pvalue    1.000    1.000</span></span>
+<span><span class="co">#&gt; rmsea.notclose.h0        0.080    0.080</span></span>
+<span><span class="co">#&gt; rmr                      0.209    0.016</span></span>
+<span><span class="co">#&gt; rmr_nomean               0.209    0.016</span></span>
+<span><span class="co">#&gt; srmr                     0.210    0.016</span></span>
+<span><span class="co">#&gt; srmr_bentler             0.210    0.016</span></span>
+<span><span class="co">#&gt; srmr_bentler_nomean      0.210    0.016</span></span>
+<span><span class="co">#&gt; crmr                     0.257    0.020</span></span>
+<span><span class="co">#&gt; crmr_nomean              0.257    0.020</span></span>
+<span><span class="co">#&gt; srmr_mplus               0.210    0.016</span></span>
+<span><span class="co">#&gt; srmr_mplus_nomean        0.210    0.016</span></span>
+<span><span class="co">#&gt; cn_05                    3.030    2.424</span></span>
+<span><span class="co">#&gt; cn_01                    3.766    3.459</span></span>
+<span><span class="co">#&gt; gfi                      0.552    0.777</span></span>
+<span><span class="co">#&gt; agfi                    -0.345   -2.341</span></span>
+<span><span class="co">#&gt; pgfi                     0.184    0.052</span></span>
+<span><span class="co">#&gt; mfi                      0.066    0.260</span></span>
+<span><span class="co">#&gt; ecvi                     5.533    2.823</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>In sintesi:</p>
 <table class="caption-top table">
 <colgroup>
@@ -1589,8 +1762,8 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 <li>se lo scopo è <strong>identificare costrutti teorici</strong> (es. “l’autostima ha due dimensioni?”), si preferisce il metodo <strong>ML</strong>.<br>
 </li>
 <li>se invece lo scopo è solo quello di <strong>riassumendo dati</strong> (es. da un questionario), anche la <strong>PCA può andare bene</strong>.</li>
-</ul></section><section id="riflessioni-conclusive" class="level2" data-number="27.12"><h2 data-number="27.12" class="anchored" data-anchor-id="riflessioni-conclusive">
-<span class="header-section-number">27.12</span> Riflessioni Conclusive</h2>
+</ul></section><section id="riflessioni-conclusive" class="level2" data-number="27.9"><h2 data-number="27.9" class="anchored" data-anchor-id="riflessioni-conclusive">
+<span class="header-section-number">27.9</span> Riflessioni Conclusive</h2>
 <p>L’analisi fattoriale non è una procedura automatica, ma un processo di modellizzazione che richiede <strong>scelte motivate</strong> e <strong>valutazioni critiche</strong> a ogni passaggio. I metodi di estrazione dei fattori, pur essendo matematicamente diversi, riflettono <strong>concezioni differenti del ruolo della varianza</strong> nelle variabili osservate e, quindi, <strong>diverse filosofie di ricerca</strong>.</p>
 <p>Ad esempio, la <strong>PCA</strong> tende a trattare le variabili come manifestazioni dirette della varianza totale, rendendola utile per scopi pratici come la riduzione della dimensionalità, ma meno adatta per inferenze teoriche su costrutti latenti. Al contrario, i metodi che stimano la <strong>varianza comune</strong> (come i fattori principali o la massima verosimiglianza) assumono che ci siano <strong>cause sottostanti e non osservabili</strong> che generano le covarianze tra le variabili.</p>
 <p>Ma oltre agli aspetti tecnici, è utile considerare alcune <strong>domande chiave</strong> che dovrebbero guidare la scelta del metodo:</p>
@@ -1617,10 +1790,10 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 <p>In sintesi, padroneggiare i diversi metodi di estrazione non significa solo saperli applicare, ma anche <strong>comprendere le implicazioni epistemologiche e psicometriche</strong> delle scelte fatte. Il vero valore dell’analisi fattoriale non sta solo nella sintesi dei dati, ma nella sua capacità di <strong>collegare numeri e teoria</strong>, variabili osservate e costrutti latenti, <strong>statistica e psicologia</strong>.</p>
 </section><section id="informazioni-sullambiente-di-sviluppo" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="informazioni-sullambiente-di-sviluppo">Informazioni sull’Ambiente di Sviluppo</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
-<span><span class="co">#&gt; Running under: macOS Sequoia 15.3.2</span></span>
+<span><span class="co">#&gt; Running under: macOS Sequoia 15.4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
@@ -1636,51 +1809,54 @@ Se invece volete solo <strong>ridurre le dimensioni</strong> dei dati per scopi 
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] ggokabeito_0.1.0  see_0.11.0        MASS_7.3-65       viridis_0.6.5    </span></span>
-<span><span class="co">#&gt;  [5] viridisLite_0.4.2 ggpubr_0.6.0      ggExtra_0.10.1    gridExtra_2.3    </span></span>
-<span><span class="co">#&gt;  [9] patchwork_1.3.0   bayesplot_1.11.1  semTools_0.5-6    semPlot_1.1.6    </span></span>
-<span><span class="co">#&gt; [13] lavaan_0.6-19     psych_2.4.12      scales_1.3.0      markdown_1.13    </span></span>
-<span><span class="co">#&gt; [17] knitr_1.50        lubridate_1.9.4   forcats_1.0.0     stringr_1.5.1    </span></span>
-<span><span class="co">#&gt; [21] dplyr_1.1.4       purrr_1.0.4       readr_2.1.5       tidyr_1.3.1      </span></span>
-<span><span class="co">#&gt; [25] tibble_3.2.1      ggplot2_3.5.1     tidyverse_2.0.0   here_1.0.1       </span></span>
+<span><span class="co">#&gt;  [1] GPArotation_2024.3-1 ggokabeito_0.1.0     see_0.11.0          </span></span>
+<span><span class="co">#&gt;  [4] MASS_7.3-65          viridis_0.6.5        viridisLite_0.4.2   </span></span>
+<span><span class="co">#&gt;  [7] ggpubr_0.6.0         ggExtra_0.10.1       gridExtra_2.3       </span></span>
+<span><span class="co">#&gt; [10] patchwork_1.3.0      bayesplot_1.11.1     semTools_0.5-7      </span></span>
+<span><span class="co">#&gt; [13] semPlot_1.1.6        lavaan_0.6-19        psych_2.5.3         </span></span>
+<span><span class="co">#&gt; [16] scales_1.3.0         markdown_2.0         knitr_1.50          </span></span>
+<span><span class="co">#&gt; [19] lubridate_1.9.4      forcats_1.0.0        stringr_1.5.1       </span></span>
+<span><span class="co">#&gt; [22] dplyr_1.1.4          purrr_1.0.4          readr_2.1.5         </span></span>
+<span><span class="co">#&gt; [25] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.2       </span></span>
+<span><span class="co">#&gt; [28] tidyverse_2.0.0      here_1.0.1          </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_1.9.1      magrittr_2.0.3     </span></span>
+<span><span class="co">#&gt;   [1] rstudioapi_0.17.1   jsonlite_2.0.0      magrittr_2.0.3     </span></span>
 <span><span class="co">#&gt;   [4] TH.data_1.1-3       estimability_1.5.1  farver_2.1.2       </span></span>
 <span><span class="co">#&gt;   [7] nloptr_2.2.1        rmarkdown_2.29      vctrs_0.6.5        </span></span>
 <span><span class="co">#&gt;  [10] minqa_1.2.8         base64enc_0.1-3     rstatix_0.7.2      </span></span>
-<span><span class="co">#&gt;  [13] htmltools_0.5.8.1   broom_1.0.7         Formula_1.2-5      </span></span>
+<span><span class="co">#&gt;  [13] htmltools_0.5.8.1   broom_1.0.8         Formula_1.2-5      </span></span>
 <span><span class="co">#&gt;  [16] htmlwidgets_1.6.4   plyr_1.8.9          sandwich_3.1-1     </span></span>
-<span><span class="co">#&gt;  [19] emmeans_1.10.7      zoo_1.8-13          igraph_2.1.4       </span></span>
+<span><span class="co">#&gt;  [19] emmeans_1.11.0      zoo_1.8-13          igraph_2.1.4       </span></span>
 <span><span class="co">#&gt;  [22] mime_0.13           lifecycle_1.0.4     pkgconfig_2.0.3    </span></span>
 <span><span class="co">#&gt;  [25] Matrix_1.7-3        R6_2.6.1            fastmap_1.2.0      </span></span>
-<span><span class="co">#&gt;  [28] rbibutils_2.3       shiny_1.10.0        digest_0.6.37      </span></span>
-<span><span class="co">#&gt;  [31] OpenMx_2.21.13      fdrtool_1.2.18      colorspace_2.1-1   </span></span>
-<span><span class="co">#&gt;  [34] rprojroot_2.0.4     Hmisc_5.2-3         timechange_0.3.0   </span></span>
-<span><span class="co">#&gt;  [37] abind_1.4-8         compiler_4.4.2      withr_3.0.2        </span></span>
-<span><span class="co">#&gt;  [40] glasso_1.11         htmlTable_2.4.3     backports_1.5.0    </span></span>
-<span><span class="co">#&gt;  [43] carData_3.0-5       ggsignif_0.6.4      corpcor_1.6.10     </span></span>
-<span><span class="co">#&gt;  [46] gtools_3.9.5        tools_4.4.2         pbivnorm_0.6.0     </span></span>
-<span><span class="co">#&gt;  [49] foreign_0.8-88      zip_2.3.2           httpuv_1.6.15      </span></span>
-<span><span class="co">#&gt;  [52] nnet_7.3-20         glue_1.8.0          quadprog_1.5-8     </span></span>
-<span><span class="co">#&gt;  [55] nlme_3.1-167        promises_1.3.2      lisrelToR_0.3      </span></span>
-<span><span class="co">#&gt;  [58] grid_4.4.2          checkmate_2.3.2     cluster_2.1.8.1    </span></span>
-<span><span class="co">#&gt;  [61] reshape2_1.4.4      generics_0.1.3      gtable_0.3.6       </span></span>
-<span><span class="co">#&gt;  [64] tzdb_0.5.0          data.table_1.17.0   hms_1.1.3          </span></span>
-<span><span class="co">#&gt;  [67] car_3.1-3           sem_3.1-16          pillar_1.10.1      </span></span>
-<span><span class="co">#&gt;  [70] rockchalk_1.8.157   later_1.4.1         splines_4.4.2      </span></span>
-<span><span class="co">#&gt;  [73] lattice_0.22-6      survival_3.8-3      kutils_1.73        </span></span>
-<span><span class="co">#&gt;  [76] tidyselect_1.2.1    miniUI_0.1.1.1      pbapply_1.7-2      </span></span>
-<span><span class="co">#&gt;  [79] reformulas_0.4.0    stats4_4.4.2        xfun_0.51          </span></span>
-<span><span class="co">#&gt;  [82] qgraph_1.9.8        arm_1.14-4          stringi_1.8.4      </span></span>
-<span><span class="co">#&gt;  [85] pacman_0.5.1        boot_1.3-31         evaluate_1.0.3     </span></span>
-<span><span class="co">#&gt;  [88] codetools_0.2-20    mi_1.1              cli_3.6.4          </span></span>
-<span><span class="co">#&gt;  [91] RcppParallel_5.1.10 rpart_4.1.24        xtable_1.8-4       </span></span>
-<span><span class="co">#&gt;  [94] Rdpack_2.6.3        munsell_0.5.1       Rcpp_1.0.14        </span></span>
-<span><span class="co">#&gt;  [97] coda_0.19-4.1       png_0.1-8           XML_3.99-0.18      </span></span>
-<span><span class="co">#&gt; [100] parallel_4.4.2      jpeg_0.1-10         lme4_1.1-36        </span></span>
-<span><span class="co">#&gt; [103] mvtnorm_1.3-3       openxlsx_4.2.8      rlang_1.1.5        </span></span>
-<span><span class="co">#&gt; [106] multcomp_1.4-28     mnormt_2.1.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt;  [28] rbibutils_2.3       shiny_1.10.0        numDeriv_2016.8-1.1</span></span>
+<span><span class="co">#&gt;  [31] digest_0.6.37       OpenMx_2.21.13      fdrtool_1.2.18     </span></span>
+<span><span class="co">#&gt;  [34] colorspace_2.1-1    rprojroot_2.0.4     Hmisc_5.2-3        </span></span>
+<span><span class="co">#&gt;  [37] timechange_0.3.0    abind_1.4-8         compiler_4.4.2     </span></span>
+<span><span class="co">#&gt;  [40] withr_3.0.2         glasso_1.11         htmlTable_2.4.3    </span></span>
+<span><span class="co">#&gt;  [43] backports_1.5.0     carData_3.0-5       ggsignif_0.6.4     </span></span>
+<span><span class="co">#&gt;  [46] corpcor_1.6.10      gtools_3.9.5        tools_4.4.2        </span></span>
+<span><span class="co">#&gt;  [49] pbivnorm_0.6.0      foreign_0.8-90      zip_2.3.2          </span></span>
+<span><span class="co">#&gt;  [52] httpuv_1.6.15       nnet_7.3-20         glue_1.8.0         </span></span>
+<span><span class="co">#&gt;  [55] quadprog_1.5-8      nlme_3.1-168        promises_1.3.2     </span></span>
+<span><span class="co">#&gt;  [58] lisrelToR_0.3       grid_4.4.2          checkmate_2.3.2    </span></span>
+<span><span class="co">#&gt;  [61] cluster_2.1.8.1     reshape2_1.4.4      generics_0.1.3     </span></span>
+<span><span class="co">#&gt;  [64] gtable_0.3.6        tzdb_0.5.0          data.table_1.17.0  </span></span>
+<span><span class="co">#&gt;  [67] hms_1.1.3           car_3.1-3           sem_3.1-16         </span></span>
+<span><span class="co">#&gt;  [70] pillar_1.10.2       rockchalk_1.8.157   later_1.4.2        </span></span>
+<span><span class="co">#&gt;  [73] splines_4.4.2       lattice_0.22-7      survival_3.8-3     </span></span>
+<span><span class="co">#&gt;  [76] kutils_1.73         tidyselect_1.2.1    miniUI_0.1.1.1     </span></span>
+<span><span class="co">#&gt;  [79] pbapply_1.7-2       reformulas_0.4.0    stats4_4.4.2       </span></span>
+<span><span class="co">#&gt;  [82] xfun_0.52           qgraph_1.9.8        arm_1.14-4         </span></span>
+<span><span class="co">#&gt;  [85] stringi_1.8.7       pacman_0.5.1        boot_1.3-31        </span></span>
+<span><span class="co">#&gt;  [88] evaluate_1.0.3      codetools_0.2-20    mi_1.1             </span></span>
+<span><span class="co">#&gt;  [91] cli_3.6.4           RcppParallel_5.1.10 rpart_4.1.24       </span></span>
+<span><span class="co">#&gt;  [94] xtable_1.8-4        Rdpack_2.6.4        munsell_0.5.1      </span></span>
+<span><span class="co">#&gt;  [97] Rcpp_1.0.14         coda_0.19-4.1       png_0.1-8          </span></span>
+<span><span class="co">#&gt; [100] XML_3.99-0.18       parallel_4.4.2      jpeg_0.1-11        </span></span>
+<span><span class="co">#&gt; [103] lme4_1.1-37         mvtnorm_1.3-3       openxlsx_4.2.8     </span></span>
+<span><span class="co">#&gt; [106] rlang_1.1.5         multcomp_1.4-28     mnormt_2.1.1</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

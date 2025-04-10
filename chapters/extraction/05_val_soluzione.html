@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -1085,11 +1105,11 @@ window.Quarto = {
 <p><span class="math display">\[
 \binom{100}{20} = 5.36 \times 10^{20}.
 \]</span></p>
-<p>È dunque necessario trovare metodi alternativi che evitino una tale esplosione combinatoria. A questo fine, ovvero per procedere alla selezione del sottoinsieme dei “migliori” item, {cite:t}<code>mcdonald2013test</code> suggerisce di calcolare la <em>quantità di informazione</em> di ciascun item. La quantità di informazione di un item è definita come rapporto tra segnale/rumore, in relazione alla scomposizione della varianza dell’item:</p>
+<p>È dunque necessario trovare metodi alternativi che evitino una tale esplosione combinatoria. A questo fine, ovvero per procedere alla selezione del sottoinsieme dei “migliori” item, <span class="citation" data-cites="mcdonald2013test">McDonald (<a href="../../99-references.html#ref-mcdonald2013test" role="doc-biblioref">2013</a>)</span> suggerisce di calcolare la <em>quantità di informazione</em> di ciascun item. La quantità di informazione di un item è definita come rapporto tra segnale/rumore, in relazione alla scomposizione della varianza dell’item:</p>
 <p><span class="math display">\[
 \frac{\lambda_i^2}{\psi_{ii}}.
 \]</span></p>
-<p>{cite:t}<code>mcdonald2013test</code> mostra come l’omissione di uno o più item produce sempre una riduzione dell’attendibilità del test (ovvero, una riduzione nel valore del coefficiente <span class="math inline">\(\omega\)</span>). Tuttavia, tale riduzione è tanto più piccola quanto più piccola è la quantità di informazione degli item omessi. Il processo di selezione degli item può dunque essere guidato da un semplice principio: si selezionano gli item aventi la quantità di informazione maggiore. Ovvero, in altre parole, si rimuovono gli item aventi la quantità di informazione più bassa.</p>
+<p><span class="citation" data-cites="mcdonald2013test">McDonald (<a href="../../99-references.html#ref-mcdonald2013test" role="doc-biblioref">2013</a>)</span> mostra come l’omissione di uno o più item produce sempre una riduzione dell’attendibilità del test (ovvero, una riduzione nel valore del coefficiente <span class="math inline">\(\omega\)</span>). Tuttavia, tale riduzione è tanto più piccola quanto più piccola è la quantità di informazione degli item omessi. Il processo di selezione degli item può dunque essere guidato da un semplice principio: si selezionano gli item aventi la quantità di informazione maggiore. Ovvero, in altre parole, si rimuovono gli item aventi la quantità di informazione più bassa.</p>
 <p><strong>Esempio.</strong> Per fare un esempio, consideriamo nuovamente la matrice di varianze e di covarianze della scala SWLS.</p>
 <div id="c5a29682" class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>varnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Y1"</span>, <span class="st">"Y2"</span>, <span class="st">"Y3"</span>, <span class="st">"Y4"</span>, <span class="st">"Y5"</span>)</span>
@@ -1250,12 +1270,12 @@ window.Quarto = {
 <section id="attendibilità-e-numero-di-item" class="level3" data-number="30.3.1">
 <h3 data-number="30.3.1" class="anchored" data-anchor-id="attendibilità-e-numero-di-item"><span class="header-section-number">30.3.1</span> Attendibilità e numero di item</h3>
 <p>Di quanto cambia l’attendibilità di uno strumento se viene variato il numero di item? Una risposta a questa domanda può essere fornita dalla formula profetica di Spearman-Brown. Supponiamo che nella formula di Spearman-Brown,</p>
-<p><span class="math display">\[
+<p><span id="eq-spearman-brown"><span class="math display">\[
 \begin{equation}
   \rho_p = \frac{p \rho_1}{(p-1)\rho_1 + 1},
 \end{equation}
-\]</span>(eq-spearman-brown)</p>
-<p><span class="math inline">\(\rho_1\)</span> rappresenti l’attendibilità di un test costituito da un certo numero di item. Se poniamo <span class="math inline">\(p=2\)</span>, la {eq}<code>eq-spearman-brown</code> ci fornisce una stima dell’attendibilità che si otterrebbe raddoppiando il numero di item nel test. Valori di <span class="math inline">\(p\)</span> minori di <span class="math inline">\(1\)</span>, invece, vengono usati per predire la diminuizione dell’attendibilità conseguente ad una diminuzione nel numero degli item del test.</p>
+\tag{30.1}\]</span></span></p>
+<p><span class="math inline">\(\rho_1\)</span> rappresenti l’attendibilità di un test costituito da un certo numero di item. Se poniamo <span class="math inline">\(p=2\)</span>, l’<a href="#eq-spearman-brown" class="quarto-xref">Equazione&nbsp;<span>30.1</span></a> ci fornisce una stima dell’attendibilità che si otterrebbe raddoppiando il numero di item nel test. Valori di <span class="math inline">\(p\)</span> minori di <span class="math inline">\(1\)</span>, invece, vengono usati per predire la diminuizione dell’attendibilità conseguente ad una diminuzione nel numero degli item del test.</p>
 <p>Ricordiamo però che le predizioni della formula di Spearman-Brown sono accurate solo se la forma allungata o accorciata del test è parallela rispetto al test considerato. Per esempio, se ad un test con un coefficiente di attendibilità molto alto vengono aggiunti item aventi una bassa attendibilità, allora l’attendibilità del test allungato sarà minore di quella predetta dalla formula di Spearman-Brown.</p>
 <p>Anche se la formula di Spearman-Brown ha un ruolo centrale nella teoria classica dei test, si tenga conto che non rappresenta l’unico strumento che può essere utilizzato per valutare la relazione tra attendibilità e numero degli item del test. La quantità detta <em>informazione dell’item</em> (<em>item information</em>), formulata dai modelli IRT, consente di predire i cambiamenti nella qualità della misura a seguito dell’aggiunta o della cancellazione di un sottoinsieme di item.</p>
 <p><strong>Esempio.</strong> Si consideri la scala SWLS. Chiediamoci come varia l’attendibilità della scala se il numero di item aumenta da 5 a 20. Poniamo che l’attendibilità della scala SWLS costituita da 5 item sia uguale a 0.824. Applicando la formula di Spearman-Brown otteniamo la stima seguente.</p>
@@ -1376,11 +1396,11 @@ window.Quarto = {
 <section id="numero-di-item-e-affidabilità" class="level3" data-number="30.3.2">
 <h3 data-number="30.3.2" class="anchored" data-anchor-id="numero-di-item-e-affidabilità"><span class="header-section-number">30.3.2</span> Numero di item e affidabilità</h3>
 <p>La formula di Spearman-Brown può anche essere riarrangiata in maniera tale da consentirci di predire il numero degli item necessari per raggiungere un determinato livello di affidabilità:</p>
-<p><span class="math display">\[
+<p><span id="eq-s-b-inv"><span class="math display">\[
 \begin{equation}
 p = \frac{\rho_p (1-\rho_1)}{\rho_1(1-\rho_p)},
 \end{equation}
-\]</span>(eq-s-b-inv)</p>
+\tag{30.2}\]</span></span></p>
 <p>dove <span class="math inline">\(\rho_1\)</span> è l’attendibilità stimata di un “item medio,” <span class="math inline">\(\rho_p\)</span> è il livello desiderato di attendibilità del test allungato e <span class="math inline">\(p\)</span> è il numero di item del test allungato.</p>
 <p><strong>Esempio.</strong> L’attendibilità della scala SWLS costituita da 5 item è <span class="math inline">\(\omega = 0.824\)</span>. Quanti item devono essere aggiunti se si vuole raggiungere un livello di attendibilità pari a <span class="math inline">\(0.95\)</span>?</p>
 <p>Ponendo <span class="math inline">\(\rho_p = 0.95\)</span> e <span class="math inline">\(\rho_1= 0.479\)</span>, in base alla {eq}<code>eq-s-b-inv</code> si ottiene che</p>
@@ -1460,13 +1480,13 @@ p = \frac{\rho_p (1-\rho_1)}{\rho_1(1-\rho_p)},
 <h3 data-number="30.4.2" class="anchored" data-anchor-id="correzione-per-guessing"><span class="header-section-number">30.4.2</span> Correzione per guessing</h3>
 <p>Alle volte i valori <span class="math inline">\(p_j\)</span> sono calcolati introducendo una correzione per le risposte fornite casualmente dai soggetti (<em>guessing</em>). Si consideri un test a scelta multipla composto da item aventi ciascuno <span class="math inline">\(C\)</span> alternative di risposta ed una sola risposta corretta. Si supponga che un rispondente risponda correttamente a <span class="math inline">\(R\)</span> item e risponda in maniera sbagliata a <span class="math inline">\(W\)</span> item.</p>
 <p>La correzione per guessing si ottiene applicando una formula basata sul seguente ragionamento. Se assumiamo che un rispondente si limita a tirare ad indovinare allora, ogni <span class="math inline">\(C\)</span> risposte, ci aspettiamo 1 risposta giusta e <span class="math inline">\(C-1\)</span> risposte sbagliate. Per calcolare il punteggio totale del test in modo da eliminare il numero di risposte corrette ottenute tirando ad indovinare è necessario sottrarre 1 punto per ogni <span class="math inline">\(C-1\)</span> item a cui è stata fornita una risposta corretta. Questo ragionamento conduce alla seguente formula:</p>
-<p><span class="math display">\[
+<p><span id="eq-guessing"><span class="math display">\[
 \begin{equation}
 FS = R - \frac{W}{C - 1},
 \end{equation}
-\]</span>(eq-guessing)</p>
+\tag{30.3}\]</span></span></p>
 <p>con <span class="math inline">\(R\)</span> = # risposte corrette, <span class="math inline">\(W\)</span> = # risposte sbagliate, <span class="math inline">\(C\)</span> = # alternative di risposta. Per esempio, se <span class="math inline">\(C=5\)</span>, allora è necessario sottrarre un punto ogni 4, il che è proprio quello che fa la {eq}<code>eq-guessing</code>.</p>
-<p>La {eq}<code>eq-guessing</code> produce un punteggio totale corretto per il guessing identico a quello che si otterrebbe assegnando 1 punto a ciascuna risposta corretta e assegnando <span class="math inline">\(- \frac{1}{C-1}\)</span> punti alle risposte sbagliate; le risposte non date non vengono considerate.</p>
+<p>L’<a href="#eq-guessing" class="quarto-xref">Equazione&nbsp;<span>30.3</span></a> produce un punteggio totale corretto per il guessing identico a quello che si otterrebbe assegnando 1 punto a ciascuna risposta corretta e assegnando <span class="math inline">\(- \frac{1}{C-1}\)</span> punti alle risposte sbagliate; le risposte non date non vengono considerate.</p>
 <p>La correzione per guessing rappresenta il tentativo di scomporre il numero totale di risposte corrette in due componenti: le risposte corrette dovute alle conoscenze del soggetto, le risposte che risultano corrette come effetto del caso. La stessa formula può anche essere utilizzata per calcolare la difficoltà degli item corretta per il guessing (come è stato fatto nell’esempio del parziale di Psicometria).</p>
 </section>
 <section id="discriminatività" class="level3" data-number="30.4.3">
@@ -1794,6 +1814,11 @@ IRI = S_i \cdot r_{i,tt},
 </div>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-mcdonald2013test" class="csl-entry" role="listitem">
+McDonald, R. P. (2013). <em>Test theory: A unified treatment</em>. <span>Psychology Press</span>.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
