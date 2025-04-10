@@ -24,7 +24,7 @@ here::here("code", "_common.R") |>
 
 # Load packages
 if (!requireNamespace("pacman")) install.packages("pacman")
-pacman::p_load(lavaan, psych)
+pacman::p_load(lavaan, psych, GPArotation)
 ```
 :::
 
@@ -231,12 +231,12 @@ Il metodo di **massima verosimiglianza** assume che i dati provengano da una **d
 - Può non convergere in presenza di dati problematici.
 
 
-> 🎓 *Suggerimento didattico:*  
+> 🎓 *Suggerimento:*  
 > Se l’obiettivo è **identificare costrutti psicologici latenti**, scegliete metodi coerenti con il modello fattoriale, come la **massima verosimiglianza**.  
 > Se invece volete solo **ridurre le dimensioni** dei dati per scopi descrittivi o pratici, allora la **PCA può essere sufficiente**.
 
 
-## Esempio pratico in R: Confronto tra metodi di estrazione
+## Esempio in R: Confronto tra Metodi di Estrazione
 
 Per illustrare i principali metodi di estrazione dei fattori, useremo un semplice esempio tratto da Rencher (2010). Una ragazza ha valutato 7 persone su 5 tratti personali:
 
@@ -263,7 +263,7 @@ R
 ```
 
 
-## Metodo delle Componenti Principali (PCA)
+### Metodo delle Componenti Principali (PCA)
 
 **1. Calcolo degli autovalori e autovettori.**
 
@@ -318,22 +318,33 @@ residui
 Se i **residui** (cioè la differenza tra $\mathbf{R}$ e $\hat{\Lambda} \hat{\Lambda}^\mathsf{T}$) sono piccoli, la soluzione a 2 fattori è soddisfacente.
 
 
-## Metodo dei Fattori Principali
+### Metodo dei Fattori Principali
 
-Il metodo dei fattori principali estrae **solo la varianza comune**, escludendo la varianza specifica.
+Il metodo dei fattori principali (o **principal factor method**) mira a estrarre **solo la varianza comune** tra le variabili, escludendo la varianza specifica (quella unica di ciascuna variabile).
 
-**1. Stima iniziale delle comunalità.**
+**Stima iniziale delle comunalità.**
 
-Una stima semplice: **il valore massimo della correlazione per ogni variabile** (approssimazione):
+Per avere una stima iniziale delle comunalità, qui si propone di prendere, per ciascuna variabile, il **massimo valore di correlazione** in valore assoluto, **escludendo la diagonale principale** della matrice delle correlazioni (che rappresenta la correlazione di ogni variabile con sé stessa, pari a 1). In R si può fare così:
 
 ```{r}
-h.hat <- apply(abs(R), 1, max)
+# Copiamo la matrice di correlazione
+R_no_diag <- R
+
+# Mettiamo 0 sulla diagonale (anziché 1)
+diag(R_no_diag) <- 0
+
+# Calcoliamo il massimo (in valore assoluto) per ogni riga
+h.hat <- apply(abs(R_no_diag), 1, max)
+
+# Arrotondiamo a 3 cifre decimali
 round(h.hat, 3)
 ```
 
-**2. Matrice ridotta.**
+Questa stima della comunalità (per ogni variabile) è volutamente molto semplificata e potrebbe risultare meno accurata di altre procedure (ad esempio, **correlazione multipla al quadrato**). Tuttavia, si usa spesso a scopo didattico per illustrare l’algoritmo.
 
-Sostituiamo le varianze sulla diagonale con le comunalità stimate:
+**Matrice ridotta.**
+
+Creiamo la **matrice ridotta** sostituendo la diagonale di $R$ (che vale 1, in quanto matrice di correlazione) con i valori stimati di comunalità:
 
 ```{r}
 R1 <- R
@@ -341,24 +352,28 @@ diag(R1) <- h.hat
 R1
 ```
 
-**3. Decomposizione della matrice ridotta.**
+**Decomposizione della matrice ridotta.**
+
+Calcoliamo gli autovalori e gli autovettori della matrice ridotta:
 
 ```{r}
 ee <- eigen(R1)
 round(ee$values, 3)  # autovalori
 ```
 
-**4. Saturazioni fattoriali.**
+**Saturazioni fattoriali.**
+
+Infine, estraiamo le **saturazioni fattoriali** per i fattori desiderati (ad esempio, i primi due). Le saturazioni ($\mathbf{L}$) indicano la relazione tra le variabili originali e i fattori latenti, **considerando solo la varianza comune**:
 
 ```{r}
 L <- ee$vectors[, 1:2] %*% sqrt(diag(ee$values[1:2]))
 round(L, 3)
 ```
 
-Le saturazioni qui rappresentano la **relazione tra variabili e fattori latenti**, tenendo conto solo della **varianza comune**.
+**Conclusione**: questa procedura illustra il metodo dei fattori principali e mostra come escludere correttamente la diagonale principale dal calcolo delle comunalità iniziali, utilizzando il massimo (in valore assoluto) delle correlazioni di ogni variabile con le altre.
 
 
-## Metodo dei Fattori Principali Iterato
+### Metodo dei Fattori Principali Iterato
 
 Questo metodo **aggiorna iterativamente** le stime delle comunalità finché le saturazioni non cambiano più (convergenza).
 
@@ -403,6 +418,31 @@ Il **p-value** indica se il modello a 2 fattori è adeguato:
 - p alto → il modello **spiega bene** i dati (non c’è differenza significativa con la matrice osservata).  
 - p basso → il modello è **insufficiente** (i residui sono troppo grandi).
 
+Se vogliamo usare `lavaan` dobbiamo introdurre una rotazione obliqua:
+
+```{r}
+ml2 <- factanal(
+  covmat = R,
+  factors = 2,
+  rotation = "oblimin",
+  n.obs = 225  
+)
+ml2
+```
+
+Replichiamo ora i risultati con `lavaan`:
+
+```{r}
+fit <- efa(sample.cov = R, 
+           sample.nobs = 225,
+           nfactors = 1:2,
+           rotation = "geomin",
+           rotation.args = list(geomin.epsilon = 0.01, rstarts = 1))
+
+summary(fit, nd = 3L, cutoff = 0.2, dot.cutoff = 0.05)
+fitMeasures(fit, fit.measures = "all")
+```
+
 In sintesi:
 
 | Metodo           | Obiettivo principale                  | Include specificità? | Test del modello? | Quando usarlo |
@@ -441,7 +481,6 @@ Infine, non dimentichiamo che l’analisi fattoriale **non esaurisce l’indagin
 - **analisi di validità di costrutto**.
 
 In sintesi, padroneggiare i diversi metodi di estrazione non significa solo saperli applicare, ma anche **comprendere le implicazioni epistemologiche e psicometriche** delle scelte fatte. Il vero valore dell’analisi fattoriale non sta solo nella sintesi dei dati, ma nella sua capacità di **collegare numeri e teoria**, variabili osservate e costrutti latenti, **statistica e psicologia**.
-
 
 
 ## Informazioni sull'Ambiente di Sviluppo {.unnumbered}
